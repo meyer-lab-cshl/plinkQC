@@ -3,8 +3,8 @@
 #' perMarkerQC checks the markers in the plink dataset for their missingness
 #' rates across samples, their deviation from Hardy-Weinberg-Equilibrium (HWE)
 #' and their minor allele frequencies (MAF). Per default, it assumes that IDs of
-#' individuals that have failed \link{\code{perIndividualQC}}have been written to
-#' qcdir/alg.failIDs and removes these individuals when computing missingness
+#' individuals that have failed \link{\code{perIndividualQC}}have been written
+#' to qcdir/alg.failIDs and removes these individuals when computing missingness
 #' rates, HWE p-values and MAF. If the qcdir/alg.failIDs file does not exist, a
 #' message is written to stdout but the analyses will continue for all samples
 #' in the alg.fam/al.bed/alg.bim dataset.
@@ -18,7 +18,7 @@
 #' @param hweTh [double] Significance threshold for deviation from HWE.
 #' @param mafTh [double] Threshold for minor allele frequency cut-off.
 #' @param macTh [double] Threshold for minor allele cut cut-off, if both mafTh
-#' and macTh are specified, macTh is used (macTh = mafTh*2*NrSamples)
+#' and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)
 #' @param plot [logical] Should results be depicted as plots? When choosing this
 #' option, make sure you have X-forwarding/graphical interface available for
 #' interactive plotting. Alternatively, enclose calls to this function in
@@ -92,7 +92,7 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, plot=FALSE) {
                 ".fam")
         suffix <- ""
         system(paste("plink --bfile ", qcdir, "/", alg,
-                     "--missing ",
+                     " --missing ",
                      "--freq ",
                      "--out ", qcdir, "/", alg, suffix, sep=""))
     } else {
@@ -178,7 +178,7 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, plot=FALSE) {
                 ".fam")
         suffix <- ""
         system(paste("plink --bfile ", qcdir, "/", alg,
-                     "--hardy ",
+                     " --hardy ",
                      "--out ", qcdir, "/", alg, suffix, sep=""))
     } else {
         suffix <- ".no_failIDs"
