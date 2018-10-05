@@ -1,0 +1,35 @@
+PLINK v1.90b6.5 64-bit (13 Sep 2018)
+Options in effect:
+  --bfile /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
+  --freq
+  --make-bed
+  --noweb
+  --out /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
+
+Hostname: hannahmbpr
+Working directory: /Users/hannah/RPackagesDevel/plinkQC
+Start time: Thu Oct  4 13:12:34 2018
+
+Note: --noweb has no effect since no web check is implemented yet.
+Random number seed: 1538655154
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+Warning: --make-bed input and output filenames match.  Appending '~' to input
+filenames.
+10000 variants loaded from .bim file.
+200 people (89 males, 111 females) loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 200 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: 354 het. haploid genotypes present (see
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.hh ); many commands
+treat these as missing.
+Total genotyping rate is 0.990506.
+--freq: Allele frequencies (founders only) written to
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.frq .
+10000 variants and 200 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.bed +
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.bim +
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.fam ... done.
+
+End time: Thu Oct  4 13:12:34 2018
