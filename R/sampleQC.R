@@ -69,10 +69,14 @@
 #' IDs in refColors/refColorsFile.
 #' @param studyColor [character] Color to be used for study population if plot
 #' is TRUE.
-#' @param plot [logical] Should results be depicted as plots? When choosing this
-#' option, make sure you have X-forwarding/graphical interface available for
-#' interactive plotting. Alternatively, enclose calls to this function in
-#' pdf(outfile) perSampleQC(arguments) dev.off().
+#' @param path2plink [character] Absolute path to where external plink software
+#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
+#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param interactive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_sampleQC) via ggplot2::ggsave(p=p_sampleQC,
+#' other_arguments) or pdf(outfile) print(p_sampleQC) dev.off().
 #' If TRUE, i) depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
 #' split by their PEDSEX (if do.check_sex is TRUE), ii) creates a scatter plot
 #' with samples' missingness rates on x-axis and their heterozygosity rates on
@@ -88,7 +92,12 @@
 #' heterozygosity threshold hetTh, iv) mismatched_sex containing a [vector] with
 #' the sample IIDs failing the sexcheck based on SNPSEX and femaleTh/maleTh and
 #' v) ancestry containing a vector with sample IIDs failing the ancestry check
-#' based on europeanTh.
+#' based on europeanTh and vi) p_sampleQC, a ggplot2-object 'containing' a
+#' sub-paneled plot with the QC-plots of \code{\link{check_sex}},
+#' \code{\link{check_heterozygosity_and_missingness}},
+#' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}, which can
+#' be shown by print(p_sampleQC).
+#' List entries contain NULL if that specific check was not chosen.
 #' @details perSampleQC wraps around the individual QC functions
 #' \code{\link{check_sex}}, \code{\link{check_heterozygosity_and_missingness}},
 #' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}. For details
@@ -111,11 +120,16 @@ perSampleQC <- function(qcdir, alg,
                             refSamplesIID="IID", refSamplesPop="Pop",
                             refColorsColor="Color", refColorsPop="Pop",
                             studyColor="#2c7bb6",
-                            plot=FALSE, verbose=TRUE) {
+                            interactive=FALSE, verbose=TRUE) {
     fail_sex <- NULL
     fail_het_imiss <- NULL
     fail_relatedness <- NULL
     fail_ancestry <- NULL
+
+    p_sexcheck <- NULL
+    p_het_imiss <- NULL
+    p_relatedness <- NULL
+    p_ancestry <- NULL
 
     if (do.check_sex) {
         if (verbose) {
@@ -128,7 +142,7 @@ perSampleQC <- function(qcdir, alg,
                                  externalFemale=externalFemale,
                                  externalSexSex=externalSexSex,
                                  externalSexID=externalSexID,
-                                 fixMixup=fixMixup, plot=plot)
+                                 fixMixup=fixMixup, interactive=FALSE)
         if (!is.null(fail_sex$fail_sex)) {
             write.table(fail_sex$fail_sex[,1:2],
                         file=paste(qcdir,"/",alg, ".fail-sexcheck.IDs", sep=""),
@@ -139,6 +153,7 @@ perSampleQC <- function(qcdir, alg,
                         file=paste(qcdir,"/",alg, ".sexcheck_mixup.IDs", sep=""),
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
         }
+        p_sexcheck <- fail_sex$p_sexcheck
     }
     if (do.check_heterozygosity_and_missingness) {
         if (verbose) {
@@ -148,7 +163,7 @@ perSampleQC <- function(qcdir, alg,
         fail_het_imiss <-
             check_heterozygosity_and_missingness(qcdir=qcdir, alg=alg,
                                                  imissTh=imissTh, hetTh=hetTh,
-                                                 plot=plot)
+                                                 interactive=FALSE)
         if (!is.null(fail_het_imiss$fail_imiss)) {
             write.table(fail_het_imiss$fail_imiss[,1:2],
                         file=paste(qcdir, "/", alg, ".fail-imiss.IDs", sep=""),
@@ -159,17 +174,20 @@ perSampleQC <- function(qcdir, alg,
                         file=paste(qcdir, "/", alg, ".fail-het.IDs", sep=""),
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
         }
+        p_het_imiss <- fail_het_imiss$p_het_imiss
     }
     if (do.check_relatedness) {
         if (verbose) message("Identification of related individuals")
         fail_relatedness <- check_relatedness(qcdir=qcdir, alg=alg,
                                               famfile=family,
-                                              highIBDTh=highIBDTh, plot=plot)
+                                              highIBDTh=highIBDTh,
+                                              interactive=FALSE)
         #if (!is.null(fail_relatedness)) {
         #    write.table(fail_relatedness[,1:2]),],
         #                file=paste(qcdir,"/", alg,".fail_IBD.txt", sep=""),
         #                row.names=FALSE, quote=FALSE, col.names=TRUE, sep="\t")
-        }
+        #}
+        p_relatedness <- fail_relatedness$p_IBD
     }
     if (do.check_ancestry) {
         if (verbose) {
@@ -187,12 +205,13 @@ perSampleQC <- function(qcdir, alg,
                                         refColorsColor=refColorsColor,
                                         refColorsPop=refColorsPop,
                                         studyColor=studyColor,
-                                        plot=plot)
+                                        interactive=FALSE)
         if (!is.null(fail_ancestry)) {
             write.table(fail_ancestry,
                         file=paste(qcdir, "/",alg,".fail-ancestry.IDs",sep=""),
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
         }
+        p_ancestry <- fail_ancestry$p_ancestry
     }
 
     system(paste("cat ",qcdir ,"/",  alg, ".fail-*.IDs | sort | uniq >",
@@ -204,27 +223,45 @@ perSampleQC <- function(qcdir, alg,
                           as.vector(fail_het_imiss$fail_het$IID),
                       mismatched_sex=as.vector(fail_sex$fail_sex$IID),
                       ancestry=as.vector(fail_ancestry$IID))
-    return(fail_list)
+
+    plots_sampleQC <- list(p_sexcheck, p_het_imiss, p_relatedness, p_ancestry)
+    plots_sampleQC <- plots_sampleQC[sapply(plots_sampleQC,
+                                            function(x) !is.null(x))]
+    subplotLabels <- LETTERS[1:length(plots_sampleQC)]
+    p_sampleQC <- cowplot::plot_grid(plotlist=plots_sampleQC,
+                                     nrow=length(plots_sampleQC),
+                                     labels=subplotLabels)
+    if (interactive) {
+        print(p_sampleQC)
+    }
+    return(list(fail_list=fail_list, p_sampleQC=p_sampleQC))
 }
 
 #' Overview of per individual QC
 #'
 #'
-#' @param fail_list [list] Output of \code{\link{perSampleQC}} i.e. named list
+#' @param results_perSampleQC [list] Output of \code{\link{perSampleQC}} i.e.
+#' named list
 #' with i) sample_missingness containing a [vector] with sample IIDs failing
 #' the selected missingness threshold imissTh, ii) highIBD containing
 #' a [vector] with sample IIDs failing the selected relatedness threshold
 #' highIBDTh, iii) outlying_heterozygosity containing a [vector] with sample
 #' IIDs failing selected the heterozygosity threshold hetTh, iv) mismatched_sex
 #' containing a [vector] with the sample IIDs failing the sexcheck based on
-#' SNPSEX and selected femaleTh/maleTh and v) ancestry containing a vector with
-#' sample IIDs failing the ancestry check based on the selected europeanTh.
-#' @param plot [logical] Should results be depicted as plots? When choosing this
-#' option, make sure you have X-forwarding/graphical interface available for
-#' interactive plotting. Alternatively, enclose calls to this function in
-#' pdf(outfile) overviewSampleQC(arguments) dev.off().
-#' If True, depicts results of perSampleQC as intersection plot (via
+#' SNPSEX and selected femaleTh/maleTh, v) ancestry containing a vector with
+#' sample IIDs failing the ancestry check based on the selected europeanTh and
+#' vi) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
+#' QC-plots of \code{\link{check_sex}},
+#' \code{\link{check_heterozygosity_and_missingness}},
+#' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}.
+#'
+#' overviewPerSampleQC depicts results of perSampleQC as intersection plot (via
 #' \code{\link[UpSetR]{upset}}).
+#' @param interactive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_overview) via ggplot2::ggsave(p=p_overview,
+#' other_arguments) or pdf(outfile) print(p_overview) dev.off().
 #' @return named [list] with i) nr_fail_samples: total number of samples
 #' [integer] failing perSampleQC, ii) fail_QC containing a [data.frame] with
 #' samples that failed QC steps (excluding ancestry): samples IIDs in rows,
@@ -232,13 +269,21 @@ perSampleQC <- function(qcdir, alg,
 #' passing the QC and entries=1 if failing that particular QC and iii)
 #' fail_QC_and_ancestry containing a [data.frame] with samples that failed
 #' ancestry and QC checks: samples IIDs in rows, columns are QC_fail and
-#' Ancestry_fail, with entries=0 if passing  and entries=1 if failing that check.
-overviewPerSampleQC <- function(fail_list, plot=FALSE) {
+#' Ancestry_fail, with entries=0 if passing  and entries=1 if failing that check
+#' and iv) p_overview, a ggplot2-object 'containing' the overview plots of the
+#' QC failures and the intersection of QC failures with ancestry exclusion which
+#' can be shown by print(p_overview).
+overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
     list2counts <- function(element, all_names) {
         all_names[!(all_names %in% element)] <- 0
         all_names[all_names %in% element] <- 1
         return(as.numeric(all_names))
     }
+    if (length(perSampleQC) == 2 &&
+        !all(names(results_perSampleQC) == c("fail_list", "p_sampleQC"))) {
+        stop("results_perSampleQC not direct output of perSampleQC")
+    }
+    fail_list <- results_perSampleQC$fail_list
     # Remove null elements
     fail_list <- fail_list[!sapply(fail_list, is.null)]
 
@@ -252,34 +297,47 @@ overviewPerSampleQC <- function(fail_list, plot=FALSE) {
                                       unique_samples_fail_wo_ancestry)
     rownames(fail_counts_wo_ancestry) <- unique_samples_fail_wo_ancestry
 
+    p_qc <- UpSetR::upset(UpSetR::fromList(fail_list_wo_ancestry),
+                  order.by = "freq",
+                  empty.intersections = "on", text.scale=1.2,
+                  # Include when UpSetR v1.4.1 is released
+                  # title="Overview quality control failures",
+                  main.bar.color="#1b9e77", matrix.color="#1b9e77",
+                  sets.bar.color="#d95f02")
 
-    # b) overview of QC and ancestry fails
-    fail_all <- list(QC_fail=unique_samples_fail_wo_ancestry,
-                Ancestry_fail=fail_list$ancestry)
-    fail_counts_all <- sapply(fail_all, list2counts, unique_samples_fail_all)
-    rownames(fail_counts_all) <- unique_samples_fail_all
+    if ("ancestry" %in% names(fail_list)) {
+        # b) overview of QC and ancestry fails
+        fail_all <- list(QC_fail=unique_samples_fail_wo_ancestry,
+                    Ancestry_fail=fail_list$ancestry)
+        fail_counts_all <- sapply(fail_all, list2counts,
+                                  unique_samples_fail_all)
+        rownames(fail_counts_all) <- unique_samples_fail_all
 
-    if (plot) {
-        UpSetR::upset(UpSetR::fromList(fail_list_wo_ancestry), order.by = "freq",
-                      empty.intersections = "on", text.scale=1.2,
-                      title="Overview quality control failures",
-                      main.bar.color="#1b9e77", matrix.color="#1b9e77",
-                      sets.bar.color="#d95f02")
-        UpSetR::upset(UpSetR::fromList(fail_all), order.by = "freq",
-                      title="Intersection between QC and ancestry failures",
+        p_qc_ancestry <- UpSetR::upset(UpSetR::fromList(fail_all),
+                                   order.by = "freq",
+                      # Include when UpSetR v1.4.1 is released
+                      # title="Intersection between QC and ancestry failures",
                       empty.intersections = "on", text.scale=1.2,
                       main.bar.color="#7570b3", matrix.color="#7570b3",
-                      sets.bar.color="#e7298a" )
+                    sets.bar.color="#e7298a" )
+        p_overview <- cowplot::plot_grid(p_qc, p_qc_ancestry, nrow=2)
+    } else {
+        p_overview <- p_qc
+        fail_counts_all <- NULL
+    }
+    if (interactive) {
+        print(p_overview)
     }
     nr_fail_samples <- length(unique_samples_fail_all)
     return(list(nr_fail_samples=nr_fail_samples,
                 fail_QC=fail_counts_wo_ancestry,
-                fail_QC_and_ancestry=fail_counts_all))
+                fail_QC_and_ancestry=fail_counts_all,
+                p_overview=p_overview))
 }
 
 #' Identification of individuals with discordant sex information
 #'
-#' Evaluates and depicts results from plink --check-sex. Reads resulting datafile
+#' Evaluates and depicts results from plink --check-sex. Reads resulting file
 #' qcdir/alg.sexcheck and returns IIDs for samples whose SNPSEX != PEDSEX (where
 #' the SNPSEX is determined by the heterozygosity rate across X-chromosomal
 #' variants).
@@ -291,6 +349,8 @@ overviewPerSampleQC <- function(fail_list, plot=FALSE) {
 #' different centers) match. If a mismatch between PEDSEX and SNPSEX was
 #' detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be
 #' updated (fixMixup=TRUE).
+#' check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
+#' split by their (PEDSEX).
 #' @param qcdir [character] path/to/directory/with/QC/results containing
 #' alg.sexcheck results as returned by plink --check-sex. Users needs writing
 #' permission to qcdir.
@@ -310,20 +370,27 @@ overviewPerSampleQC <- function(fail_list, plot=FALSE) {
 #' information in externalSex.
 #' @param externalSexID [character] Column identifier for column containing ID
 #' information in externalSex.
-#' @param plot [logical] Should results be depicted as plots? When choosing this
-#' option, make sure you have X-forwarding/graphical interface available for
-#' interactive plotting. Alternatively, enclose calls to this function in
-#' pdf(outfile) check_sex(arguments) dev.off().
-#' If TRUE, depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
-#' split by their (PEDSEX).
+#' @paraminteractive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
+#' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
+#' @param path2plink [character] Absolute path to where external plink software
+#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
+#' assumed that PATH set-up works and plink will be found by system("plink").
+#' Only reqired if fixMixup=TRUE.
 #' @return named list with i) fail_sex: dataframe with FID, IID, PEDSEX, SNPSEX
-#' and Sex (if externalSex was provided) of individuals failing sex check and
-#' 2) mixup: dataframe with FID, IID, PEDSEX, SNPSEX and Sex (if externalSex
-#' was provided) of individuals whose PEDSEX != Sex and Sex == SNPSEX.
+#' and Sex (if externalSex was provided) of individuals failing sex check,
+#' ii) mixup: dataframe with FID, IID, PEDSEX, SNPSEX and Sex (if externalSex
+#' was provided) of individuals whose PEDSEX != Sex and Sex == SNPSEX and iii)
+#' p_sexcheck, a ggplot2-object 'containing' a scatter plot of the X-chromosomal
+#' heterozygosity (SNPSEX) of the sample split by their (PEDSEX), which can be
+#' shown by print(p_sexcheck).
 check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
-                      plot=FALSE, fixMixup=FALSE,
+                      interactive=FALSE, fixMixup=FALSE,
                       externalFemale="F", externalMale="M",
-                      externalSexSex="Sex", externalSexID="IID") {
+                      externalSexSex="Sex", externalSexID="IID",
+                      path2plink=NULL) {
     if (!file.exists(paste(qcdir,"/", alg, ".sexcheck",sep=""))){
         stop("plink --check-sex results file: ", qcdir,"/", alg,
              ".sexcheck does not exist.")
@@ -336,92 +403,103 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
         stop("Header of", qcdir,"/", alg, ".sexcheck is not correct. Was your
              file generated with plink --check-sex?")
     }
-
     if (is.null(externalSex)) {
         fail_sex <- sexcheck[sexcheck$STATUS == "PROBLEM",]
         if (nrow(fail_sex) == 0) fail_sex <- NULL
-        return(list(fail_sex=fail_sex, mixup=NULL))
-    }
-
-    if (!(externalSexSex %in% names(externalSex))) {
-        stop("Column", externalSexSex, "not found in externalSex!")
-    }
-    if (!(externalSexID %in% names(externalSex))) {
-        stop("Column", externalSexID, "not found in externalSex!")
-    }
-    names(externalSex)[names(externalSex) == externalSexSex] <- "Sex"
-    names(externalSex)[names(externalSex) == externalSexID] <- "IID"
-
-    sexcheck_fuse <- merge(sexcheck, externalSex, by="IID")
-    sex_mismatch <-
-        apply(dplyr::select(sexcheck_fuse, Sex, PEDSEX, SNPSEX), 1,
-              function(ind) {
-                  # Mismatch Sex in pheno and geno files
-                  if (ind[1] == externalFemale && ind[2] %in% c(0, 1)) {
-                      return(ifelse(ind[3] == 2, FALSE, TRUE))
-                  }
-                  if (ind[1] == externalMale && ind[2] %in% c(0, 2)) {
-                      return(ifelse(ind[3] == 1, FALSE, TRUE))
-                  }
-                  # Mismatch Sex assigned and estimated
-                  if (ind[1] == externalFemale && ind[2] == 2) {
-                      return(ifelse(ind[3] == 1, TRUE, NA))
-                  }
-                  if (ind[1] == externalMale && ind[2] == 1) {
-                      return(ifelse(ind[3] == 2, TRUE, NA))
-                  }
-            })
-    # SNPSEX != (Sex in pheno file, PEDSEX)
-    fail_sex <-
-       dplyr::select(sexcheck_fuse, FID, IID, Sex, PEDSEX,
-                     SNPSEX, F)[which(sex_mismatch),]
-    # SNPSEX == Sex in pheno file and PEDSEX != (SNPSEX, Sex)
-    mixup_geno_pheno <-
-       dplyr::select(sexcheck_fuse, FID, IID, Sex, PEDSEX,
-                     SNPSEX, F)[which(!sex_mismatch),]
-    # Fix mismatch between PEDSEX and sex
-    if (fixMixup) {
-        if (nrow(mixup_geno_pheno) != 0) {
-            file_mixup <- paste(qcdir, "/", alg, ".mismatched_sex_geno_pheno",
-                                sep="")
-            write.table(dplyr::select(mixup_geno_pheno, FID, IID, SNPSEX),
-                       file=file_mixup,
-                       row.names=FALSE, quote=FALSE, col.names=FALSE)
-            system(paste("plink --bfile ", qcdir, "/", alg, "\ ",
-                               "--update-sex ", file_mixup, "\ ",
-                               "--make-bed \ ",
-                               "--out ", qcdir , "/", alg, sep=""))
-        } else {
-            if (verbose) {
-                message("All assigned genotype sexes (PEDSEX) match external",
-                        " sex assignment (Sex)")
-            }
-            mixup_geno_pheno <- NULL
-        }
+        mixup_geno_pheno <- NULL
     } else {
-        # Append mismatch to fail_sex, ie treat as fail IDs
-        if (nrow(mixup_geno_pheno) != 0) {
-            fail_sex <- rbind(fail_sex, mixup_geno_pheno)
+        if (!(externalSexSex %in% names(externalSex))) {
+            stop("Column", externalSexSex, "not found in externalSex!")
+        }
+        if (!(externalSexID %in% names(externalSex))) {
+            stop("Column", externalSexID, "not found in externalSex!")
+        }
+        names(externalSex)[names(externalSex) == externalSexSex] <- "Sex"
+        names(externalSex)[names(externalSex) == externalSexID] <- "IID"
+
+        sexcheck_fuse <- merge(sexcheck, externalSex, by="IID")
+        sex_mismatch <-
+            apply(dplyr::select(sexcheck_fuse, Sex, PEDSEX, SNPSEX), 1,
+                  function(ind) {
+                      # Mismatch Sex in pheno and geno files
+                      if (ind[1] == externalFemale && ind[2] %in% c(0, 1)) {
+                          return(ifelse(ind[3] == 2, FALSE, TRUE))
+                      }
+                      if (ind[1] == externalMale && ind[2] %in% c(0, 2)) {
+                          return(ifelse(ind[3] == 1, FALSE, TRUE))
+                      }
+                      # Mismatch Sex assigned and estimated
+                      if (ind[1] == externalFemale && ind[2] == 2) {
+                          return(ifelse(ind[3] == 1, TRUE, NA))
+                      }
+                      if (ind[1] == externalMale && ind[2] == 1) {
+                          return(ifelse(ind[3] == 2, TRUE, NA))
+                      }
+                })
+        # SNPSEX != (Sex in pheno file, PEDSEX)
+        fail_sex <-
+           dplyr::select(sexcheck_fuse, FID, IID, Sex, PEDSEX,
+                         SNPSEX, F)[which(sex_mismatch),]
+        # SNPSEX == Sex in pheno file and PEDSEX != (SNPSEX, Sex)
+        mixup_geno_pheno <-
+           dplyr::select(sexcheck_fuse, FID, IID, Sex, PEDSEX,
+                         SNPSEX, F)[which(!sex_mismatch),]
+        # Fix mismatch between PEDSEX and sex
+        if (fixMixup) {
+            checkPlink(path2plink)
+            if (nrow(mixup_geno_pheno) != 0) {
+                file_mixup <- paste(qcdir, "/", alg,
+                                    ".mismatched_sex_geno_pheno", sep="")
+                write.table(dplyr::select(mixup_geno_pheno, FID, IID, SNPSEX),
+                           file=file_mixup,
+                           row.names=FALSE, quote=FALSE, col.names=FALSE)
+                system(paste("plink --bfile ", qcdir, "/", alg, "\ ",
+                                   "--update-sex ", file_mixup, "\ ",
+                                   "--make-bed \ ",
+                                   "--out ", qcdir , "/", alg, sep=""))
+            } else {
+                if (verbose) {
+                    message("All assigned genotype sexes (PEDSEX) match ",
+                            " external sex assignment (Sex)")
+                }
+                mixup_geno_pheno <- NULL
+            }
         } else {
-            mixup_geno_pheno <- NULL
+            # Append mismatch to fail_sex, ie treat as fail IDs
+            if (nrow(mixup_geno_pheno) != 0) {
+                fail_sex <- rbind(fail_sex, mixup_geno_pheno)
+            } else {
+                mixup_geno_pheno <- NULL
+            }
         }
     }
-    if (plot) {
-        sexcheck$color <- "#1b9e77"
-        sexcheck$color[sexcheck$PEDSEX==2] <- "#d95f02"
-        plot(sexcheck$PEDSEX, sexcheck$F, axes=FALSE, pch=20, main="Sex Check",
-             xlim=c(0,3),
-             col=sexcheck$color, xlab="Reported Gender", ylab="ChrX Inbreeding")
-        axis(1, at=c(1,2), labels=c("Male","Female"))
-        axis(2, at=c(maleTh, femaleTh), labels=c(maleTh,femaleTh))
-        segments(0.5, maleTh, 1.5, maleTh, lty=2, col="red")
-        segments(1.5, femaleTh, 2.5, femaleTh, lty=2, col="red")
-        maptools::pointLabel(x=fail_sex$PEDSEX, y=fail_sex$F,
-                             labels=fail_sex$IID, cex=.6,
-                             offset =.2)
-        box()
+    sexcheck$color <- "#1b9e77"
+    sexcheck$color[sexcheck$PEDSEX==2] <- "#d95f02"
+    sexcheck$PEDSEX <- as.factor(sexcheck$PEDSEX)
+    p_sexcheck <- ggplot()
+    p_sexcheck <- p_sexcheck + geom_point(data=sexcheck,
+                                          aes(x=PEDSEX, y=F,color=PEDSEX)) +
+        ggtitle("Check assigned sex versus SNP sex") +
+        scale_color_manual(values=c("#1b9e77", "#d95f02"), guide=FALSE) +
+        scale_x_discrete(labels=c("Male", "Female")) +
+        xlab("Reported Sex (PEDSEX)") +
+        ylab("ChrX heterozygosity") +
+        ggrepel::geom_label_repel(data=data.frame(x=fail_sex$PEDSEX,
+                                                 y=fail_sex$F,
+                                                 label=fail_sex$IID),
+                                 aes(x=x,y=y, label=label)) +
+        geom_segment(data=data.frame(x=0.8, xend=1.2, y=maleTh,
+                                     yend=maleTh),
+                     aes(x=x,xend=xend, y=y, yend=yend), color="#1b9e77") +
+        geom_segment(data=data.frame(x=1.8, xend=2.2, y=femaleTh,
+                                     yend=femaleTh),
+                     aes(x=x,xend=xend, y=y, yend=yend), color="#d95f02") +
+        theme_bw()
+    if (interactive) {
+        print(p_sexcheck)
     }
-    return(list(fail_sex=fail_sex, mixup=mixup_geno_pheno))
+    return(list(fail_sex=fail_sex, mixup=mixup_geno_pheno,
+                p_sexcheck=p_sexcheck))
 }
 
 #' Identification of individuals with outlying missing genotype or
@@ -430,7 +508,7 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
 #' Evaluates and depicts results from plink --missing (missing genotype rates
 #' per individual) and plink --het (heterozygosity rates per individual).
 #' Non-systematic failures in genotyping and outlying heterozygosity (hz) rates
-#' per individual are often proxies for DNA sample quality. Larger than expected 
+#' per individual are often proxies for DNA sample quality. Larger than expected
 #' heterozygosity can indicate possible DNA contamination.
 #' The mean heterozygosity in Plink is computed as hz_mean = (N-O)/N, where
 #' N: number of non-missing genotypes and O:observed number of homozygous
@@ -439,7 +517,8 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
 #' Within a population and genotyping panel, a reduced heterozygosity rate can
 #' indicate inbreeding - these individuals will then be returned by
 #' check_relatedness as individuals that fail the relatedness filters.
-#'
+#' check_heterozygosity_and_missingness creates a scatter plot with the samples'
+#' missingness rates on x-axis and their heterozygosity rates on the y-axis.
 #' @param qcdir [character] path/to/directory/with/QC/results containing
 #' alg.imiss and alg.het results as returned by plink --missing and plink
 #' --het. Users needs writing permission to qcdir.
@@ -451,12 +530,11 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
 #' heterozygosity in any individual. Expressed as multiples of standard
 #' deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 #' hetTh*sd(het) will be returned as failing heterozygosity check.
-#' @param plot [logical] Should results be depicted as plots? When choosing this
-#' option, make sure you have X-forwarding/graphical interface available for
-#' interactive plotting. Alternatively, enclose calls to this function in
-#' pdf(outfile) check_heterozygosity_and_missingness(arguments) dev.off().
-#' If TRUE, creates scatter plot with samples' missingness rates on x-axis and
-#' their heterozygosity rates on the y-axis.
+#' @param interactive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
+#' , other_arguments) or pdf(outfile) print(p_het_imiss) dev.off().
 #' @return named [list] with i) fail_imiss dataframe containing FID (Family ID),
 #' IID (Within-family ID), MISS_PHENO (Phenotype missing? (Y/N)), N_MISS (Number
 #' of missing genotype call(s), not including obligatory missings), N_GENO (
@@ -465,9 +543,12 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
 #' containing FID (Family ID), IID (Within-family ID), O(HOM) (Observed number
 #' of homozygotes), E(HOM) (Expected number of homozygotes), N(NM) (Number of
 #' non-missing autosomal genotypes), F (Method-of-moments F coefficient
-#' estimate) of individuals failing  outlying heterozygosity check.
+#' estimate) of individuals failing  outlying heterozygosity check and iii)
+#' p_het_imiss, a ggplot2-object 'containing' a scatter plot with the samples'
+#' missingness rates on x-axis and their heterozygosity rates on the y-axis,
+#' which can be shown by print(p_het_imiss).
 check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
-                                                 hetTh=3, plot=FALSE) {
+                                                 hetTh=3, interactive=FALSE) {
 
     if (!file.exists(paste(qcdir,"/", alg, ".imiss",sep=""))){
         stop("plink --missing output file: ", qcdir,"/", alg,
@@ -495,54 +576,49 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
     fail_het <- het[het$F < (mean(het$F)  - hetTh*sd(het$F)) |
                      het$F > (mean(het$F) + hetTh*sd(het$F)),]
 
-    if (plot) {
-        nr_samples <- nrow(imiss)
-        imiss$logF_MISS <- log10(imiss[,6])
-        data <- merge(imiss, het, by="IID")
-        F_minus_5sd <- mean(data$F) - (5*sd(data$F))
-        F_add_5sd <- mean(data$F) + (5*sd(data$F))
-        F_minus_4sd <- mean(data$F) - (4*sd(data$F))
-        F_add_4sd <- mean(data$F) + (4*sd(data$F))
-        F_minus_3sd <- mean(data$F) - (3*sd(data$F))
-        F_add_3sd <- mean(data$F) + (3*sd(data$F))
-        F_minus_2sd <- mean(data$F) - (2*sd(data$F))
-        F_add_2sd <- mean(data$F) + (2*sd(data$F))
-        F_minus_1sd <- mean(data$F) - (1*sd(data$F))
-        F_add_1sd <- mean(data$F) + (1*sd(data$F))
-        plot(data$logF_MISS,data$F, xlim=c(-4,0), pch=20,
-             col=densCols(data$logF_MISS, data$F),
-             main="Heterozygosity by Missingness for All samples",
-             xlab="Proportion of missing SNPs",
-             ylab="Heterozygosity (SD from mean)", axes=FALSE)
-        box()
-        fail_het_imiss <- data[which(data[,1] %in%
-                                     union(fail_het[,1], fail_imiss[,1])),]
-        maptools::pointLabel(x=fail_het_imiss$logF_MISS, y=fail_het_imiss$F,
-                   labels=fail_het_imiss[,1], cex=0.6, offset=.2)
-        axis(1, at=c(-4,-3,-2, log10(0.03), log10(0.05),-1,0),
-             labels=c(0.0001, 0.001, 0.01, 0.03, 0.05, 0.01, 1))
-        axis(2,
-             at=c(F_minus_5sd, F_minus_4sd, F_minus_3sd,
-                  F_add_3sd, F_add_4sd, F_add_5sd),
-             labels=c("-5", "-4", "-3" ,"+3", "+4", "+5"), las=2)
-        abline(h=F_minus_5sd, col="azure4", lty=3)
-        abline(h=F_add_5sd, col="azure4", lty=3)
-        abline(h=F_minus_4sd, col="azure4", lty=3)
-        abline(h=F_add_4sd, col="azure4", lty=3)
-        abline(h=F_minus_3sd, col="azure4", lty=3)
-        abline(h=F_add_3sd, col="azure4", lty=3)
-        abline(h=F_minus_2sd, col="azure4", lty=3)
-        abline(h=F_add_2sd, col="azure4",lty=3)
-        abline(h=F_minus_1sd, col="azure4",lty=3)
-        abline(h=F_add_1sd, col="azure4",lty=3)
-        abline(h=mean(data$F) - (hetTh*sd(data$F)), col="red", lty=2)
-        abline(h=mean(data$F) + (hetTh*sd(data$F)), col="red", lty=2)
-        abline(v=log10(0.03), col="azure4", lty=3)
-        abline(v=log10(0.05), col="azure4", lty=3)
-        abline(v=log10(imissTh), col="red", lty=2)
+    nr_samples <- nrow(imiss)
+    imiss$logF_MISS <- log10(imiss$F_MISS)
+    het_imiss <- merge(imiss, het, by="IID")
+    fail_het_imiss <- het_imiss[which(het_imiss$IID %in%
+                                          union(fail_het$IID, fail_imiss$IID)),]
+    het_imiss$type <- 1
+    het_imiss$type[het_imiss$IID %in% fail_het$IID] <- 2
+    het_imiss$type[het_imiss$IID %in% fail_imiss$IID] <- 3
+    het_imiss$type[het_imiss$IID %in%
+                       intersect(fail_het$IID, fail_imiss$IID)] <- 4
+    het_imiss$type <- as.factor(het_imiss$type)
+    minus_sd <- mean(het_imiss$F) - 1:5*(sd(het_imiss$F))
+    plus_sd <- mean(het_imiss$F) + 1:5*(sd(het_imiss$F))
+    p_het_imiss <- ggplot()
+    p_het_imiss <- p_het_imiss + geom_point(data=het_imiss,
+                             aes(x=het_imiss$logF_MISS, y=het_imiss$F,
+                                 color=type)) +
+        scale_color_manual(values=c("#666666", "#1b9e77", "#d95f02",
+                                    "#7570b3"), guide=FALSE) +
+        xlab("Proportion of missing SNPs") +
+        ylab("Heterozygosity rate") +
+        ggtitle("Heterozygosity by Missingness across samples") +
+        geom_hline(yintercept=c(minus_sd[1:3], plus_sd[1:3]), lty=2,
+                   col="azure4") +
+        scale_y_continuous(labels=c("-5", "-4", "-3" ,"+3", "+4", "+5"),
+                         breaks=c(minus_sd[3:5], plus_sd[3:5])) +
+        scale_x_continuous(labels=c(0.0001, 0.001, 0.01, 0.03, 0.05, 0.01, 1),
+                         breaks=c(-4,-3,-2, log10(0.03), log10(0.05),-1,0)) +
+        geom_hline(yintercept=mean(het_imiss$F) - (hetTh*sd(het_imiss$F)),
+                   col="#e7298a", lty=2) +
+        geom_hline(yintercept=mean(het_imiss$F) + (hetTh*sd(het_imiss$F)),
+                   col="#e7298a", lty=2) +
+        geom_vline(xintercept=log10(imissTh), col="#e7298a", lty=2) +
+        ggrepel::geom_label_repel(data=data.frame(x=fail_het_imiss$logF_MISS,
+                                                  y=fail_het_imiss$F,
+                                                  label=fail_het_imiss$IID),
+                                  aes(x=x,y=y, label=label)) +
+        theme_bw()
+    if (interactive) {
+        print(p_het_imiss)
     }
-    return(list(fail_imiss=fail_imiss,
-                fail_het=fail_het))
+    return(list(fail_imiss=fail_imiss, fail_het=fail_het,
+                p_het_imiss=p_het_imiss))
 }
 
 #' Identification of related individuals
@@ -559,7 +635,8 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
 #' missingness rate is selected and returned as the individual failing the
 #' relatedness check. Optionally, a famfile with additional
 #' relatedness information can be provided.
-#'
+#' check_relatedness depicts all pair-wise IBD-estimates as histograms
+#' stratified by value of PI_HAT.
 #' @param qcdir [character] path/to/directory/with/QC/results containing
 #' alg.imiss and alg.genome results as returned by plink --missing and plink
 #' --genome. Users needs writing permission to qcdir.
@@ -568,16 +645,25 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
 #' @param famfile [character] path/to/file/with/additional/family/information.
 #' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
 #' pair of individuals.
-#' @param plot [logical] Should results be depicted as plots? When choosing this
-#' option, make sure you have X-forwarding/graphical interface available for
-#' interactive plotting. Alternatively, enclose calls to this function in
-#' pdf(outfile) check_relatedness(arguments) dev.off().
-#' If TRUE, depicts all pair-wise IBD-estimates as histogram.
-#' @return [data.frame] with
+#' @param interactive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
+#' other_arguments) or pdf(outfile) print(p_IBD) dev.off().
+#' @return a named [list] with i) fail_high_IBD containing a [data.frame] with
+#' and ii) iii) p_IBD, a
+#' ggplot2-object 'containing' all pair-wise IBD-estimates as histograms
+#' stratified by value of PI_HAT, which can be
+#' shown by print(p_IBD).
+#' @examples
+#' package.dir <- find.package('plinkQC')
+#' qcdir <- file.path(package.dir,'extdata')
+#' alg <- 'data'
+#' relatednessQC <- check_relatedness(qcdir=qcdir, alg=alg)
 
 check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
-                              plot=FALSE) {
-    if (!file.exists(paste(qcdir,"/", alg, ".imiss",sep=""))){
+                              interactive=FALSE) {
+    if (!file.exists(paste(qcdir,"/", alg, ".imiss", sep=""))){
         stop("plink --missing output file: ", qcdir,"/", alg,
              ".imiss does not exist.")
     }
@@ -600,12 +686,17 @@ check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
         stop("Header of", qcdir,"/", alg, ".genome is not correct. Was your
              file generated with plink --genome?")
     }
+
+    #package.dir <- find.package('plinkQC')
+    package.dir <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library/plinkQC"
+    perl.dir <- file.path(package.dir,'perl')
+
     if (!is.null(famfile)) {
-        system(paste("~/GWAS/analysis/genotyping/QC/highIBD_relatedness.pl ",
+        system(paste(perl.dir, "/highIBD_relatedness.pl ",
                      "--file ", qcdir, "/", alg," --thres ", highIBDTh,
                     " --famfile ", famfile, sep=""), wait=TRUE)
     } else {
-        system(paste("~/GWAS/analysis/genotyping/QC/highIBD_relatedness_Anderson.pl  ",
+        system(paste(perl.dir, "/highIBD_relatedness_Anderson.pl  ",
                      qcdir, "/", alg, sep=""))
     }
     is.IBD =  system(paste("cat ", qcdir, "/", alg, ".fail-IBD.IDs | wc -l",
@@ -613,27 +704,42 @@ check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
     if (is.IBD != 0 ) {
         fail_highIBD <- read.table(paste(qcdir,"/", alg, ".fail-IBD.IDs",
                                          sep=""))
-        colnames(highIBD) <- c("FID", "IID")
+        colnames(fail_highIBD) <- c("FID", "IID")
         #fail_highIBD <- dplyr::filter(genome,
         #                              (IID1 %in% highIBD$IID |
         #                               IID2 %in% highIBD$IID))
     } else {
         fail_highIBD  <- NULL
     }
-    if (plot) {
-        hist(genome$PI_HAT, col="darkblue",
-             main="Estimated IBD (PI_HAT) for All Pairs",
-             xlab="Estimated pairwise IBD", breaks=c(0.0125*0:80),
-             ylab="# of pairs")
-        abline(v=highIBDTh, lty=2, col="red")
-        genome <- genome[genome$PI_HAT > 0.05,]
-        hist(genome$PI_HAT,col="darkblue",
-             main="Estimated IBD (PI_HAT) for pairs >0.05",
-             xlab="Estimated pairwise IBD", breaks=c(0.0125*0:80),
-             ylab="# of pairs")
-            abline(v=highIBDTh, lty=2, col="red")
+
+    genome$PI_HAT_bin <- ifelse(genome$PI_HAT < 0.1, 1, 0)
+    p_allPI_HAT <- ggplot(genome, aes(PI_HAT))
+    p_allPI_HAT <- p_allPI_HAT + geom_histogram(binwidth = 0.005,
+                                            fill="#66a61e") +
+        ylab("Number of pairs") +
+        xlab("Estimated pairwise IBD (PI_HAT)") +
+        ggtitle("IBD for all sample pairs") +
+        geom_vline(xintercept=highIBDTh, lty=2, col="#e7298a") +
+        theme_bw() +
+        theme(title=element_text(size=8))
+    p_highPI_HAT <- ggplot(dplyr::filter(genome, PI_HAT_bin == 0), aes(PI_HAT))
+    p_highPI_HAT <- p_highPI_HAT + geom_histogram(binwidth = 0.005,
+                                                  fill="#e6ab02") +
+        ylab("Number of pairs") +
+        xlab("Estimated pairwise IBD (PI_HAT)") +
+        ggtitle("IBD for sample pairs with PI_HAT >0.1") +
+        geom_vline(xintercept=highIBDTh, lty=2, col="#e7298a") +
+        theme_bw() +
+        theme(title=element_text(size=8))
+    p_histo <- cowplot::plot_grid(p_allPI_HAT, p_highPI_HAT)
+    title <- cowplot::ggdraw() +
+        cowplot::draw_label("Relatedness estimated as pairwise IBD (PI_HAT)")
+    p_IBD <- cowplot::plot_grid(title, p_histo, ncol = 1,
+                                rel_heights = c(0.1, 1))
+    if (interactive) {
+        print(p_IBD)
     }
-    return(fail_highIBD)
+    return(list(fail_highIBD=fail_highIBD, p_IBD=p_IBD))
 }
 
 
@@ -650,6 +756,8 @@ check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
 #' centre falls outside the circle described by the radius r=europeanTh* maxDist
 #' are considered non-European and their IDs are returned as failing the
 #' ancestry check.
+#' check_ancestry creates a scatter plot of PC1 versus PC2 color-coded for
+#' samples of the reference populations and the study population.
 #'
 #' @param qcdir [character] path/to/directory/with/QC/results containing
 #' prefixMergedDataset.eigenvec results as returned by plink --pca.
@@ -681,20 +789,23 @@ check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
 #' IDs in refColors/refColorsFile.
 #' @param studyColor [character] Color to be used for study population if plot
 #' is TRUE.
-#' @param plot [logical] Should results be depicted as plots? When choosing this
-#' option, make sure you have X-forwarding/graphical interface available for
-#' interactive plotting. Alternatively, enclose calls to this function in
-#' pdf(outfile) check_ancestry(arguments) dev.off().
-#' If TRUE, creates scatter plot of PC1 versus PC2 color-coded for samples of
-#' reference populations and study population.
-#' @return [data.frame] with FID and IID of non-European individuals.
+#' @param interactive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
+#' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
+#' @return named ]list] with i) fail_ancestry, containing a [data.frame] with
+#' FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
+#' 'containing' a scatter plot of PC1 versus PC2 color-coded for samples of the
+#' reference populations and the study population, which can be shown by
+#' print(p_ancestry).
 check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
                            refSamples=NULL, refColors=NULL,
                            refSamplesFile=NULL, refColorsFile=NULL,
                            refSamplesIID="IID", refSamplesPop="Pop",
                            refColorsColor="Color", refColorsPop="Pop",
                            studyColor="#2c7bb6",
-                           plot=FALSE) {
+                           interactive=FALSE) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam", sep=""))){
         stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
     }
@@ -781,16 +892,16 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
     non_europeans <- dplyr::filter(data_alg, euclid_dist >
                                    (max_euclid_dist * europeanTh))
     fail_ancestry <- dplyr::select(non_europeans, FID, IID)
-    if (plot) {
-        p <- ggplot2::ggplot()
-        p <- p + ggplot2::geom_point(data=data_all,
-                                     ggplot2::aes(x=PC1, y=PC2, color=Pop)) +
-            ggplot2::scale_color_manual(values=refColors$Color,
-                                        name="Population") +
-            ggforce::geom_circle(ggplot2::aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
-                                     r=(max_euclid_dist * europeanTh))) +
-            ggplot2::theme_bw()
-        print(p)
+    p_ancestry <- ggplot2::ggplot()
+    p_ancestry <- p_ancestry + ggplot2::geom_point(data=data_all,
+                                 ggplot2::aes(x=PC1, y=PC2, color=Pop)) +
+        ggplot2::scale_color_manual(values=refColors$Color,
+                                    name="Population") +
+        ggforce::geom_circle(ggplot2::aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
+                                 r=(max_euclid_dist * europeanTh))) +
+        ggplot2::theme_bw()
+    if (interactive) {
+        print(p_ancestry)
     }
-    return(fail_ancestry)
+    return(list(fail_ancestry=fail_ancestry, p_ancestry=p_ancestry))
 }
