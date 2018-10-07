@@ -16,6 +16,8 @@ Imports:
     optparse,
     data.table (>= 1.11.0),
     ggplot2,
+    ggforce,
+    ggrepel,
     cowplot,
     UpSetR,
     dplyr

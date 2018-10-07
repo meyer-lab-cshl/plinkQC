@@ -3,7 +3,7 @@
 #' perMarkerQC checks the markers in the plink dataset for their missingness
 #' rates across samples, their deviation from Hardy-Weinberg-Equilibrium (HWE)
 #' and their minor allele frequencies (MAF). Per default, it assumes that IDs of
-#' individuals that have failed \link{\code{perIndividualQC}}have been written
+#' individuals that have failed \code{\link{perSampleQC}} have been written
 #' to qcdir/alg.failIDs and removes these individuals when computing missingness
 #' rates, HWE p-values and MAF. If the qcdir/alg.failIDs file does not exist, a
 #' message is written to stdout but the analyses will continue for all samples
@@ -31,14 +31,16 @@
 #' @param path2plink [character] Absolute path to where external plink software
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return named [list] with i) SNP_missingness containing a [vector] with
-#' SNP IDs failing the missingness threshold lmissTh, ii) hew containing a
+#' SNP IDs failing the missingness threshold lmissTh, ii) hwe containing a
 #' [vector] with SNP IDs failing the HWE exact test threshold hweTh and iii)
 #' maf containing a [vector] with SNPs failing the MAF threshold mafTh.
 #' @details perMarkerQC wraps around the marker QC functions
-#' \link{\code{check_snp_missingness}}, \link{\code{check_hwe}} and
-#' \link{\code{check_maf}}. For details on the parameters and outputs, check
+#' \code{\link{check_snp_missingness}}, \code{\link{check_hwe}} and
+#' \code{\link{check_maf}}. For details on the parameters and outputs, check
 #' these function documentations.
+#' @export
 perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
                         lmissTh=0.01, interactive=FALSE, verbose=TRUE,
                         path2plink=NULL) {
@@ -65,7 +67,7 @@ perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
 #'
 #' Uses plink --remove alg.fail.IDs --missing --freq to calculate the rates of
 #' missing genotype calls and frequency for all variants in the individuals that
-#' passed the perIndividualQC. Depicts SNP missingness rates (stratified by
+#' passed the perSampleQC. Depicts SNP missingness rates (stratified by
 #' minor allele frequency) as histograms.
 #'
 #' @param qcdir [character] /path/to/directory/with/QC/results containing
@@ -91,6 +93,7 @@ perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
 #' (Number of potentially valid call(s)), F_MISS (Missing call rate) for all
 #' SNPs failing the lmissTh and ii) p_lmiss, a ggplot2-object 'containing' the
 #' SNP missingness histogram which can be shown by (print(p_lmiss)).
+#' @export
 check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
                                   path2plink=NULL) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
@@ -103,19 +106,20 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
     checkPlink(path2plink)
+    if (!is.null(path2plink)) paste(gsub("/$", "", path2plink), "/", sep="")
     if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividual QC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
                 "check_SNP_missingness for all samples in ", qcdir,"/", alg,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "/plink --bfile ", qcdir, "/", alg,
+        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --missing ",
                      "--freq ",
                      "--out ", qcdir, "/", alg, suffix, sep=""))
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "/plink --bfile ", qcdir, "/", alg,
+        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --remove ", qcdir ,"/", alg, ".fail.IDs --missing ",
                      "--freq ",
                      "--out ", qcdir, "/", alg, suffix, sep=""))
@@ -128,7 +132,8 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
                   header=TRUE, as.is=TRUE)
     lmiss_frq <- merge(lmiss, frq)
     lmiss_frq$MAF_bin <- ifelse(lmiss_frq$MAF < 0.05, 1, 0)
-    p_highMAF <- ggplot(dplyr::filter(lmiss_frq, MAF_bin == 0), aes(F_MISS))
+    p_highMAF <- ggplot(dplyr::filter_(lmiss_frq, ~MAF_bin == 0),
+                        aes_string('F_MISS'))
     p_highMAF <- p_highMAF + geom_histogram(binwidth = 0.005,
                                             fill="#66a61e") +
         ylab("Number of SNPs") +
@@ -137,7 +142,8 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
         geom_vline(xintercept=lmissTh, lty=2, col="red") +
         theme_bw() +
         theme(title=element_text(size=10))
-    p_lowMAF <- ggplot(dplyr::filter(lmiss_frq, MAF_bin == 1), aes(F_MISS))
+    p_lowMAF <- ggplot(dplyr::filter_(lmiss_frq, ~MAF_bin == 1),
+                       aes_string('F_MISS'))
     p_lowMAF <- p_lowMAF + geom_histogram(binwidth = 0.005,
                                           fill="#e6ab02") +
         ylab("Number of SNPs") +
@@ -159,7 +165,7 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #'
 #' Uses plink --remove alg.fail.IDs --hwe to calculate the observed and expected
 #' heterozygote frequencies per SNP in the individuals that
-#' passed the perIndividualQC and compute the deviation of the frequencies from
+#' passed the perSampleQC and compute the deviation of the frequencies from
 #' Hardy-Weinberg equilibrium (HWE) by HWE exact test.
 #' The p-values of the HWE exact test are displayed as histograms (stratified by
 #' all and low p-values), where the hweTh is used to depict the QC cut-off for
@@ -188,6 +194,7 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' for all SNPs that failed the hweTh and ii) p_hwe, a ggplot2-object
 #' 'containing' the HWE p-value distribution histogram which can be shown by
 #' (print(p_hwe)).
+#' @export
 check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
                       path2plink=NULL) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
@@ -200,26 +207,28 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
     checkPlink(path2plink)
+    if (!is.null(path2plink)) paste(gsub("/$", "", path2plink), "/", sep="")
     if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
-        message("File with individuals that failed perIndividual QC: ",
+        message("File with individuals that failed perSampleQC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
                 "check_HWE for all samples in ", qcdir,"/", alg,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "/plink --bfile ", qcdir, "/", alg,
-                     " --hardy ",
-                     "--out ", qcdir, "/", alg, suffix, sep=""))
+        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
+                     " --hardy",
+                     " --out ", qcdir, "/", alg, suffix, sep=""))
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "/plink --bfile ", qcdir, "/", alg,
-                     " --remove ", qcdir, "/", alg, ".fail.IDs --hardy ",
-                     "--out ", qcdir, "/", alg, suffix, sep=""))
+        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
+                     " --remove ", qcdir, "/", alg, ".fail.IDs --hardy",
+                     " --out ", qcdir, "/", alg, suffix, sep=""))
     }
     hwe <- read.table(paste(qcdir, "/", alg, suffix, ".hwe", sep=""),
                        header=TRUE, as.is=TRUE)
     hwe <- hwe[grepl("ALL", hwe$TEST),]
     hwe$P_bin <- ifelse(hwe$P < 0.01, 1, 0)
-    p_allP <- ggplot(hwe, aes(-log10(P)))
+    hwe$minus_log10P <- -log10(hwe$P)
+    p_allP <- ggplot(hwe, aes_string('minus_log10P'))
     p_allP <- p_allP + geom_histogram(binwidth = 0.5,
                                       fill="#66a61e") +
         ylab("Number of SNPs") +
@@ -228,7 +237,8 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
         geom_vline(xintercept=-log10(hweTh), lty=2, col="red") +
         theme_bw() +
         theme(title=element_text(size=10))
-    p_lowP <- ggplot(dplyr::filter(hwe, P_bin == 1), aes(-log10(P)))
+    p_lowP <- ggplot(dplyr::filter_(hwe, ~P_bin == 1),
+                     aes_string('minus_log10P'))
     p_lowP <- p_lowP + geom_histogram(binwidth = 0.5,
                                             fill="#e6ab02") +
         ylab("Number of SNPs") +
@@ -267,12 +277,14 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' @param path2plink [character] Absolute path to where external plink software
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return named list with i) fail_maf containing a [data.frame] with CHR
 #' (Chromosome code), SNP (Variant identifier), A1 (Allele 1; usually minor), A2
 #' (Allele 2; usually major), MAF (Allele 1 frequency), NCHROBS (Number of
 #' allele observations) for all SNPs that failed the mafTh/macTh and ii) p_maf,
 #' a ggplot2-object 'containing' the MAF distribution histogram which can be
 #' shown by (print(p_maf)).
+#' @export
 check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
                       interactive=FALSE, path2plink=NULL) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
@@ -285,21 +297,22 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
     checkPlink(path2plink)
-    if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
-        message("File with individuals that failed perIndividual QC: ",
+    if (!is.null(path2plink)) paste(gsub("/$", "", path2plink), "/", sep="")
+    if (!file.exists(paste(qcdir, "/", alg, ".fail.IDs",sep=""))){
+        message("File with individuals that failed perSampleQC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
                 "check_maf for all samples in ", qcdir,"/", alg,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "/plink --noweb --bfile ", qcdir, "/", alg,
-                     " --freq --make-bed ",
-                     "--out ", qcdir, "/", alg, suffix, sep=""))
+        system(paste(path2plink, "plink --noweb --bfile ", qcdir, "/", alg,
+                     " --freq --make-bed",
+                     " --out ", qcdir, "/", alg, suffix, sep=""))
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "/plink --noweb --bfile ", qcdir, "/", alg,
-                     " --remove ", qcdir ,"/", alg, ".fail.IDs --freq ",
-                     "--make-bed ",
-                     "--out ", qcdir, "/", alg, suffix, sep=""))
+        system(paste(path2plink, "plink --noweb --bfile ", qcdir, "/", alg,
+                     " --remove ", qcdir ,"/", alg, ".fail.IDs --freq",
+                     " --make-bed",
+                     " --out ", qcdir, "/", alg, suffix, sep=""))
     }
     maf <- read.table(paste(qcdir,"/",alg, suffix, ".frq",sep=""),
                        header=TRUE, as.is=TRUE)
@@ -322,7 +335,7 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
                     mafTh, ")")
         }
     }
-    p_maf <- ggplot(maf, aes(MAF))
+    p_maf <- ggplot(maf, aes_string('MAF'))
     p_maf <- p_maf + geom_histogram(binwidth = 0.01,
                                             fill="#999999") +
         ylab("Number of SNPs") +
