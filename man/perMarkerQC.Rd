@@ -32,13 +32,15 @@ available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_marker) via ggplot2::ggsave(p=p_marker,
 other_arguments) or pdf(outfile) print(p_marker) dev.off().}
 
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+
 \item{path2plink}{[character] Absolute path to where external plink software
 \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 assumed that PATH set-up works and plink will be found by system("plink").}
 }
 \value{
 named [list] with i) SNP_missingness containing a [vector] with
-SNP IDs failing the missingness threshold lmissTh, ii) hew containing a
+SNP IDs failing the missingness threshold lmissTh, ii) hwe containing a
 [vector] with SNP IDs failing the HWE exact test threshold hweTh and iii)
 maf containing a [vector] with SNPs failing the MAF threshold mafTh.
 }
@@ -46,7 +48,7 @@ maf containing a [vector] with SNPs failing the MAF threshold mafTh.
 perMarkerQC checks the markers in the plink dataset for their missingness
 rates across samples, their deviation from Hardy-Weinberg-Equilibrium (HWE)
 and their minor allele frequencies (MAF). Per default, it assumes that IDs of
-individuals that have failed \link{\code{perIndividualQC}}have been written
+individuals that have failed \code{\link{perSampleQC}} have been written
 to qcdir/alg.failIDs and removes these individuals when computing missingness
 rates, HWE p-values and MAF. If the qcdir/alg.failIDs file does not exist, a
 message is written to stdout but the analyses will continue for all samples
@@ -58,7 +60,7 @@ distribution as a histogram.
 }
 \details{
 perMarkerQC wraps around the marker QC functions
-\link{\code{check_snp_missingness}}, \link{\code{check_hwe}} and
-\link{\code{check_maf}}. For details on the parameters and outputs, check
+\code{\link{check_snp_missingness}}, \code{\link{check_hwe}} and
+\code{\link{check_maf}}. For details on the parameters and outputs, check
 these function documentations.
 }

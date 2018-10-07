@@ -14,8 +14,8 @@ perSampleQC(qcdir, alg, do.check_sex = TRUE, maleTh = 0.8,
   europeanTh = 1.5, refSamples = NULL, refColors = NULL,
   refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
   refSamplesPop = "Pop", refColorsColor = "Color",
-  refColorsPop = "Pop", studyColor = "#2c7bb6", interactive = FALSE,
-  verbose = TRUE)
+  refColorsPop = "Pop", studyColor = "#2c7bb6", path2plink = NULL,
+  interactive = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing the
@@ -37,6 +37,10 @@ males.}
 
 \item{femaleTh}{[double] Threshold of X-chromosomal heterozygosity rate for
 females.}
+
+\item{externalSex}{[data.frame, optional] with sample IDs [externalSexID] and
+sex [externalSexSex] to double check if external and PEDSEX data (often
+processed at different centers) match.}
 
 \item{externalMale}{[integer/character] Identifier for 'male' in externalSex.}
 
@@ -85,14 +89,27 @@ considered to be of European descent and samples outside this radius of
 non-European descent. The radius is computed as the maximum Euclidean distance
 of reference Europeans to the centre of reference European samples.}
 
+\item{refSamples}{[data.frame] Dataframe with sample identifiers
+[refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
+population identifier [refSamplesPop] corresponding to population IDs
+[refColorsPop] in refColorsfile/refColors. Either refSamples or
+refSamplesFile have to be specified.}
+
+\item{refColors}{[data.frame, optional] Dataframe with population IDs in
+column [refColorsPop] and corresponding color-code for PCA plot in column
+[refColorsColor]. If not provided and is.null(refColorsFile) default colors
+are used.}
+
 \item{refSamplesFile}{[character] /Path/to/File/with/reference samples. Needs
 columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 corresponding to population IDs [refColorsPop] in refColorsfile/refColors.}
 
 \item{refColorsFile}{[character, optional]
-/Path/to/File/with/Population/Colors; if not provided and is.null(refColors)
-ggplot default colors for qualitative scale are used if plot is TRUE.}
+/Path/to/File/with/Population/Colors cotaining population IDs in column
+[refColorsPop] and corresponding color-code for PCA plot in column
+[refColorsColor].If not provided and is.null(refColors) default colors for
+are used.}
 
 \item{refSamplesIID}{[character] Column name of reference sample IDs in
 refSamples/refSamplesFile.}
@@ -109,6 +126,10 @@ IDs in refColors/refColorsFile.}
 \item{studyColor}{[character] Color to be used for study population if plot
 is TRUE.}
 
+\item{path2plink}{[character] Absolute path to where external plink software
+\url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
+assumed that PATH set-up works and plink will be found by system("plink").}
+
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -123,9 +144,7 @@ and iv) creates a scatter plot of PC1 versus PC2 color-coded for samples of
 reference populations and study population (if do.check_relatedness is set to
 TRUE).}
 
-\item{path2plink}{[character] Absolute path to where external plink software
-\url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").}
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \value{
 named [list] with i) sample_missingness containing a [vector] with

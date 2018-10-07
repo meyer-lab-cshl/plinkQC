@@ -20,6 +20,8 @@ alg.fam.}
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
 and macTh are specied, macTh is used (macTh = mafTh\*2\*NrSamples)}
 
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and

@@ -7,7 +7,7 @@
 check_sex(qcdir, alg, externalSex = NULL, maleTh = 0.8,
   femaleTh = 0.2, interactive = FALSE, fixMixup = FALSE,
   externalFemale = "F", externalMale = "M", externalSexSex = "Sex",
-  externalSexID = "IID", path2plink = NULL)
+  externalSexID = "IID", verbose = FALSE, path2plink = NULL)
 }
 \arguments{
 \item{qcdir}{[character] path/to/directory/with/QC/results containing
@@ -16,6 +16,10 @@ permission to qcdir.}
 
 \item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 alg.fam and alg.sexcheck.}
+
+\item{externalSex}{[data.frame, optional] with sample IDs [externalSexID] and
+sex [externalSexSex] to double check if external and PEDSEX data (often
+processed at different centers) match.}
 
 \item{maleTh}{[double] Threshold of X-chromosomal heterozygosity rate for
 males.}
@@ -44,6 +48,8 @@ information in externalSex.}
 \item{externalSexID}{[character] Column identifier for column containing ID
 information in externalSex.}
 
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+
 \item{path2plink}{[character] Absolute path to where external plink software
 \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 assumed that PATH set-up works and plink will be found by system("plink").
@@ -66,7 +72,7 @@ variants).
 Mismatching SNPSEX and PEDSEX IDs can indicate plating errors, sample-mixup
 or generally samples with poor genotyping. In the latter case, these IDs are
 likely to fail other QC steps as well.
-Optionally, an external file with sample IDs [ID] and sex [Sex] can be
+Optionally, an extra data.frame (externalSex) with sample IDs and sex can be
 provided to double check if external and PEDSEX data (often processed at
 different centers) match. If a mismatch between PEDSEX and SNPSEX was
 detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be

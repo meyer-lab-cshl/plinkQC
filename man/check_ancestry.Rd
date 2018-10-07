@@ -28,14 +28,27 @@ considered to be of European descent and samples outside this radius of
 non-European descent. The radius is computed as the maximum Euclidean distance
 of reference Europeans to the centre of reference European samples.}
 
+\item{refSamples}{[data.frame] Dataframe with sample identifiers
+[refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
+population identifier [refSamplesPop] corresponding to population IDs
+[refColorsPop] in refColorsfile/refColors. Either refSamples or
+refSamplesFile have to be specified.}
+
+\item{refColors}{[data.frame, optional] Dataframe with population IDs in
+column [refColorsPop] and corresponding color-code for PCA plot in column
+[refColorsColor]. If not provided and is.null(refColorsFile) default colors
+are used.}
+
 \item{refSamplesFile}{[character] /Path/to/File/with/reference samples. Needs
 columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 corresponding to population IDs [refColorsPop] in refColorsfile/refColors.}
 
 \item{refColorsFile}{[character, optional]
-/Path/to/File/with/Population/Colors; if not provided and is.null(refColors)
-ggplot default colors for qualitative scale are used if plot is TRUE.}
+/Path/to/File/with/Population/Colors cotaining population IDs in column
+[refColorsPop] and corresponding color-code for PCA plot in column
+[refColorsColor].If not provided and is.null(refColors) default colors for
+are used.}
 
 \item{refSamplesIID}{[character] Column name of reference sample IDs in
 refSamples/refSamplesFile.}

@@ -4,7 +4,35 @@
 \alias{clean_data}
 \title{Create plink dataset with samples and markers passing quality control}
 \usage{
-clean_data(qcdir, alg, macTh = 20, mafTh = 0.01, highIBDTh = NULL)
+clean_data(qcdir, alg, lmissTh = 0.01, hweTh = 1e-05, macTh = 20,
+  mafTh = 0.01, filterRelated = FALSE, path2plink = NULL,
+  verbose = FALSE)
+}
+\arguments{
+\item{qcdir}{[character] /path/to/directory/with/QC/results containing
+alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
+individuals that failed QC. User needs writing permission to qcdir.}
+
+\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
+alg.fam.}
+
+\item{lmissTh}{[double] Threshold for acceptable variant missing rate across
+samples.}
+
+\item{hweTh}{[double] Significance threshold for deviation from HWE.}
+
+\item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
+and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)}
+
+\item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
+
+\item{filterRelated}{[logical]}
+
+\item{path2plink}{[character] Absolute path to where external plink software
+\url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
+assumed that PATH set-up works and plink will be found by system("plink").}
+
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \description{
 Remove samples that fail per individual QC
