@@ -5,9 +5,13 @@ use strict;
 my %imiss;
 my %removed;
 
+my $verbose = $ARGV[1];
+
 open IMISS, '<', $ARGV[0].".imiss"
         or die "Cannot open genotypes file (".$ARGV[0].".genome): $!\n";
-print "Reading PLINK .imiss file ".$ARGV[0].".imiss\n";
+if($verbose eq "verbose") {
+    print "Reading PLINK .imiss file ".$ARGV[0].".imiss\n";
+}
 while(<IMISS>){
     s/^\s+//;
     my @fields = split /\s+/, $_;
@@ -19,7 +23,9 @@ open GENOME, '<', $ARGV[0].".genome"
 # Adapted output file name
 #open OUT, '>', "fail-IBD-QC.txt";
 open OUT, '>', $ARGV[0].".fail-IBD.IDs";
-print "Reading PLINK .genome file ".$ARGV[0].".genome\n";
+if($verbose eq "verbose") {
+    print "Reading PLINK .genome file ".$ARGV[0].".genome\n";
+}
 while(<GENOME>){
     s/^\s+//;
     my @fields = split /\s+/, $_;
