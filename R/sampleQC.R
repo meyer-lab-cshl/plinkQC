@@ -169,7 +169,7 @@ perSampleQC <- function(qcdir, alg,
         #    write.table(fail_relatedness[,1:2]),],
         #                file=paste(qcdir,"/", alg,".fail_IBD.txt", sep=""),
         #                row.names=FALSE, quote=FALSE, col.names=TRUE, sep="\t")
-        }
+        #}
     }
     if (do.check_ancestry) {
         if (verbose) {
@@ -613,7 +613,7 @@ check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
     if (is.IBD != 0 ) {
         fail_highIBD <- read.table(paste(qcdir,"/", alg, ".fail-IBD.IDs",
                                          sep=""))
-        colnames(highIBD) <- c("FID", "IID")
+        colnames(fail_highIBD) <- c("FID", "IID")
         #fail_highIBD <- dplyr::filter(genome,
         #                              (IID1 %in% highIBD$IID |
         #                               IID2 %in% highIBD$IID))
