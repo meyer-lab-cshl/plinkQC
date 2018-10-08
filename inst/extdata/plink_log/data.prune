@@ -1,0 +1,55 @@
+PLINK v1.90b6.5 64-bit (13 Sep 2018)
+Options in effect:
+  --bfile /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
+  --exclude range high-LD-regions.txt
+  --indep-pairwise 50 5 0.2
+  --out /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
+
+Hostname: hannahmbpr
+Working directory: /Users/hannah/RPackagesDevel/plinkQC/inst/extdata
+Start time: Thu Oct  4 11:08:23 2018
+
+Random number seed: 1538647703
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+10000 variants loaded from .bim file.
+200 people (89 males, 111 females) loaded from .fam.
+--exclude range: 237 variants excluded.
+--exclude range: 9763 variants remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 200 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: 354 het. haploid genotypes present (see
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.hh ); many commands
+treat these as missing.
+Total genotyping rate is 0.990555.
+9763 variants and 200 people pass filters and QC.
+Note: No phenotypes present.
+Pruned 739 variants from chromosome 1, leaving 1196.
+Pruned 62 variants from chromosome 2, leaving 628.
+Pruned 56 variants from chromosome 3, leaving 554.
+Pruned 36 variants from chromosome 4, leaving 486.
+Pruned 26 variants from chromosome 5, leaving 486.
+Pruned 36 variants from chromosome 6, leaving 488.
+Pruned 35 variants from chromosome 7, leaving 443.
+Pruned 42 variants from chromosome 8, leaving 398.
+Pruned 25 variants from chromosome 9, leaving 367.
+Pruned 40 variants from chromosome 10, leaving 428.
+Pruned 29 variants from chromosome 11, leaving 360.
+Pruned 30 variants from chromosome 12, leaving 404.
+Pruned 20 variants from chromosome 13, leaving 294.
+Pruned 9 variants from chromosome 14, leaving 243.
+Pruned 14 variants from chromosome 15, leaving 225.
+Pruned 17 variants from chromosome 16, leaving 267.
+Pruned 5 variants from chromosome 17, leaving 214.
+Pruned 11 variants from chromosome 18, leaving 231.
+Pruned 10 variants from chromosome 19, leaving 146.
+Pruned 15 variants from chromosome 20, leaving 182.
+Pruned 12 variants from chromosome 21, leaving 135.
+Pruned 9 variants from chromosome 22, leaving 125.
+Pruned 25 variants from chromosome 23, leaving 160.
+Pruning complete.  1303 of 9763 variants removed.
+Marker lists written to
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.prune.in and
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.prune.out .
+
+End time: Thu Oct  4 11:08:23 2018
