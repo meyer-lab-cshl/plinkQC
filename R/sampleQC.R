@@ -196,7 +196,7 @@ perSampleQC <- function(qcdir, alg,
     if (do.check_relatedness) {
         if (verbose) message("Identification of related individuals")
         fail_relatedness <- check_relatedness(qcdir=qcdir, alg=alg,
-                                              famfile=family,
+                                              imissTh=imissTh,
                                               highIBDTh=highIBDTh,
                                               interactive=FALSE)
         #if (!is.null(fail_relatedness)) {
@@ -235,7 +235,7 @@ perSampleQC <- function(qcdir, alg,
                  qcdir, "/", alg, ".fail.IDs", sep=""), wait=TRUE)
 
     fail_list <- list(missing_genotype=as.vector(fail_het_imiss$fail_imiss$IID),
-                      highIBD=as.vector(fail_relatedness$IID),
+                      highIBD=as.vector(fail_relatedness$failIDs$IID),
                       outlying_heterozygosity=
                           as.vector(fail_het_imiss$fail_het$IID),
                       mismatched_sex=as.vector(fail_sex$fail_sex$IID),
@@ -508,15 +508,13 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
             }
         }
     }
-    sexcheck$color <- "#1b9e77"
-    sexcheck$color[sexcheck$PEDSEX==2] <- "#d95f02"
     sexcheck$PEDSEX <- as.factor(sexcheck$PEDSEX)
     p_sexcheck <- ggplot()
     p_sexcheck <- p_sexcheck + geom_point(data=sexcheck,
                                           aes_string(x='PEDSEX', y='F',
                                                      color='PEDSEX')) +
         ggtitle("Check assigned sex versus SNP sex") +
-        scale_color_manual(values=c("#1b9e77", "#d95f02"), guide=FALSE) +
+        scale_color_manual(values=c("#377eb8", "#e41a1c"), guide=FALSE) +
         scale_x_discrete(labels=c("Male", "Female")) +
         xlab("Reported Sex (PEDSEX)") +
         ylab("ChrX heterozygosity") +
@@ -526,12 +524,12 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
                                  aes_string(x='x',y='y', label='label')) +
         geom_segment(data=data.frame(x=0.8, xend=1.2, y=maleTh,
                                      yend=maleTh),
-                     aes_string(x='x', xend='xend', y='y', yend='yend'),
-                     color="#1b9e77") +
+                     aes_string(x='x', xend='xend', y='y', yend='yend'), lty=2,
+                     color="#e7298a") +
         geom_segment(data=data.frame(x=1.8, xend=2.2, y=femaleTh,
-                                     yend=femaleTh),
+                                     yend=femaleTh), lty=2,
                      aes_string(x='x', xend='xend', y='y', yend='yend'),
-                     color="#d95f02") +
+                     color="#e7298a") +
         theme_bw()
     if (interactive) {
         print(p_sexcheck)
@@ -664,18 +662,20 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
 
 #' Identification of related individuals
 #'
-#' Evaluates and depicts results of plink --genome.
-#' plink --genome calculates identity by state (IBS) for each pair of individuals
-#' based on the average proportion of alleles shared at genotyped SNPs. The
-#' degree of recent shared ancestry, i.e. the identity by descent (IBD) can
-#' be estimated from the genome-wide IBS. The proportion of IBD between two
-#' individuals is returned by --genome as PI_HAT.
-#' check_relatedness uses two external scripts for parsing of the alg.genome
-#' files to find pairs of samples whose proportion of IBD is larger than the
-#' specified highIBDTh. Subsequently, the individual with the greater genotype
-#' missingness rate is selected and returned as the individual failing the
-#' relatedness check. Optionally, a famfile with additional
-#' relatedness information can be provided.
+#' Evaluates and depicts results of plink --genome and plink --imiss
+#' plink --genome calculates identity by state (IBS) for each pair of
+#' individuals based on the average proportion of alleles shared at genotyped
+#' SNPs. The degree of recent shared ancestry, i.e. the identity by descent
+#' (IBD) can be estimated from the genome-wide IBS. The proportion of IBD
+#' between two individuals is returned by --genome as PI_HAT.
+#' check_relatedness finds pairs of samples whose proportion of IBD is larger
+#' than the specified highIBDTh. Subsequently, for pairs of individual that do
+#' not have additional relatives in the dataset, the individual with the greater
+#' genotype missingness rate is selected and returned as the individual failing
+#' the relatedness check. For more complex family structures, the unrelated
+#' individuals per family are selected (e.g. in a parents-offspring trio, the
+#' offspring will be marked as fail, while the parents will be kept in the
+#' analysis).
 #' check_relatedness depicts all pair-wise IBD-estimates as histograms
 #' stratified by value of PI_HAT.
 #' @param qcdir [character] path/to/directory/with/QC/results containing
@@ -683,17 +683,29 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
 #' --genome. Users needs writing permission to qcdir.
 #' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 #' alg.fam, alg.genome and alg.imiss.
-#' @param famfile [character] path/to/file/with/additional/family/information.
 #' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
 #' pair of individuals.
+#' @param imissTh [double] Threshold for acceptable missing genotype rate in any
+#' individual; has to be proportion between (0,1)
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
 #' other_arguments) or pdf(outfile) print(p_IBD) dev.off().
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @return a named [list] with i) fail_high_IBD containing a [data.frame] with
-#' and ii) iii) p_IBD, a
+#' @return a named [list] with i) fail_high_IBD containing a [data.frame] of
+#' IIDs and FIDs of individuals who fail the IBDTh in columns
+#' FID1	and IID1. In addition, the following columns are returned (as originally
+#' obtained by plink --genome):
+#' FID2	(Family ID for second sample), IID2	(Individual ID for second sample),
+#' RT (Relationship type inferred from .fam/.ped file), EZ (IBD sharing expected
+#' value, based on just .fam/.ped relationship), Z0	(P(IBD=0)), Z1 (P(IBD=1)),
+#' Z2 (P(IBD=2)), PI_HAT (Proportion IBD, i.e. P(IBD=2) + 0.5*P(IBD=1)), PHE
+#' (Pairwise phenotypic code (1, 0, -1 = AA, AU, and UU pairs, respectively)),
+#' DST (IBS distance, i.e. (IBS2 + 0.5*IBS1) / (IBS0 + IBS1 + IBS2)), PPC (IBS
+#' binomial test), RATIO (HETHET : IBS0 SNP ratio (expected value 2)).
+#' and ii) failIDs containing a [data.frame] with individual IDs [IID] and
+#' family IDs [FID] of individuals failing the highIBDTh iii) p_IBD, a
 #' ggplot2-object 'containing' all pair-wise IBD-estimates as histograms
 #' stratified by value of PI_HAT, which can be
 #' shown by print(p_IBD).
@@ -704,8 +716,8 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
 #' alg <- 'data'
 #' relatednessQC <- check_relatedness(qcdir=qcdir, alg=alg)
 
-check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
-                              interactive=FALSE, verbose=FALSE) {
+check_relatedness <- function(qcdir, alg, highIBDTh=0.1875,
+                              imissTh=0.03, interactive=FALSE, verbose=FALSE) {
     if (!file.exists(paste(qcdir,"/", alg, ".imiss", sep=""))){
         stop("plink --missing output file: ", qcdir,"/", alg,
              ".imiss does not exist.")
@@ -731,31 +743,13 @@ check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
              file generated with plink --genome?")
     }
 
-    #package.dir <- find.package('plinkQC')
-    package.dir <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library/plinkQC"
-    perl.dir <- file.path(package.dir,'perl')
-
-    if (!is.null(famfile)) {
-        system(paste(perl.dir, "/highIBD_relatedness.pl ",
-                     "--file ", qcdir, "/", alg," --thres ", highIBDTh,
-                    " --famfile ", famfile, sep=""), wait=TRUE)
-    } else {
-        verbose_string <- ifelse(verbose, "verbose", "silent")
-        system(paste(perl.dir, "/highIBD_relatedness_Anderson.pl  ",
-                     qcdir, "/", alg, " ", verbose_string, sep=""))
-    }
-    is.IBD =  system(paste("cat ", qcdir, "/", alg, ".fail-IBD.IDs | wc -l",
-                               sep=""), intern=TRUE)
-    if (is.IBD != 0 ) {
-        fail_highIBD <- read.table(paste(qcdir,"/", alg, ".fail-IBD.IDs",
-                                         sep=""))
-        colnames(fail_highIBD) <- c("FID", "IID")
-        #fail_highIBD <- dplyr::filter(genome,
-        #                              (IID1 %in% highIBD$IID |
-        #                               IID2 %in% highIBD$IID))
-    } else {
-        fail_highIBD  <- NULL
-    }
+    fail_highIBD <- relatednessFilter(relatedness=genome,  otherCriterion=imiss,
+                                      relatednessTh=highIBDTh,
+                                      relatednessFID1="FID1",
+                                      relatednessFID2="FID2",
+                                      otherCriterionTh=imissTh,
+                                      otherCriterionThDirection="gt",
+                                      otherCriterionMeasure="F_MISS" )
 
     genome$PI_HAT_bin <- ifelse(genome$PI_HAT < 0.1, 1, 0)
     p_allPI_HAT <- ggplot(genome, aes_string('PI_HAT'))
@@ -785,7 +779,8 @@ check_relatedness <- function(qcdir, alg, famfile=NULL, highIBDTh=0.1875,
     if (interactive) {
         print(p_IBD)
     }
-    return(list(fail_highIBD=fail_highIBD, p_IBD=p_IBD))
+    return(list(fail_highIBD=fail_highIBD$relatednessFails,
+                failIDs=fail_highIBD$failIDs, p_IBD=p_IBD))
 }
 
 
@@ -876,7 +871,7 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
         stop("plink --pca output file: ", qcdir,"/", prefixMergedDataset,
              ".eigenvec does not exist.")
     }
-    testNumerics(numbers=europeanT, positives=europeanTh)
+    testNumerics(numbers=europeanTh, positives=europeanTh)
     pca_data <- data.table::fread(paste(qcdir, "/", prefixMergedDataset,
                                         ".eigenvec", sep=""),
                                   stringsAsFactors=FALSE, data.table=FALSE)
