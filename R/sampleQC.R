@@ -199,15 +199,12 @@ perSampleQC <- function(qcdir, alg,
                                               imissTh=imissTh,
                                               highIBDTh=highIBDTh,
                                               interactive=FALSE)
-        #if (!is.null(fail_relatedness)) {
-        #    write.table(fail_relatedness[,1:2]),],
-        #                file=paste(qcdir,"/", alg,".fail_IBD.txt", sep=""),
-        #                row.names=FALSE, quote=FALSE, col.names=TRUE, sep="\t")
-        #}
-<<<<<<< HEAD
-=======
+        if (!is.null(fail_relatedness$failIDs)) {
+           write.table(fail_relatedness$failIDs,
+                        file=paste(qcdir,"/", alg,".fail-IBD.IDs", sep=""),
+                        row.names=FALSE, quote=FALSE, col.names=TRUE, sep="\t")
+        }
         p_relatedness <- fail_relatedness$p_IBD
->>>>>>> b8ddbcf67e1170fc73f3bcde6553de5d5477ee4f
     }
     if (do.check_ancestry) {
         if (verbose) {
@@ -226,8 +223,8 @@ perSampleQC <- function(qcdir, alg,
                                         refColorsPop=refColorsPop,
                                         studyColor=studyColor,
                                         interactive=FALSE)
-        if (!is.null(fail_ancestry)) {
-            write.table(fail_ancestry,
+        if (!is.null(fail_ancestry$fail_ancestry)) {
+            write.table(fail_ancestry$fail_ancestry,
                         file=paste(qcdir, "/",alg,".fail-ancestry.IDs",sep=""),
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
         }
@@ -467,7 +464,7 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
                 })
         # SNPSEX != (Sex in pheno file, PEDSEX)
         fail_sex <-
-           dplyr::select_(sexcheck_fuse, ~FID, ~IID, ~Sex, P~EDSEX,
+           dplyr::select_(sexcheck_fuse, ~FID, ~IID, ~Sex, ~PEDSEX,
                          ~SNPSEX, ~F)[which(sex_mismatch),]
         if (nrow(fail_sex) == 0) {
             fail_sex <- NULL
@@ -698,11 +695,11 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return a named [list] with i) fail_high_IBD containing a [data.frame] of
 #' IIDs and FIDs of individuals who fail the IBDTh in columns
-#' FID1	and IID1. In addition, the following columns are returned (as originally
+#' FID1 and IID1. In addition, the following columns are returned (as originally
 #' obtained by plink --genome):
-#' FID2	(Family ID for second sample), IID2	(Individual ID for second sample),
+#' FID2 (Family ID for second sample), IID2 (Individual ID for second sample),
 #' RT (Relationship type inferred from .fam/.ped file), EZ (IBD sharing expected
-#' value, based on just .fam/.ped relationship), Z0	(P(IBD=0)), Z1 (P(IBD=1)),
+#' value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 (P(IBD=1)),
 #' Z2 (P(IBD=2)), PI_HAT (Proportion IBD, i.e. P(IBD=2) + 0.5*P(IBD=1)), PHE
 #' (Pairwise phenotypic code (1, 0, -1 = AA, AU, and UU pairs, respectively)),
 #' DST (IBS distance, i.e. (IBS2 + 0.5*IBS1) / (IBS0 + IBS1 + IBS2)), PPC (IBS
