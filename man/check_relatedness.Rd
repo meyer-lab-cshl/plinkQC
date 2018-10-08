@@ -4,8 +4,8 @@
 \alias{check_relatedness}
 \title{Identification of related individuals}
 \usage{
-check_relatedness(qcdir, alg, famfile = NULL, highIBDTh = 0.1875,
-  interactive = FALSE)
+check_relatedness(qcdir, alg, highIBDTh = 0.1875, imissTh = 0.03,
+  interactive = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{qcdir}{[character] path/to/directory/with/QC/results containing
@@ -15,37 +15,53 @@ alg.imiss and alg.genome results as returned by plink --missing and plink
 \item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 alg.fam, alg.genome and alg.imiss.}
 
-\item{famfile}{[character] path/to/file/with/additional/family/information.}
-
 \item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
 pair of individuals.}
+
+\item{imissTh}{[double] Threshold for acceptable missing genotype rate in any
+individual; has to be proportion between (0,1)}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
 other_arguments) or pdf(outfile) print(p_IBD) dev.off().}
+
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \value{
-a named [list] with i) fail_high_IBD containing a [data.frame] with
-and ii) iii) p_IBD, a
+a named [list] with i) fail_high_IBD containing a [data.frame] of
+IIDs and FIDs of individuals who fail the IBDTh in columns
+FID1	and IID1. In addition, the following columns are returned (as originally
+obtained by plink --genome):
+FID2	(Family ID for second sample), IID2	(Individual ID for second sample),
+RT (Relationship type inferred from .fam/.ped file), EZ (IBD sharing expected
+value, based on just .fam/.ped relationship), Z0	(P(IBD=0)), Z1 (P(IBD=1)),
+Z2 (P(IBD=2)), PI_HAT (Proportion IBD, i.e. P(IBD=2) + 0.5*P(IBD=1)), PHE
+(Pairwise phenotypic code (1, 0, -1 = AA, AU, and UU pairs, respectively)),
+DST (IBS distance, i.e. (IBS2 + 0.5*IBS1) / (IBS0 + IBS1 + IBS2)), PPC (IBS
+binomial test), RATIO (HETHET : IBS0 SNP ratio (expected value 2)).
+and ii) failIDs containing a [data.frame] with individual IDs [IID] and
+family IDs [FID] of individuals failing the highIBDTh iii) p_IBD, a
 ggplot2-object 'containing' all pair-wise IBD-estimates as histograms
 stratified by value of PI_HAT, which can be
 shown by print(p_IBD).
 }
 \description{
-Evaluates and depicts results of plink --genome.
-plink --genome calculates identity by state (IBS) for each pair of individuals
-based on the average proportion of alleles shared at genotyped SNPs. The
-degree of recent shared ancestry, i.e. the identity by descent (IBD) can
-be estimated from the genome-wide IBS. The proportion of IBD between two
-individuals is returned by --genome as PI_HAT.
-check_relatedness uses two external scripts for parsing of the alg.genome
-files to find pairs of samples whose proportion of IBD is larger than the
-specified highIBDTh. Subsequently, the individual with the greater genotype
-missingness rate is selected and returned as the individual failing the
-relatedness check. Optionally, a famfile with additional
-relatedness information can be provided.
+Evaluates and depicts results of plink --genome and plink --imiss
+plink --genome calculates identity by state (IBS) for each pair of
+individuals based on the average proportion of alleles shared at genotyped
+SNPs. The degree of recent shared ancestry, i.e. the identity by descent
+(IBD) can be estimated from the genome-wide IBS. The proportion of IBD
+between two individuals is returned by --genome as PI_HAT.
+check_relatedness finds pairs of samples whose proportion of IBD is larger
+than the specified highIBDTh. Subsequently, for pairs of individual that do
+not have additional relatives in the dataset, the individual with the greater
+genotype missingness rate is selected and returned as the individual failing
+the relatedness check. For more complex family structures, the unrelated
+individuals per family are selected (e.g. in a parents-offspring trio, the
+offspring will be marked as fail, while the parents will be kept in the
+analysis).
 check_relatedness depicts all pair-wise IBD-estimates as histograms
 stratified by value of PI_HAT.
 }
