@@ -17,12 +17,13 @@ alg.imiss and alg.het results as returned by plink --missing and plink
 alg.fam, alg.het and alg.imiss.}
 
 \item{imissTh}{[double] Threshold for acceptable missing genotype rate in any
-individual}
+individual; has to be proportion between (0,1)}
 
 \item{hetTh}{[double] Threshold for acceptable deviation from mean
 heterozygosity in any individual. Expressed as multiples of standard
 deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
-hetTh*sd(het) will be returned as failing heterozygosity check.}
+hetTh*sd(het) will be returned as failing heterozygosity check; has to be
+larger than 0.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
