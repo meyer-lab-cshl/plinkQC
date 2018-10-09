@@ -239,7 +239,7 @@ perSampleQC <- function(qcdir, alg,
                       outlying_heterozygosity=
                           as.vector(fail_het_imiss$fail_het$IID),
                       mismatched_sex=as.vector(fail_sex$fail_sex$IID),
-                      ancestry=as.vector(fail_ancestry$IID))
+                      ancestry=as.vector(fail_ancestry$fail_ancestry$IID))
 
     plots_sampleQC <- list(p_sexcheck, p_het_imiss, p_relatedness, p_ancestry)
     plots_sampleQC <- plots_sampleQC[sapply(plots_sampleQC,
@@ -514,8 +514,6 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
                                           aes_string(x='PEDSEX', y='F',
                                                      color='PEDSEX')) +
         ggtitle("Check assigned sex versus SNP sex") +
-        scale_color_manual(values=c("#377eb8", "#e41a1c"), guide=FALSE) +
-        scale_x_discrete(labels=c("Male", "Female")) +
         xlab("Reported Sex (PEDSEX)") +
         ylab("ChrX heterozygosity") +
         ggrepel::geom_label_repel(data=data.frame(x=fail_sex$PEDSEX,
@@ -531,6 +529,17 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
                      aes_string(x='x', xend='xend', y='y', yend='yend'),
                      color="#e7298a") +
         theme_bw()
+    if (length(unique(sexcheck$PEDSEX)) == 2) {
+        p_sexcheck <- p_sexcheck +
+            scale_color_manual(values=c("#377eb8", "#e41a1c"),
+                                        guide=FALSE) +
+        scale_x_discrete(labels=c("Male", "Female"))
+    } else if (length(unique(sexcheck$PEDSEX)) == 3 ) {
+        p_sexcheck <- p_sexcheck +
+            scale_color_manual(values=c("#999999", "#377eb8", "#e41a1c"),
+                                        guide=FALSE) +
+            scale_x_discrete(labels=c("Unassigned", "Male", "Female"))
+    }
     if (interactive) {
         print(p_sexcheck)
     }
@@ -651,7 +660,8 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
         ggrepel::geom_label_repel(data=data.frame(x=fail_het_imiss$logF_MISS,
                                                   y=fail_het_imiss$F,
                                                   label=fail_het_imiss$IID),
-                                  aes_string(x='x',y='y', label='label')) +
+                                  aes_string(x='x',y='y', label='label'),
+                                  size=1.2) +
         theme_bw()
     if (interactive) {
         print(p_het_imiss)
@@ -923,7 +933,7 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
     data_all <- merge(pca_data, refSamples, by="IID", all.x=TRUE)
     data_all$Pop[is.na(data_all$Pop)] <- alg
     data_all$Color[is.na(data_all$Color)] <- studyColor
-    data_all <- data_all[order(data_all$Pop, decreasing=TRUE),]
+    data_all <- data_all[order(data_all$Pop, decreasing=FALSE),]
 
     refColors <- rbind(refColors,c(alg, studyColor))
     data_all$Color <- as.factor(data_all$Color)
@@ -952,9 +962,11 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
                                                      color='Pop')) +
         scale_color_manual(values=refColors$Color,
                                     name="Population") +
+        guides(color=guide_legend(nrow=2, byrow=TRUE)) +
         ggforce::geom_circle(aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
                                  r=(max_euclid_dist * europeanTh))) +
-        theme_bw()
+        theme_bw() +
+        theme(legend.position='bottom')
     if (interactive) {
         print(p_ancestry)
     }
