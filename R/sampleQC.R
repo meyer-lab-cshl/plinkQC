@@ -519,7 +519,8 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
         ggrepel::geom_label_repel(data=data.frame(x=fail_sex$PEDSEX,
                                                  y=fail_sex$F,
                                                  label=fail_sex$IID),
-                                 aes_string(x='x',y='y', label='label')) +
+                                 aes_string(x='x',y='y', label='label'),
+                                 size=1.2) +
         geom_segment(data=data.frame(x=0.8, xend=1.2, y=maleTh,
                                      yend=maleTh),
                      aes_string(x='x', xend='xend', y='y', yend='yend'), lty=2,
@@ -644,7 +645,7 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
         scale_color_manual(values=c("#666666", "#1b9e77", "#d95f02",
                                     "#7570b3"), guide=FALSE) +
         xlab("Proportion of missing SNPs") +
-        ylab("Heterozygosity rate") +
+        ylab("Heterozygosity rate (and sd)") +
         ggtitle("Heterozygosity by Missingness across samples") +
         geom_hline(yintercept=c(minus_sd[1:3], plus_sd[1:3]), lty=2,
                    col="azure4") +
