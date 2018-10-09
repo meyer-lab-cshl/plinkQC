@@ -1,0 +1,54 @@
+---
+title: "Genotype quality control with plinkQC"
+author: "Hannah Meyer"
+date: "`r Sys.Date()`"
+output: 
+    pdf_document:
+        fig_caption: yes
+        toc: true
+        toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Genotype quality control with plinkQC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+devtools::load_all()
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r set parameters}
+package.dir <- find.package('plinkQC')
+qcdir <- "/Users/hannah/RPackagesDevel/plinkQC/inst/extdata"
+#qcdir <- file.path(package.dir, 'extdata')
+alg <- 'data'
+path2plink <- "~/bin"
+```
+
+```{r run qc}
+
+```
+
+```{r sample QC,  fig.height=8, fig.width=6}
+fail_individuals <- perSampleQC(qcdir=qcdir, alg=alg,
+                                #refSamplesFile=refSamplesFile, 
+                                #refColorsFile=refColorsFile,
+                                externalSexID="Bru.Number",
+                                do.check_ancestry=FALSE,
+                                prefixMergedDataset="gencall.sanger12.HapMapIII.pruned.pca",
+                                interactive=TRUE, verbose=TRUE)
+
+```
+
+```{r overview sample QC}
+overview <- overviewPerSampleQC(fail_individuals, interactive=TRUE)
+```
+
+```{r marker QC, fig.height=8, fig.width=6}
+fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, path2plink=path2plink,
+                            verbose=TRUE, interactive=TRUE)
+```
