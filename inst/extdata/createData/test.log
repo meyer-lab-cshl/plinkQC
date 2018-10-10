@@ -1,0 +1,29 @@
+PLINK v1.90b5 64-bit (14 Nov 2017)
+Options in effect:
+  --bfile /homes/hannah/data/genotype/QC/sanger12/gencall.sanger12
+  --extract ext/test_markers.txt
+  --keep ext/test_samples.txt
+  --make-bed
+  --out ext/test
+
+Hostname: ebi-cli-003.ebi.ac.uk
+Working directory: /homes/hannah/RPackagesDevel/plinkQC
+Start time: Thu Oct  4 09:48:54 2018
+
+Random number seed: 1538642934
+128733 MB RAM detected; reserving 64366 MB for main workspace.
+679037 variants loaded from .bim file.
+1346 people (615 males, 731 females) loaded from .fam.
+--extract: 10000 variants remaining.
+--keep: 200 people remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 200 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: 354 het. haploid genotypes present (see ext/test.hh ); many commands
+treat these as missing.
+Total genotyping rate in remaining samples is 0.990506.
+10000 variants and 200 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to ext/test.bed + ext/test.bim + ext/test.fam ... done.
+
+End time: Thu Oct  4 09:48:55 2018

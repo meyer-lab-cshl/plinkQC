@@ -1,36 +1,38 @@
-PLINK v1.90b6.5 64-bit (13 Sep 2018)
+PLINK v1.90b5 64-bit (14 Nov 2017)
 Options in effect:
-  --bfile /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
+  --bfile /homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data
   --freq
   --make-bed
   --noweb
-  --out /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs
-  --remove /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.fail.IDs
+  --out /homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs
+  --remove /homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.fail.IDs
 
-Hostname: hannahmbpr
-Working directory: /Users/hannah/RPackagesDevel/plinkQC/vignettes
-Start time: Mon Oct  8 18:15:58 2018
+Hostname: ebi6-035.ebi.ac.uk
+Working directory: /nfs/nobackup/birney-research/hannah/tmp/Rtmpytufoc/plinkQC.Rcheck/vign_test/plinkQC/vignettes
+Start time: Wed Oct 10 17:17:30 2018
 
 Note: --noweb has no effect since no web check is implemented yet.
-Random number seed: 1539018958
-16384 MB RAM detected; reserving 8192 MB for main workspace.
+Random number seed: 1539188250
+128733 MB RAM detected; reserving 64366 MB for main workspace.
+Allocated 48274 MB successfully, after larger attempt(s) failed.
 10000 variants loaded from .bim file.
 200 people (89 males, 111 females) loaded from .fam.
---remove: 181 people remaining.
+--remove: 178 people remaining.
+Warning: At least 10 duplicate IDs in --remove file.
 Using 1 thread (no multithreaded calculations invoked).
-Before main variant filters, 181 founders and 0 nonfounders present.
+Before main variant filters, 178 founders and 0 nonfounders present.
 Calculating allele frequencies... done.
-Warning: 77 het. haploid genotypes present (see
-/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.hh ); many
+Warning: 76 het. haploid genotypes present (see
+/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.hh ); many
 commands treat these as missing.
-Total genotyping rate in remaining samples is 0.997029.
+Total genotyping rate in remaining samples is 0.997103.
 --freq: Allele frequencies (founders only) written to
-/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.frq .
-10000 variants and 181 people pass filters and QC.
+/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.frq .
+10000 variants and 178 people pass filters and QC.
 Note: No phenotypes present.
 --make-bed to
-/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.bed +
-/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.bim +
-/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.fam ... done.
+/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.bed +
+/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.bim +
+/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.fam ... done.
 
-End time: Mon Oct  8 18:15:58 2018
+End time: Wed Oct 10 17:17:30 2018
