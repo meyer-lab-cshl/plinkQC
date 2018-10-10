@@ -2,7 +2,8 @@
 #'
 #' perSampleQC checks the samples in the plink dataset for their total
 #' missingness and heterozygosity rates, the concordance of their assigned sex
-#' to their SNP sex and their genetic ancestry.
+#' to their SNP sex, their relatedness to other study individuals and their
+#' genetic ancestry.
 #'
 #' @param qcdir [character] /path/to/directory/with/QC/results containing the
 #' basic data files alg.bim, alg.bed, alg.fam files. In addition, if
@@ -44,7 +45,6 @@
 #' heterozygosity in any individual. Expressed as multiples of standard
 #' deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 #' hetTh*sd(het) will be returned as failing heterozygosity check.
-#' @param family [character] path/to/file/with/additional/family/information.
 #' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
 #' pair of individuals.
 #' @param prefixMergedDataset [character] Prefix of merged dataset (study and
@@ -247,7 +247,8 @@ perSampleQC <- function(qcdir, alg,
     subplotLabels <- LETTERS[1:length(plots_sampleQC)]
     p_sampleQC <- cowplot::plot_grid(plotlist=plots_sampleQC,
                                      nrow=length(plots_sampleQC),
-                                     labels=subplotLabels)
+                                     labels=subplotLabels,
+                                     rel_heights=c(1,1,1,1.5))
     if (interactive) {
         print(p_sampleQC)
     }
@@ -255,6 +256,10 @@ perSampleQC <- function(qcdir, alg,
 }
 
 #' Overview of per individual QC
+#'
+#' overviewPerSampleQC depicts results of perSampleQC as intersection plot (via
+#' \code{\link[UpSetR]{upset}}) and returns dataframes indicating which QC
+#' checks any sample failed or passed.
 #'
 #'
 #' @param results_perSampleQC [list] Output of \code{\link{perSampleQC}} i.e.
@@ -271,9 +276,6 @@ perSampleQC <- function(qcdir, alg,
 #' QC-plots of \code{\link{check_sex}},
 #' \code{\link{check_heterozygosity_and_missingness}},
 #' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}.
-#'
-#' overviewPerSampleQC depicts results of perSampleQC as intersection plot (via
-#' \code{\link[UpSetR]{upset}}).
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -520,7 +522,7 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
                                                  y=fail_sex$F,
                                                  label=fail_sex$IID),
                                  aes_string(x='x',y='y', label='label'),
-                                 size=1.2) +
+                                 size=2) +
         geom_segment(data=data.frame(x=0.8, xend=1.2, y=maleTh,
                                      yend=maleTh),
                      aes_string(x='x', xend='xend', y='y', yend='yend'), lty=2,
@@ -662,7 +664,7 @@ check_heterozygosity_and_missingness <- function(qcdir, alg, imissTh=0.03,
                                                   y=fail_het_imiss$F,
                                                   label=fail_het_imiss$IID),
                                   aes_string(x='x',y='y', label='label'),
-                                  size=1.2) +
+                                  size=2) +
         theme_bw()
     if (interactive) {
         print(p_het_imiss)
