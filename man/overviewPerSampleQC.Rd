@@ -20,10 +20,7 @@ sample IIDs failing the ancestry check based on the selected europeanTh and
 vi) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of \code{\link{check_sex}},
 \code{\link{check_heterozygosity_and_missingness}},
-\code{\link{check_relatedness}} and \code{\link{check_ancestry}}.
-
-overviewPerSampleQC depicts results of perSampleQC as intersection plot (via
-\code{\link[UpSetR]{upset}}).}
+\code{\link{check_relatedness}} and \code{\link{check_ancestry}}.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -45,5 +42,7 @@ QC failures and the intersection of QC failures with ancestry exclusion which
 can be shown by print(p_overview).
 }
 \description{
-Overview of per individual QC
+overviewPerSampleQC depicts results of perSampleQC as intersection plot (via
+\code{\link[UpSetR]{upset}}) and returns dataframes indicating which QC
+checks any sample failed or passed.
 }

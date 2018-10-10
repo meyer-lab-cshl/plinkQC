@@ -72,7 +72,7 @@ save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 other_arguments) or pdf(outfile) print(p_ancestry) dev.off().}
 }
 \value{
-named ]list] with i) fail_ancestry, containing a [data.frame] with
+named [list] with i) fail_ancestry, containing a [data.frame] with
 FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
 'containing' a scatter plot of PC1 versus PC2 color-coded for samples of the
 reference populations and the study population, which can be shown by

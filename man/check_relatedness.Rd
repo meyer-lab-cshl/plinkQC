@@ -32,11 +32,11 @@ other_arguments) or pdf(outfile) print(p_IBD) dev.off().}
 \value{
 a named [list] with i) fail_high_IBD containing a [data.frame] of
 IIDs and FIDs of individuals who fail the IBDTh in columns
-FID1	and IID1. In addition, the following columns are returned (as originally
+FID1 and IID1. In addition, the following columns are returned (as originally
 obtained by plink --genome):
-FID2	(Family ID for second sample), IID2	(Individual ID for second sample),
+FID2 (Family ID for second sample), IID2 (Individual ID for second sample),
 RT (Relationship type inferred from .fam/.ped file), EZ (IBD sharing expected
-value, based on just .fam/.ped relationship), Z0	(P(IBD=0)), Z1 (P(IBD=1)),
+value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 (P(IBD=1)),
 Z2 (P(IBD=2)), PI_HAT (Proportion IBD, i.e. P(IBD=2) + 0.5*P(IBD=1)), PHE
 (Pairwise phenotypic code (1, 0, -1 = AA, AU, and UU pairs, respectively)),
 DST (IBS distance, i.e. (IBS2 + 0.5*IBS1) / (IBS0 + IBS1 + IBS2)), PPC (IBS

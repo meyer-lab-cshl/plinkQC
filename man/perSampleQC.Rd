@@ -74,8 +74,6 @@ hetTh*sd(het) will be returned as failing heterozygosity check.}
 \item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
 pair of individuals.}
 
-\item{family}{[character] path/to/file/with/additional/family/information.}
-
 \item{do.check_ancestry}{[logical] if TRUE, run
 \code{\link{check_ancestry}}.}
 
@@ -164,7 +162,8 @@ List entries contain NULL if that specific check was not chosen.
 \description{
 perSampleQC checks the samples in the plink dataset for their total
 missingness and heterozygosity rates, the concordance of their assigned sex
-to their SNP sex and their genetic ancestry.
+to their SNP sex, their relatedness to other study individuals and their
+genetic ancestry.
 }
 \details{
 perSampleQC wraps around the individual QC functions
