@@ -58,7 +58,7 @@ perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
                       hwe=fail_hwe$fail_hwe$SNP, maf=fail_maf$fail_maf$SNP)
     p_marker <- cowplot::plot_grid(fail_snp_missingness$p_lmiss,
                                    fail_hwe$p_hwe, fail_maf$p_maf,
-                                   nrow=3)
+                                   nrow=3, labels=LETTERS[1:3])
     if(interactive) print(p_marker)
     return(list(fail_list=fail_list, p_marker=p_marker))
 }
@@ -106,7 +106,9 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
     checkPlink(path2plink)
-    if (!is.null(path2plink)) paste(gsub("/$", "", path2plink), "/", sep="")
+    if (!is.null(path2plink)) {
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
+    }
     if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividual QC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
@@ -207,7 +209,9 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
     checkPlink(path2plink)
-    if (!is.null(path2plink)) paste(gsub("/$", "", path2plink), "/", sep="")
+    if (!is.null(path2plink)) {
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
+    }
     if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
         message("File with individuals that failed perSampleQC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
@@ -297,7 +301,9 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
     checkPlink(path2plink)
-    if (!is.null(path2plink)) paste(gsub("/$", "", path2plink), "/", sep="")
+    if (!is.null(path2plink)) {
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
+    }
     if (!file.exists(paste(qcdir, "/", alg, ".fail.IDs",sep=""))){
         message("File with individuals that failed perSampleQC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
