@@ -128,7 +128,7 @@ perSampleQC <- function(qcdir, alg,
                             do.check_heterozygosity_and_missingness=TRUE,
                             imissTh=0.03, hetTh=3,
                             do.check_relatedness=TRUE,
-                            highIBDTh=0.1875, family=NULL,
+                            highIBDTh=0.1875,
                             do.check_ancestry=TRUE,
                             prefixMergedDataset, europeanTh=1.5,
                             refSamples=NULL, refColors=NULL,
@@ -230,7 +230,8 @@ perSampleQC <- function(qcdir, alg,
         }
         p_ancestry <- fail_ancestry$p_ancestry
     }
-
+    if(verbose) message(paste("Combine fail IDs into ", qcdir, "/", alg,
+                               ".fail.IDs", sep=""))
     system(paste("cat ",qcdir ,"/",  alg, ".fail-*.IDs | sort | uniq >",
                  qcdir, "/", alg, ".fail.IDs", sep=""), wait=TRUE)
 
@@ -495,7 +496,7 @@ check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8, femaleTh=0.2,
                                        " --out ", qcdir , "/", alg, sep=""))
                 } else {
                     if (verbose) {
-                        message("All assigned genotype sexes (PEDSEX) match ",
+                        message("All assigned genotype sexes (PEDSEX) match",
                                 " external sex assignment (Sex)")
                     }
                     mixup_geno_pheno <- NULL
@@ -859,7 +860,7 @@ check_relatedness <- function(qcdir, alg, highIBDTh=0.1875,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 #' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
-#' @return named ]list] with i) fail_ancestry, containing a [data.frame] with
+#' @return named [list] with i) fail_ancestry, containing a [data.frame] with
 #' FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
 #' 'containing' a scatter plot of PC1 versus PC2 color-coded for samples of the
 #' reference populations and the study population, which can be shown by
@@ -899,13 +900,6 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
         refSamples <- read.table(refSamplesFile, header=TRUE,
                                  stringsAsFactors=FALSE)
     }
-    if (!is.null(refColorsFile) && !file.exists(refColorsFile)) {
-        stop("refColorsFile file", refColorsFile, "does not exist.")
-    }
-    if (!is.null(refColorsFile)) {
-        refColors <- read.table(refColorsFile, header=TRUE,
-                                 stringsAsFactors=FALSE)
-    }
     if (!(refSamplesIID  %in% names(refSamples))) {
         stop(paste("Column", refSamplesIID, "not found in refSamples."))
     }
@@ -916,6 +910,13 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
     names(refSamples)[names(refSamples) == refSamplesPop] <- "Pop"
     refSamples <- dplyr::select_(refSamples, ~IID, ~Pop)
 
+    if (!is.null(refColorsFile) && !file.exists(refColorsFile)) {
+        stop("refColorsFile file", refColorsFile, "does not exist.")
+    }
+    if (!is.null(refColorsFile)) {
+        refColors <- read.table(refColorsFile, header=TRUE,
+                                 stringsAsFactors=FALSE)
+    }
     if (!is.null(refColors)) {
         if (!(refColorsColor  %in% names(refColors))) {
             stop(paste("Column", refColorsColor, "not found in refColors."))
@@ -938,7 +939,7 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
     data_all$Color[is.na(data_all$Color)] <- studyColor
     data_all <- data_all[order(data_all$Pop, decreasing=FALSE),]
 
-    refColors <- rbind(refColors,c(alg, studyColor))
+    refColors <- rbind(refColors, c(alg, studyColor))
     data_all$Color <- as.factor(data_all$Color)
     data_all$Pop <- factor(data_all$Pop, levels=refColors$Pop)
 
