@@ -24,7 +24,9 @@ clean_data <- function(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
                        mafTh=0.01, filterRelated=FALSE, path2plink=NULL,
                        verbose=FALSE) {
     checkPlink(path2plink)
-    if (!is.null(path2plink)) paste(gsub("/$", "", path2plink), "/", sep="")
+    if (!is.null(path2plink)) {
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
+    }
     if (filterRelated) {
         # i) with sample filtering based on all fail-IDs (including relatedness)
         # and variant filter for missing genotypes, MAF and HWE
