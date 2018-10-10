@@ -8,7 +8,7 @@ output:
         toc: true
         toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{Genotype quality control with plinkQC}
+  %\VignetteIndexEntry{GenotypeQC_with_plinkQC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 ```{r set parameters}
 package.dir <- find.package('plinkQC')
-qcdir <- "/Users/hannah/RPackagesDevel/plinkQC/inst/extdata"
+qcdir <- "~/RPackagesDevel/plinkQC/inst/extdata"
 #qcdir <- file.path(package.dir, 'extdata')
 alg <- 'data'
 path2plink <- "~/bin"
