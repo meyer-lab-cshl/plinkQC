@@ -5,7 +5,7 @@
 \title{Identification of SNPs with a very low minor allele frequency}
 \usage{
 check_maf(qcdir, alg, mafTh = 0.01, macTh = 20, verbose = FALSE,
-  interactive = FALSE, path2plink = NULL)
+  interactive = FALSE, path2plink = NULL, showPlinkError = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
@@ -20,7 +20,8 @@ alg.fam.}
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
 and macTh are specied, macTh is used (macTh = mafTh\*2\*NrSamples)}
 
-\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out
+and specifically, if TRUE, plink log will be displayed.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface

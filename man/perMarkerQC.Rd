@@ -6,7 +6,7 @@
 \usage{
 perMarkerQC(qcdir, alg, mafTh = 0.01, macTh = 20, hweTh = 1e-05,
   lmissTh = 0.01, interactive = FALSE, verbose = TRUE,
-  path2plink = NULL)
+  path2plink = NULL, showPlinkError = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
@@ -39,10 +39,15 @@ other_arguments) or pdf(outfile) print(p_marker) dev.off().}
 assumed that PATH set-up works and plink will be found by system("plink").}
 }
 \value{
-named [list] with i) SNP_missingness containing a [vector] with
-SNP IDs failing the missingness threshold lmissTh, ii) hwe containing a
-[vector] with SNP IDs failing the HWE exact test threshold hweTh and iii)
-maf containing a [vector] with SNPs failing the MAF threshold mafTh.
+named [list] with i) fail_list, a named [list] with 1.
+SNP_missingness, containing SNP IDs failing the missingness threshold
+lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
+hweTh and 3. maf, containing SNPs failing the MAF threshold mafTh/MAC
+threshold macTh and ii) p_markerQC, a ggplot2-object 'containing' a
+sub-paneled plot with the QC-plots of \code{\link{check_snp_missingness}},
+\code{\link{check_hwe}} and \code{\link{check_maf}}, which can
+be shown by print(p_markerQC).
+List entries contain NULL if that specific check was not chosen.
 }
 \description{
 perMarkerQC checks the markers in the plink dataset for their missingness

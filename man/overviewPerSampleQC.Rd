@@ -2,7 +2,7 @@
 % Please edit documentation in R/sampleQC.R
 \name{overviewPerSampleQC}
 \alias{overviewPerSampleQC}
-\title{Overview of per individual QC}
+\title{Overview of per sample QC}
 \usage{
 overviewPerSampleQC(results_perSampleQC, interactive = FALSE)
 }

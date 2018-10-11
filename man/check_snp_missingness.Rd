@@ -5,7 +5,7 @@
 \title{Identification of SNPs with high missingness rates}
 \usage{
 check_snp_missingness(qcdir, alg, lmissTh = 0.01, interactive = FALSE,
-  path2plink = NULL)
+  path2plink = NULL, verbose = FALSE, showPlinkError = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
@@ -27,6 +27,9 @@ other_arguments) or pdf(outfile) print(p_lmiss) dev.off().}
 \item{path2plink}{[character] Absolute path to where external plink software
 \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 assumed that PATH set-up works and plink will be found by system("plink").}
+
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out
+and specifically, if TRUE, plink log will be displayed.}
 }
 \value{
 named list with i) fail_missingness containing a [data.frame] with

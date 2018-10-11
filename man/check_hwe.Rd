@@ -6,7 +6,7 @@
 equilibrium (HWE)}
 \usage{
 check_hwe(qcdir, alg, hweTh = 1e-05, interactive = FALSE,
-  path2plink = NULL)
+  path2plink = NULL, verbose = FALSE, showPlinkError = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
@@ -27,6 +27,9 @@ other_arguments) or pdf(outfile) print(p_hwe) dev.off().}
 \item{path2plink}{[character] Absolute path to where external plink software
 \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 assumed that PATH set-up works and plink will be found by system("plink").}
+
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out
+and specifically, if TRUE, plink log will be displayed.}
 }
 \value{
 named list with i) fail_hwe containing a [data.frame] with CHR

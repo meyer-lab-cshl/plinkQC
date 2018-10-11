@@ -10,12 +10,12 @@ perSampleQC(qcdir, alg, do.check_sex = TRUE, maleTh = 0.8,
   externalFemale = "F", fixMixup = FALSE,
   do.check_heterozygosity_and_missingness = TRUE, imissTh = 0.03,
   hetTh = 3, do.check_relatedness = TRUE, highIBDTh = 0.1875,
-  family = NULL, do.check_ancestry = TRUE, prefixMergedDataset,
-  europeanTh = 1.5, refSamples = NULL, refColors = NULL,
-  refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
-  refSamplesPop = "Pop", refColorsColor = "Color",
-  refColorsPop = "Pop", studyColor = "#2c7bb6", path2plink = NULL,
-  interactive = FALSE, verbose = TRUE)
+  do.check_ancestry = TRUE, prefixMergedDataset, europeanTh = 1.5,
+  refSamples = NULL, refColors = NULL, refSamplesFile = NULL,
+  refColorsFile = NULL, refSamplesIID = "IID", refSamplesPop = "Pop",
+  refColorsColor = "Color", refColorsPop = "Pop",
+  studyColor = "#2c7bb6", path2plink = NULL, interactive = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing the
@@ -145,15 +145,16 @@ TRUE).}
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \value{
-named [list] with i) sample_missingness containing a [vector] with
-sample IIDs failing the missingness threshold imissTh, ii) highIBD containing
-a [vector] with sample IIDs failing the relatedness threshold highIBDTh, iii)
-outlying_heterozygosity containing a [vector] with sample IIDs failing the
-heterozygosity threshold hetTh, iv) mismatched_sex containing a [vector] with
-the sample IIDs failing the sexcheck based on SNPSEX and femaleTh/maleTh and
-v) ancestry containing a vector with sample IIDs failing the ancestry check
-based on europeanTh and vi) p_sampleQC, a ggplot2-object 'containing' a
-sub-paneled plot with the QC-plots of \code{\link{check_sex}},
+named [list] with i) fail_list, a named list with 1.
+sample_missingness containing a [vector] with sample IIDs failing the
+missingness threshold imissTh, 2. highIBD containing a [vector] with sample
+IIDs failing the relatedness threshold highIBDTh, 3. outlying_heterozygosity
+containing a [vector] with sample IIDs failing the heterozygosity threshold
+hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
+the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
+a vector with sample IIDs failing the ancestry check based on europeanTh and
+ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
+QC-plots of \code{\link{check_sex}},
 \code{\link{check_heterozygosity_and_missingness}},
 \code{\link{check_relatedness}} and \code{\link{check_ancestry}}, which can
 be shown by print(p_sampleQC).
