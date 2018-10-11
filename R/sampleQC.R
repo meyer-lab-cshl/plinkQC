@@ -100,15 +100,16 @@
 #' reference populations and study population (if do.check_relatedness is set to
 #' TRUE).
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @return named [list] with i) sample_missingness containing a [vector] with
-#' sample IIDs failing the missingness threshold imissTh, ii) highIBD containing
-#' a [vector] with sample IIDs failing the relatedness threshold highIBDTh, iii)
-#' outlying_heterozygosity containing a [vector] with sample IIDs failing the
-#' heterozygosity threshold hetTh, iv) mismatched_sex containing a [vector] with
-#' the sample IIDs failing the sexcheck based on SNPSEX and femaleTh/maleTh and
-#' v) ancestry containing a vector with sample IIDs failing the ancestry check
-#' based on europeanTh and vi) p_sampleQC, a ggplot2-object 'containing' a
-#' sub-paneled plot with the QC-plots of \code{\link{check_sex}},
+#' @return named [list] with i) fail_list, a named list with 1.
+#' sample_missingness containing a [vector] with sample IIDs failing the
+#' missingness threshold imissTh, 2. highIBD containing a [vector] with sample
+#' IIDs failing the relatedness threshold highIBDTh, 3. outlying_heterozygosity
+#' containing a [vector] with sample IIDs failing the heterozygosity threshold
+#' hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
+#' the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
+#' a vector with sample IIDs failing the ancestry check based on europeanTh and
+#' ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
+#' QC-plots of \code{\link{check_sex}},
 #' \code{\link{check_heterozygosity_and_missingness}},
 #' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}, which can
 #' be shown by print(p_sampleQC).
@@ -230,10 +231,6 @@ perSampleQC <- function(qcdir, alg,
         }
         p_ancestry <- fail_ancestry$p_ancestry
     }
-    if(verbose) message(paste("Combine fail IDs into ", qcdir, "/", alg,
-                               ".fail.IDs", sep=""))
-    system(paste("cat ",qcdir ,"/",  alg, ".fail-*.IDs | sort | uniq >",
-                 qcdir, "/", alg, ".fail.IDs", sep=""), wait=TRUE)
 
     fail_list <- list(missing_genotype=as.vector(fail_het_imiss$fail_imiss$IID),
                       highIBD=as.vector(fail_relatedness$failIDs$IID),
@@ -241,6 +238,13 @@ perSampleQC <- function(qcdir, alg,
                           as.vector(fail_het_imiss$fail_het$IID),
                       mismatched_sex=as.vector(fail_sex$fail_sex$IID),
                       ancestry=as.vector(fail_ancestry$fail_ancestry$IID))
+
+    if(verbose) message(paste("Combine fail IDs into ", qcdir, "/", alg,
+                               ".fail.IDs", sep=""))
+    uniqueFails <- unique(unlist(fail_list))
+    write.table(cbind(uniqueFails, uniqueFails),
+                        file=paste(qcdir, "/",alg,".fail.IDs",sep=""),
+                        quote=FALSE, row.names=FALSE, col.names=FALSE)
 
     plots_sampleQC <- list(p_sexcheck, p_het_imiss, p_relatedness, p_ancestry)
     plots_sampleQC <- plots_sampleQC[sapply(plots_sampleQC,
@@ -256,7 +260,7 @@ perSampleQC <- function(qcdir, alg,
     return(list(fail_list=fail_list, p_sampleQC=p_sampleQC))
 }
 
-#' Overview of per individual QC
+#' Overview of per sample QC
 #'
 #' overviewPerSampleQC depicts results of perSampleQC as intersection plot (via
 #' \code{\link[UpSetR]{upset}}) and returns dataframes indicating which QC
@@ -323,6 +327,8 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
                   empty.intersections = "on", text.scale=1.2,
                   # Include when UpSetR v1.4.1 is released
                   # title="Overview quality control failures",
+                  mainbar.y.label="Samples failing multiple QC checks",
+                  sets.x.label="Sample fails per QC check",
                   main.bar.color="#1b9e77", matrix.color="#1b9e77",
                   sets.bar.color="#d95f02")
 
@@ -338,6 +344,8 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
                                    order.by = "freq",
                       # Include when UpSetR v1.4.1 is released
                       # title="Intersection between QC and ancestry failures",
+                      mainbar.y.label="Samples failing QC and ancestry checks",
+                      sets.x.label="Sample fails per QC check",
                       empty.intersections = "on", text.scale=1.2,
                       main.bar.color="#7570b3", matrix.color="#7570b3",
                     sets.bar.color="#e7298a" )
