@@ -1,38 +1,27 @@
-PLINK v1.90b5 64-bit (14 Nov 2017)
+PLINK v1.90b6.5 64-bit (13 Sep 2018)
 Options in effect:
-  --bfile /homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data
+  --bfile /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
   --freq
-  --make-bed
-  --noweb
-  --out /homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs
-  --remove /homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.fail.IDs
+  --out /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs
+  --remove /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.fail.IDs
 
-Hostname: ebi6-035.ebi.ac.uk
-Working directory: /nfs/nobackup/birney-research/hannah/tmp/Rtmpytufoc/plinkQC.Rcheck/vign_test/plinkQC/vignettes
-Start time: Wed Oct 10 17:17:30 2018
+Hostname: hannahmbpr
+Working directory: /private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/Rtmpman8b8/Rbuild37f246298134/plinkQC/vignettes
+Start time: Thu Oct 11 21:26:29 2018
 
-Note: --noweb has no effect since no web check is implemented yet.
-Random number seed: 1539188250
-128733 MB RAM detected; reserving 64366 MB for main workspace.
-Allocated 48274 MB successfully, after larger attempt(s) failed.
+Random number seed: 1539289589
+16384 MB RAM detected; reserving 8192 MB for main workspace.
 10000 variants loaded from .bim file.
 200 people (89 males, 111 females) loaded from .fam.
 --remove: 178 people remaining.
-Warning: At least 10 duplicate IDs in --remove file.
 Using 1 thread (no multithreaded calculations invoked).
 Before main variant filters, 178 founders and 0 nonfounders present.
 Calculating allele frequencies... done.
 Warning: 76 het. haploid genotypes present (see
-/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.hh ); many
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.hh ); many
 commands treat these as missing.
 Total genotyping rate in remaining samples is 0.997103.
 --freq: Allele frequencies (founders only) written to
-/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.frq .
-10000 variants and 178 people pass filters and QC.
-Note: No phenotypes present.
---make-bed to
-/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.bed +
-/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.bim +
-/homes/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.fam ... done.
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.frq .
 
-End time: Wed Oct 10 17:17:30 2018
+End time: Thu Oct 11 21:26:29 2018
