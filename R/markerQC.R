@@ -32,10 +32,15 @@
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @return named [list] with i) SNP_missingness containing a [vector] with
-#' SNP IDs failing the missingness threshold lmissTh, ii) hwe containing a
-#' [vector] with SNP IDs failing the HWE exact test threshold hweTh and iii)
-#' maf containing a [vector] with SNPs failing the MAF threshold mafTh.
+#' @return named [list] with i) fail_list, a named [list] with 1.
+#' SNP_missingness, containing SNP IDs failing the missingness threshold
+#' lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
+#' hweTh and 3. maf, containing SNPs failing the MAF threshold mafTh/MAC
+#' threshold macTh and ii) p_markerQC, a ggplot2-object 'containing' a
+#' sub-paneled plot with the QC-plots of \code{\link{check_snp_missingness}},
+#' \code{\link{check_hwe}} and \code{\link{check_maf}}, which can
+#' be shown by print(p_markerQC).
+#' List entries contain NULL if that specific check was not chosen.
 #' @details perMarkerQC wraps around the marker QC functions
 #' \code{\link{check_snp_missingness}}, \code{\link{check_hwe}} and
 #' \code{\link{check_maf}}. For details on the parameters and outputs, check
@@ -43,25 +48,99 @@
 #' @export
 perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
                         lmissTh=0.01, interactive=FALSE, verbose=TRUE,
-                        path2plink=NULL) {
+                        path2plink=NULL, showPlinkError=TRUE) {
     if (verbose) message("Identification of SNPs with high missingness rate")
     fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, alg=alg,
                                                   lmissTh=lmissTh,
-                                                  path2plink=path2plink)
+                                                  path2plink=path2plink,
+                                                  verbose=verbose,
+                                                  showPlinkError=showPlinkError)
     if (verbose) message("Identification of SNPs with deviation from HWE")
     fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, hweTh=hweTh,
-                          path2plink=path2plink)
+                          path2plink=path2plink, verbose=verbose,
+                          showPlinkError=showPlinkError)
     if (verbose) message("Remove markers with a low minor allele frequency")
     fail_maf <- check_maf(qcdir=qcdir, alg=alg, mafTh=mafTh, macTh=macTh,
-                          path2plink=path2plink)
-    fail_list <- list(SNP_missingness=fail_snp_missingness$fail_missingenss$SNP,
+                          path2plink=path2plink, verbose=verbose,
+                          showPlinkError=showPlinkError)
+    fail_list <- list(SNP_missingness=fail_snp_missingness$fail_missingness$SNP,
                       hwe=fail_hwe$fail_hwe$SNP, maf=fail_maf$fail_maf$SNP)
-    p_marker <- cowplot::plot_grid(fail_snp_missingness$p_lmiss,
+    p_markerQC <- cowplot::plot_grid(fail_snp_missingness$p_lmiss,
                                    fail_hwe$p_hwe, fail_maf$p_maf,
                                    nrow=3, labels=LETTERS[1:3])
-    if(interactive) print(p_marker)
-    return(list(fail_list=fail_list, p_marker=p_marker))
+    if(interactive) print(p_markerQC)
+    return(list(fail_list=fail_list, p_markerQC=p_markerQC))
 }
+
+#' Overview of per marker QC
+#'
+#' overviewPerMarkerQC depicts results of perMarkerQC as intersection plot (via
+#' \code{\link[UpSetR]{upset}}) and returns dataframe indicating which QC
+#' checks were failed or passed.
+#'
+#'
+#' @param results_perMarkerQC [list] Output of \code{\link{perSampleQC}} i.e.
+#' named [list] with i) fail_list, a named [list] with 1.
+#' SNP_missingness, containing SNP IDs failing the missingness threshold
+#' lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
+#' hweTh and 3. maf, containing SNPs failing the MAF threshold mafTh/MAC
+#' threshold macTh and ii) p_markerQC, a ggplot2-object 'containing' a
+#' sub-paneled plot with the QC-plots of \code{\link{check_snp_missingness}},
+#' \code{\link{check_hwe}} and \code{\link{check_maf}}
+#' @param interactive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_overview) via ggplot2::ggsave(p=p_overview,
+#' other_arguments) or pdf(outfile) print(p_overview) dev.off().
+#' @return named [list] with i) nr_fail_markers: total number of markers
+#' [integer] failing perMarkerQC, ii) fail_QC containing a [data.frame] with
+#' markers that failed QC steps: marker rsIDs in rows,
+#' columns are all QC steps applied by perMarkerQC (max=3), with entries=0 if
+#' passing the QC and entries=1 if failing that particular QC and ii)
+#' p_overview, a ggplot2-object 'containing' the overview plots of the QC
+#' failures which can be shown by print(p_overview).
+#' @export
+overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
+    list2counts <- function(element, all_names) {
+        all_names[!(all_names %in% element)] <- 0
+        all_names[all_names %in% element] <- 1
+        return(as.numeric(all_names))
+    }
+    if (length(perMarkerQC) == 2 &&
+        !all(names(results_perMarkerQC) == c("fail_list", "p_markerQC"))) {
+        stop("results_perMarkerQC not direct output of perMarkerQC")
+    }
+    fail_list <- results_perMarkerQC$fail_list
+    # Remove null elements
+    fail_list <- fail_list[!sapply(fail_list, is.null)]
+
+    unique_samples_fail_all <- unique(unlist(fail_list))
+
+    # overview QC fails
+    unique_markers_fail <- unique(unlist(fail_list))
+    fail_counts <- sapply(fail_list, list2counts, unique_markers_fail)
+    rownames(fail_counts) <-  unique_markers_fail
+
+    p_overview <- UpSetR::upset(UpSetR::fromList(fail_list),
+                          order.by = "freq",
+                          empty.intersections = "on", text.scale=1.2,
+                          # Include when UpSetR v1.4.1 is released
+                          # title="Overview quality control failures",
+                          mainbar.y.label="Markers failing multiple QC checks",
+                          sets.x.label="Marker fails per QC check",
+                          main.bar.color="#1b9e77", matrix.color="#1b9e77",
+                          sets.bar.color="#d95f02")
+    if (interactive) {
+        print(p_overview)
+    }
+    nr_fail_markers <- length(unique_markers_fail)
+    return(list(nr_fail_samples=nr_fail_markers,
+                fail_QC=fail_counts,
+                p_overview=p_overview))
+}
+
+
+
 
 #' Identification of SNPs with high missingness rates
 #'
@@ -85,6 +164,8 @@ perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
 #' @param path2plink [character] Absolute path to where external plink software
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param verbose [logical] If TRUE, progress info is printed to standard out
+#' and specifically, if TRUE, plink log will be displayed.
 #' @return named list with i) fail_missingness containing a [data.frame] with
 #' CHR (Chromosome code), SNP (Variant identifier), CLST (Cluster identifier.
 #' Only present with --within/--family), N_MISS (Number of missing genotype
@@ -95,7 +176,8 @@ perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
 #' SNP missingness histogram which can be shown by (print(p_lmiss)).
 #' @export
 check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
-                                  path2plink=NULL) {
+                                  path2plink=NULL, verbose=FALSE,
+                                  showPlinkError=TRUE) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
         stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
     }
@@ -118,13 +200,15 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --missing ",
                      "--freq ",
-                     "--out ", qcdir, "/", alg, suffix, sep=""))
+                     "--out ", qcdir, "/", alg, suffix, sep=""),
+               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
     } else {
         suffix <- ".no_failIDs"
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --remove ", qcdir ,"/", alg, ".fail.IDs --missing ",
                      "--freq ",
-                     "--out ", qcdir, "/", alg, suffix, sep=""))
+                     "--out ", qcdir, "/", alg, suffix, sep=""),
+               ignore.stdout=verbose, ignore.stderr=!showPlinkError)
     }
 
     lmiss <- read.table(paste(qcdir, "/", alg, suffix, ".lmiss",sep=""),
@@ -140,7 +224,7 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
                                             fill="#66a61e") +
         ylab("Number of SNPs") +
         xlab("Proportion of missing data") +
-        ggtitle("Missingness for SNPs with MAF > 0.05") +
+        ggtitle("SNPs with MAF > 0.05") +
         geom_vline(xintercept=lmissTh, lty=2, col="red") +
         theme_bw() +
         theme(title=element_text(size=10))
@@ -150,11 +234,15 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
                                           fill="#e6ab02") +
         ylab("Number of SNPs") +
         xlab("Proportion of missing data") +
-        ggtitle("Missingness for SNPs with MAF < 0.05") +
+        ggtitle("SNPs with MAF < 0.05") +
         geom_vline(xintercept=lmissTh, lty=2, col="red") +
         theme_bw() +
         theme(title=element_text(size=10))
-    p_lmiss <- cowplot::plot_grid(p_highMAF, p_lowMAF)
+    p_histo <- cowplot::plot_grid(p_lowMAF, p_highMAF)
+    title <- cowplot::ggdraw() +
+        cowplot::draw_label("Marker missingness rate")
+    p_lmiss <- cowplot::plot_grid(title, p_histo, ncol = 1,
+                                rel_heights = c(0.1, 1))
     if (interactive) {
         print(p_lmiss)
     }
@@ -187,6 +275,8 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' @param path2plink [character] Absolute path to where external plink software
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param verbose [logical] If TRUE, progress info is printed to standard out
+#' and specifically, if TRUE, plink log will be displayed.
 #' @return named list with i) fail_hwe containing a [data.frame] with CHR
 #' (Chromosome code), SNP (Variant identifier), TEST (Type of test: one of
 #' {'ALL', 'AFF', 'UNAFF', 'ALL(QT)', 'ALL(NP)'}), A1 (Allele 1; usually minor),
@@ -198,7 +288,7 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' (print(p_hwe)).
 #' @export
 check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
-                      path2plink=NULL) {
+                      path2plink=NULL, verbose=FALSE, showPlinkError=TRUE) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
         stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
     }
@@ -220,12 +310,14 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
         suffix <- ""
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --hardy",
-                     " --out ", qcdir, "/", alg, suffix, sep=""))
+                     " --out ", qcdir, "/", alg, suffix, sep=""),
+               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
     } else {
         suffix <- ".no_failIDs"
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --remove ", qcdir, "/", alg, ".fail.IDs --hardy",
-                     " --out ", qcdir, "/", alg, suffix, sep=""))
+                     " --out ", qcdir, "/", alg, suffix, sep=""),
+               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
     }
     hwe <- read.table(paste(qcdir, "/", alg, suffix, ".hwe", sep=""),
                        header=TRUE, as.is=TRUE)
@@ -237,7 +329,7 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
                                       fill="#66a61e") +
         ylab("Number of SNPs") +
         xlab(expression(-log[10](HWE~exact~test~p-value))) +
-        ggtitle(expression(Distribution~of~-log[10](p-value[HWE]))) +
+        ggtitle(expression(All~p-value[HWE])) +
         geom_vline(xintercept=-log10(hweTh), lty=2, col="red") +
         theme_bw() +
         theme(title=element_text(size=10))
@@ -247,11 +339,15 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
                                             fill="#e6ab02") +
         ylab("Number of SNPs") +
         xlab(expression(-log[10](HWE~exact~test~p-value))) +
-        ggtitle(expression(Distribution~of~-log[10](p-value[HWE])<0.01)) +
+        ggtitle(expression(p-value[HWE]<0.01)) +
         geom_vline(xintercept=-log10(hweTh), lty=2, col="red") +
         theme_bw() +
         theme(title=element_text(size=10))
-    p_hwe <- cowplot::plot_grid(p_allP, p_lowP)
+    p_histo <- cowplot::plot_grid(p_allP, p_lowP)
+    title <- cowplot::ggdraw() +
+        cowplot::draw_label(expression(Distribution~of~-log[10](p-value[HWE])))
+    p_hwe <- cowplot::plot_grid(title, p_histo, ncol = 1,
+                                  rel_heights = c(0.1, 1))
     if (interactive) {
         print(p_hwe)
     }
@@ -281,7 +377,8 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' @param path2plink [character] Absolute path to where external plink software
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
-#' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @param verbose [logical] If TRUE, progress info is printed to standard out
+#' and specifically, if TRUE, plink log will be displayed.
 #' @return named list with i) fail_maf containing a [data.frame] with CHR
 #' (Chromosome code), SNP (Variant identifier), A1 (Allele 1; usually minor), A2
 #' (Allele 2; usually major), MAF (Allele 1 frequency), NCHROBS (Number of
@@ -290,7 +387,7 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' shown by (print(p_maf)).
 #' @export
 check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
-                      interactive=FALSE, path2plink=NULL) {
+                      interactive=FALSE, path2plink=NULL, showPlinkError=TRUE) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
         stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
     }
@@ -310,25 +407,30 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
                 "check_maf for all samples in ", qcdir,"/", alg,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --noweb --bfile ", qcdir, "/", alg,
-                     " --freq --make-bed",
-                     " --out ", qcdir, "/", alg, suffix, sep=""))
+        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
+                     " --freq ",
+                     " --out ", qcdir, "/", alg, suffix, sep=""),
+               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --noweb --bfile ", qcdir, "/", alg,
+        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --remove ", qcdir ,"/", alg, ".fail.IDs --freq",
-                     " --make-bed",
-                     " --out ", qcdir, "/", alg, suffix, sep=""))
+                     " --out ", qcdir, "/", alg, suffix, sep=""),
+               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
     }
-    maf <- read.table(paste(qcdir,"/",alg, suffix, ".frq",sep=""),
+    maf <- read.table(paste(qcdir,"/", alg, suffix, ".frq",sep=""),
                        header=TRUE, as.is=TRUE)
-    samples <- read.table(paste(qcdir,"/",alg, suffix, ".fam",sep=""),
-                          header=TRUE, as.is=TRUE)
+
+    all_samples <-  R.utils::countLines(paste(qcdir,"/",alg, ".fam",sep=""))
+    fail_samples <-  R.utils::countLines(paste(qcdir,"/",alg, ".fail.IDs",
+                                               sep=""))
+    keep_samples <- all_samples - fail_samples
+
     if (is.null(mafTh) && is.null(macTh)) {
         stop("Either mafTh or macTh need to be provided")
     }
     if(!is.null(macTh)) {
-        mafTh <- macTh/(2*nrow(samples))
+        mafTh <- macTh/(2*keep_samples)
     }
     if (verbose) {
         if (!is.null(mafTh) && !is.null(macTh)) {
@@ -353,6 +455,6 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
     if (interactive) {
         print(p_maf)
     }
-    failed_maf <- maf[maf$MAF < mafTh,]
-    return(list(failed_maf=failed_maf, p_maf=p_maf))
+    fail_maf <- maf[maf$MAF < mafTh,]
+    return(list(fail_maf=fail_maf, p_maf=p_maf))
 }
