@@ -32,6 +32,8 @@
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
 #' @return named [list] with i) fail_list, a named [list] with 1.
 #' SNP_missingness, containing SNP IDs failing the missingness threshold
 #' lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
@@ -48,21 +50,22 @@
 #' @export
 perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
                         lmissTh=0.01, interactive=FALSE, verbose=TRUE,
-                        path2plink=NULL, showPlinkError=TRUE) {
+                        path2plink=NULL, showPlinkOutput=TRUE) {
     if (verbose) message("Identification of SNPs with high missingness rate")
     fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, alg=alg,
                                                   lmissTh=lmissTh,
                                                   path2plink=path2plink,
                                                   verbose=verbose,
-                                                  showPlinkError=showPlinkError)
+                                                  showPlinkOutput=
+                                                      showPlinkOutput)
     if (verbose) message("Identification of SNPs with deviation from HWE")
     fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, hweTh=hweTh,
                           path2plink=path2plink, verbose=verbose,
-                          showPlinkError=showPlinkError)
+                          showPlinkOutput=showPlinkOutput)
     if (verbose) message("Remove markers with a low minor allele frequency")
     fail_maf <- check_maf(qcdir=qcdir, alg=alg, mafTh=mafTh, macTh=macTh,
                           path2plink=path2plink, verbose=verbose,
-                          showPlinkError=showPlinkError)
+                          showPlinkOutput=showPlinkOutput)
     fail_list <- list(SNP_missingness=fail_snp_missingness$fail_missingness$SNP,
                       hwe=fail_hwe$fail_hwe$SNP, maf=fail_maf$fail_maf$SNP)
     p_markerQC <- cowplot::plot_grid(fail_snp_missingness$p_lmiss,
@@ -121,22 +124,22 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
     fail_counts <- sapply(fail_list, list2counts, unique_markers_fail)
     rownames(fail_counts) <-  unique_markers_fail
 
-    p_overview <- UpSetR::upset(UpSetR::fromList(fail_list),
-                          order.by = "freq",
-                          empty.intersections = "on", text.scale=1.2,
-                          # Include when UpSetR v1.4.1 is released
-                          # title="Overview quality control failures",
-                          mainbar.y.label="Markers failing multiple QC checks",
-                          sets.x.label="Marker fails per QC check",
-                          main.bar.color="#1b9e77", matrix.color="#1b9e77",
-                          sets.bar.color="#d95f02")
     if (interactive) {
-        print(p_overview)
+        UpSetR::upset(UpSetR::fromList(fail_list),
+                      order.by = "freq",
+                      empty.intersections = "on", text.scale=1.2,
+                      # Include when UpSetR v1.4.1 is released
+                      # title="Overview quality control failures",
+                      mainbar.y.label="Markers failing multiple QC checks",
+                      sets.x.label="Marker fails per QC check",
+                      main.bar.color="#1b9e77", matrix.color="#1b9e77",
+                      sets.bar.color="#d95f02")
+        #print(p_overview)
     }
     nr_fail_markers <- length(unique_markers_fail)
     return(list(nr_fail_samples=nr_fail_markers,
-                fail_QC=fail_counts,
-                p_overview=p_overview))
+                fail_QC=fail_counts))
+                #p_overview=p_overview))
 }
 
 
@@ -164,6 +167,8 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' @param path2plink [character] Absolute path to where external plink software
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
 #' and specifically, if TRUE, plink log will be displayed.
 #' @return named list with i) fail_missingness containing a [data.frame] with
@@ -177,7 +182,7 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' @export
 check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
                                   path2plink=NULL, verbose=FALSE,
-                                  showPlinkError=TRUE) {
+                                  showPlinkOutput=TRUE) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
         stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
     }
@@ -201,14 +206,14 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
                      " --missing ",
                      "--freq ",
                      "--out ", qcdir, "/", alg, suffix, sep=""),
-               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
+               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --remove ", qcdir ,"/", alg, ".fail.IDs --missing ",
                      "--freq ",
                      "--out ", qcdir, "/", alg, suffix, sep=""),
-               ignore.stdout=verbose, ignore.stderr=!showPlinkError)
+               ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
     }
 
     lmiss <- read.table(paste(qcdir, "/", alg, suffix, ".lmiss",sep=""),
@@ -275,6 +280,8 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' @param path2plink [character] Absolute path to where external plink software
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
 #' and specifically, if TRUE, plink log will be displayed.
 #' @return named list with i) fail_hwe containing a [data.frame] with CHR
@@ -288,7 +295,7 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' (print(p_hwe)).
 #' @export
 check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
-                      path2plink=NULL, verbose=FALSE, showPlinkError=TRUE) {
+                      path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
         stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
     }
@@ -311,13 +318,13 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --hardy",
                      " --out ", qcdir, "/", alg, suffix, sep=""),
-               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
+               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --remove ", qcdir, "/", alg, ".fail.IDs --hardy",
                      " --out ", qcdir, "/", alg, suffix, sep=""),
-               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
+               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     }
     hwe <- read.table(paste(qcdir, "/", alg, suffix, ".hwe", sep=""),
                        header=TRUE, as.is=TRUE)
@@ -377,6 +384,8 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' @param path2plink [character] Absolute path to where external plink software
 #' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 #' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
 #' and specifically, if TRUE, plink log will be displayed.
 #' @return named list with i) fail_maf containing a [data.frame] with CHR
@@ -387,7 +396,7 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' shown by (print(p_maf)).
 #' @export
 check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
-                      interactive=FALSE, path2plink=NULL, showPlinkError=TRUE) {
+                      interactive=FALSE, path2plink=NULL, showPlinkOutput=TRUE) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
         stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
     }
@@ -410,13 +419,13 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --freq ",
                      " --out ", qcdir, "/", alg, suffix, sep=""),
-               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
+               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
         system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
                      " --remove ", qcdir ,"/", alg, ".fail.IDs --freq",
                      " --out ", qcdir, "/", alg, suffix, sep=""),
-               ignore.stdout=!verbose, ignore.stderr=!showPlinkError)
+               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     }
     maf <- read.table(paste(qcdir,"/", alg, suffix, ".frq",sep=""),
                        header=TRUE, as.is=TRUE)
