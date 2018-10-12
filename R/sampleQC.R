@@ -322,7 +322,8 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
                                       unique_samples_fail_wo_ancestry)
     rownames(fail_counts_wo_ancestry) <- unique_samples_fail_wo_ancestry
 
-    p_qc <- UpSetR::upset(UpSetR::fromList(fail_list_wo_ancestry),
+    if (interactive) {
+        UpSetR::upset(UpSetR::fromList(fail_list_wo_ancestry),
                   order.by = "freq",
                   empty.intersections = "on", text.scale=1.2,
                   # Include when UpSetR v1.4.1 is released
@@ -331,6 +332,7 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
                   sets.x.label="Sample fails per QC check",
                   main.bar.color="#1b9e77", matrix.color="#1b9e77",
                   sets.bar.color="#d95f02")
+    }
 
     if ("ancestry" %in% names(fail_list)) {
         # b) overview of QC and ancestry fails
@@ -339,8 +341,8 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
         fail_counts_all <- sapply(fail_all, list2counts,
                                   unique_samples_fail_all)
         rownames(fail_counts_all) <- unique_samples_fail_all
-
-        p_qc_ancestry <- UpSetR::upset(UpSetR::fromList(fail_all),
+        if (interactive) {
+            UpSetR::upset(UpSetR::fromList(fail_all),
                                    order.by = "freq",
                       # Include when UpSetR v1.4.1 is released
                       # title="Intersection between QC and ancestry failures",
@@ -349,19 +351,17 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
                       empty.intersections = "on", text.scale=1.2,
                       main.bar.color="#7570b3", matrix.color="#7570b3",
                     sets.bar.color="#e7298a" )
-        p_overview <- cowplot::plot_grid(p_qc, p_qc_ancestry, nrow=2)
-    } else {
-        p_overview <- p_qc
+        }
+        #p_overview <- cowplot::plot_grid(p_qc, p_qc_ancestry, nrow=2)
+        } else {
+        #p_overview <- p_qc
         fail_counts_all <- NULL
-    }
-    if (interactive) {
-        print(p_overview)
     }
     nr_fail_samples <- length(unique_samples_fail_all)
     return(list(nr_fail_samples=nr_fail_samples,
                 fail_QC=fail_counts_wo_ancestry,
-                fail_QC_and_ancestry=fail_counts_all,
-                p_overview=p_overview))
+                fail_QC_and_ancestry=fail_counts_all))
+                #p_overview=p_overview))
 }
 
 #' Identification of individuals with discordant sex information
@@ -977,6 +977,7 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
         guides(color=guide_legend(nrow=2, byrow=TRUE)) +
         ggforce::geom_circle(aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
                                  r=(max_euclid_dist * europeanTh))) +
+        ggtitle("PCA on combined reference and study genotypes") +
         theme_bw() +
         theme(legend.position='bottom')
     if (interactive) {
