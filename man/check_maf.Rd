@@ -5,7 +5,7 @@
 \title{Identification of SNPs with a very low minor allele frequency}
 \usage{
 check_maf(qcdir, alg, mafTh = 0.01, macTh = 20, verbose = FALSE,
-  interactive = FALSE, path2plink = NULL, showPlinkError = TRUE)
+  interactive = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
@@ -32,6 +32,9 @@ other_arguments) or pdf(outfile) print(p_maf) dev.off().}
 \item{path2plink}{[character] Absolute path to where external plink software
 \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 assumed that PATH set-up works and plink will be found by system("plink").}
+
+\item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
+printed to standard out.}
 }
 \value{
 named list with i) fail_maf containing a [data.frame] with CHR

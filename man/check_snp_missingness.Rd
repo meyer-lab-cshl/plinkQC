@@ -5,7 +5,7 @@
 \title{Identification of SNPs with high missingness rates}
 \usage{
 check_snp_missingness(qcdir, alg, lmissTh = 0.01, interactive = FALSE,
-  path2plink = NULL, verbose = FALSE, showPlinkError = TRUE)
+  path2plink = NULL, verbose = FALSE, showPlinkOutput = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
@@ -30,6 +30,9 @@ assumed that PATH set-up works and plink will be found by system("plink").}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out
 and specifically, if TRUE, plink log will be displayed.}
+
+\item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
+printed to standard out.}
 }
 \value{
 named list with i) fail_missingness containing a [data.frame] with

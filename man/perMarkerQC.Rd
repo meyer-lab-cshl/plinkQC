@@ -6,7 +6,7 @@
 \usage{
 perMarkerQC(qcdir, alg, mafTh = 0.01, macTh = 20, hweTh = 1e-05,
   lmissTh = 0.01, interactive = FALSE, verbose = TRUE,
-  path2plink = NULL, showPlinkError = TRUE)
+  path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
@@ -37,6 +37,9 @@ other_arguments) or pdf(outfile) print(p_marker) dev.off().}
 \item{path2plink}{[character] Absolute path to where external plink software
 \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
 assumed that PATH set-up works and plink will be found by system("plink").}
+
+\item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
+printed to standard out.}
 }
 \value{
 named [list] with i) fail_list, a named [list] with 1.
