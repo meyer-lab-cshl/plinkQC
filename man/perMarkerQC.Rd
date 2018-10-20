@@ -6,7 +6,9 @@
 \usage{
 perMarkerQC(qcdir, alg, mafTh = 0.01, macTh = 20, hweTh = 1e-05,
   lmissTh = 0.01, interactive = FALSE, verbose = TRUE,
-  path2plink = NULL, showPlinkOutput = TRUE)
+  path2plink = NULL, showPlinkOutput = TRUE,
+  do.check_snp_missingness = TRUE, do.check_hwe = TRUE,
+  do.check_maf = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
@@ -40,6 +42,13 @@ assumed that PATH set-up works and plink will be found by system("plink").}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
+
+\item{do.check_snp_missingness}{[logical] if TRUE, run
+\code{\link{check_snp_missingness}}.}
+
+\item{do.check_hwe}{[logical] if TRUE, run \code{\link{check_hwe}}}
+
+\item{do.check_maf}{[logical] if TRUE, run \code{\link{check_maf}}.}
 }
 \value{
 named [list] with i) fail_list, a named [list] with 1.
@@ -56,7 +65,7 @@ List entries contain NULL if that specific check was not chosen.
 perMarkerQC checks the markers in the plink dataset for their missingness
 rates across samples, their deviation from Hardy-Weinberg-Equilibrium (HWE)
 and their minor allele frequencies (MAF). Per default, it assumes that IDs of
-individuals that have failed \code{\link{perSampleQC}} have been written
+individuals that have failed \code{\link{perIndividualQC}} have been written
 to qcdir/alg.failIDs and removes these individuals when computing missingness
 rates, HWE p-values and MAF. If the qcdir/alg.failIDs file does not exist, a
 message is written to stdout but the analyses will continue for all samples

@@ -7,7 +7,7 @@
 overviewPerMarkerQC(results_perMarkerQC, interactive = FALSE)
 }
 \arguments{
-\item{results_perMarkerQC}{[list] Output of \code{\link{perSampleQC}} i.e.
+\item{results_perMarkerQC}{[list] Output of \code{\link{perIndividualQC}} i.e.
 named [list] with i) fail_list, a named [list] with 1.
 SNP_missingness, containing SNP IDs failing the missingness threshold
 lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
@@ -27,9 +27,7 @@ named [list] with i) nr_fail_markers: total number of markers
 [integer] failing perMarkerQC, ii) fail_QC containing a [data.frame] with
 markers that failed QC steps: marker rsIDs in rows,
 columns are all QC steps applied by perMarkerQC (max=3), with entries=0 if
-passing the QC and entries=1 if failing that particular QC and ii)
-p_overview, a ggplot2-object 'containing' the overview plots of the QC
-failures which can be shown by print(p_overview).
+passing the QC and entries=1 if failing that particular QC.
 }
 \description{
 overviewPerMarkerQC depicts results of perMarkerQC as intersection plot (via

@@ -3,7 +3,7 @@
 #' perMarkerQC checks the markers in the plink dataset for their missingness
 #' rates across samples, their deviation from Hardy-Weinberg-Equilibrium (HWE)
 #' and their minor allele frequencies (MAF). Per default, it assumes that IDs of
-#' individuals that have failed \code{\link{perSampleQC}} have been written
+#' individuals that have failed \code{\link{perIndividualQC}} have been written
 #' to qcdir/alg.failIDs and removes these individuals when computing missingness
 #' rates, HWE p-values and MAF. If the qcdir/alg.failIDs file does not exist, a
 #' message is written to stdout but the analyses will continue for all samples
@@ -17,6 +17,10 @@
 #' individuals that failed QC. User needs writing permission to qcdir.
 #' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 #' alg.fam.
+#' @param do.check_hwe [logical] if TRUE, run \code{\link{check_hwe}}
+#' @param do.check_maf [logical] if TRUE, run \code{\link{check_maf}}.
+#' @param do.check_snp_missingness [logical] if TRUE, run
+#' \code{\link{check_snp_missingness}}.
 #' @param lmissTh [double] Threshold for acceptable variant missing rate across
 #' samples.
 #' @param hweTh [double] Significance threshold for deviation from HWE.
@@ -50,27 +54,55 @@
 #' @export
 perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
                         lmissTh=0.01, interactive=FALSE, verbose=TRUE,
-                        path2plink=NULL, showPlinkOutput=TRUE) {
-    if (verbose) message("Identification of SNPs with high missingness rate")
-    fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, alg=alg,
-                                                  lmissTh=lmissTh,
-                                                  path2plink=path2plink,
-                                                  verbose=verbose,
-                                                  showPlinkOutput=
-                                                      showPlinkOutput)
-    if (verbose) message("Identification of SNPs with deviation from HWE")
-    fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, hweTh=hweTh,
-                          path2plink=path2plink, verbose=verbose,
-                          showPlinkOutput=showPlinkOutput)
-    if (verbose) message("Remove markers with a low minor allele frequency")
-    fail_maf <- check_maf(qcdir=qcdir, alg=alg, mafTh=mafTh, macTh=macTh,
-                          path2plink=path2plink, verbose=verbose,
-                          showPlinkOutput=showPlinkOutput)
+                        path2plink=NULL, showPlinkOutput=TRUE,
+                        do.check_snp_missingness=TRUE, do.check_hwe=TRUE,
+                        do.check_maf=TRUE) {
+    if (do.check_snp_missingness) {
+        if (verbose) message("Identification of SNPs with high missingness rate")
+        fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, alg=alg,
+                                                      lmissTh=lmissTh,
+                                                      path2plink=path2plink,
+                                                      verbose=verbose,
+                                                      showPlinkOutput=
+                                                          showPlinkOutput)
+        p_missingness <- fail_snp_missingness$p_lmiss
+    } else {
+        fail_snp_missingness <- NULL
+        p_missingness <- NULL
+    }
+    if (do.check_hwe) {
+        if (verbose) message("Identification of SNPs with deviation from HWE")
+        fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, hweTh=hweTh,
+                              path2plink=path2plink, verbose=verbose,
+                              showPlinkOutput=showPlinkOutput)
+        p_hwe <- fail_hwe$p_hwe
+    } else {
+        fail_hwe <- NULL
+        p_hwe <- NULL
+    }
+    if (do.check_maf) {
+        if (verbose) message("Remove markers with a low minor allele frequency")
+        fail_maf <- check_maf(qcdir=qcdir, alg=alg, mafTh=mafTh, macTh=macTh,
+                              path2plink=path2plink, verbose=verbose,
+                              showPlinkOutput=showPlinkOutput)
+        p_maf <- fail_maf$p_maf
+    } else {
+        fail_maf <- NULL
+        p_maf <- NULL
+    }
     fail_list <- list(SNP_missingness=fail_snp_missingness$fail_missingness$SNP,
                       hwe=fail_hwe$fail_hwe$SNP, maf=fail_maf$fail_maf$SNP)
-    p_markerQC <- cowplot::plot_grid(fail_snp_missingness$p_lmiss,
-                                   fail_hwe$p_hwe, fail_maf$p_maf,
-                                   nrow=3, labels=LETTERS[1:3])
+
+    plots_markerQC <- list(p_missingness, p_hwe, p_maf)
+    plots_markerQC <- plots_markerQC[sapply(plots_markerQC,
+                                            function(x) !is.null(x))]
+    subplotLabels <- LETTERS[1:length(plots_markerQC)]
+    p_markerQC <- cowplot::plot_grid(plotlist=plots_markerQC,
+                                     nrow=length(plots_markerQC),
+                                     labels=subplotLabels,
+                                     rel_heights=c(rep(1,
+                                                       length(plots_markerQC)),
+                                                       1.5))
     if(interactive) print(p_markerQC)
     return(list(fail_list=fail_list, p_markerQC=p_markerQC))
 }
@@ -82,7 +114,7 @@ perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
 #' checks were failed or passed.
 #'
 #'
-#' @param results_perMarkerQC [list] Output of \code{\link{perSampleQC}} i.e.
+#' @param results_perMarkerQC [list] Output of \code{\link{perIndividualQC}} i.e.
 #' named [list] with i) fail_list, a named [list] with 1.
 #' SNP_missingness, containing SNP IDs failing the missingness threshold
 #' lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
@@ -99,9 +131,7 @@ perMarkerQC <- function(qcdir, alg, mafTh=0.01, macTh=20, hweTh=1e-5,
 #' [integer] failing perMarkerQC, ii) fail_QC containing a [data.frame] with
 #' markers that failed QC steps: marker rsIDs in rows,
 #' columns are all QC steps applied by perMarkerQC (max=3), with entries=0 if
-#' passing the QC and entries=1 if failing that particular QC and ii)
-#' p_overview, a ggplot2-object 'containing' the overview plots of the QC
-#' failures which can be shown by print(p_overview).
+#' passing the QC and entries=1 if failing that particular QC.
 #' @export
 overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
     list2counts <- function(element, all_names) {
@@ -125,7 +155,8 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
     rownames(fail_counts) <-  unique_markers_fail
 
     if (interactive) {
-        UpSetR::upset(UpSetR::fromList(fail_list),
+        if (length(fail_list) >= 2) {
+            UpSetR::upset(UpSetR::fromList(fail_list),
                       order.by = "freq",
                       empty.intersections = "on", text.scale=1.2,
                       # Include when UpSetR v1.4.1 is released
@@ -134,6 +165,11 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
                       sets.x.label="Marker fails per QC check",
                       main.bar.color="#1b9e77", matrix.color="#1b9e77",
                       sets.bar.color="#d95f02")
+        } else {
+            message("overviewMarkerQC cannot be displayed with UpSetR: at ",
+                    "least two elements in list required, but only ",
+                    length(fail_list) ," provided")
+        }
         #print(p_overview)
     }
     nr_fail_markers <- length(unique_markers_fail)
@@ -149,7 +185,7 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #'
 #' Uses plink --remove alg.fail.IDs --missing --freq to calculate the rates of
 #' missing genotype calls and frequency for all variants in the individuals that
-#' passed the perSampleQC. Depicts SNP missingness rates (stratified by
+#' passed the perIndividualQC. Depicts SNP missingness rates (stratified by
 #' minor allele frequency) as histograms.
 #'
 #' @param qcdir [character] /path/to/directory/with/QC/results containing
@@ -260,7 +296,7 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #'
 #' Uses plink --remove alg.fail.IDs --hwe to calculate the observed and expected
 #' heterozygote frequencies per SNP in the individuals that
-#' passed the perSampleQC and compute the deviation of the frequencies from
+#' passed the perIndividualQC and compute the deviation of the frequencies from
 #' Hardy-Weinberg equilibrium (HWE) by HWE exact test.
 #' The p-values of the HWE exact test are displayed as histograms (stratified by
 #' all and low p-values), where the hweTh is used to depict the QC cut-off for
@@ -310,7 +346,7 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
     if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
-        message("File with individuals that failed perSampleQC: ",
+        message("File with individuals that failed perIndividualQC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
                 "check_HWE for all samples in ", qcdir,"/", alg,
                 ".fam")
@@ -365,7 +401,7 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' Identification of SNPs with a very low minor allele frequency
 #'
 #' Uses plink --remove alg.fail.IDs --freq to calculate the minor allele
-#' frequencies for all variants in the individuals that passed the perSampleQC.
+#' frequencies for all variants in the individuals that passed the perIndividualQC.
 #' The minor allele frequency distributions is plotted as a histogram.
 #'
 #' @param qcdir [character] /path/to/directory/with/QC/results containing
@@ -396,7 +432,8 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' shown by (print(p_maf)).
 #' @export
 check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
-                      interactive=FALSE, path2plink=NULL, showPlinkOutput=TRUE) {
+                      interactive=FALSE, path2plink=NULL,
+                      showPlinkOutput=TRUE) {
     if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
         stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
     }
@@ -411,7 +448,7 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
     if (!file.exists(paste(qcdir, "/", alg, ".fail.IDs",sep=""))){
-        message("File with individuals that failed perSampleQC: ",
+        message("File with individuals that failed perIndividualQC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
                 "check_maf for all samples in ", qcdir,"/", alg,
                 ".fam")
@@ -433,7 +470,7 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
     all_samples <-  R.utils::countLines(paste(qcdir,"/",alg, ".fam",sep=""))
     fail_samples <-  R.utils::countLines(paste(qcdir,"/",alg, ".fail.IDs",
                                                sep=""))
-    keep_samples <- all_samples - fail_samples
+    keep_samples <- as.numeric(all_samples - fail_samples)
 
     if (is.null(mafTh) && is.null(macTh)) {
         stop("Either mafTh or macTh need to be provided")
@@ -444,12 +481,12 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
     if (verbose) {
         if (!is.null(mafTh) && !is.null(macTh)) {
             message("Both mafTh and macTh provided, macTh=", macTh,
-                    " is used (corresponds to mafTh=", mafTh, ")")
+                    " is used (corresponds to mafTh=", round(mafTh, 6), ")")
         } else if (!is.null(mafTh)) {
-            message("The mafTh is ", mafTh)
+            message("The mafTh is ", round(mafTh, 6))
         } else {
             message("The macTh is ", macTh," which corresponds to a mafTh=",
-                    mafTh, ")")
+                    round(mafTh, 6), ")")
         }
     }
     p_maf <- ggplot(maf, aes_string('MAF'))

@@ -46,6 +46,6 @@ shown by (print(p_maf)).
 }
 \description{
 Uses plink --remove alg.fail.IDs --freq to calculate the minor allele
-frequencies for all variants in the individuals that passed the perSampleQC.
+frequencies for all variants in the individuals that passed the perIndividualQC.
 The minor allele frequency distributions is plotted as a histogram.
 }

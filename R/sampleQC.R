@@ -1,6 +1,6 @@
 #' Quality control for all individuals in plink-dataset
 #'
-#' perSampleQC checks the samples in the plink dataset for their total
+#' perIndividualQC checks the samples in the plink dataset for their total
 #' missingness and heterozygosity rates, the concordance of their assigned sex
 #' to their SNP sex, their relatedness to other study individuals and their
 #' genetic ancestry.
@@ -114,14 +114,14 @@
 #' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}, which can
 #' be shown by print(p_sampleQC).
 #' List entries contain NULL if that specific check was not chosen.
-#' @details perSampleQC wraps around the individual QC functions
+#' @details perIndividualQC wraps around the individual QC functions
 #' \code{\link{check_sex}}, \code{\link{check_heterozygosity_and_missingness}},
 #' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}. For details
 #' on the parameters and outputs, check these function documentations. For
 #' detailed output for fail IIDs (instead of simple IID lists), run each
 #' function individually.
 #' @export
-perSampleQC <- function(qcdir, alg,
+perIndividualQC <- function(qcdir, alg,
                             do.check_sex=TRUE, maleTh=0.8, femaleTh=0.2,
                             externalSex=NULL, externalMale="M",
                             externalSexSex="Sex", externalSexID="IID",
@@ -253,7 +253,8 @@ perSampleQC <- function(qcdir, alg,
     p_sampleQC <- cowplot::plot_grid(plotlist=plots_sampleQC,
                                      nrow=length(plots_sampleQC),
                                      labels=subplotLabels,
-                                     rel_heights=c(1,1,1,1.5))
+                                     rel_heights=c(rep(1,length(plots_sampleQC)),
+                                                       1.5))
     if (interactive) {
         print(p_sampleQC)
     }
@@ -262,12 +263,12 @@ perSampleQC <- function(qcdir, alg,
 
 #' Overview of per sample QC
 #'
-#' overviewPerSampleQC depicts results of perSampleQC as intersection plot (via
+#' overviewperIndividualQC depicts results of perIndividualQC as intersection plot (via
 #' \code{\link[UpSetR]{upset}}) and returns dataframes indicating which QC
 #' checks any sample failed or passed.
 #'
 #'
-#' @param results_perSampleQC [list] Output of \code{\link{perSampleQC}} i.e.
+#' @param results_perIndividualQC [list] Output of \code{\link{perIndividualQC}} i.e.
 #' named list
 #' with i) sample_missingness containing a [vector] with sample IIDs failing
 #' the selected missingness threshold imissTh, ii) highIBD containing
@@ -287,28 +288,25 @@ perSampleQC <- function(qcdir, alg,
 #' save the returned plot object (p_overview) via ggplot2::ggsave(p=p_overview,
 #' other_arguments) or pdf(outfile) print(p_overview) dev.off().
 #' @return named [list] with i) nr_fail_samples: total number of samples
-#' [integer] failing perSampleQC, ii) fail_QC containing a [data.frame] with
+#' [integer] failing perIndividualQC, ii) fail_QC containing a [data.frame] with
 #' samples that failed QC steps (excluding ancestry): samples IIDs in rows,
-#' columns are all QC steps applied by perSampleQC (max=4), with entries=0 if
+#' columns are all QC steps applied by perIndividualQC (max=4), with entries=0 if
 #' passing the QC and entries=1 if failing that particular QC and iii)
 #' fail_QC_and_ancestry containing a [data.frame] with samples that failed
 #' ancestry and QC checks: samples IIDs in rows, columns are QC_fail and
-#' Ancestry_fail, with entries=0 if passing  and entries=1 if failing that check
-#' and iv) p_overview, a ggplot2-object 'containing' the overview plots of the
-#' QC failures and the intersection of QC failures with ancestry exclusion which
-#' can be shown by print(p_overview).
+#' Ancestry_fail, with entries=0 if passing and entries=1 if failing that check.
 #' @export
-overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
+overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) {
     list2counts <- function(element, all_names) {
         all_names[!(all_names %in% element)] <- 0
         all_names[all_names %in% element] <- 1
         return(as.numeric(all_names))
     }
-    if (length(perSampleQC) == 2 &&
-        !all(names(results_perSampleQC) == c("fail_list", "p_sampleQC"))) {
-        stop("results_perSampleQC not direct output of perSampleQC")
+    if (length(perIndividualQC) == 2 &&
+        !all(names(results_perIndividualQC) == c("fail_list", "p_sampleQC"))) {
+        stop("results_perIndividualQC not direct output of perIndividualQC")
     }
-    fail_list <- results_perSampleQC$fail_list
+    fail_list <- results_perIndividualQC$fail_list
     # Remove null elements
     fail_list <- fail_list[!sapply(fail_list, is.null)]
 
@@ -323,7 +321,8 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
     rownames(fail_counts_wo_ancestry) <- unique_samples_fail_wo_ancestry
 
     if (interactive) {
-        UpSetR::upset(UpSetR::fromList(fail_list_wo_ancestry),
+        if (length(fail_list_wo_ancestry) >= 2) {
+            UpSetR::upset(UpSetR::fromList(fail_list_wo_ancestry),
                   order.by = "freq",
                   empty.intersections = "on", text.scale=1.2,
                   # Include when UpSetR v1.4.1 is released
@@ -332,6 +331,11 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
                   sets.x.label="Sample fails per QC check",
                   main.bar.color="#1b9e77", matrix.color="#1b9e77",
                   sets.bar.color="#d95f02")
+        } else {
+            message("overviewSampleQC for QC fails cannot be displayed with ",
+                    "UpSetR: at least two elements in list required, but only ",
+                    length(fail_list_wo_ancestry) ," provided")
+        }
     }
 
     if ("ancestry" %in% names(fail_list)) {
@@ -342,18 +346,24 @@ overviewPerSampleQC <- function(results_perSampleQC, interactive=FALSE) {
                                   unique_samples_fail_all)
         rownames(fail_counts_all) <- unique_samples_fail_all
         if (interactive) {
-            UpSetR::upset(UpSetR::fromList(fail_all),
-                                   order.by = "freq",
-                      # Include when UpSetR v1.4.1 is released
+            if (length(fail_all) >= 2) {
+                UpSetR::upset(UpSetR::fromList(fail_all),
+                              order.by = "freq",
+                            # Include when UpSetR v1.4.1 is released
                       # title="Intersection between QC and ancestry failures",
                       mainbar.y.label="Samples failing QC and ancestry checks",
                       sets.x.label="Sample fails per QC check",
                       empty.intersections = "on", text.scale=1.2,
                       main.bar.color="#7570b3", matrix.color="#7570b3",
                     sets.bar.color="#e7298a" )
+            } else {
+                message("overviewSampleQC for QC fails and ancestry cannot be ",
+                        "displayed with UpSetR: as no samples are present in ",
+                        "QC fails")
+            }
         }
         #p_overview <- cowplot::plot_grid(p_qc, p_qc_ancestry, nrow=2)
-        } else {
+    } else {
         #p_overview <- p_qc
         fail_counts_all <- NULL
     }
@@ -773,7 +783,7 @@ check_relatedness <- function(qcdir, alg, highIBDTh=0.1875,
                                       otherCriterionThDirection="gt",
                                       otherCriterionMeasure="F_MISS" )
 
-    genome$PI_HAT_bin <- ifelse(genome$PI_HAT < 0.1, 1, 0)
+    genome$PI_HAT_bin <- ifelse(genome$PI_HAT > 0.05, 0, 1)
     p_allPI_HAT <- ggplot(genome, aes_string('PI_HAT'))
     p_allPI_HAT <- p_allPI_HAT + geom_histogram(binwidth = 0.005,
                                             fill="#66a61e") +
@@ -972,8 +982,12 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
     p_ancestry <- p_ancestry + geom_point(data=data_all,
                                           aes_string(x='PC1', y='PC2',
                                                      color='Pop')) +
+        geom_point(data=dplyr::filter_(data_all, ~Pop != alg),
+                   aes_string(x='PC1', y='PC2',
+                              color='Pop'),
+                   size=1) +
         scale_color_manual(values=refColors$Color,
-                                    name="Population") +
+                           name="Population") +
         guides(color=guide_legend(nrow=2, byrow=TRUE)) +
         ggforce::geom_circle(aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
                                  r=(max_euclid_dist * europeanTh))) +

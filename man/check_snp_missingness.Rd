@@ -47,6 +47,6 @@ SNP missingness histogram which can be shown by (print(p_lmiss)).
 \description{
 Uses plink --remove alg.fail.IDs --missing --freq to calculate the rates of
 missing genotype calls and frequency for all variants in the individuals that
-passed the perSampleQC. Depicts SNP missingness rates (stratified by
+passed the perIndividualQC. Depicts SNP missingness rates (stratified by
 minor allele frequency) as histograms.
 }

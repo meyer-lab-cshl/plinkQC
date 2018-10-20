@@ -99,12 +99,12 @@ test_that('check_relatedness returns correct output type',{
 
 test_that('check_relatedness returns correct output length',{
     fail_relatedness <- check_relatedness(qcdir, alg, verbose=FALSE)
-    expect_equal(length(fail_relatedness), 2)
+    expect_equal(length(fail_relatedness), 3)
 })
 
 test_that('check_relatedness returns correct output names',{
     fail_relatedness <- check_relatedness(qcdir, alg, verbose=FALSE)
-    expect_equal(names(fail_relatedness), c("fail_highIBD", "p_IBD"))
+    expect_equal(names(fail_relatedness), c("fail_highIBD", "failIDs", "p_IBD"))
 })
 
 test_that('check_relatedness returns correct fail IDs for example data',{
@@ -113,3 +113,8 @@ test_that('check_relatedness returns correct fail IDs for example data',{
                         fail_highIBDIDs[,1]))
 })
 
+test_that('overviewPerSampleQC returns QC fails message', {
+    results_perSampleQC <- list(fail_list=list(a=1:10), p_SampleQC=NULL)
+    expect_message(overviewPerSampleQC(results_perSampleQC, interactive=TRUE),
+                   "overviewSampleQC for QC fails cannot be displayed with")
+})

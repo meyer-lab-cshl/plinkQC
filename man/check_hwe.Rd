@@ -48,7 +48,7 @@ for all SNPs that failed the hweTh and ii) p_hwe, a ggplot2-object
 \description{
 Uses plink --remove alg.fail.IDs --hwe to calculate the observed and expected
 heterozygote frequencies per SNP in the individuals that
-passed the perSampleQC and compute the deviation of the frequencies from
+passed the perIndividualQC and compute the deviation of the frequencies from
 Hardy-Weinberg equilibrium (HWE) by HWE exact test.
 The p-values of the HWE exact test are displayed as histograms (stratified by
 all and low p-values), where the hweTh is used to depict the QC cut-off for
