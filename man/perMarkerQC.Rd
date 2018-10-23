@@ -4,29 +4,36 @@
 \alias{perMarkerQC}
 \title{Quality control for all markers in plink-dataset}
 \usage{
-perMarkerQC(qcdir, alg, mafTh = 0.01, macTh = 20, hweTh = 1e-05,
-  lmissTh = 0.01, interactive = FALSE, verbose = TRUE,
-  path2plink = NULL, showPlinkOutput = TRUE,
-  do.check_snp_missingness = TRUE, do.check_hwe = TRUE,
-  do.check_maf = TRUE)
+perMarkerQC(qcdir, alg, do.check_snp_missingness = TRUE,
+  lmissTh = 0.01, do.check_hwe = TRUE, hweTh = 1e-05,
+  do.check_maf = TRUE, mafTh = 0.01, macTh = 20,
+  interactive = FALSE, verbose = TRUE, path2plink = NULL,
+  showPlinkOutput = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing
 alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
 individuals that failed QC. User needs writing permission to qcdir.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
+\item{alg}{[character] prefix of plink files, i.e. alg.bed, alg.bim,
 alg.fam.}
+
+\item{do.check_snp_missingness}{[logical] If TRUE, run
+\code{\link{check_snp_missingness}}.}
+
+\item{lmissTh}{[double] Threshold for acceptable variant missing rate across
+samples.}
+
+\item{do.check_hwe}{[logical] If TRUE, run \code{\link{check_hwe}}}
+
+\item{hweTh}{[double] Significance threshold for deviation from HWE.}
+
+\item{do.check_maf}{[logical] If TRUE, run \code{\link{check_maf}}.}
 
 \item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
 
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
 and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)}
-
-\item{hweTh}{[double] Significance threshold for deviation from HWE.}
-
-\item{lmissTh}{[double] Threshold for acceptable variant missing rate across
-samples.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -42,19 +49,12 @@ assumed that PATH set-up works and plink will be found by system("plink").}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
-
-\item{do.check_snp_missingness}{[logical] if TRUE, run
-\code{\link{check_snp_missingness}}.}
-
-\item{do.check_hwe}{[logical] if TRUE, run \code{\link{check_hwe}}}
-
-\item{do.check_maf}{[logical] if TRUE, run \code{\link{check_maf}}.}
 }
 \value{
-named [list] with i) fail_list, a named [list] with 1.
-SNP_missingness, containing SNP IDs failing the missingness threshold
-lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
-hweTh and 3. maf, containing SNPs failing the MAF threshold mafTh/MAC
+Named [list] with i) fail_list, a named [list] with 1.
+SNP_missingness, containing SNP IDs [vector] failing the missingness threshold
+lmissTh, 2. hwe, containing SNP IDs [vector] failing the HWE exact test threshold
+hweTh and 3. maf, containing SNPs Ids [vector] failing the MAF threshold mafTh/MAC
 threshold macTh and ii) p_markerQC, a ggplot2-object 'containing' a
 sub-paneled plot with the QC-plots of \code{\link{check_snp_missingness}},
 \code{\link{check_hwe}} and \code{\link{check_maf}}, which can
@@ -80,4 +80,17 @@ perMarkerQC wraps around the marker QC functions
 \code{\link{check_snp_missingness}}, \code{\link{check_hwe}} and
 \code{\link{check_maf}}. For details on the parameters and outputs, check
 these function documentations.
+}
+\examples{
+package.dir <- find.package('plinkQC')
+qcdir <- file.path(package.dir, 'extdata')
+alg <- "data"
+path2plink <- '/path/to/plink'
+# the following code is not run on package build, as the path2plink on the
+# user system is not known.
+# All quality control checks
+\dontrun{
+fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, interactive=FALSE,
+verbose=TRUE, path2plink=path2plink)
+}
 }

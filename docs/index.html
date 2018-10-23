@@ -28,8 +28,8 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container template-article">
+      <header><div class="navbar navbar-standard navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -48,22 +48,45 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-file"></span>
+     
+    Documentation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
 <li>
-  <a href="articles/plinkQC.html">Get started</a>
-</li>
-<li>
-  <a href="reference/index.html">Reference</a>
+      <a href="articles/AncestryCheck.html">Ancestry</a>
+    </li>
+  </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
+  <a href="news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="reference/index.html">
+    <span class="fa fa-code"></span>
+     
+    functions
+  </a>
+</li>
+<li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -76,11 +99,37 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
-    <p>Genotyping arrays enable the direct measurement of an individuals genotype at thousands of markers. plinkQC facilitates genotype quality control for genetic association studies as described by Anderson et al (2010) Nature Protocols. It wraps around PLINK basic statistics (e.g. missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions and generates a per-individual and per-marker quality control report. Individuals and markers that fail the quality control can subsequently be removed to generate a new, clean dataset. Removal of individuals based on relationship status is optimised to retain as many individuals as possible in the study.</p>
+  <div class="col-md-9 contents">
+    
+
+    
+    
+
+<div id="plinkqc" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plinkqc" class="anchor"></a><i class="fa fa-map" aria-hidden="true"></i> plinkQC</h2>
+<p><strong>plinkQC</strong> is a R/CRAN for <strong>genotype quality control</strong> in genetic association studies. It makes PLINK basic statistics (e.g.missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions easily accesible from within R and allows for automatic evaluation of the results.</p>
+<p><strong>plinkQC</strong> facilitates an ancestry check for study individuals based on comparison to reference datasets. The processing of the reference datasets is documented in detail <a href="articles/AncestryCheck.html">here</a></p>
+<p><strong>plinkQC</strong> generates a per-individual and per-marker quality control report.</p>
+<p>Individuals and markers that fail the quality control can subsequently be removed with <strong>plinkQC</strong> to generate a new, clean dataset.</p>
+<p>Removal of individuals based on relationship status via <strong>plinkQC</strong> is optimised to retain as many individuals as possible in the study.</p>
+</div>
+<div id="getting-started" class="section level2">
+<h2 class="hasAnchor">
+<a href="#getting-started" class="anchor"></a><i class="fa fa-cog" aria-hidden="true"></i> Getting Started</h2>
+<ul>
+<li>
+<p>The current github version of <strong>plinkQC</strong> is: 0.1.0 and can be installed via</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">library</span>(devtools)
+<span class="ex">install_github</span>(<span class="st">"HannahVMeyer/PhenotypeSimulator"</span>)</code></pre></div>
+</li>
+<li><p><strong>plinkQC</strong> will soon be available on CRAN!</p></li>
+<li><p>A log of version changes can be found <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.html">here</a>.</p></li>
+</ul>
+</div>
   </div>
 
-  <div class="col-md-3" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
@@ -105,7 +154,14 @@
 </ul>
 </div>
 
-  </div>
+      <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=plinkQC"><img src="http://www.r-pkg.org/badges/version/plinkQC" alt="CRAN_Status_Badge"></a></li>
+</ul>
+</div>
+</div>
+
 </div>
 
 

@@ -20,7 +20,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-standard navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -39,22 +39,45 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-file"></span>
+     
+    Documentation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
 <li>
-  <a href="../articles/plinkQC.html">Get started</a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+      <a href="../articles/AncestryCheck.html">Ancestry</a>
+    </li>
+  </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-code"></span>
+     
+    functions
+  </a>
+</li>
+<li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -72,7 +95,7 @@
       <h1>Genotype quality control with plinkQC</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2018-10-20</h4>
+            <h4 class="date">2018-10-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/plinkQC.Rmd"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="hidden name"><code>plinkQC.Rmd</code></div>
@@ -85,10 +108,10 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>Genotyping arrays enable the direct measurement of an individuals genotype at thousands of markers. Subsequent analyses such as genome-wide association studies rely on the high quality of these marker genotypes.</p>
-<p><span class="citation">(Anderson et al. 2010)</span> and colleagues introduced a protocol for data quality control in genetic association studies heavily based on the summary statistics and relatedness estimation functions in the PLINK software. PLINK is a comprehensive, open-source command-line tool for genome-wide association studies (GWAS) and population genetics research <span class="citation">(Purcell et al. 2007, <span class="citation">Chang et al. (2015)</span>)</span>. It’s main functionalities include data management, computing individual- and marker-level summary statistics, identity-by-state estimation and association analysis.<br>
-Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span class="citation">(PLINK/SEQ 2014)</span>. While the plugin is limited to operations yielding simple genetic marker vectors as output, the PLINK/SEQ R Package is limited in the functionalities it can access.</p>
-<p><em>plinkQC</em> facilitates genotype quality control for genetic association studies as described by <span class="citation">(Anderson et al. 2010)</span>. It wraps around plink basic statistics (e.g. missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions and generates a per-individual and per-marker quality control report. Individuals and markers that fail the quality control can subsequently be removed with <em>plinkQC</em> to generate a new, clean dataset. Removal of individuals based on relationship status is optimised to retain as many individuals as possible in the study.</p>
-<p><em>plinkQC</em> depends on the <a href="https://www.cog-genomics.org/plink/1.9/">plink</a> <span class="citation">(Purcell et al. 2007, <span class="citation">Chang et al. (2015)</span>)</span> (version <span class="math inline">\(gt\)</span> 1.9), which has to be manually installed prior to the usage of <em>plinkQC</em>. It assumes the genotype have already been determined from the original probe intensity data of the genotype array and is available in <a href="https://www.cog-genomics.org/plink/1.9/input#bed">plink format</a>.</p>
+<p><span class="citation">[1]</span> and colleagues introduced a protocol for data quality control in genetic association studies heavily based on the summary statistics and relatedness estimation functions in the PLINK software. PLINK is a comprehensive, open-source command-line tool for genome-wide association studies (GWAS) and population genetics research <span class="citation">[2]</span>. It’s main functionalities include data management, computing individual- and marker-level summary statistics, identity-by-state estimation and association analysis.<br>
+Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span class="citation">[4]</span>. While the plugin is limited to operations yielding simple genetic marker vectors as output, the PLINK/SEQ R Package is limited in the functionalities it can access.</p>
+<p><em>plinkQC</em> facilitates genotype quality control for genetic association studies as described by <span class="citation">[1]</span>. It wraps around plink basic statistics (e.g. missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions and generates a per-individual and per-marker quality control report. Individuals and markers that fail the quality control can subsequently be removed with <em>plinkQC</em> to generate a new, clean dataset. Removal of individuals based on relationship status is optimised to retain as many individuals as possible in the study.</p>
+<p><em>plinkQC</em> depends on the <a href="https://www.cog-genomics.org/plink/1.9/">PLINK</a> (version <span class="math inline">\(\ge\)</span> 1.9), which has to be manually installed prior to the usage of <em>plinkQC</em>. It assumes the genotype have already been determined from the original probe intensity data of the genotype array and is available in <a href="https://www.cog-genomics.org/plink/1.9/input#bed">plink format</a>.</p>
 <p>The protocol is implemented in three main functions, the per-individual quality control (<code>perIndividualQC</code>), the per-marker quality control (<code>perMarkerQC</code>) and the generation of the new, quality control dataset (<code>cleanData</code>):</p>
 <div id="per-individual-quality-control" class="section level2">
 <h2 class="hasAnchor">
@@ -127,17 +150,20 @@ path2plink &lt;-<span class="st"> "~/bin"</span></code></pre></div>
                             <span class="dt">refColorsFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_PopColors.txt"</span>,
                                                  <span class="dt">sep=</span><span class="st">""</span>),
                             <span class="dt">prefixMergedDataset=</span><span class="st">"data.HapMapIII"</span>,
-                            <span class="dt">interactive=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)
+                            <span class="dt">interactive=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>,
+                            <span class="dt">do.run_check_het_and_miss=</span><span class="ot">FALSE</span>,
+                            <span class="dt">do.run_check_sex=</span><span class="ot">FALSE</span>,
+                            <span class="dt">do.run_check_relatedness=</span><span class="ot">FALSE</span>)
 <span class="co">#&gt; Identification of individuals with discordant sex information</span>
 <span class="co">#&gt; Identification of individuals with outlying missing genotype or heterozygosity rates</span>
 <span class="co">#&gt; Identification of related individuals</span>
 <span class="co">#&gt; Identification of individuals of divergent ancestry</span>
 <span class="co">#&gt; Combine fail IDs into ~/RPackagesDevel/plinkQC/inst/extdata/data.fail.IDs</span></code></pre></div>
-<p><img src="figs/individual%20QC-1.png" width="864"></p>
+<p><img src="plinkQC_files/figure-html/individual%20QC-1.png" width="864"></p>
 <p><code>overviewperIndividualQC</code> depicts overview plots of quality control failures and the intersection of quality control failures with ancestry exclusion.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">overview_individuals &lt;-<span class="st"> </span><span class="kw"><a href="../reference/overviewPerIndividualQC.html">overviewPerIndividualQC</a></span>(fail_individuals,
                                                 <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="figs/overview%20individual%20QC-1.png" width="700"><img src="figs/overview%20individual%20QC-2.png" width="700"></p>
+<p><img src="plinkQC_files/figure-html/overview%20individual%20QC-1.png" width="700"><img src="plinkQC_files/figure-html/overview%20individual%20QC-2.png" width="700"></p>
 </div>
 <div id="per-marker-quality-control-1" class="section level2">
 <h2 class="hasAnchor">
@@ -151,10 +177,10 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <span class="co">#&gt; Identification of SNPs with deviation from HWE</span>
 <span class="co">#&gt; Remove markers with a low minor allele frequency</span>
 <span class="co">#&gt; Both mafTh and macTh provided, macTh=20 is used (corresponds to mafTh=0.067568)</span></code></pre></div>
-<p><img src="figs/marker%20QC-1.png" width="576"></p>
+<p><img src="plinkQC_files/figure-html/marker%20QC-1.png" width="576" style="display: block; margin: auto;"></p>
 <p><code>overviewPerMarkerQC</code> depicts an overview of the marker quality control failures and their overlaps.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">overview_marker &lt;-<span class="st"> </span><span class="kw"><a href="../reference/overviewPerMarkerQC.html">overviewPerMarkerQC</a></span>(fail_markers, <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="figs/overview%20marker%20QC-1.png" width="700"></p>
+<p><img src="plinkQC_files/figure-html/overview%20marker%20QC-1.png" width="700"></p>
 
 </div>
 <div id="create-qc-ed-dataset" class="section level2">
@@ -169,33 +195,36 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <div id="step-by-step" class="section level1">
 <h1 class="hasAnchor">
 <a href="#step-by-step" class="anchor"></a>Step-by-step</h1>
-<p>(for more details, see <span class="citation">(Anderson et al. 2010 and <a href="https://www.cog-genomics.org/plink/1.9/">plink</a>))</span>).</p>
+<p>(for more details, see <span class="citation">[1]</span>).</p>
 <div id="individuals-with-discordant-sex-information" class="section level2">
 <h2 class="hasAnchor">
 <a href="#individuals-with-discordant-sex-information" class="anchor"></a>Individuals with discordant sex information</h2>
 <p>The identification of individuals with discordant sex information helps to detect sample mix-ups and samples with very poor genotyping rates. For each sample, the homozygosity rates across all X-chromosomal genetic markers are computed and compared with the expected rates (typically $&lt;$0.2 for females and $&gt;$0.8 for males). For samples where the assigned sex (PEDSEX in the .fam file) contradicts the sex inferred from the homozygosity rates (SNPSEX), it should be checked that the sex was correctly recorded (genotyping often occurs at different locations as phenotyping and misrecording might occur). Samples with discordant sex information that is not accounted for should be removed from the study. Identifying individuals with discordant sex information is implemented in <code>check_sex</code>. It finds individuals whose SNPSEX != PEDSEX. Optionally, an extra data.frame with sample IDs and sex can be provided to double check if external and PEDSEX data (often processed at different centers) match. If a mismatch between PEDSEX and SNPSEX was detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be updated. <code>check_sex</code> depicts the X-chromosomal heterozygosity (SNPSEX) of the samples split by their (PEDSEX).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_sex &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_sex.html">check_sex</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20sex-1.png" width="700"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_sex &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_sex.html">check_sex</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>,
+                      <span class="dt">run.check_sex=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="plinkQC_files/figure-html/check%20sex-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="individuals-with-outlying-missing-genotype-andor-heterozygosity-rates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#individuals-with-outlying-missing-genotype-andor-heterozygosity-rates" class="anchor"></a>Individuals with outlying missing genotype and/or heterozygosity rates</h2>
-<p>The identification of individuals with outlying missing genotype and/or heterozygosity rates helps to detect samples with poor DNA quality and/or concentration that should be excluded from the study. Typically, individuals with more than 3-7% of their genotype calles missing are removed. Outlying heterozygosity rates are judged relative to the overall heterozygosity rates in the study, and individuals whose rates are more than a few standard deviations (sd) from the mean heterozygosity rate are removed. A typical quality control for outlying heterozygoisty rates would remove individuals who are three sd away from the mean rate. Identifying related individuals with outlying missing genotype and/or heterozygosity rates is implemented in <code>check_heterozygosity_and_missingness</code>. It finds individuals that have genotyping and heterozygosity rates that fail the set thresholds and depicts the results as a scatter plot with the samples’ missingness rates on x-axis and their heterozygosity rates on the y-axis.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_het_imiss &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_heterozygosity_and_missingness.html">check_heterozygosity_and_missingness</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg,
-                                                       <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20het%20miss-1.png" width="700"></p>
+<p>The identification of individuals with outlying missing genotype and/or heterozygosity rates helps to detect samples with poor DNA quality and/or concentration that should be excluded from the study. Typically, individuals with more than 3-7% of their genotype calles missing are removed. Outlying heterozygosity rates are judged relative to the overall heterozygosity rates in the study, and individuals whose rates are more than a few standard deviations (sd) from the mean heterozygosity rate are removed. A typical quality control for outlying heterozygoisty rates would remove individuals who are three sd away from the mean rate. Identifying related individuals with outlying missing genotype and/or heterozygosity rates is implemented in <code>check_het_and_miss</code>. It finds individuals that have genotyping and heterozygosity rates that fail the set thresholds and depicts the results as a scatter plot with the samples’ missingness rates on x-axis and their heterozygosity rates on the y-axis.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_het_imiss &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_het_and_miss.html">check_het_and_miss</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg,
+                                     <span class="dt">interactive=</span><span class="ot">TRUE</span>,
+                                     <span class="dt">run.check_het_and_miss=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="plinkQC_files/figure-html/check%20het%20miss-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="related-individuals" class="section level2">
 <h2 class="hasAnchor">
 <a href="#related-individuals" class="anchor"></a>Related individuals</h2>
 <p>Depending on the future use of the genotypes, it might required to remove any related individuals from the study. Related individuals can be identified by their proporting of shared alleles at the genotyped markers (identity by descend, IBD). Standardly, individuals with second-degree relatedness or higher will be excluded. Identifying related individuals is implemented in <code>check_relatedness</code>. It finds pairs of samples whose proportion of IBD is larger than the specified highIBDTh. Subsequently, for pairs of individual that do not have additional relatives in the dataset, the individual with the greater genotype missingness rate is selected and returned as the individual failing the relatedness check. For more complex family structures, the unrelated individuals per family are selected (e.g. in a parents-offspring trio, the offspring will be marked as fail, while the parents will be kept in the analysis).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">exclude_relatedness &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_relatedness.html">check_relatedness</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20related-1.png" width="700"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">exclude_relatedness &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_relatedness.html">check_relatedness</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
+                                         <span class="dt">run.check_relatedness=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="plinkQC_files/figure-html/check%20related-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="individuals-of-divergent-ancestry" class="section level2">
 <h2 class="hasAnchor">
 <a href="#individuals-of-divergent-ancestry" class="anchor"></a>Individuals of divergent ancestry</h2>
-<p>The identification of individuals of divergent ancestry can be achieved by combining the genotypes of the study population with genotypes of a reference dataset consisting of individuals from known ethnicities (for instance individuals from the Hapmap or 1000 genomes study <span class="citation">(The International HapMap Consortium 2005,<span class="citation">The International HapMap Consortium (2007)</span>, <span class="citation">The International HapMap Consortium (2010)</span>,<span class="citation">1000 Genomes Project Consortium (2015b)</span>,<span class="citation">1000 Genomes Project Consortium (2015a)</span>)</span>). Principal component analysis on this combined genotype panel can be used to detect population structure down to the level of the reference dataset (for Hapmap and 1000 Genomes, this is down to large-scale continental ancestry). Identifying individuals of divergent ancestry is implemented in <code>check_ancestry</code>. Currently, check ancestry only supports automatic selection of individuals of European descent. It uses information from principal components 1 and 2 to find the center of the European reference samples. All study samples whose euclidean distance from the centre falls outside a specified radius are considered non-European. <code>check_ancestry</code> creates a scatter plot of PC1 versus PC2 color-coded for samples of the reference populations and the study population.</p>
+<p>The identification of individuals of divergent ancestry can be achieved by combining the genotypes of the study population with genotypes of a reference dataset consisting of individuals from known ethnicities (for instance individuals from the Hapmap or 1000 genomes study <span class="citation">[5]</span>). Principal component analysis on this combined genotype panel can be used to detect population structure down to the level of the reference dataset (for Hapmap and 1000 Genomes, this is down to large-scale continental ancestry). Identifying individuals of divergent ancestry is implemented in <code>check_ancestry</code>. Currently, check ancestry only supports automatic selection of individuals of European descent. It uses information from principal components 1 and 2 to find the center of the European reference samples. All study samples whose euclidean distance from the centre falls outside a specified radius are considered non-European. <code>check_ancestry</code> creates a scatter plot of PC1 versus PC2 color-coded for samples of the reference populations and the study population.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">exclude_ancestry &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_ancestry.html">check_ancestry</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg,
                             <span class="dt">refSamplesFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_ID2Pop.txt"</span>,
                                                  <span class="dt">sep=</span><span class="st">""</span>), 
@@ -203,7 +232,7 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
                                                  <span class="dt">sep=</span><span class="st">""</span>),
                             <span class="dt">prefixMergedDataset=</span><span class="st">"data.HapMapIII"</span>,
                             <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20ancestry-1.png" width="700"></p>
+<p><img src="plinkQC_files/figure-html/check%20ancestry-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="markers-with-excessive-missingness-rate" class="section level2">
 <h2 class="hasAnchor">
@@ -212,7 +241,7 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_snpmissing &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_snp_missingness.html">check_snp_missingness</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                                          <span class="dt">path2plink=</span>path2plink, 
                                          <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20snp%20missing-1.png" width="700"></p>
+<p><img src="plinkQC_files/figure-html/check%20snp%20missing-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="markers-with-deviation-from-hwe" class="section level2">
 <h2 class="hasAnchor">
@@ -221,7 +250,7 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_hwe &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_hwe.html">check_hwe</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                       <span class="dt">path2plink=</span>path2plink, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>,
                       <span class="dt">verbose=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20hwe-1.png" width="700"></p>
+<p><img src="plinkQC_files/figure-html/check%20hwe-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="markers-with-low-minor-allele-frequency" class="section level2">
 <h2 class="hasAnchor">
@@ -231,39 +260,39 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
                       <span class="dt">path2plink=</span>path2plink, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>,
                       <span class="dt">verbose=</span><span class="ot">TRUE</span>)
 <span class="co">#&gt; Both mafTh and macTh provided, macTh=20 is used (corresponds to mafTh=0.067568)</span></code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20maf-1.png" width="700"></p>
+<p><img src="plinkQC_files/figure-html/check%20maf-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
 <div id="refs" class="references">
-<div id="ref-b1000Genomes2015">
-<p>1000 Genomes Project Consortium. 2015a. “A global reference for human genetic variation.” <em>Nature</em> 526: 75–81. doi:<a href="https://doi.org/10.1038/nature15393">10.1038/nature15393</a>.</p>
-</div>
-<div id="ref-a1000Genomes2015">
-<p>———. 2015b. “An integrated map of structural variation in 2,504 human genomes.” <em>Nature</em> 526: 75–81. doi:<a href="https://doi.org/10.1038/nature15394">10.1038/nature15394</a>.</p>
-</div>
 <div id="ref-Anderson2010">
-<p>Anderson, Carl A, Fredrik H Pettersson, Geraldine M Clarke, Lon R Cardon, Andrew P Morris, and Krina T Zondervan. 2010. “Data quality control in genetic case-control association studies.” <em>Nature Protocols</em> 5: 1564–73. doi:<a href="https://doi.org/10.1038/nprot.2010.116">10.1038/nprot.2010.116</a>.</p>
-</div>
-<div id="ref-Chang2015">
-<p>Chang, Christopher C, Carson C Chow, Laurent CAM Tellier, Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015. “Second-generation PLINK: rising to the challenge of larger and richer datasets.” <em>GigaScience</em> 4: 7. doi:<a href="https://doi.org/10.1186/s13742-015-0047-8">10.1186/s13742-015-0047-8</a>.</p>
-</div>
-<div id="ref-PlinkSeq2014">
-<p>PLINK/SEQ. 2014. <a href="https://atgu.mgh.harvard.edu/plinkseq/index.shtml" class="uri">https://atgu.mgh.harvard.edu/plinkseq/index.shtml</a>.</p>
+<p>1. Anderson CA, Pettersson FH, Clarke GM, Cardon LR, Morris AP, Zondervan KT. Data quality control in genetic case-control association studies. Nature Protocols. 2010;5: 1564–73. doi:<a href="https://doi.org/10.1038/nprot.2010.116">10.1038/nprot.2010.116</a></p>
 </div>
 <div id="ref-Purcell2007">
-<p>Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas, Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007. “PLINK: a tool set for whole-genome association and population-based linkage analyses.” <em>The American Journal of Human Genetics</em> 81 (3): 559–75. doi:<a href="https://doi.org/10.1086/519795">10.1086/519795</a>.</p>
+<p>2. Purcell S, Neale B, Todd-Brown K, Thomas L, Ferreira MAR, Bender D, et al. PLINK: a tool set for whole-genome association and population-based linkage analyses. The American Journal of Human Genetics. 2007;81: 559–75. doi:<a href="https://doi.org/10.1086/519795">10.1086/519795</a></p>
+</div>
+<div id="ref-Chang2015">
+<p>3. Chang CC, Chow CC, Tellier LC, Vattikuti S, Purcell SM, Lee JJ. Second-generation PLINK: rising to the challenge of larger and richer datasets. GigaScience. 2015;4: 7. doi:<a href="https://doi.org/10.1186/s13742-015-0047-8">10.1186/s13742-015-0047-8</a></p>
+</div>
+<div id="ref-PlinkSeq2014">
+<p>4. PLINK/SEQ. [Internet]. 2014. Available: <a href="https://atgu.mgh.harvard.edu/plinkseq/index.shtml" class="uri">https://atgu.mgh.harvard.edu/plinkseq/index.shtml</a></p>
 </div>
 <div id="ref-HapMap2005">
-<p>The International HapMap Consortium. 2005. “A haplotype map of the human genome.” <em>Nature</em> 437: 1299–1320. doi:<a href="https://doi.org/10.1038/nature04226">10.1038/nature04226</a>.</p>
+<p>5. The International HapMap Consortium. A haplotype map of the human genome. Nature. 2005;437: 1299–320. doi:<a href="https://doi.org/10.1038/nature04226">10.1038/nature04226</a></p>
 </div>
 <div id="ref-HapMap2007">
-<p>———. 2007. “A second generation human haplotype map of over 3.1 million SNPs.” <em>Nature</em> 449 (18): 851. doi:<a href="https://doi.org/10.1038/nature06258">10.1038/nature06258</a>.</p>
+<p>6. The International HapMap Consortium. A second generation human haplotype map of over 3.1 million SNPs. Nature. 2007;449: 851. doi:<a href="https://doi.org/10.1038/nature06258">10.1038/nature06258</a></p>
 </div>
 <div id="ref-HapMap2010">
-<p>———. 2010. “Integrating common and rare genetic variation in diverse human populations.” <em>Nature</em> 467. doi:<a href="https://doi.org/10.1038/nature09298">10.1038/nature09298</a>.</p>
+<p>7. The International HapMap Consortium. Integrating common and rare genetic variation in diverse human populations. Nature. 2010;467. doi:<a href="https://doi.org/10.1038/nature09298">10.1038/nature09298</a></p>
+</div>
+<div id="ref-a1000Genomes2015">
+<p>8. 1000 Genomes Project Consortium. An integrated map of structural variation in 2,504 human genomes. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15394">10.1038/nature15394</a></p>
+</div>
+<div id="ref-b1000Genomes2015">
+<p>9. 1000 Genomes Project Consortium. A global reference for human genetic variation. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15393">10.1038/nature15393</a></p>
 </div>
 </div>
 </div>

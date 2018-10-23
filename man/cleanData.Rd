@@ -30,33 +30,33 @@ and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)}
 \item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
 
 \item{filterAncestry}{[logical] Set to exclude samples that failed ancestry
-check (via \code{\link{check_ancestry}} or \code{\link{perSampleQC}}).
+check (via \code{\link{check_ancestry}} or \code{\link{perIndividualQC}}).
 Requires file qcdir/alg.fail-ancestry.IDs (automatically created by
-\code{\link{perSampleQC}} if do.check_ancestry set to TRUE).}
+\code{\link{perIndividualQC}} if do.check_ancestry set to TRUE).}
 
 \item{filterRelated}{[logical] Set to exclude samples that failed relatedness
-check (via \code{\link{check_relatedness}} or \code{\link{perSampleQC}}).
+check (via \code{\link{check_relatedness}} or \code{\link{perIndividualQC}}).
 Requires file qcdir/alg.fail-IBD.IDs (automatically created by
-\code{\link{perSampleQC}} if do.check_relatedness set to TRUE).}
+\code{\link{perIndividualQC}} if do.evaluate_check_relatedness set to TRUE).}
 
 \item{filterSex}{[logical] Set to exclude samples that failed the sex
-check (via \code{\link{check_sex}} or \code{\link{perSampleQC}}).
+check (via \code{\link{check_sex}} or \code{\link{perIndividualQC}}).
 Requires file qcdir/alg.fail-sexcheck.IDs (automatically created by
-\code{\link{perSampleQC}} if do.check_sex set to TRUE).}
+\code{\link{perIndividualQC}} if do.evaluate_check_sex set to TRUE).}
 
 \item{filterHeterozygosity}{[logical] Set to exclude samples that failed
 check for outlying heterozygosity rates (via
-\code{\link{check_heterozygosity_and_missingness}} or
-\code{\link{perSampleQC}}). Requires file qcdir/alg.fail-het.IDs
-(automatically created by \code{\link{perSampleQC}} if
-do.check_heterozygosity_and_missingness set to TRUE).}
+\code{\link{check_het_and_miss}} or
+\code{\link{perIndividualQC}}). Requires file qcdir/alg.fail-het.IDs
+(automatically created by \code{\link{perIndividualQC}} if
+do.evaluate_check_het_and_miss set to TRUE).}
 
 \item{filterSampleMissingness}{[logical] Set to exclude samples that failed
 check for excessive missing genotype rates (via
-\code{\link{check_heterozygosity_and_missingness}} or
-\code{\link{perSampleQC}}). Requires file qcdir/alg.fail-imiss.IDs
-(automatically created by \code{\link{perSampleQC}} if
-do.check_heterozygosity_and_missingness set to TRUE).}
+\code{\link{check_het_and_miss}} or
+\code{\link{perIndividualQC}}). Requires file qcdir/alg.fail-imiss.IDs
+(automatically created by \code{\link{perIndividualQC}} if
+do.evaluate_check_het_and_miss set to TRUE).}
 
 \item{filterSNPMissingness}{[logical] Set to exclude markers that have
 excessive missing rates across samples (via
@@ -89,4 +89,22 @@ samples that fail the QC.
 \description{
 Remove samples that fail per-sample QC and remove markers that fail
 per-marker QC.
+}
+\examples{
+package.dir <- find.package('plinkQC')
+qcdir <- file.path(package.dir, 'extdata')
+alg <- "data"
+path2plink <- '/path/2/plink'
+# the following code is not run on package build, as the path2plink on the
+# user system is not known.
+\dontrun{
+# All checks
+ids_all <- cleanData(qcdir=qcdir, alg=alg, macTh=15, interactive=FALSE,
+verbose=TRUE, path2plink=path2plink, filterAncestry=TRUE, filterRelated=TRUE)
+
+# Only filter samples failing check sex and heterozygosity/missingness
+ids_sex_miss_het <- cleanData(qcdir=qcdir, alg=alg, macTh=15,
+interactive=FALSE, verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
+filterRelated=FALSE)
+}
 }

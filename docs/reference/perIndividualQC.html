@@ -56,7 +56,7 @@ genetic ancestry." />
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-standard navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -75,23 +75,46 @@ genetic ancestry." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
-<li>
-  <a href="../articles/plinkQC.html">Get started</a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-file"></span>
+     
+    Documentation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/AncestryCheck.html">Ancestry</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-code"></span>
+     
+    functions
+  </a>
+</li>
+<li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -107,7 +130,7 @@ genetic ancestry." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Quality control for all individuals in plink-dataset</h1>
-    <small class="dont-index">Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/R/sampleQC.R'><code>R/sampleQC.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/R/individualQC.R'><code>R/individualQC.R</code></a></small>
     <div class="hidden name"><code>perIndividualQC.Rd</code></div>
     </div>
 
@@ -120,18 +143,20 @@ genetic ancestry.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>perIndividualQC</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>do.check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
-  <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>,
+    <pre class="usage"><span class='fu'>perIndividualQC</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>do.run_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>,
   <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>, <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>, <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>do.check_heterozygosity_and_missingness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
-  <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>do.check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
+  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>, <span class='kw'>do.run_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>do.run_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
   <span class='kw'>do.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>prefixMergedDataset</span>, <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
   <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
   <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>, <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
-  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -140,21 +165,29 @@ genetic ancestry.</p>
       <th>qcdir</th>
       <td><p>[character] /path/to/directory/with/QC/results containing the
 basic data files alg.bim, alg.bed, alg.fam files. In addition, if
-do.[analysis] is set to TRUE, it expects the analysis-specific plink output
-files in qcdir, i.e. do.check_sex expects alg.sexcheck,
-do.check_heterozygosity_and_missingness expects alg.het and alg.imiss,
-do.check_relatedness expects alg.genome and alg.imiss and do.check_ancestry
-expects prefixMergeData.eigenvec.
+do.evaluate_[analysis] is set to TRUE and do.run_[analysis] is FALSE,
+it expects the analysis-specific plink output
+files in qcdir i.e. do.check_sex expects alg.sexcheck,
+do.evaluate_check_het_and_miss expects alg.het and alg.imiss,
+do.evauluate_check_relatedness expects alg.genome and alg.imiss and
+do.check_ancestry expects prefixMergeData.eigenvec. If these files are not
+present <code>perIndividualQC</code> will fail with missing file error. Setting
+do.run_[analysis] TRUE will execute the checks and create the required files.
 User needs writing permission to qcdir.</p></td>
     </tr>
     <tr>
       <th>alg</th>
-      <td><p>[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
+      <td><p>[character] Prefix of plink files, i.e. alg.bed, alg.bim,
 alg.fam.</p></td>
     </tr>
     <tr>
-      <th>do.check_sex</th>
-      <td><p>[logical] if TRUE, run <code><a href='check_sex.html'>check_sex</a></code></p></td>
+      <th>do.run_check_sex</th>
+      <td><p>[logical] If TRUE, run <code><a href='run_check_sex.html'>run_check_sex</a></code></p></td>
+    </tr>
+    <tr>
+      <th>do.evaluate_check_sex</th>
+      <td><p>[logical] If TRUE, run
+<code><a href='evaluate_check_sex.html'>evaluate_check_sex</a></code></p></td>
     </tr>
     <tr>
       <th>maleTh</th>
@@ -167,10 +200,16 @@ males.</p></td>
 females.</p></td>
     </tr>
     <tr>
+      <th>fixMixup</th>
+      <td><p>[logical] Should PEDSEX of individuals with mismatch between
+PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
+change the alg.bim/.bed/.fam files!</p></td>
+    </tr>
+    <tr>
       <th>externalSex</th>
-      <td><p>[data.frame, optional] with sample IDs [externalSexID] and
-sex [externalSexSex] to double check if external and PEDSEX data (often
-processed at different centers) match.</p></td>
+      <td><p>[data.frame, optional] Dataframe with sample IDs
+[externalSexID] and sex [externalSexSex] to double check if external and
+PEDSEX data (often processed at different centers) match.</p></td>
     </tr>
     <tr>
       <th>externalMale</th>
@@ -192,15 +231,14 @@ information in externalSex.</p></td>
 externalSex.</p></td>
     </tr>
     <tr>
-      <th>fixMixup</th>
-      <td><p>[logical] Should PEDSEX of individuals with mismatch between
-PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
-change the alg.bim/.bed/.fam files!</p></td>
+      <th>do.run_check_het_and_miss</th>
+      <td><p>[logical] If TRUE, run
+<code><a href='run_check_heterozygosity.html'>run_check_heterozygosity</a></code> and <code><a href='run_check_missingness.html'>run_check_missingness</a></code></p></td>
     </tr>
     <tr>
-      <th>do.check_heterozygosity_and_missingness</th>
-      <td><p>[logical] if TRUE, run
-<code><a href='check_heterozygosity_and_missingness.html'>check_heterozygosity_and_missingness</a></code>.</p></td>
+      <th>do.evaluate_check_het_and_miss</th>
+      <td><p>[logical] If TRUE, run
+<code><a href='evaluate_check_het_and_miss.html'>evaluate_check_het_and_miss</a></code>.</p></td>
     </tr>
     <tr>
       <th>imissTh</th>
@@ -215,9 +253,14 @@ deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check.</p></td>
     </tr>
     <tr>
-      <th>do.check_relatedness</th>
-      <td><p>[logical] if TRUE, run
-<code><a href='check_relatedness.html'>check_relatedness</a></code>.</p></td>
+      <th>do.run_check_relatedness</th>
+      <td><p>[logical] If TRUE, run
+<code><a href='run_check_relatedness.html'>run_check_relatedness</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>do.evaluate_check_relatedness</th>
+      <td><p>[logical] If TRUE, run
+<code><a href='evaluate_check_relatedness.html'>evaluate_check_relatedness</a></code>.</p></td>
     </tr>
     <tr>
       <th>highIBDTh</th>
@@ -226,7 +269,7 @@ pair of individuals.</p></td>
     </tr>
     <tr>
       <th>do.check_ancestry</th>
-      <td><p>[logical] if TRUE, run
+      <td><p>[logical] If TRUE, run
 <code><a href='check_ancestry.html'>check_ancestry</a></code>.</p></td>
     </tr>
     <tr>
@@ -260,7 +303,7 @@ are used.</p></td>
     </tr>
     <tr>
       <th>refSamplesFile</th>
-      <td><p>[character] /Path/to/File/with/reference samples. Needs
+      <td><p>[character] /path/to/File/with/reference samples. Needs
 columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 corresponding to population IDs [refColorsPop] in refColorsfile/refColors.</p></td>
@@ -268,7 +311,7 @@ corresponding to population IDs [refColorsPop] in refColorsfile/refColors.</p></
     <tr>
       <th>refColorsFile</th>
       <td><p>[character, optional]
-/Path/to/File/with/Population/Colors cotaining population IDs in column
+/path/to/File/with/Population/Colors cotaining population IDs in column
 [refColorsPop] and corresponding color-code for PCA plot in column
 [refColorsColor].If not provided and is.null(refColors) default colors for
 are used.</p></td>
@@ -299,12 +342,6 @@ IDs in refColors/refColorsFile.</p></td>
 is TRUE.</p></td>
     </tr>
     <tr>
-      <th>path2plink</th>
-      <td><p>[character] Absolute path to where external plink software
-<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").</p></td>
-    </tr>
-    <tr>
       <th>interactive</th>
       <td><p>[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -312,23 +349,36 @@ available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_sampleQC) via ggplot2::ggsave(p=p_sampleQC,
 other_arguments) or pdf(outfile) print(p_sampleQC) dev.off().
 If TRUE, i) depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
-split by their PEDSEX (if do.check_sex is TRUE), ii) creates a scatter plot
+split by their PEDSEX (if do.evaluate_check_sex is TRUE), ii) creates a
+scatter plot
 with samples' missingness rates on x-axis and their heterozygosity rates on
-the y-axis (if do.check_heterozygosity_and_missingness is TRUE), iii) depicts
-all pair-wise IBD-estimates as histogram (if do.check_relatedness is TRUE)
+the y-axis (if do.evaluate_check_het_and_miss is TRUE), iii) depicts
+all pair-wise IBD-estimates as histogram (if do.evaluate_check_relatedness is
+TRUE)
 and iv) creates a scatter plot of PC1 versus PC2 color-coded for samples of
-reference populations and study population (if do.check_relatedness is set to
+reference populations and study population (if do.check_ancestry is set to
 TRUE).</p></td>
     </tr>
     <tr>
       <th>verbose</th>
       <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
     </tr>
+    <tr>
+      <th>path2plink</th>
+      <td><p>[character] Absolute path to where external plink software
+<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found. If not provided,
+assumed that PATH set-up works and plink will be found by system("plink").</p></td>
+    </tr>
+    <tr>
+      <th>showPlinkOutput</th>
+      <td><p>[logical] If TRUE, plink log and error messages are
+printed to standard out.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>named [list] with i) fail_list, a named list with 1.
+    <p>Named [list] with i) fail_list, a named [list] with 1.
 sample_missingness containing a [vector] with sample IIDs failing the
 missingness threshold imissTh, 2. highIBD containing a [vector] with sample
 IIDs failing the relatedness threshold highIBDTh, 3. outlying_heterozygosity
@@ -336,9 +386,9 @@ containing a [vector] with sample IIDs failing the heterozygosity threshold
 hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
 the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
 a vector with sample IIDs failing the ancestry check based on europeanTh and
-ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
+ii) p_sampleQC, a ggplot2-object 'containing' a sub-panelled plot with the
 QC-plots of <code><a href='check_sex.html'>check_sex</a></code>,
-<code><a href='check_heterozygosity_and_missingness.html'>check_heterozygosity_and_missingness</a></code>,
+<code><a href='check_het_and_miss.html'>check_het_and_miss</a></code>,
 <code><a href='check_relatedness.html'>check_relatedness</a></code> and <code><a href='check_ancestry.html'>check_ancestry</a></code>, which can
 be shown by print(p_sampleQC).
 List entries contain NULL if that specific check was not chosen.</p>
@@ -346,13 +396,28 @@ List entries contain NULL if that specific check was not chosen.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>perIndividualQC wraps around the individual QC functions
-<code><a href='check_sex.html'>check_sex</a></code>, <code><a href='check_heterozygosity_and_missingness.html'>check_heterozygosity_and_missingness</a></code>,
+<code><a href='check_sex.html'>check_sex</a></code>, <code><a href='check_het_and_miss.html'>check_het_and_miss</a></code>,
 <code><a href='check_relatedness.html'>check_relatedness</a></code> and <code><a href='check_ancestry.html'>check_ancestry</a></code>. For details
 on the parameters and outputs, check these function documentations. For
 detailed output for fail IIDs (instead of simple IID lists), run each
 function individually.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
+<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
+<span class='no'>alg</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
+<span class='co'># All quality control checks</span>
+<span class='no'>fail_individuals</span> <span class='kw'>&lt;-</span> <span class='fu'>perIndividualQC</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>,
+<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>do.run_check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_sex(qcdir = qcdir, alg = alg, maleTh = maleTh,     femaleTh = femaleTh, externalSex = externalSex, externalMale = externalMale,     externalFemale = externalFemale, externalSexSex = externalSexSex,     externalSexID = externalSexID, verbose = verbose, path2plink = path2plink,     showPlinkOutput = showPlinkOutput, fixMixup = fixMixup, interactive = FALSE): plink --check-sex results file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.sexcheck does not exist.</span></div><div class='input'><span class='co'># Only check sex and missingness/heterozygosity</span>
+<span class='no'>fail_sex_het_miss</span> <span class='kw'>&lt;-</span> <span class='fu'>perIndividualQC</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>,
+<span class='kw'>do.check_ancestry</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.evaluate_check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>do.run_check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_sex(qcdir = qcdir, alg = alg, maleTh = maleTh,     femaleTh = femaleTh, externalSex = externalSex, externalMale = externalMale,     externalFemale = externalFemale, externalSexSex = externalSexSex,     externalSexID = externalSexID, verbose = verbose, path2plink = path2plink,     showPlinkOutput = showPlinkOutput, fixMixup = fixMixup, interactive = FALSE): plink --check-sex results file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.sexcheck does not exist.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -362,7 +427,9 @@ function individually.</p>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -54,7 +54,7 @@ per-marker QC." />
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-standard navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -73,23 +73,46 @@ per-marker QC." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
-<li>
-  <a href="../articles/plinkQC.html">Get started</a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-file"></span>
+     
+    Documentation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/AncestryCheck.html">Ancestry</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-code"></span>
+     
+    functions
+  </a>
+</li>
+<li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -158,41 +181,41 @@ and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)</p></td>
     <tr>
       <th>filterAncestry</th>
       <td><p>[logical] Set to exclude samples that failed ancestry
-check (via <code><a href='check_ancestry.html'>check_ancestry</a></code> or <code>perSampleQC</code>).
+check (via <code><a href='check_ancestry.html'>check_ancestry</a></code> or <code><a href='perIndividualQC.html'>perIndividualQC</a></code>).
 Requires file qcdir/alg.fail-ancestry.IDs (automatically created by
-<code>perSampleQC</code> if do.check_ancestry set to TRUE).</p></td>
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code> if do.check_ancestry set to TRUE).</p></td>
     </tr>
     <tr>
       <th>filterRelated</th>
       <td><p>[logical] Set to exclude samples that failed relatedness
-check (via <code><a href='check_relatedness.html'>check_relatedness</a></code> or <code>perSampleQC</code>).
+check (via <code><a href='check_relatedness.html'>check_relatedness</a></code> or <code><a href='perIndividualQC.html'>perIndividualQC</a></code>).
 Requires file qcdir/alg.fail-IBD.IDs (automatically created by
-<code>perSampleQC</code> if do.check_relatedness set to TRUE).</p></td>
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code> if do.evaluate_check_relatedness set to TRUE).</p></td>
     </tr>
     <tr>
       <th>filterSex</th>
       <td><p>[logical] Set to exclude samples that failed the sex
-check (via <code><a href='check_sex.html'>check_sex</a></code> or <code>perSampleQC</code>).
+check (via <code><a href='check_sex.html'>check_sex</a></code> or <code><a href='perIndividualQC.html'>perIndividualQC</a></code>).
 Requires file qcdir/alg.fail-sexcheck.IDs (automatically created by
-<code>perSampleQC</code> if do.check_sex set to TRUE).</p></td>
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code> if do.evaluate_check_sex set to TRUE).</p></td>
     </tr>
     <tr>
       <th>filterHeterozygosity</th>
       <td><p>[logical] Set to exclude samples that failed
 check for outlying heterozygosity rates (via
-<code><a href='check_heterozygosity_and_missingness.html'>check_heterozygosity_and_missingness</a></code> or
-<code>perSampleQC</code>). Requires file qcdir/alg.fail-het.IDs
-(automatically created by <code>perSampleQC</code> if
-do.check_heterozygosity_and_missingness set to TRUE).</p></td>
+<code><a href='check_het_and_miss.html'>check_het_and_miss</a></code> or
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code>). Requires file qcdir/alg.fail-het.IDs
+(automatically created by <code><a href='perIndividualQC.html'>perIndividualQC</a></code> if
+do.evaluate_check_het_and_miss set to TRUE).</p></td>
     </tr>
     <tr>
       <th>filterSampleMissingness</th>
       <td><p>[logical] Set to exclude samples that failed
 check for excessive missing genotype rates (via
-<code><a href='check_heterozygosity_and_missingness.html'>check_heterozygosity_and_missingness</a></code> or
-<code>perSampleQC</code>). Requires file qcdir/alg.fail-imiss.IDs
-(automatically created by <code>perSampleQC</code> if
-do.check_heterozygosity_and_missingness set to TRUE).</p></td>
+<code><a href='check_het_and_miss.html'>check_het_and_miss</a></code> or
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code>). Requires file qcdir/alg.fail-imiss.IDs
+(automatically created by <code><a href='perIndividualQC.html'>perIndividualQC</a></code> if
+do.evaluate_check_het_and_miss set to TRUE).</p></td>
     </tr>
     <tr>
       <th>filterSNPMissingness</th>
@@ -238,6 +261,22 @@ containing a [data.frame] with family [FID] and individual [IID] IDs of
 samples that fail the QC.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
+<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
+<span class='no'>alg</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
+<span class='no'>path2plink</span> <span class='kw'>&lt;-</span> <span class='st'>'/path/2/plink'</span>
+<span class='co'># the following code is not run on package build, as the path2plink on the</span>
+<span class='co'># user system is not known.</span></div><span class='co'># NOT RUN {</span>
+<span class='co'># All checks</span>
+<span class='no'>ids_all</span> <span class='kw'>&lt;-</span> <span class='fu'>cleanData</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>, <span class='kw'>macTh</span><span class='kw'>=</span><span class='fl'>15</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>path2plink</span><span class='kw'>=</span><span class='no'>path2plink</span>, <span class='kw'>filterAncestry</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>filterRelated</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+
+<span class='co'># Only filter samples failing check sex and heterozygosity/missingness</span>
+<span class='no'>ids_sex_miss_het</span> <span class='kw'>&lt;-</span> <span class='fu'>cleanData</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>, <span class='kw'>macTh</span><span class='kw'>=</span><span class='fl'>15</span>,
+<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>path2plink</span><span class='kw'>=</span><span class='no'>path2plink</span>, <span class='kw'>filterAncestry</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>filterRelated</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -245,7 +284,9 @@ samples that fail the QC.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
