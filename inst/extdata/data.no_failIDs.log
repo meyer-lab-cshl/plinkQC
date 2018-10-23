@@ -7,9 +7,9 @@ Options in effect:
 
 Hostname: hannahmbpr
 Working directory: /Users/hannah/RPackagesDevel/plinkQC/vignettes
-Start time: Tue Oct 23 16:36:20 2018
+Start time: Tue Oct 23 16:55:21 2018
 
-Random number seed: 1540308980
+Random number seed: 1540310121
 16384 MB RAM detected; reserving 8192 MB for main workspace.
 10000 variants loaded from .bim file.
 200 people (89 males, 111 females) loaded from .fam.
@@ -24,4 +24,4 @@ Total genotyping rate in remaining samples is 0.997125.
 --freq: Allele frequencies (founders only) written to
 /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.frq .
 
-End time: Tue Oct 23 16:36:20 2018
+End time: Tue Oct 23 16:55:21 2018

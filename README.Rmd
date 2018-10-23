@@ -1,6 +1,7 @@
 ---
 output: github_document
 ---
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
@@ -20,14 +21,14 @@ per individual, allele frequencies per genetic marker) and relationship
 functions easily accesible from within R and allows for automatic evaluation
 of the results.
 
-**plinkQC** facilitates an ancestry check for study individuals based on 
+**plinkQC** facilitates an ancestry check for study individuals based on
 comparison to reference datasets. The processing of the reference datasets is
 documented in detail [here](articles/AncestryCheck.html)
 
 **plinkQC** generates a per-individual and per-marker quality control report.
 
 Individuals and markers that fail the quality control can subsequently be
-removed with **plinkQC** to generate a new, clean dataset. 
+removed with **plinkQC** to generate a new, clean dataset.
 
 Removal of individuals based on relationship status via **plinkQC** is optimised
 to retain as many individuals as possible in the study.
@@ -36,7 +37,7 @@ to retain as many individuals as possible in the study.
 
 - The current github version of **plinkQC**  is: 0.1.0 and can be
 installed via
-```bash
+```{r ithub install, eval=FALSE}
 library(devtools)
 install_github("HannahVMeyer/PhenotypeSimulator")
 ```
@@ -45,4 +46,3 @@ install_github("HannahVMeyer/PhenotypeSimulator")
 - Full documentation is available at http://HannahVMeyer.github.io/plinkQC/
 
 - A log of version changes can be found [here](https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.md).
-
