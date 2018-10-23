@@ -1,8 +1,15 @@
 context('Test applyQC functions')
-# package.dir <- find.package('plinkQC')
-package.dir <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library/plinkQC"
+package.dir <- find.package('plinkQC')
+#package.dir <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library/plinkQC"
 qcdir <- file.path(package.dir, 'extdata')
 alg <- 'data'
+
+fail_individuals <-
+    perIndividualQC(qcdir=qcdir, alg=alg,
+                    refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt", sep=""),
+                    refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+                    prefixMergedDataset="data.HapMapIII",
+                    interactive=FALSE, verbose=FALSE)
 
 context('Test cleanData')
 test_that('cleanData throws file error',{
@@ -39,17 +46,12 @@ test_that('cleanData fails with missing lmissTh error', {
 
 test_that('cleanData returns message with missing sample check', {
     expect_error(cleanData(qcdir, alg,  filterAncestry=FALSE,
-                           filterRelated=FALSE,
-                           filterSex=FALSE, filterHeterozygosity=FALSE),
+                           filterRelated=FALSE, filterSampleMissingness=FALSE,
+                           filterSex=FALSE, filterHeterozygosity=FALSE,
+                           filterMAF=FALSE, filterSNPMissingness=FALSE,
+                           filterHWE=FALSE),
                  "No per-sample and per-marker filters chosen")
 })
 
-cleanData(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
-                      mafTh=0.01, filterAncestry=TRUE, filterRelated=TRUE,
-                      filterSex=TRUE, filterHeterozygosity=TRUE,
-                      filterSampleMissingness=TRUE,
-                      filterSNPMissingness=TRUE, filterHWE=TRUE,
-                      filterMAF=TRUE, path2plink=NULL, verbose=FALSE,
-                      showPlinkOutput=TRUE)
 
 

@@ -1,6 +1,6 @@
 context('Test markerQC functions')
-# package.dir <- find.package('plinkQC')
-package.dir <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library/plinkQC"
+package.dir <- find.package('plinkQC')
+#package.dir <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library/plinkQC"
 qcdir <- file.path(package.dir, 'extdata')
 alg <- 'data'
 
