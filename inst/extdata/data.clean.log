@@ -10,9 +10,9 @@ Options in effect:
 
 Hostname: hannahmbpr
 Working directory: /Users/hannah/RPackagesDevel/plinkQC/vignettes
-Start time: Tue Oct 23 17:33:11 2018
+Start time: Tue Oct 23 17:45:56 2018
 
 Error: Unrecognized flag ('--lmiss').
 For more information, try 'plink --help [flag name]' or 'plink --help | more'.
 
-End time: Tue Oct 23 17:33:11 2018
+End time: Tue Oct 23 17:45:56 2018

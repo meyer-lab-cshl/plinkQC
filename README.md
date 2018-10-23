@@ -3,7 +3,7 @@
 <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 ----------------------------------------------------
 
-**plinkQC** is a R/CRAN for **genotype quality control** in genetic association studies. It makes PLINK basic statistics (e.g.missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions easily accesible from within R and allows for automatic evaluation of the results.
+**plinkQC** is a R/CRAN package for **genotype quality control** in genetic association studies. It makes PLINK basic statistics (e.g.missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions easily accessible from within R and allows for automatic evaluation of the results.
 
 **plinkQC** facilitates an ancestry check for study individuals based on comparison to reference datasets. The processing of the reference datasets is documented in detail [here](articles/AncestryCheck.html)
 
