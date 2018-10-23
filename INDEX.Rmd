@@ -8,8 +8,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "README-"
 )
-#[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
 ```
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
 
 ## <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 
@@ -21,17 +21,17 @@ of the results.
 
 **plinkQC** facilitates an ancestry check for study individuals based on 
 comparison to reference datasets. The processing of the reference datasets is
-documented in detail [here](articles/AncestryCheck.html)
+documented in detail [here](articles/AncestryCheck.html).
 
 **plinkQC** generates a per-individual and per-marker quality control report.
-
 Individuals and markers that fail the quality control can subsequently be
-removed with **plinkQC** to generate a new, clean dataset. 
+removed with **plinkQC** to generate a new, clean dataset. A detailed,
+step-by-step documentation is provided [here](articles/plinkQC.html).
 
 Removal of individuals based on relationship status via **plinkQC** is optimised
 to retain as many individuals as possible in the study.
 
-```{r, echo = FALSE, out.width = '100%'}
+```{r, echo = FALSE}
 knitr::include_graphics("docs/qc.png")
 ```
 
@@ -45,5 +45,5 @@ install_github("HannahVMeyer/PhenotypeSimulator")
 ```
 **plinkQC** will soon be available on CRAN!
 
-A log of version changes can be found [here](https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.md).
+A log of version changes can be found [here](news/index.html).
 
