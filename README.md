@@ -7,7 +7,7 @@
 
 Full documentation is available at <http://HannahVMeyer.github.io/plinkQC/>.
 
-**plinkQC** facilitates an ancestry check for study individuals based on comparison to reference datasets. The processing of the reference datasets is documented in detail [here](articles/AncestryCheck.html)
+**plinkQC** facilitates an ancestry check for study individuals based on comparison to reference datasets. The processing of the reference datasets is documented in detail [here](articles/AncestryCheck.html).
 
 **plinkQC** generates a per-individual and per-marker quality control report.
 
