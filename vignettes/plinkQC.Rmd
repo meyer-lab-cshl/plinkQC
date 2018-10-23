@@ -9,7 +9,7 @@ output:
         toc_depth: 2
         keep_tex: true
 bibliography: references.bib
-#csl: plos-genetics.csl
+csl: plos-genetics.csl
 vignette: >
   %\VignetteIndexEntry{GenotypeQC_with_plinkQC}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,7 +17,8 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-devtools::load_all()
+#devtools::load_all()
+library(plinkQC)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -37,8 +38,8 @@ comprehensive, open-source command-line tool for genome-wide association studies
 functionalities include data management, computing individual- and marker-level
 summary statistics, identity-by-state estimation and association analysis.  
 Integration with R is achieved through its R plugin or PLINK/SEQ R Package
-[@PlinkSeq2014]. While the plugin is limited to operations yielding simple genetic 
-marker vectors as output, the PLINK/SEQ R Package is limited in the
+[@PlinkSeq2014]. While the plugin is limited to operations yielding simple
+genetic marker vectors as output, the PLINK/SEQ R Package is limited in the
 functionalities it can access. 
 
 *plinkQC* facilitates genotype quality control for genetic association studies
@@ -50,11 +51,10 @@ that fail the quality control can subsequently be removed with *plinkQC* to
 generate a new, clean dataset. Removal of individuals based on relationship
 status is optimised to retain as many individuals as possible in the study.
 
-*plinkQC* depends on the [plink](https://www.cog-genomics.org/plink/1.9/) 
-[@Purcell2007, @Chang2015] (version $gt$  1.9), which has to be manually
-installed prior to the usage of *plinkQC*. It assumes the genotype have already
-been determined from the original probe intensity data of the genotype array and
-is available in
+*plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
+ (version $\ge$  1.9), which has to be manually installed prior to the usage of
+ *plinkQC*. It assumes the genotype have already been determined from the
+ original probe intensity data of the genotype array and is available in
 [plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
 
 The protocol is implemented in three main functions, the per-individual quality
@@ -120,20 +120,23 @@ multi-panel plot. NB: To reduce the data size of the example data in plinkQC,
 data.genome  has already been reduced to the individuals that are related. Thus
 the relatedness plots in C only show counts for related individuals.
 
-```{r individual QC,  fig.height=12, fig.width=9, dev='pdf', fig.path="figs/"}
+```{r individual QC,  fig.height=12, fig.width=9}
 fail_individuals <- perIndividualQC(qcdir=qcdir, alg=alg,
                             refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",
                                                  sep=""), 
                             refColorsFile=paste(qcdir, "/HapMap_PopColors.txt",
                                                  sep=""),
                             prefixMergedDataset="data.HapMapIII",
-                            interactive=TRUE, verbose=TRUE)
+                            interactive=TRUE, verbose=TRUE,
+                            do.run_check_het_and_miss=FALSE,
+                            do.run_check_sex=FALSE,
+                            do.run_check_relatedness=FALSE)
 
 ```
 
 `overviewperIndividualQC` depicts overview plots of quality control failures and
 the intersection of quality control failures with ancestry exclusion.
-```{r overview individual QC, dev='pdf', fig.path="figs/"}
+```{r overview individual QC}
 overview_individuals <- overviewPerIndividualQC(fail_individuals,
                                                 interactive=TRUE)
 ```
@@ -146,7 +149,7 @@ prefix.bed, prefix.fam). Optionally, the user can specify different thresholds
 for the quality control checks and which check to conduct. Per default, all
 quality control checks will be conducted. `perMarkerQC` displays the results of
 the QC step in a multi-panel plot.
-```{r marker QC, fig.height=9, fig.width=6, dev='pdf', fig.path="figs/"}
+```{r marker QC, fig.height=9, fig.width=6, fig.align='center'}
 par(mfrow=c(2,1), las=1)
 fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, path2plink=path2plink,
                             verbose=TRUE, interactive=TRUE,
@@ -155,7 +158,7 @@ fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, path2plink=path2plink,
 
 `overviewPerMarkerQC` depicts an overview of the marker quality control
 failures and their overlaps.
-```{r overview marker QC, dev='pdf', fig.path="figs/"}
+```{r overview marker QC}
 overview_marker <- overviewPerMarkerQC(fail_markers, interactive=TRUE)
 ```
 
@@ -192,8 +195,9 @@ between PEDSEX and SNPSEX was detected, by SNPSEX == Sex, PEDSEX of these
 individuals can optionally be updated. `check_sex` depicts the X-chromosomal
 heterozygosity (SNPSEX) of the samples split by their (PEDSEX).
 
-```{r check sex}
-fail_sex <- check_sex(qcdir=qcdir, alg=alg, interactive=TRUE, verbose=TRUE)
+```{r check sex, fig.height=3, fig.width=5, fig.align='center'}
+fail_sex <- check_sex(qcdir=qcdir, alg=alg, interactive=TRUE, verbose=TRUE,
+                      run.check_sex=FALSE)
 ```
 
 ## Individuals with outlying missing genotype and/or heterozygosity rates
@@ -207,15 +211,16 @@ the study, and individuals whose rates are more than a few standard deviations
 for outlying heterozygoisty rates would remove individuals who are three sd away
 from the mean rate.
 Identifying related individuals with outlying missing genotype and/or
-heterozygosity rates is implemented in `check_heterozygosity_and_missingness`.
+heterozygosity rates is implemented in `check_het_and_miss`.
 It finds individuals that have genotyping and heterozygosity rates that fail the
 set thresholds and depicts the results as a scatter plot with the samples'
 missingness rates on x-axis and their heterozygosity rates on the y-axis.
 
 
-```{r check het miss}
-fail_het_imiss <- check_heterozygosity_and_missingness(qcdir=qcdir, alg=alg,
-                                                       interactive=TRUE)
+```{r check het miss, fig.height=3, fig.width=5, fig.align='center'}
+fail_het_imiss <- check_het_and_miss(qcdir=qcdir, alg=alg,
+                                     interactive=TRUE,
+                                     run.check_het_and_miss=FALSE)
 ```
 
 
@@ -234,8 +239,9 @@ complex family structures, the unrelated individuals per family are selected
 (e.g. in a parents-offspring trio, the offspring will be marked as fail, while 
 the parents will be kept in the analysis).
 
-```{r check related}
-exclude_relatedness <- check_relatedness(qcdir=qcdir, alg=alg, interactive=TRUE)
+```{r check related, fig.height=3, fig.width=5, fig.align='center'}
+exclude_relatedness <- check_relatedness(qcdir=qcdir, alg=alg, interactive=TRUE,
+                                         run.check_relatedness=FALSE)
 ```
 
 
@@ -257,7 +263,7 @@ considered non-European. `check_ancestry` creates a scatter plot of PC1 versus
 PC2 color-coded for samples of the reference populations and the study
 population.
 
-```{r check ancestry}
+```{r check ancestry, fig.height=3, fig.width=5, fig.align='center'}
 exclude_ancestry <- check_ancestry(qcdir=qcdir, alg=alg,
                             refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",
                                                  sep=""), 
@@ -275,7 +281,7 @@ Identifying markers with high missingness rates is implemented in
 `snp_missingness`. It calculates the rates of missing genotype calls and
 frequency for all variants in the individuals that passed the `perIndividualQC`.
 
-```{r check snp missing}
+```{r check snp missing, fig.height=3, fig.width=5, fig.align='center'}
 fail_snpmissing <- check_snp_missingness(qcdir=qcdir, alg=alg, interactive=TRUE,
                                          path2plink=path2plink, 
                                          showPlinkOutput=FALSE, verbose=TRUE)
@@ -292,7 +298,7 @@ It calculates the observed and expected heterozygote frequencies per SNP in the
 individuals that passed the `perIndividualQC` and computes the deviation of the
 frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test.
 
-```{r check hwe}
+```{r check hwe, fig.height=3, fig.width=5, fig.align='center'}
 fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, interactive=TRUE,
                       path2plink=path2plink, showPlinkOutput=FALSE,
                       verbose=TRUE)
@@ -306,7 +312,7 @@ Identifying markers with low minor allele count is implemented in `check_maf`.
 It calculates the minor allele frequencies for all variants in the individuals
 that passed the `perIndividualQC`.
 
-```{r check maf}
+```{r check maf, fig.height=3, fig.width=5, fig.align='center'}
 fail_maf <- check_maf(qcdir=qcdir, alg=alg, interactive=TRUE,
                       path2plink=path2plink, showPlinkOutput=FALSE,
                       verbose=TRUE)
