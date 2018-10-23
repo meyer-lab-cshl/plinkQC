@@ -1,8 +1,8 @@
 #' Check PLINK software access
 #'
 #' checkPlink checks that the PLINK software
-#' (\url{https://www.cog-genomics.org/plink/1.9/}) required for perMarkerQC and
-#' check_sex can be found from system call
+#' (\url{https://www.cog-genomics.org/plink/1.9/})
+#' can be found from system call.
 #'
 #' @param path2plink [character, optional] Absolute path to plink software. If
 #' not provided, assumed that PATH set-up works and plink will be found by
