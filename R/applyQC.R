@@ -8,29 +8,29 @@
 #' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 #' alg.fam.
 #' @param filterRelated [logical] Set to exclude samples that failed relatedness
-#' check (via \code{\link{check_relatedness}} or \code{\link{perSampleQC}}).
+#' check (via \code{\link{check_relatedness}} or \code{\link{perIndividualQC}}).
 #' Requires file qcdir/alg.fail-IBD.IDs (automatically created by
-#' \code{\link{perSampleQC}} if do.check_relatedness set to TRUE).
+#' \code{\link{perIndividualQC}} if do.evaluate_check_relatedness set to TRUE).
 #' @param filterAncestry [logical] Set to exclude samples that failed ancestry
-#' check (via \code{\link{check_ancestry}} or \code{\link{perSampleQC}}).
+#' check (via \code{\link{check_ancestry}} or \code{\link{perIndividualQC}}).
 #' Requires file qcdir/alg.fail-ancestry.IDs (automatically created by
-#' \code{\link{perSampleQC}} if do.check_ancestry set to TRUE).
+#' \code{\link{perIndividualQC}} if do.check_ancestry set to TRUE).
 #' @param filterHeterozygosity [logical] Set to exclude samples that failed
 #' check for outlying heterozygosity rates (via
-#' \code{\link{check_heterozygosity_and_missingness}} or
-#' \code{\link{perSampleQC}}). Requires file qcdir/alg.fail-het.IDs
-#' (automatically created by \code{\link{perSampleQC}} if
-#' do.check_heterozygosity_and_missingness set to TRUE).
+#' \code{\link{check_het_and_miss}} or
+#' \code{\link{perIndividualQC}}). Requires file qcdir/alg.fail-het.IDs
+#' (automatically created by \code{\link{perIndividualQC}} if
+#' do.evaluate_check_het_and_miss set to TRUE).
 #' @param filterSampleMissingness [logical] Set to exclude samples that failed
 #' check for excessive missing genotype rates (via
-#' \code{\link{check_heterozygosity_and_missingness}} or
-#' \code{\link{perSampleQC}}). Requires file qcdir/alg.fail-imiss.IDs
-#' (automatically created by \code{\link{perSampleQC}} if
-#' do.check_heterozygosity_and_missingness set to TRUE).
+#' \code{\link{check_het_and_miss}} or
+#' \code{\link{perIndividualQC}}). Requires file qcdir/alg.fail-imiss.IDs
+#' (automatically created by \code{\link{perIndividualQC}} if
+#' do.evaluate_check_het_and_miss set to TRUE).
 #' @param filterSex [logical] Set to exclude samples that failed the sex
-#' check (via \code{\link{check_sex}} or \code{\link{perSampleQC}}).
+#' check (via \code{\link{check_sex}} or \code{\link{perIndividualQC}}).
 #' Requires file qcdir/alg.fail-sexcheck.IDs (automatically created by
-#' \code{\link{perSampleQC}} if do.check_sex set to TRUE).
+#' \code{\link{perIndividualQC}} if do.evaluate_check_sex set to TRUE).
 #' @param filterHWE [logical] Set to exclude markers that fail HWE exact test
 #' (via \code{\link{check_hwe}} or \code{\link{perMarkerQC}}). Requires hweTh to
 #' be set.
@@ -58,6 +58,23 @@
 #' containing a [data.frame] with family [FID] and individual [IID] IDs of
 #' samples that fail the QC.
 #' @export
+#' @examples
+#' package.dir <- find.package('plinkQC')
+#' qcdir <- file.path(package.dir, 'extdata')
+#' alg <- "data"
+#' path2plink <- '/path/2/plink'
+#' # the following code is not run on package build, as the path2plink on the
+#' # user system is not known.
+#' \dontrun{
+#' # All checks
+#' ids_all <- cleanData(qcdir=qcdir, alg=alg, macTh=15, interactive=FALSE,
+#' verbose=TRUE, path2plink=path2plink, filterAncestry=TRUE, filterRelated=TRUE)
+#'
+#' # Only filter samples failing check sex and heterozygosity/missingness
+#' ids_sex_miss_het <- cleanData(qcdir=qcdir, alg=alg, macTh=15,
+#' interactive=FALSE, verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
+#' filterRelated=FALSE)
+#' }
 
 cleanData <- function(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
                        mafTh=0.01, filterAncestry=TRUE, filterRelated=TRUE,
@@ -69,6 +86,8 @@ cleanData <- function(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
     sampleFilter <- c(filterAncestry, filterRelated, filterSex,
                       filterHeterozygosity, filterSampleMissingness)
     markerFilter <- c(filterHWE, filterMAF, filterSNPMissingness)
+    prefix <- paste(qcdir,"/", alg, sep="")
+
     if (!any(c(sampleFilter, markerFilter))) {
         stop("No per-sample and per-marker filters chosen")
     }
@@ -80,78 +99,88 @@ cleanData <- function(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
         message("No per-marker filter chosen, carry on with removing samples ",
                 "that fail per-samples QCs")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
-        stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
+    if (!file.exists(paste(prefix, ".fam",sep=""))){
+        stop("plink family file: ", prefix, ".fam does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".bim",sep=""))){
-        stop("plink snp file: ", qcdir,"/", alg, ".bim does not exist.")
+    if (!file.exists(paste(prefix, ".bim",sep=""))){
+        stop("plink snp file: ", prefix, ".bim does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".bed",sep=""))){
-        stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
+    if (!file.exists(paste(prefix, ".bed",sep=""))){
+        stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     # Remove remove.IDs file if already existing
-    system(paste("rm -f ", qcdir,"/", alg, ".remove.IDs", sep="" ))
-    if (filterRelated) {
-        if (!file.exists(paste(qcdir,"/", alg, ".fail-IBD.IDs", sep=""))){
-            stop("filterRelated is TRUE but file ", qcdir,"/", alg,
-                 ".fail-IBD.IDs does not exist")
-        } else {
-            system(paste("cat ", qcdir,"/", alg, ".fail-IBD.IDs >> ",
-                         qcdir, "/", alg, ".remove.IDs", sep=""))
+    system(paste("rm -f ", prefix, ".remove.IDs", sep="" ))
+    if (any(sampleFilter)) {
+        if (filterRelated) {
+            if (!file.exists(paste(prefix, ".fail-IBD.IDs", sep=""))){
+                stop("filterRelated is TRUE but file ", prefix,
+                     ".fail-IBD.IDs does not exist")
+            } else {
+                system(paste("cat ", prefix, ".fail-IBD.IDs >> ",
+                             prefix, ".remove.IDs", sep=""))
+            }
         }
-    }
-    if (filterAncestry) {
-        if (!file.exists(paste(qcdir,"/", alg, ".fail-ancestry.IDs", sep=""))){
-            stop("filterAncestry is TRUE but file ", qcdir,"/", alg,
-                 ".fail-ancestry.IDs does not exist")
-        } else {
-            system(paste("cat ", qcdir,"/", alg, ".fail-ancestry.IDs >> ",
-                         qcdir, "/", alg, ".remove.IDs", sep=""))
+        if (filterAncestry) {
+            if (!file.exists(paste(prefix, ".fail-ancestry.IDs", sep=""))){
+                stop("filterAncestry is TRUE but file ", prefix,
+                     ".fail-ancestry.IDs does not exist")
+            } else {
+                system(paste("cat ", prefix, ".fail-ancestry.IDs >> ",
+                             prefix, ".remove.IDs", sep=""))
+            }
         }
-    }
-    if (filterHeterozygosity) {
-        if (!file.exists(paste(qcdir,"/", alg, ".fail-het.IDs", sep=""))){
-            stop("filterHeterozygosity is TRUE but file ", qcdir,"/", alg,
-                 ".fail-het.IDs does not exist")
-        } else {
-            system(paste("cat ", qcdir,"/", alg, ".fail-het.IDs >> ",
-                         qcdir, "/", alg, ".remove.IDs", sep=""))
+        if (filterHeterozygosity) {
+            if (!file.exists(paste(prefix, ".fail-het.IDs", sep=""))){
+                stop("filterHeterozygosity is TRUE but file ", prefix,
+                     ".fail-het.IDs does not exist")
+            } else {
+                system(paste("cat ", prefix, ".fail-het.IDs >> ",
+                             prefix, ".remove.IDs", sep=""))
+            }
         }
-    }
-    if (filterSampleMissingness) {
-        if (!file.exists(paste(qcdir,"/", alg, ".fail-imiss.IDs", sep=""))){
-            stop("filterSampleMissingness is TRUE but file ", qcdir,"/", alg,
-                 ".fail-imiss.IDs does not exist")
-        } else {
-            system(paste("cat ", qcdir,"/", alg, ".fail-imiss.IDs >> ",
-                         qcdir, "/", alg, ".remove.IDs", sep=""))
+        if (filterSampleMissingness) {
+            if (!file.exists(paste(prefix, ".fail-imiss.IDs", sep=""))){
+                stop("filterSampleMissingness is TRUE but file ", prefix,
+                     ".fail-imiss.IDs does not exist")
+            } else {
+                system(paste("cat ", prefix, ".fail-imiss.IDs >> ",
+                             prefix, ".remove.IDs", sep=""))
+            }
         }
-    }
-    if (filterSex) {
-        if (!file.exists(paste(qcdir,"/", alg, ".fail-sexcheck.IDs", sep=""))){
-            stop("filterSex is TRUE but file ", qcdir,"/", alg,
-                 ".fail-sexcheck.IDs does not exist")
-        } else {
-            system(paste("cat ", qcdir,"/", alg, ".fail-sexcheck.IDs >> ",
-                         qcdir, "/", alg, ".remove.IDs", sep=""))
+        if (filterSex) {
+            if (!file.exists(paste(prefix, ".fail-sexcheck.IDs", sep=""))){
+                stop("filterSex is TRUE but file ", prefix,
+                     ".fail-sexcheck.IDs does not exist")
+            } else {
+                system(paste("cat ", prefix, ".fail-sexcheck.IDs >> ",
+                             prefix, ".remove.IDs", sep=""))
+            }
         }
+        # ensure unique IDs in remove.IDs
+        removeIDs <- data.table::fread(paste(prefix, ".remove.IDs",
+                                             sep=""),
+                                       header=FALSE,
+                                       data.table=FALSE, stringsAsFactors=FALSE)
+        removeIDs <- removeIDs[!duplicated(removeIDs),]
+        write.table(removeIDs, paste(prefix, ".remove.IDs", sep=""),
+                    col.names=FALSE, row.names=FALSE, quote=FALSE)
+        keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                     data.table=FALSE, stringsAsFactors=FALSE,
+                                     header=FALSE)
+        keepIDs <- keepIDs[keepIDs[,2] %in% removeIDs[,2],1:2]
+        removeString <- paste(" --remove ", prefix, ".remove.IDs", sep="")
+    } else {
+        keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                     data.table=FALSE, stringsAsFactors=FALSE,
+                                     header=FALSE)
+        removeIDs <- NULL
+        removeString <- ""
     }
-    # ensure unique IDs in remove.IDs
-    removeIDs <- data.table::fread(paste(qcdir, "/", alg, ".remove.IDs",
-                                         sep=""),
-                                   header=FALSE,
-                                   data.table=FALSE, stringsAsFactors=FALSE)
-    removeIDs <- removeIDs[!duplicated(removeIDs),]
-    write.table(removeIDs, paste(qcdir, "/", alg, ".remove.IDs", sep=""),
-                col.names=FALSE, row.names=FALSE, quote=FALSE)
-    keepIDs <- data.table::fread(paste(qcdir, "/", alg, ".fam", sep=""),
-                                 data.table=FALSE, stringsAsFactors=FALSE,
-                                 header=FALSE)
-    keepIDs <- keepIDs[keepIDs[,2] %in% removeIDs[,2],1:2]
 
     hwe <- NULL
     maf <- NULL
     missing <- NULL
+
     if (filterHWE) {
         if (is.null(hweTh)) {
             stop("filterHWE is TRUE but hweTh not specified")
@@ -164,7 +193,7 @@ cleanData <- function(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
             stop("filterMAF is TRUE but neither mafTh or macTh are provided")
         }
         if(!is.null(macTh)) {
-            all_samples <-  R.utils::countLines(paste(qcdir,"/",alg, ".fam",
+            all_samples <-  R.utils::countLines(paste(prefix, ".fam",
                                                       sep=""))
             keep_samples <- as.numeric(all_samples) - nrow(removeIDs)
             mafTh <- macTh/(2*keep_samples)
@@ -187,7 +216,7 @@ cleanData <- function(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
         if (is.null(lmissTh)) {
             stop("filterSNPMissingness is TRUE but lmissTh not specified")
         } else {
-            missing <- paste(" --lmiss", lmissTh)
+            missing <- paste(" --geno", lmissTh)
         }
     }
     checkPlink(path2plink)
@@ -196,9 +225,9 @@ cleanData <- function(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
     }
 
     system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
-                 " --remove ", qcdir,"/", alg, ".remove.IDs",
+                 removeString,
                  maf, hwe, missing,
-                 " --make-bed --out ", qcdir, "/", alg, ".clean",
+                 " --make-bed --out ", prefix, ".clean",
                  sep=""),
            ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     return(list(passIDs=keepIDs, failIDs=removeIDs))
