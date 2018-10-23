@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
+## <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 
 **plinkQC** is a R/CRAN for **genotype quality control** in genetic association
 studies. It makes PLINK basic statistics (e.g.missing genotyping rates

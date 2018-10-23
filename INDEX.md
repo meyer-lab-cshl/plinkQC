@@ -1,5 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 ----------------------------------------------------
 
@@ -13,18 +12,17 @@ Individuals and markers that fail the quality control can subsequently be remove
 
 Removal of individuals based on relationship status via **plinkQC** is optimised to retain as many individuals as possible in the study.
 
+<embed src="docs/qc.pdf" width="100%" type="application/pdf" />
 <i class="fa fa-cog" aria-hidden="true"></i> Getting Started
 ------------------------------------------------------------
 
 The current github version of **plinkQC** is: 0.1.0 and can be installed via
 
-``` r
+``` bash
 library(devtools)
 install_github("HannahVMeyer/PhenotypeSimulator")
 ```
 
 **plinkQC** will soon be available on CRAN!
-
-Full documentation is available at <http://HannahVMeyer.github.io/plinkQC/>
 
 A log of version changes can be found [here](https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.md).

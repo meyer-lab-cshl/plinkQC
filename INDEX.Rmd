@@ -8,9 +8,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "README-"
 )
+#[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
 ```
-
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
 
 ## <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 
@@ -31,6 +30,10 @@ removed with **plinkQC** to generate a new, clean dataset.
 
 Removal of individuals based on relationship status via **plinkQC** is optimised
 to retain as many individuals as possible in the study.
+
+```{r, echo = FALSE, out.width = '100%'}
+knitr::include_graphics("docs/qc.png")
+```
 
 ## <i class="fa fa-cog" aria-hidden="true"></i> Getting Started
 
