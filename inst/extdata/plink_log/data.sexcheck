@@ -5,10 +5,10 @@ Options in effect:
   --out /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
 
 Hostname: hannahmbpr
-Working directory: /Users/hannah/RPackagesDevel/plinkQC/inst/extdata
-Start time: Thu Oct  4 11:08:23 2018
+Working directory: /Users/hannah/RPackagesDevel/plinkQC/inst/bash
+Start time: Sat Oct 13 13:27:35 2018
 
-Random number seed: 1538647703
+Random number seed: 1539433655
 16384 MB RAM detected; reserving 8192 MB for main workspace.
 10000 variants loaded from .bim file.
 200 people (89 males, 111 females) loaded from .fam.
@@ -25,4 +25,4 @@ Note: No phenotypes present.
 Report written to
 /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.sexcheck .
 
-End time: Thu Oct  4 11:08:23 2018
+End time: Sat Oct 13 13:27:35 2018

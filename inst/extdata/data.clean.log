@@ -1,0 +1,18 @@
+PLINK v1.90b6.5 64-bit (13 Sep 2018)
+Options in effect:
+  --bfile /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
+  --hwe 1e-05
+  --lmiss 0.01
+  --maf 0.0662251655629139
+  --make-bed
+  --out /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.clean
+  --remove /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.remove.IDs
+
+Hostname: hannahmbpr
+Working directory: /Users/hannah/RPackagesDevel/plinkQC/vignettes
+Start time: Tue Oct 23 16:36:14 2018
+
+Error: Unrecognized flag ('--lmiss').
+For more information, try 'plink --help [flag name]' or 'plink --help | more'.
+
+End time: Tue Oct 23 16:36:14 2018
