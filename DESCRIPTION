@@ -1,11 +1,13 @@
 Package: plinkQC
 Type: Package
-Title: Genotype quality control with PLINK
+Title: Genotype Quality Control with PLINK
 Version: 0.1.0
 Authors@R:
     person("Hannah", "Meyer", email = "hannah@ebi.ac.uk",
     role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4564-0899"))
-URL: https://github.com/HannahVMeyer/plinkQC
+URL: c(
+    https://github.com/HannahVMeyer/plinkQC, 
+    https://hannahvmeyer.github.io/plinkQC/index.html)
 BugReports: https://github.com/HannahVMeyer/plinkQC/issues
 Maintainer: Hannah Meyer <hannah@ebi.ac.uk>
 Description: Genotyping arrays enable the direct measurement of an individuals
