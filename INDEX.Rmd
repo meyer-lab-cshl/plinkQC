@@ -9,7 +9,9 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 ```
+
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 
@@ -35,7 +37,7 @@ to retain as many individuals as possible in the study.
 knitr::include_graphics("docs/qc.png")
 ```
 
-## <i class="fa fa-cog" aria-hidden="true"></i> Getting Started
+## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
 The current github version of **plinkQC**  is: 0.1.0 and can be
 installed via
