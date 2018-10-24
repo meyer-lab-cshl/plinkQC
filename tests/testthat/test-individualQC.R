@@ -1,28 +1,25 @@
-context('Test sampleQC functions')
+context('Test individualQC functions')
+library(plinkQC)
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
+qcdir <- '.'
 alg <- 'data'
 
 
-fail_sexIDs <- read.table(paste(qcdir, "/", alg, ".fail-sexcheck.IDs", sep=""))
-fail_highIBDIDs <- read.table(paste(qcdir, "/", alg, ".fail-IBD.IDs", sep=""))
-fail_imissIDs <- read.table(paste(qcdir, "/", alg, ".fail-imiss.IDs", sep=""))
-fail_hetIDs <- read.table(paste(qcdir, "/", alg, ".fail-het.IDs", sep=""))
+fail_sexIDs <- read.table(paste(alg, ".fail-sexcheck.IDs", sep=""))
+fail_highIBDIDs <- read.table(paste(alg, ".fail-IBD.IDs", sep=""))
+fail_imissIDs <- read.table(paste(alg, ".fail-imiss.IDs", sep=""))
+fail_hetIDs <- read.table(paste(alg, ".fail-het.IDs", sep=""))
 
 context('Test check_sex')
 test_that('check_sex throws file error',{
-    expect_error(check_sex(qcdir, "nodata", verbose=FALSE),
+    expect_error(evaluate_check_sex(qcdir, "nodata", verbose=FALSE),
                  "plink --check-sex results file")
 })
 test_that('evaluate_check_sex fails with femaleTh/maleTh numbers error', {
               expect_error(evaluate_check_sex(qcdir, alg, maleTh=2, femaleTh=3),
                            "Proportions have to be specified")
           })
-#test_that('check_sex throws path2plink error',{
-#    expect_error(check_sex(qcdir, alg, path2plink="~/test", verbose=FALSE),
-#                 "PLINK software required for running this ")
-#})
-#
+
 test_that('evaluate_check_sex returns correct output type',{
     fail_sex <- evaluate_check_sex(qcdir, alg, verbose=FALSE)
     expect_true(is.list(fail_sex))
@@ -34,12 +31,12 @@ test_that('evaluate_check_sex returns correct output length',{
 })
 
 test_that('evaluate_check_sex returns correct output names',{
-    fail_sex <- check_sex(qcdir, alg, verbose=FALSE)
+    fail_sex <- evaluate_check_sex(qcdir, alg, verbose=FALSE)
     expect_equal(names(fail_sex), c("fail_sex", "mixup", "p_sexcheck"))
 })
 
 test_that('evaluate_check_sex returns correct fail IDs for example data',{
-    fail_sex <- check_sex(qcdir, alg, verbose=FALSE)
+    fail_sex <- evaluate_check_sex(qcdir, alg, verbose=FALSE)
     expect_true(all(fail_sex$fail_sex$IID %in% fail_sexIDs[,1]))
 })
 

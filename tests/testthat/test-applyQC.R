@@ -1,13 +1,14 @@
 context('Test applyQC functions')
-package.dir <- find.package('plinkQC')
-#package.dir <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library/plinkQC"
-qcdir <- file.path(package.dir, 'extdata')
+qcdir <- '.'
 alg <- 'data'
 
 fail_individuals <-
     perIndividualQC(qcdir=qcdir, alg=alg,
                     refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt", sep=""),
                     refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+                    do.run_check_sex=FALSE, do.run_check_ancestry=FALSE,
+                    do.run_check_het_and_miss=FALSE,
+                    do.run_check_relatedness=FALSE,
                     prefixMergedDataset="data.HapMapIII",
                     interactive=FALSE, verbose=FALSE)
 
