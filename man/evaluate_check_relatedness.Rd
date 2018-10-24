@@ -50,8 +50,8 @@ shown by print(p_IBD).
 \description{
 Evaluates and depicts results from plink --genome on the LD pruned dataset
 (via \code{\link{run_check_relatedness}} or externally conducted IBD
-estimation.plink --genome calculates identity by state (IBS) for each pair of
-individuals based on the average proportion of alleles shared at genotyped
+estimation. plink --genome calculates identity by state (IBS) for each pair
+of individuals based on the average proportion of alleles shared at genotyped
 SNPs. The degree of recent shared ancestry, i.e. the identity by descent
 (IBD) can be estimated from the genome-wide IBS. The proportion of IBD
 between two individuals is returned by --genome as PI_HAT.

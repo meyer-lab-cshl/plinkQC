@@ -7,7 +7,6 @@ output:
         fig_caption: yes
         toc: true
         toc_depth: 2
-        keep_tex: true
         highlight: pygments
 bibliography: references.bib
 csl: plos-genetics.csl
@@ -41,9 +40,12 @@ is provided with $plinkQC$ in `file.path(find.package('plinkQC'),'extdata')`.
 # Workflow
 ## Download reference data
 A suitable reference dataset should be downloaded and if necessary, re-formated
-into PLINK format. Vignettes xx and xx, show the download and processing of the
-HapMapIII and 1000Genomes phase 3 dataset, respectively. In this example, we
-will use HammapIII data as the reference dataset.
+into PLINK format. Vignettes
+['Processing HapMap III reference data for ancestry estimation'](https://hannahvmeyer.github.io/plinkQC/articles/HapMap.html) and 
+['Processing 1000Genomes  reference data for ancestry estimation'](), show the
+download and processing of the HapMap phase III and 1000Genomes phase III
+dataset, respectively. In this example, we will use the HammapIII data as the
+reference dataset.
 
 ## Set-up
 We will first set up some bash variables and create directories needed; storing
@@ -79,7 +81,7 @@ ranges of known high-LD structure. This file was originally provided by
 @Anderson2010 and is available in
 `file.path(find.package('plinkQC'),'extdata','high-LD-regions.txt')`.
 
-```{r, engine='bash', prune, eval=FALSE, background='#F7F7F7'}
+```{bash prune, eval=FALSE}
 plink --bfile  $qcdir/$name \
       --exclude range  $refdir/$highld \
       --indep-pairwise 50 5 0.2 \
@@ -219,19 +221,16 @@ population. From within R, run the following command to the ancestry check:
 library(plinkQC)
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir,'extdata')
-alg='data'
-refname='HapMapIII'
-refdir='~/reference'
+alg <- 'data'
+refname <- 'HapMapIII'
+prefixMergedDataset <- paste(alg, ".", refname, sep="")
 
-
-exclude_ancestry <- check_ancestry(qcdir=qcdir, alg=alg,
-                            refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",
-                                                 sep=""), 
-                            refColorsFile=paste(qcdir, "/HapMap_PopColors.txt",
-                                                 sep=""),
-                            prefixMergedDataset=paste(alg, ".", refname,
-                                                      sep=""),
-                            interactive=TRUE)
+exclude_ancestry <-
+    check_ancestry(qcdir=qcdir, alg=alg,
+                   prefixMergedDataset=prefixMergedDataset,
+                   refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt", sep=""), 
+                   refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+                   run.check_ancestry=FALSE, interactive=TRUE)
 ```
 
 # References

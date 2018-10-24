@@ -96,8 +96,7 @@ new dataset. In addition, the functionality of each of the functions underlying
 
 ```{r set parameters}
 package.dir <- find.package('plinkQC')
-qcdir <- "~/RPackagesDevel/plinkQC/inst/extdata"
-#qcdir <- file.path(package.dir, 'extdata')
+qcdir <- file.path(package.dir, 'extdata')
 alg <- 'data'
 path2plink <- "~/bin"
 ```
@@ -130,7 +129,8 @@ fail_individuals <- perIndividualQC(qcdir=qcdir, alg=alg,
                             interactive=TRUE, verbose=TRUE,
                             do.run_check_het_and_miss=FALSE,
                             do.run_check_sex=FALSE,
-                            do.run_check_relatedness=FALSE)
+                            do.run_check_relatedness=FALSE,
+                            do.run_check_ancestry=FALSE)
 
 ```
 
@@ -270,6 +270,7 @@ exclude_ancestry <- check_ancestry(qcdir=qcdir, alg=alg,
                             refColorsFile=paste(qcdir, "/HapMap_PopColors.txt",
                                                  sep=""),
                             prefixMergedDataset="data.HapMapIII",
+                            run.check_ancestry=FALSE,
                             interactive=TRUE)
 ```
 

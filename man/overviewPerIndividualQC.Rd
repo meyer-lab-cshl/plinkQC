@@ -52,6 +52,6 @@ refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
-do.run_check_sex=FALSE)
+do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
 overview <- overviewPerIndividualQC(fail_individuals)
 }

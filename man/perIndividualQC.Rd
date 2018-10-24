@@ -4,20 +4,22 @@
 \alias{perIndividualQC}
 \title{Quality control for all individuals in plink-dataset}
 \usage{
-perIndividualQC(qcdir, alg, do.run_check_sex = TRUE,
-  do.evaluate_check_sex = TRUE, maleTh = 0.8, femaleTh = 0.2,
-  fixMixup = FALSE, externalSex = NULL, externalMale = "M",
-  externalSexSex = "Sex", externalSexID = "IID",
-  externalFemale = "F", do.run_check_het_and_miss = TRUE,
+perIndividualQC(qcdir, alg, dont.check_sex = FALSE,
+  do.run_check_sex = TRUE, do.evaluate_check_sex = TRUE,
+  maleTh = 0.8, femaleTh = 0.2, fixMixup = FALSE,
+  externalSex = NULL, externalMale = "M", externalSexSex = "Sex",
+  externalSexID = "IID", externalFemale = "F",
+  dont.check_het_and_miss = FALSE, do.run_check_het_and_miss = TRUE,
   do.evaluate_check_het_and_miss = TRUE, imissTh = 0.03, hetTh = 3,
-  do.run_check_relatedness = TRUE,
+  dont.check_relatedness = FALSE, do.run_check_relatedness = TRUE,
   do.evaluate_check_relatedness = TRUE, highIBDTh = 0.1875,
-  do.check_ancestry = TRUE, prefixMergedDataset, europeanTh = 1.5,
-  refSamples = NULL, refColors = NULL, refSamplesFile = NULL,
-  refColorsFile = NULL, refSamplesIID = "IID", refSamplesPop = "Pop",
-  refColorsColor = "Color", refColorsPop = "Pop",
-  studyColor = "#2c7bb6", interactive = FALSE, verbose = TRUE,
-  path2plink = NULL, showPlinkOutput = TRUE)
+  dont.check_ancestry = FALSE, do.run_check_ancestry = TRUE,
+  do.evaluate_check_ancestry = TRUE, prefixMergedDataset,
+  europeanTh = 1.5, refSamples = NULL, refColors = NULL,
+  refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
+  refSamplesPop = "Pop", refColorsColor = "Color",
+  refColorsPop = "Pop", studyColor = "#2c7bb6", interactive = FALSE,
+  verbose = TRUE, path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing the
@@ -27,13 +29,17 @@ it expects the analysis-specific plink output
 files in qcdir i.e. do.check_sex expects alg.sexcheck,
 do.evaluate_check_het_and_miss expects alg.het and alg.imiss,
 do.evauluate_check_relatedness expects alg.genome and alg.imiss and
-do.check_ancestry expects prefixMergeData.eigenvec. If these files are not
-present \code{perIndividualQC} will fail with missing file error. Setting
-do.run_[analysis] TRUE will execute the checks and create the required files.
-User needs writing permission to qcdir.}
+do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
+are not present \code{perIndividualQC} will fail with missing file error
+Setting do.run_[analysis] TRUE will execute the checks and create the
+required files. User needs writing permission to qcdir.}
 
 \item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
 alg.fam.}
+
+\item{dont.check_sex}{[logical] If TRUE, no sex check will be conducted;
+short for do.run_check_sex=FALSE and do.evaluate_check_sex=FALSE.
+Takes precendence over do.run_check_sex and do.evaluate_check_sex.}
 
 \item{do.run_check_sex}{[logical] If TRUE, run \code{\link{run_check_sex}}}
 
@@ -65,6 +71,13 @@ information in externalSex.}
 \item{externalFemale}{[integer/character] Identifier for 'female' in
 externalSex.}
 
+\item{dont.check_het_and_miss}{[logical] If TRUE, no heterozygosity and
+missingness check will be conducted; short for
+do.run_check_heterozygosity=FALSE, do.run_check_missingness=FALSE and
+do.evaluate_check_het_and_miss=FALSE. Takes precendence over
+do.run_check_heterozygosity, do.run_check_missingness and
+do.evaluate_check_het_and_miss.}
+
 \item{do.run_check_het_and_miss}{[logical] If TRUE, run
 \code{\link{run_check_heterozygosity}} and \code{\link{run_check_missingness}}}
 
@@ -79,6 +92,11 @@ heterozygosity in any individual. Expressed as multiples of standard
 deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check.}
 
+\item{dont.check_relatedness}{[logical] If TRUE, no relatedness check will be
+conducted; short for do.run_check_relatedness=FALSE and
+do.evaluate_check_relatedness=FALSE. Takes precendence over
+do.run_check_relatedness and do.evaluate_check_relatedness.}
+
 \item{do.run_check_relatedness}{[logical] If TRUE, run
 \code{\link{run_check_relatedness}}.}
 
@@ -88,11 +106,20 @@ hetTh*sd(het) will be returned as failing heterozygosity check.}
 \item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
 pair of individuals.}
 
-\item{do.check_ancestry}{[logical] If TRUE, run
-\code{\link{check_ancestry}}.}
+\item{dont.check_ancestry}{[logical] If TRUE, no ancestry check will be
+conducted; short for do.run_check_ancestry=FALSE and
+do.evaluate_check_ancestry=FALSE. Takes precendence over
+do.run_check_ancestry and do.evaluate_check_ancestry.}
+
+\item{do.run_check_ancestry}{[logical] If TRUE, run
+\code{\link{run_check_ancestry}}.}
+
+\item{do.evaluate_check_ancestry}{[logical] If TRUE, run
+\code{\link{evaluate_check_ancestry}}.}
 
 \item{prefixMergedDataset}{[character] Prefix of merged dataset (study and
-reference samples) used in plink --pca, resulting in
+reference samples) with prefixMergedDataset.bed, prefixMergedDataset.bim
+and prefixMergedDataset.fam, which was used in plink --pca, resulting in
 prefixMergedDataset.eigenvec}
 
 \item{europeanTh}{[double] Scaling factor of radius to be drawn around center
@@ -198,15 +225,17 @@ package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir, 'extdata')
 alg <- "data"
 # All quality control checks
+# In this examples, run_check* already conducted and outcome files present
+# in qcdir, hence dont.check_* all set to FALSE
 fail_individuals <- perIndividualQC(qcdir=qcdir, alg=alg,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
-do.run_check_sex=FALSE)
+do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
 # Only check sex and missingness/heterozygosity
 fail_sex_het_miss <- perIndividualQC(qcdir=qcdir, alg=alg,
-do.check_ancestry=FALSE, do.evaluate_check_relatedness=FALSE,
+dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
 interactive=FALSE, verbose=FALSE, do.run_check_het_and_miss=FALSE,
-do.run_check_relatedness=FALSE, do.run_check_sex=FALSE)
+do.run_check_sex=FALSE)
 }
