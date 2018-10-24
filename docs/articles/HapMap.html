@@ -129,7 +129,7 @@
 <div id="download-and-convert-hapmap-phase-iii-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#download-and-convert-hapmap-phase-iii-data" class="anchor"></a>Download and convert Hapmap phase III data</h2>
-<p>Hapmap phase 3 data (HapMapIII) is available in <a href="https://www.cog-genomics.org/plink/1.9/input#ped">PLINK text format</a> at ncbi. The following code chunk downloads and unzips the data.</p>
+<p>Hapmap phase 3 data (HapMapIII) is available in <a href="https://www.cog-genomics.org/plink/1.9/input#ped">PLINK text format</a> at ncbi. In addition, a sample file with information about the individuals’ ancestry is available and shoud be downloaded as in input for <code>plinkQC::chec_Ancestry()</code>. The following code chunk downloads and unzips the data.</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">cd</span> <span class="va">$refdir</span>
 
 <span class="va">ftp=</span>ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/2009-01_phaseIII/plink_format/
@@ -139,7 +139,9 @@
 <span class="fu">bunzip2</span> <span class="va">$prefix</span>.map.bz2
 
 <span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.ped.bz2
-<span class="fu">bunzip2</span> <span class="va">$prefix</span>.per.bz2</code></pre></div>
+<span class="fu">bunzip2</span> <span class="va">$prefix</span>.per.bz2
+
+<span class="fu">wget</span> <span class="va">$ftp</span>/relationships_w_pops_121708.txt</code></pre></div>
 <p>We then convert the <a href="https://www.cog-genomics.org/plink/1.9/input#ped">PLINK text format</a> to the standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped">PLINK binary format</a>.</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">plink</span> --file <span class="va">$refdir</span>/<span class="va">$prefix</span> \
       --make-bed \

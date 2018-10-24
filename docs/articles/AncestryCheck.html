@@ -252,19 +252,16 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plinkQC)
 package.dir &lt;-<span class="st"> </span><span class="kw">find.package</span>(<span class="st">'plinkQC'</span>)
 qcdir &lt;-<span class="st"> </span><span class="kw">file.path</span>(package.dir,<span class="st">'extdata'</span>)
-alg=<span class="st">'data'</span>
-refname=<span class="st">'HapMapIII'</span>
-refdir=<span class="st">'~/reference'</span>
+alg &lt;-<span class="st"> 'data'</span>
+refname &lt;-<span class="st"> 'HapMapIII'</span>
+prefixMergedDataset &lt;-<span class="st"> </span><span class="kw">paste</span>(alg, <span class="st">"."</span>, refname, <span class="dt">sep=</span><span class="st">""</span>)
 
-
-exclude_ancestry &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_ancestry.html">check_ancestry</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg,
-                            <span class="dt">refSamplesFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_ID2Pop.txt"</span>,
-                                                 <span class="dt">sep=</span><span class="st">""</span>), 
-                            <span class="dt">refColorsFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_PopColors.txt"</span>,
-                                                 <span class="dt">sep=</span><span class="st">""</span>),
-                            <span class="dt">prefixMergedDataset=</span><span class="kw">paste</span>(alg, <span class="st">"."</span>, refname,
-                                                      <span class="dt">sep=</span><span class="st">""</span>),
-                            <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
+exclude_ancestry &lt;-
+<span class="st">    </span><span class="kw"><a href="../reference/check_ancestry.html">check_ancestry</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg,
+                   <span class="dt">prefixMergedDataset=</span>prefixMergedDataset,
+                   <span class="dt">refSamplesFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_ID2Pop.txt"</span>, <span class="dt">sep=</span><span class="st">""</span>), 
+                   <span class="dt">refColorsFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_PopColors.txt"</span>, <span class="dt">sep=</span><span class="st">""</span>),
+                   <span class="dt">run.check_ancestry=</span><span class="ot">FALSE</span>, <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="AncestryCheck_files/figure-html/check%20ancestry-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>

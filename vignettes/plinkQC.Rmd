@@ -30,13 +30,13 @@ Genotyping arrays enable the direct measurement of an individuals genotype at
 thousands of markers. Subsequent analyses such as genome-wide association
 studies rely on the high quality of these marker genotypes.
 
-[@Anderson2010] and colleagues introduced a protocol for data quality control in
+Anderson and colleagues introduced a protocol for data quality control in
 genetic association studies heavily based on the summary statistics and
-relatedness estimation functions in the PLINK software. PLINK is a
-comprehensive, open-source command-line tool for genome-wide association studies
-(GWAS) and population genetics research [@Purcell2007, @Chang2015]. It's main 
-functionalities include data management, computing individual- and marker-level
-summary statistics, identity-by-state estimation and association analysis.  
+relatedness estimation functions in the PLINK software [@Anderson2010]. PLINK is
+a comprehensive, open-source command-line tool for genome-wide association
+studies (GWAS) and population genetics research [@Purcell2007, @Chang2015]. It's
+main functionalities include data management, computing individual- and marker-
+level summary statistics, identity-by-state estimation and association analysis.  
 Integration with R is achieved through its R plugin or PLINK/SEQ R Package
 [@PlinkSeq2014]. While the plugin is limited to operations yielding simple
 genetic marker vectors as output, the PLINK/SEQ R Package is limited in the

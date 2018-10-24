@@ -114,7 +114,7 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>Genotyping arrays enable the direct measurement of an individuals genotype at thousands of markers. Subsequent analyses such as genome-wide association studies rely on the high quality of these marker genotypes.</p>
-<p><span class="citation">[1]</span> and colleagues introduced a protocol for data quality control in genetic association studies heavily based on the summary statistics and relatedness estimation functions in the PLINK software. PLINK is a comprehensive, open-source command-line tool for genome-wide association studies (GWAS) and population genetics research <span class="citation">[2]</span>. It’s main functionalities include data management, computing individual- and marker-level summary statistics, identity-by-state estimation and association analysis.<br>
+<p>Anderson and colleagues introduced a protocol for data quality control in genetic association studies heavily based on the summary statistics and relatedness estimation functions in the PLINK software <span class="citation">[1]</span>. PLINK is a comprehensive, open-source command-line tool for genome-wide association studies (GWAS) and population genetics research <span class="citation">[2]</span>. It’s main functionalities include data management, computing individual- and marker- level summary statistics, identity-by-state estimation and association analysis.<br>
 Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span class="citation">[4]</span>. While the plugin is limited to operations yielding simple genetic marker vectors as output, the PLINK/SEQ R Package is limited in the functionalities it can access.</p>
 <p><em>plinkQC</em> facilitates genotype quality control for genetic association studies as described by <span class="citation">[1]</span>. It wraps around plink basic statistics (e.g. missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions and generates a per-individual and per-marker quality control report. Individuals and markers that fail the quality control can subsequently be removed with <em>plinkQC</em> to generate a new, clean dataset. Removal of individuals based on relationship status is optimised to retain as many individuals as possible in the study.</p>
 <p><em>plinkQC</em> depends on the <a href="https://www.cog-genomics.org/plink/1.9/">PLINK</a> (version <span class="math inline">\(\ge\)</span> 1.9), which has to be manually installed prior to the usage of <em>plinkQC</em>. It assumes the genotype have already been determined from the original probe intensity data of the genotype array and is available in <a href="https://www.cog-genomics.org/plink/1.9/input#bed">plink format</a>.</p>
@@ -140,8 +140,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <a href="#workflow" class="anchor"></a>Workflow</h1>
 <p>In the following, genotype quality control with <em>plinkQC</em> is applied on a small example dataset with 200 individuals and 10,000 markers (provided with this package). The quality control is demonstrated in three easy steps, per-individual and per-marker quality control followed by the generation of the new dataset. In addition, the functionality of each of the functions underlying <code>perMarkerQC</code> and <code>perIndividualQC</code> is demonstrated at the end of this vignette.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">package.dir &lt;-<span class="st"> </span><span class="kw">find.package</span>(<span class="st">'plinkQC'</span>)
-qcdir &lt;-<span class="st"> "~/RPackagesDevel/plinkQC/inst/extdata"</span>
-<span class="co">#qcdir &lt;- file.path(package.dir, 'extdata')</span>
+qcdir &lt;-<span class="st"> </span><span class="kw">file.path</span>(package.dir, <span class="st">'extdata'</span>)
 alg &lt;-<span class="st"> 'data'</span>
 path2plink &lt;-<span class="st"> "~/bin"</span></code></pre></div>
 <div id="per-individual-quality-control-1" class="section level2">
@@ -159,12 +158,13 @@ path2plink &lt;-<span class="st"> "~/bin"</span></code></pre></div>
                             <span class="dt">interactive=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>,
                             <span class="dt">do.run_check_het_and_miss=</span><span class="ot">FALSE</span>,
                             <span class="dt">do.run_check_sex=</span><span class="ot">FALSE</span>,
-                            <span class="dt">do.run_check_relatedness=</span><span class="ot">FALSE</span>)
+                            <span class="dt">do.run_check_relatedness=</span><span class="ot">FALSE</span>,
+                            <span class="dt">do.run_check_ancestry=</span><span class="ot">FALSE</span>)
 <span class="co">#&gt; Identification of individuals with discordant sex information</span>
 <span class="co">#&gt; Identification of individuals with outlying missing genotype or heterozygosity rates</span>
 <span class="co">#&gt; Identification of related individuals</span>
 <span class="co">#&gt; Identification of individuals of divergent ancestry</span>
-<span class="co">#&gt; Combine fail IDs into ~/RPackagesDevel/plinkQC/inst/extdata/data.fail.IDs</span></code></pre></div>
+<span class="co">#&gt; Combine fail IDs into /Library/Frameworks/R.framework/Versions/3.5/Resources/library/plinkQC/extdata/data.fail.IDs</span></code></pre></div>
 <p><img src="plinkQC_files/figure-html/individual%20QC-1.png" width="864"></p>
 <p><code>overviewperIndividualQC</code> depicts overview plots of quality control failures and the intersection of quality control failures with ancestry exclusion.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">overview_individuals &lt;-<span class="st"> </span><span class="kw"><a href="../reference/overviewPerIndividualQC.html">overviewPerIndividualQC</a></span>(fail_individuals,
@@ -237,6 +237,7 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
                             <span class="dt">refColorsFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_PopColors.txt"</span>,
                                                  <span class="dt">sep=</span><span class="st">""</span>),
                             <span class="dt">prefixMergedDataset=</span><span class="st">"data.HapMapIII"</span>,
+                            <span class="dt">run.check_ancestry=</span><span class="ot">FALSE</span>,
                             <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="plinkQC_files/figure-html/check%20ancestry-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>

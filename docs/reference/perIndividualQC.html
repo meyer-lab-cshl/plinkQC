@@ -149,20 +149,22 @@ genetic ancestry.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>perIndividualQC</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>do.run_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>,
-  <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>, <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>, <span class='kw'>do.run_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <pre class="usage"><span class='fu'>perIndividualQC</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>dont.check_sex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>do.run_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>do.evaluate_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>, <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>,
+  <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>,
+  <span class='kw'>dont.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>do.evaluate_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>do.run_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>dont.check_relatedness</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>do.evaluate_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
-  <span class='kw'>do.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>prefixMergedDataset</span>, <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
-  <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
-  <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>, <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
-  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>dont.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>prefixMergedDataset</span>,
+  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
+  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,15 +178,21 @@ it expects the analysis-specific plink output
 files in qcdir i.e. do.check_sex expects alg.sexcheck,
 do.evaluate_check_het_and_miss expects alg.het and alg.imiss,
 do.evauluate_check_relatedness expects alg.genome and alg.imiss and
-do.check_ancestry expects prefixMergeData.eigenvec. If these files are not
-present <code>perIndividualQC</code> will fail with missing file error. Setting
-do.run_[analysis] TRUE will execute the checks and create the required files.
-User needs writing permission to qcdir.</p></td>
+do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
+are not present <code>perIndividualQC</code> will fail with missing file error
+Setting do.run_[analysis] TRUE will execute the checks and create the
+required files. User needs writing permission to qcdir.</p></td>
     </tr>
     <tr>
       <th>alg</th>
       <td><p>[character] Prefix of plink files, i.e. alg.bed, alg.bim,
 alg.fam.</p></td>
+    </tr>
+    <tr>
+      <th>dont.check_sex</th>
+      <td><p>[logical] If TRUE, no sex check will be conducted;
+short for do.run_check_sex=FALSE and do.evaluate_check_sex=FALSE.
+Takes precendence over do.run_check_sex and do.evaluate_check_sex.</p></td>
     </tr>
     <tr>
       <th>do.run_check_sex</th>
@@ -237,6 +245,15 @@ information in externalSex.</p></td>
 externalSex.</p></td>
     </tr>
     <tr>
+      <th>dont.check_het_and_miss</th>
+      <td><p>[logical] If TRUE, no heterozygosity and
+missingness check will be conducted; short for
+do.run_check_heterozygosity=FALSE, do.run_check_missingness=FALSE and
+do.evaluate_check_het_and_miss=FALSE. Takes precendence over
+do.run_check_heterozygosity, do.run_check_missingness and
+do.evaluate_check_het_and_miss.</p></td>
+    </tr>
+    <tr>
       <th>do.run_check_het_and_miss</th>
       <td><p>[logical] If TRUE, run
 <code><a href='run_check_heterozygosity.html'>run_check_heterozygosity</a></code> and <code><a href='run_check_missingness.html'>run_check_missingness</a></code></p></td>
@@ -259,6 +276,13 @@ deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check.</p></td>
     </tr>
     <tr>
+      <th>dont.check_relatedness</th>
+      <td><p>[logical] If TRUE, no relatedness check will be
+conducted; short for do.run_check_relatedness=FALSE and
+do.evaluate_check_relatedness=FALSE. Takes precendence over
+do.run_check_relatedness and do.evaluate_check_relatedness.</p></td>
+    </tr>
+    <tr>
       <th>do.run_check_relatedness</th>
       <td><p>[logical] If TRUE, run
 <code><a href='run_check_relatedness.html'>run_check_relatedness</a></code>.</p></td>
@@ -274,14 +298,27 @@ hetTh*sd(het) will be returned as failing heterozygosity check.</p></td>
 pair of individuals.</p></td>
     </tr>
     <tr>
-      <th>do.check_ancestry</th>
+      <th>dont.check_ancestry</th>
+      <td><p>[logical] If TRUE, no ancestry check will be
+conducted; short for do.run_check_ancestry=FALSE and
+do.evaluate_check_ancestry=FALSE. Takes precendence over
+do.run_check_ancestry and do.evaluate_check_ancestry.</p></td>
+    </tr>
+    <tr>
+      <th>do.run_check_ancestry</th>
       <td><p>[logical] If TRUE, run
-<code><a href='check_ancestry.html'>check_ancestry</a></code>.</p></td>
+<code><a href='run_check_ancestry.html'>run_check_ancestry</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>do.evaluate_check_ancestry</th>
+      <td><p>[logical] If TRUE, run
+<code><a href='evaluate_check_ancestry.html'>evaluate_check_ancestry</a></code>.</p></td>
     </tr>
     <tr>
       <th>prefixMergedDataset</th>
       <td><p>[character] Prefix of merged dataset (study and
-reference samples) used in plink --pca, resulting in
+reference samples) with prefixMergedDataset.bed, prefixMergedDataset.bim
+and prefixMergedDataset.fam, which was used in plink --pca, resulting in
 prefixMergedDataset.eigenvec</p></td>
     </tr>
     <tr>
@@ -414,16 +451,18 @@ function individually.</p>
 <span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
 <span class='no'>alg</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
 <span class='co'># All quality control checks</span>
+<span class='co'># In this examples, run_check* already conducted and outcome files present</span>
+<span class='co'># in qcdir, hence dont.check_* all set to FALSE</span>
 <span class='no'>fail_individuals</span> <span class='kw'>&lt;-</span> <span class='fu'>perIndividualQC</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>,
 <span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
 <span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
 <span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
 <span class='kw'>do.run_check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_sex(qcdir = qcdir, alg = alg, maleTh = maleTh,     femaleTh = femaleTh, externalSex = externalSex, externalMale = externalMale,     externalFemale = externalFemale, externalSexSex = externalSexSex,     externalSexID = externalSexID, verbose = verbose, path2plink = path2plink,     showPlinkOutput = showPlinkOutput, fixMixup = fixMixup, interactive = FALSE): plink --check-sex results file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.sexcheck does not exist.</span></div><div class='input'><span class='co'># Only check sex and missingness/heterozygosity</span>
+<span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_ancestry</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_sex(qcdir = qcdir, alg = alg, maleTh = maleTh,     femaleTh = femaleTh, externalSex = externalSex, externalMale = externalMale,     externalFemale = externalFemale, externalSexSex = externalSexSex,     externalSexID = externalSexID, verbose = verbose, path2plink = path2plink,     showPlinkOutput = showPlinkOutput, fixMixup = fixMixup, interactive = FALSE): plink --check-sex results file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.sexcheck does not exist.</span></div><div class='input'><span class='co'># Only check sex and missingness/heterozygosity</span>
 <span class='no'>fail_sex_het_miss</span> <span class='kw'>&lt;-</span> <span class='fu'>perIndividualQC</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>,
-<span class='kw'>do.check_ancestry</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.evaluate_check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>dont.check_ancestry</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>dont.check_relatedness</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
 <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>do.run_check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_sex(qcdir = qcdir, alg = alg, maleTh = maleTh,     femaleTh = femaleTh, externalSex = externalSex, externalMale = externalMale,     externalFemale = externalFemale, externalSexSex = externalSexSex,     externalSexID = externalSexID, verbose = verbose, path2plink = path2plink,     showPlinkOutput = showPlinkOutput, fixMixup = fixMixup, interactive = FALSE): plink --check-sex results file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.sexcheck does not exist.</span></div></pre>
+<span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_sex(qcdir = qcdir, alg = alg, maleTh = maleTh,     femaleTh = femaleTh, externalSex = externalSex, externalMale = externalMale,     externalFemale = externalFemale, externalSexSex = externalSexSex,     externalSexID = externalSexID, verbose = verbose, path2plink = path2plink,     showPlinkOutput = showPlinkOutput, fixMixup = fixMixup, interactive = FALSE): plink --check-sex results file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.sexcheck does not exist.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
