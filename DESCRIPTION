@@ -7,7 +7,7 @@ Authors@R:
     role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4564-0899"))
 URL: c(
     https://github.com/HannahVMeyer/plinkQC, 
-    https://hannahvmeyer.github.io/plinkQC/index.html)
+    https://hannahvmeyer.github.io/plinkQC)
 BugReports: https://github.com/HannahVMeyer/plinkQC/issues
 Maintainer: Hannah Meyer <hannah@ebi.ac.uk>
 Description: Genotyping arrays enable the direct measurement of an individuals
