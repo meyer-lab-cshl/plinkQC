@@ -15,7 +15,7 @@ Individuals and markers that fail the quality control can subsequently be remove
 
 Removal of individuals based on relationship status via **plinkQC** is optimised to retain as many individuals as possible in the study.
 
-<i class="fa fa-cog" aria-hidden="true"></i> Getting Started
+<i class="fa fa-rocket" aria-hidden="true"></i> Installation
 ------------------------------------------------------------
 
 The current github version of **plinkQC** is: 0.1.0 and can be installed via
