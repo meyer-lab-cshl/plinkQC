@@ -50,6 +50,7 @@ clean_data <- function(qcdir, alg, lmissTh=0.01, hweTh=1e-5, macTh=20,
                  " --remove ", qcdir,"/", alg, ".noIBDfail.IDs",
                  " --hwe ", hweTh,
                  " --geno ", lmissTh,
+                 " --maf ", mafTh ,
                  " --make-bed --out ", qcdir, "/", alg, ".clean.related",
                  sep=""))
 }
