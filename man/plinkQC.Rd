@@ -8,3 +8,4 @@
 \description{
 plinkQC
 }
+\keyword{internal}

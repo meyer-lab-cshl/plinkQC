@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerQC.R
 \name{check_maf}
 \alias{check_maf}
-\title{Identification of SNPs with a very low minor allele frequency}
+\title{Identification of SNPs with low minor allele frequency}
 \usage{
 check_maf(qcdir, alg, mafTh = 0.01, macTh = 20, verbose = FALSE,
   interactive = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
@@ -12,7 +12,7 @@ check_maf(qcdir, alg, mafTh = 0.01, macTh = 20, verbose = FALSE,
 alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
 individuals that failed QC. User needs writing permission to qcdir.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
+\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
 alg.fam.}
 
 \item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
@@ -37,7 +37,7 @@ assumed that PATH set-up works and plink will be found by system("plink").}
 printed to standard out.}
 }
 \value{
-named list with i) fail_maf containing a [data.frame] with CHR
+Named list with i) fail_maf containing a [data.frame] with CHR
 (Chromosome code), SNP (Variant identifier), A1 (Allele 1; usually minor), A2
 (Allele 2; usually major), MAF (Allele 1 frequency), NCHROBS (Number of
 allele observations) for all SNPs that failed the mafTh/macTh and ii) p_maf,
@@ -45,7 +45,30 @@ a ggplot2-object 'containing' the MAF distribution histogram which can be
 shown by (print(p_maf)).
 }
 \description{
-Uses plink --remove alg.fail.IDs --freq to calculate the minor allele
-frequencies for all variants in the individuals that passed the perSampleQC.
-The minor allele frequency distributions is plotted as a histogram.
+Runs and evaluates results from plink --freq. It calculates the minor allele
+frequencies for all variants in the individuals that passed the
+\code{\link{perIndividualQC}}. The minor allele frequency distributions is
+plotted as a histogram.
+}
+\details{
+\code{check_maf} uses plink --remove alg.fail.IDs --freq to calculate the
+minor allele frequencies for all variants in the individuals that passed the
+\code{\link{perIndividualQC}}. It does so without generating a new dataset
+but simply removes the IDs when calculating the statistics.
+
+For details on the output data.frame fail_maf, check the original
+description on the PLINK output format page:
+\url{https://www.cog-genomics.org/plink/1.9/formats#frq}.
+}
+\examples{
+package.dir <- find.package('plinkQC')
+qcdir <- file.path(package.dir, 'extdata')
+alg <- "data"
+path2plink <- '/path/to/plink'
+# the following code is not run on package build, as the path2plink on the
+# user system is not known.
+\dontrun{
+fail_maf <- check_maf(qcdir=qcdir, alg=alg, macTh=15, interactive=FALSE,
+verbose=TRUE, path2plink=path2plink)
+}
 }

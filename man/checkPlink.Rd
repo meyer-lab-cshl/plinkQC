@@ -13,6 +13,6 @@ system("plink").}
 }
 \description{
 checkPlink checks that the PLINK software
-(\url{https://www.cog-genomics.org/plink/1.9/}) required for perMarkerQC and
-check_sex can be found from system call
+(\url{https://www.cog-genomics.org/plink/1.9/})
+can be found from system call.
 }

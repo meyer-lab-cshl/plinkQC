@@ -2,7 +2,7 @@
 % Please edit documentation in R/markerQC.R
 \name{check_snp_missingness}
 \alias{check_snp_missingness}
-\title{Identification of SNPs with high missingness rates}
+\title{Identification of SNPs with high missingness rate}
 \usage{
 check_snp_missingness(qcdir, alg, lmissTh = 0.01, interactive = FALSE,
   path2plink = NULL, verbose = FALSE, showPlinkOutput = TRUE)
@@ -12,7 +12,7 @@ check_snp_missingness(qcdir, alg, lmissTh = 0.01, interactive = FALSE,
 alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
 individuals that failed QC. User needs writing permission to qcdir.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
+\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
 alg.fam.}
 
 \item{lmissTh}{[double] Threshold for acceptable variant missing rate across
@@ -35,7 +35,7 @@ and specifically, if TRUE, plink log will be displayed.}
 printed to standard out.}
 }
 \value{
-named list with i) fail_missingness containing a [data.frame] with
+Named list with i) fail_missingness containing a [data.frame] with
 CHR (Chromosome code), SNP (Variant identifier), CLST (Cluster identifier.
 Only present with --within/--family), N_MISS (Number of missing genotype
 call(s), not counting obligatory missings), N_CLST  (Cluster size; does not
@@ -45,8 +45,31 @@ SNPs failing the lmissTh and ii) p_lmiss, a ggplot2-object 'containing' the
 SNP missingness histogram which can be shown by (print(p_lmiss)).
 }
 \description{
-Uses plink --remove alg.fail.IDs --missing --freq to calculate the rates of
-missing genotype calls and frequency for all variants in the individuals that
-passed the perSampleQC. Depicts SNP missingness rates (stratified by
-minor allele frequency) as histograms.
+Runs and evaluates results from plink --missing --freq. It calculate the
+rates of missing genotype calls and frequency for all variants in the
+individuals that passed the \code{\link{perIndividualQC}}. The SNP
+missingness rates (stratified by minor allele frequency) as histograms.
+}
+\details{
+\code{check_snp_missingness} uses plink --remove alg.fail.IDs --missing
+--freq to calculate rates of missing genotype calls and frequency per SNP in
+the individuals that passed the \code{\link{perIndividualQC}}. It does so
+without generating a new dataset but simply removes the IDs when calculating
+the statistics.
+
+For details on the output data.frame fail_missingness, check the original
+description on the PLINK output format page:
+\url{https://www.cog-genomics.org/plink/1.9/formats#lmiss}.
+}
+\examples{
+package.dir <- find.package('plinkQC')
+qcdir <- file.path(package.dir, 'extdata')
+alg <- "data"
+path2plink <- '/path/to/plink'
+# the following code is not run on package build, as the path2plink on the
+# user system is not known.
+\dontrun{
+fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, alg=alg,
+interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+}
 }

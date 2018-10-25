@@ -13,7 +13,7 @@ check_hwe(qcdir, alg, hweTh = 1e-05, interactive = FALSE,
 alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
 individuals that failed QC. User needs writing permission to qcdir.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
+\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
 alg.fam.}
 
 \item{hweTh}{[double] Significance threshold for deviation from HWE.}
@@ -35,7 +35,7 @@ and specifically, if TRUE, plink log will be displayed.}
 printed to standard out.}
 }
 \value{
-named list with i) fail_hwe containing a [data.frame] with CHR
+Named list with i) fail_hwe containing a [data.frame] with CHR
 (Chromosome code), SNP (Variant identifier), TEST (Type of test: one of
 {'ALL', 'AFF', 'UNAFF', 'ALL(QT)', 'ALL(NP)'}), A1 (Allele 1; usually minor),
 A2 (Allele 2; usually major), GENO ('/'-separated genotype counts: A1 hom,
@@ -46,11 +46,34 @@ for all SNPs that failed the hweTh and ii) p_hwe, a ggplot2-object
 (print(p_hwe)).
 }
 \description{
-Uses plink --remove alg.fail.IDs --hwe to calculate the observed and expected
-heterozygote frequencies per SNP in the individuals that
-passed the perSampleQC and compute the deviation of the frequencies from
-Hardy-Weinberg equilibrium (HWE) by HWE exact test.
-The p-values of the HWE exact test are displayed as histograms (stratified by
-all and low p-values), where the hweTh is used to depict the QC cut-off for
-SNPs.
+Runs and evaluates results from plink --hardy. It calculates the observed and
+expected heterozygote frequencies for all variants in the individuals that
+passed the \code{\link{perIndividualQC}} and computes the deviation of the
+frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test. The
+p-values of the HWE exact test are displayed as histograms (stratified by
+all and low p-values), where the hweTh is used to depict the quality control
+cut-off for SNPs.
+}
+\details{
+\code{check_hwe} uses plink --remove alg.fail.IDs --hardy to
+calculate the observed and expected heterozygote frequencies per SNP in the
+individuals that passed the \code{\link{perIndividualQC}}. It does so
+without generating a new dataset but simply removes the IDs when calculating
+the statistics.
+
+For details on the output data.frame fail_hwe, check the original
+description on the PLINK output format page:
+\url{https://www.cog-genomics.org/plink/1.9/formats#hwe}.
+}
+\examples{
+package.dir <- find.package('plinkQC')
+qcdir <- file.path(package.dir, 'extdata')
+alg <- "data"
+path2plink <- '/path/to/plink'
+# the following code is not run on package build, as the path2plink on the
+# user system is not known.
+\dontrun{
+fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, interactive=FALSE, verbose=TRUE,
+path2plink=path2plink)
+}
 }
