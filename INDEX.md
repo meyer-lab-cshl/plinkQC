@@ -20,7 +20,7 @@ The current github version of **plinkQC** is: 0.1.0 and can be installed via
 
 ``` bash
 library(devtools)
-install_github("HannahVMeyer/PhenotypeSimulator")
+install_github("HannahVMeyer/plinkQC")
 ```
 
 **plinkQC** will soon be available on CRAN!
