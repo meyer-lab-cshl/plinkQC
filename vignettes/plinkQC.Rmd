@@ -7,7 +7,6 @@ output:
         fig_caption: yes
         toc: true
         toc_depth: 2
-        keep_tex: true
 bibliography: references.bib
 csl: plos-genetics.csl
 vignette: >
@@ -17,7 +16,6 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-#devtools::load_all()
 library(plinkQC)
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -149,17 +147,26 @@ prefix.bed, prefix.fam). Optionally, the user can specify different thresholds
 for the quality control checks and which check to conduct. Per default, all
 quality control checks will be conducted. `perMarkerQC` displays the results of
 the QC step in a multi-panel plot.
-```{r marker QC, fig.height=9, fig.width=6, fig.align='center'}
-par(mfrow=c(2,1), las=1)
+```{r marker QC, eval=FALSE}
 fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, path2plink=path2plink,
                             verbose=TRUE, interactive=TRUE,
                             showPlinkOutput=FALSE)
 ```
 
+```{r load markerQC, echo=FALSE, fig.height=9, fig.width=6, fig.align='center'}
+par(mfrow=c(2,1), las=1)
+knitr::include_graphics("markerQC.pdf")
+```
+
 `overviewPerMarkerQC` depicts an overview of the marker quality control
 failures and their overlaps.
-```{r overview marker QC}
+```{r overview marker QC, eval=FALSE}
 overview_marker <- overviewPerMarkerQC(fail_markers, interactive=TRUE)
+```
+
+```{r load overviewMarkerQC, echo=FALSE}
+par(mfrow=c(2,1), las=1)
+knitr::include_graphics("overviewMarkerQC.pdf")
 ```
 
 \newpage
@@ -169,13 +176,12 @@ individuals and markers that fail the chosen criteria can automatically be
 removed from the dataset  with `cleanData`, resulting in the new dataset qcdir/data.clean.bed,qcdir/data.clean.bim, qcdir/data.clean.fam. For
 convenience, `cleanData` returns a list of all individuals in the study split
 into keep and remove individuals.
-```{r clean data}
+```{r clean data, eval=FALSE}
 Ids  <- cleanData(qcdir=qcdir, alg=alg, path2plink=path2plink,
                             verbose=TRUE, showPlinkOutput=FALSE)
 ```
 
 # Step-by-step
-(for more details, see [@Anderson2010 and [plink](https://www.cog-genomics.org/plink/1.9/))]).
 
 ## Individuals with discordant sex information
 The identification of individuals with discordant sex information helps to detect
@@ -282,12 +288,15 @@ Identifying markers with high missingness rates is implemented in
 `snp_missingness`. It calculates the rates of missing genotype calls and
 frequency for all variants in the individuals that passed the `perIndividualQC`.
 
-```{r check snp missing, fig.height=3, fig.width=5, fig.align='center'}
+```{r check snp missing, eval=FALSE}
 fail_snpmissing <- check_snp_missingness(qcdir=qcdir, alg=alg, interactive=TRUE,
                                          path2plink=path2plink, 
-                                         showPlinkOutput=FALSE, verbose=TRUE)
+                                         showPlinkOutput=FALSE)
 ```
 
+```{r load snp missing, echo=FALSE, fig.align='center'}
+knitr::include_graphics("snpmissingness.pdf")
+```
 ## Markers with deviation from HWE
 Markers with strong deviation from HWE might be indicative of genotyping or
 genotype-calling errors. As serious genotyping errors often yield
@@ -299,11 +308,14 @@ It calculates the observed and expected heterozygote frequencies per SNP in the
 individuals that passed the `perIndividualQC` and computes the deviation of the
 frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test.
 
-```{r check hwe, fig.height=3, fig.width=5, fig.align='center'}
+```{r check hwe, eval=FALSE}
 fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, interactive=TRUE,
-                      path2plink=path2plink, showPlinkOutput=FALSE,
-                      verbose=TRUE)
+                      path2plink=path2plink, showPlinkOutput=FALSE)
 ```
+```{r load hwe, echo=FALSE, fig.align='center'}
+knitr::include_graphics("hwe.pdf")
+```
+
 
 ## Markers with low minor allele frequency
 Markers with low minor allele count are often removed as the actual genotype
@@ -313,10 +325,12 @@ Identifying markers with low minor allele count is implemented in `check_maf`.
 It calculates the minor allele frequencies for all variants in the individuals
 that passed the `perIndividualQC`.
 
-```{r check maf, fig.height=3, fig.width=5, fig.align='center'}
+```{r check maf, eval=FALSE}
 fail_maf <- check_maf(qcdir=qcdir, alg=alg, interactive=TRUE,
-                      path2plink=path2plink, showPlinkOutput=FALSE,
-                      verbose=TRUE)
+                      path2plink=path2plink, showPlinkOutput=FALSE)
+```
+```{r load  maf, echo=FALSE, fig.align='center'}
+knitr::include_graphics("maf.pdf")
 ```
 
 # References 
