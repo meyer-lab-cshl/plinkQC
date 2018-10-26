@@ -7,8 +7,11 @@ output:
         fig_caption: yes
         toc: true
         toc_depth: 2
+<<<<<<< HEAD
 bibliography: references.bib
 csl: plos-genetics.csl
+=======
+>>>>>>> 1df06936c00b6131a09818f88b954b5158edd35f
 vignette: >
   %\VignetteIndexEntry{GenotypeQC_with_plinkQC}
   %\VignetteEngine{knitr::rmarkdown}
@@ -24,74 +27,81 @@ knitr::opts_chunk$set(
 ```
 
 # Introduction
-Genotyping arrays enable the direct measurement of an individuals genotype at
-thousands of markers. Subsequent analyses such as genome-wide association
-studies rely on the high quality of these marker genotypes.
+Genotyping arrays allow to measure a samples' genotype at thousands of markers. 
+Subsequent studies such as genome-wide association studies rely on high quality
+genotypes which can be ensure for thorough quality control protocols. plinkQC
+follows the quality control proposed by Anderson and colleagues @Anderson2010.
+It assumes the genotype have already been determined from the original probe
+intensity data of the genotype array and is available in [plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
 
-Anderson and colleagues introduced a protocol for data quality control in
-genetic association studies heavily based on the summary statistics and
-relatedness estimation functions in the PLINK software [@Anderson2010]. PLINK is
-a comprehensive, open-source command-line tool for genome-wide association
-studies (GWAS) and population genetics research [@Purcell2007, @Chang2015]. It's
-main functionalities include data management, computing individual- and marker-
-level summary statistics, identity-by-state estimation and association analysis.  
-Integration with R is achieved through its R plugin or PLINK/SEQ R Package
-[@PlinkSeq2014]. While the plugin is limited to operations yielding simple
-genetic marker vectors as output, the PLINK/SEQ R Package is limited in the
-functionalities it can access. 
+plinkQC depends on the [plink](https://www.cog-genomics.org/plink/1.9/), which
+has to be manually installed prior to the usage of plinkQC. 
 
-*plinkQC* facilitates genotype quality control for genetic association studies
-as described by [@Anderson2010]. It wraps 
-around plink basic statistics (e.g. missing genotyping rates per individual, 
-allele frequencies per genetic marker) and relationship functions and generates
-a per-individual and per-marker quality control report. Individuals and markers
-that fail the quality control can subsequently be removed with *plinkQC* to
-generate a new, clean dataset. Removal of individuals based on relationship
-status is optimised to retain as many individuals as possible in the study.
+plinkQC offers functions for 'per-sample' and 'per-marker' QC. As advocated in 
+@Anderson2010, functions are implemented in a way that the 'per-sample’ QC
+is conducted before the  'per-marker'to maximize the number of markers
+remaining in the study. This approach prevents markers from being erroneously
+removed because of a subset of poorly genotyped individuals. Contrarily,
+samples may be falsely excluded based on a poorly genotyped subset of markers.
+However, both QCs may be conducted independently.
 
-*plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
- (version $\ge$  1.9), which has to be manually installed prior to the usage of
- *plinkQC*. It assumes the genotype have already been determined from the
- original probe intensity data of the genotype array and is available in
-[plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
+The following paragraphs will briefly describe the purpose of each per-sample
+and per-marker QC step (for more details, see @Anderson2010).
+This general description is followed by a step-by-step genotype QC of an example
+dataset using plinkQC.
 
-The protocol is implemented in three main functions, the per-individual quality
-control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
-the generation of the new, quality control dataset (`cleanData`):
+## Per-sample QC
+The per-sample QC of genotypes consists of four steps: (i) identification of
+samples with discordant sex information, (ii) identification of samples with
+outlying missing genotype and/or heterozygosity rates, (iii) identification of
+related samples and (iv) identification of samples of divergent ancestry.
 
-## Per-individual quality control
-The per-individual quality control with `perIndividualQC` wraps around these
-functions:
-    (i) `check_sex`: for the identification of individuals with discordant sex
-    information,
-    (ii) `check_heterozygosity_and_missingness`: for the identification of
-    individuals with outlying missing genotype and/or heterozygosity rates,
-    (iii) `check_relatedness`: for the identification of related individuals,
-    (iv) `check_ancestry`: identification of individuals of divergent ancestry.
+The identification of samples with discordant sex information helps to detect
+sample mix-ups and samples with very poor genotyping rates. For each sample, the
+homozygosity rates across all X-chromosomal genetic markers are computed and
+compared with the expected rates: <0.2 for females and >0.8 for males. For
+samples where the assigned sex (PEDSEX in the .fam file) contradicts the sex
+inferred from the homozygosity rates, it should be checked that the sex was
+correctly recorded (genotyping often occurs at different locations as
+phenotyping and misrecording might occur). Samples with discordant sex
+information that is not accounted for should be removed from the study.
 
-## Per-marker quality control
-The per-marker quality control with `perMarkerQC` wraps around these
-functions:
-    (i) `check_snp_missingnes`: for the identifying markers with excessive
-    missing genotype rates,
-    (ii) `check_hwe`: for the identifying markers showing a significant
-    deviation from Hardy-Weinberg equilibrium (HWE),
-    (iii) `check_maf`: for the removal of markers with low minor allele
-    frequency (MAF).
-    
-## Clean data
-`cleanData` takes the results of `perMarkerQC` and `perIndividualQC` and creates
-a new dataset with all individuals and markers that passed the quality control
-checks.
+The identification of samples with outlying missing genotype and/or
+heterozygosity rates helps to detect samples with poor DNA quality and/or
+concentration that should be excluded from the study.
 
-# Workflow
-In the following, genotype quality control with *plinkQC* is applied on a small
-example dataset with 200 individuals and 10,000 markers (provided with this
-package). The  quality control is demonstrated in three easy steps,
-per-individual and per-marker quality control followed by the generation of the
-new dataset. In addition, the functionality of each of the functions underlying
-`perMarkerQC` and `perIndividualQC` is demonstrated at the end of this vignette.
+Depending on the future use of the genotypes, it might required to remove any
+related samples from the study. Related individuals can be identified by their
+proporting of shared alleles at the genotyped markers (identity by
+descend, IBD). Standardly, samples with second-degree relatedness of higher will
+be excluded. 
 
+The identification of samples of divergent ancestry can be achieved by
+combining the genotypes of the study population with genotypes of a reference
+dataset consisting of samples from known ethnicities (for instance samples from
+the Hapmap or 1000 genomes study @Hapmap, @1000Genomes). Principal component
+analysis on this combined genotype panle can be used to detect population
+structure down to the level of the reference dataset (for Hapmap and 1000
+Genomes, this down to large-scale continental ancestry).
+
+## Per-marker QC
+The per-marker QC consists of (i) identifying markers with an large missing
+genotype rate, (ii) identifying markers showing a significant deviation from
+Hardy-Weinberg equilibrium (HWE) and (iii) the removal markers with low minor
+allele frequency (MAF)/minor allele count.
+
+Markers with excessive missingness rate are removed as they are considered 
+unreliable. Markers with strong deviation from HWE might be indicative of
+genotyping or genotype-calling errors. Markers with low minor allele count are 
+often removed as the actual genotype calling (via the calling algorithm) is very
+difficult due to the small sizes of the heterozygote and rare-homozygote
+clusters.
+
+
+The following vignette shows the usage of the individual and marker QC functions
+and depicts summaries of the QCs via its overview functions. 
+
+# Running plink
 ```{r set parameters}
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir, 'extdata')
@@ -99,46 +109,59 @@ alg <- 'data'
 path2plink <- "~/bin"
 ```
 
-## Per-individual quality control
-For `perIndividualQC`, one simply specifies the directory where the data is
-stored (qcdir) and the prefix of the plink files (i.e. prefix.bim, prefix.bed,
-prefix.fam). In addition, the names of the files containing information about 
-the reference population and the merged dataset used in `check_ancestry` have to
-be provided: refSamplesFile, refColorsFile and prefixMergedDataset. Per default, 
-all quality control checks will be conducted. 
+```{r run qc}
 
-In addition to running each check, `perIndividualQC` writes a list of all fail
-individual IDs to the qcdir. These IDs will be removed in the computation of the
+```
+
+# Per-sample QC
+The per-sample QC of genotypes is implemented in the following functions:
+
+  1. identification of samples with discordant sex information: `check_sex`
+  2. identification of samples with outlying missing
+    genotype and/or heterozygosity rates:
+    `check_heterozygosity_and_missingness`
+  3. identification of related samples: `check_relatedness`
+  4. identification of samples of divergent ancestry: `check_ancestry`.
+
+These checks can be carried out individually or run jointly via `perSampleQC`,
+where one can specify which check to run. Per default all checks are conducted.
+
+In addition to running each check, `perSampleQC` writes a list of all fail
+sample IDs to the qcdir. These IDs will be removed in the computation of the
 `perMarkerQC`. If the list is not present, `perMarkerQC` will send a message
-about conducting the quality control on the entire dataset.
+about conducting the QC on the entire dataset.
 
-`perIndividualQC` displays the results of the quality control steps in a
-multi-panel plot. NB: To reduce the data size of the example data in plinkQC,
-data.genome  has already been reduced to the individuals that are related. Thus
-the relatedness plots in C only show counts for related individuals.
+In the following, the per-sample QC of the results of `run_QC.sh` is depicted.
+Within `perSampleQC`, one simply specifies the directory where the data is
+stored and the prefix of the plink files (i.e. prefix.bim, prefix.bed,
+prefix.fam). In addition, the names of the files containing information about 
+the reference population and the merged dataset used in `check_ancestry` have to be
+provided: refSamplesFile, refColorsFile and prefixMergedDataset. Per default, 
+all QC checks will be conducted. 
 
-```{r individual QC,  fig.height=12, fig.width=9}
-fail_individuals <- perIndividualQC(qcdir=qcdir, alg=alg,
+## QC steps
+`perSampleQC` displays the results of the QC steps in a multi-panel plot.
+
+```{r sample QC,  fig.height=12, fig.width=9}
+fail_samples <- perSampleQC(qcdir=qcdir, alg=alg,
                             refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",
                                                  sep=""), 
                             refColorsFile=paste(qcdir, "/HapMap_PopColors.txt",
                                                  sep=""),
                             prefixMergedDataset="data.HapMapIII",
-                            interactive=TRUE, verbose=TRUE,
-                            do.run_check_het_and_miss=FALSE,
-                            do.run_check_sex=FALSE,
-                            do.run_check_relatedness=FALSE,
-                            do.run_check_ancestry=FALSE)
+                            interactive=TRUE, verbose=TRUE)
 
 ```
 
-`overviewperIndividualQC` depicts overview plots of quality control failures and
-the intersection of quality control failures with ancestry exclusion.
-```{r overview individual QC}
-overview_individuals <- overviewPerIndividualQC(fail_individuals,
-                                                interactive=TRUE)
+\newpage
+## Overview
+`overviewPerSampleQC` depicts overview plots of QC failures and the intersection
+of QC failures with ancestry exclusion.
+```{r overview sample QC}
+overview_samples <- overviewPerSampleQC(fail_samples, interactive=TRUE)
 ```
 
+<<<<<<< HEAD
 
 ## Per-marker quality control
 `perMarkerQC` applies its checks to data in the specified directory (qcdir),
@@ -152,7 +175,6 @@ fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, path2plink=path2plink,
                             verbose=TRUE, interactive=TRUE,
                             showPlinkOutput=FALSE)
 ```
-
 ```{r load markerQC, echo=FALSE, fig.height=9, fig.width=6, fig.align='center'}
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("markerQC.pdf")
@@ -333,4 +355,4 @@ fail_maf <- check_maf(qcdir=qcdir, alg=alg, interactive=TRUE,
 knitr::include_graphics("maf.pdf")
 ```
 
-# References 
+# References
