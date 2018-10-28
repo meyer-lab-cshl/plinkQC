@@ -32,20 +32,22 @@
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_marker) via ggplot2::ggsave(p=p_marker,
 #' other_arguments) or pdf(outfile) print(p_marker) dev.off().
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @return Named [list] with i) fail_list, a named [list] with 1.
-#' SNP_missingness, containing SNP IDs [vector] failing the missingness threshold
-#' lmissTh, 2. hwe, containing SNP IDs [vector] failing the HWE exact test threshold
-#' hweTh and 3. maf, containing SNPs Ids [vector] failing the MAF threshold mafTh/MAC
-#' threshold macTh and ii) p_markerQC, a ggplot2-object 'containing' a
-#' sub-paneled plot with the QC-plots of \code{\link{check_snp_missingness}},
-#' \code{\link{check_hwe}} and \code{\link{check_maf}}, which can
-#' be shown by print(p_markerQC).
+#' SNP_missingness, containing SNP IDs [vector] failing the missingness
+#' threshold lmissTh, 2. hwe, containing SNP IDs [vector] failing the HWE exact
+#' test threshold hweTh and 3. maf, containing SNPs Ids [vector] failing the MAF
+#' threshold mafTh/MAC threshold macTh and ii) p_markerQC, a ggplot2-object
+#' 'containing' a sub-paneled plot with the QC-plots of
+#' \code{\link{check_snp_missingness}}, \code{\link{check_hwe}} and
+#' \code{\link{check_maf}}, which can be shown by print(p_markerQC).
 #' List entries contain NULL if that specific check was not chosen.
 #' @details perMarkerQC wraps around the marker QC functions
 #' \code{\link{check_snp_missingness}}, \code{\link{check_hwe}} and
@@ -234,9 +236,11 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_lmiss) via ggplot2::ggsave(p=p_lmiss,
 #' other_arguments) or pdf(outfile) print(p_lmiss) dev.off().
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -273,10 +277,10 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
     if (!file.exists(paste(qcdir,"/", alg, ".bed",sep=""))){
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
-    checkPlink(path2plink)
     if (!is.null(path2plink)) {
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
+    checkPlink(path2plink)
     if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividual QC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
@@ -369,9 +373,11 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_hwe,
 #' other_arguments) or pdf(outfile) print(p_hwe) dev.off().
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -408,10 +414,10 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
     if (!file.exists(paste(qcdir,"/", alg, ".bed",sep=""))){
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
-    checkPlink(path2plink)
     if (!is.null(path2plink)) {
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
+    checkPlink(path2plink)
     if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividualQC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
@@ -494,9 +500,11 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_maf,
 #' other_arguments) or pdf(outfile) print(p_maf) dev.off().
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -531,10 +539,10 @@ check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
     if (!file.exists(paste(qcdir,"/", alg, ".bed",sep=""))){
         stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
     }
-    checkPlink(path2plink)
     if (!is.null(path2plink)) {
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
+    checkPlink(path2plink)
     if (!file.exists(paste(qcdir, "/", alg, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividualQC: ",
                 qcdir,"/", alg, ".fail.IDs does not exist. Continue ",

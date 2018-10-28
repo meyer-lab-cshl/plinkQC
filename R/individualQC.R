@@ -112,9 +112,11 @@
 #' IDs in refColors/refColorsFile.
 #' @param studyColor [character] Color to be used for study population if plot
 #' is TRUE.
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -551,10 +553,11 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
-#' Only reqired if fixMixup and/or run.check_sex are TRUE.
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -647,10 +650,11 @@ check_sex <- function(qcdir, alg, maleTh=0.8, femaleTh=0.2, run.check_sex=TRUE,
 #' deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 #' hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 #' larger than 0.
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
-#' Only reqired if run.check_het_and_miss is TRUE.
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -741,10 +745,11 @@ check_het_and_miss <- function(qcdir, alg, imissTh=0.03, hetTh=3,
 #' pair of individuals.
 #' @param imissTh [double] Threshold for acceptable missing genotype rate in any
 #' individual; has to be proportion between (0,1)
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
-#' Only reqired if run.check_relatedness is TRUE.
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -821,8 +826,9 @@ check_relatedness <- function(qcdir, alg, highIBDTh=0.1875, imissTh=0.03,
 #' @param europeanTh [double] Scaling factor of radius to be drawn around center
 #' of European reference samples, with study samples inside this radius
 #' considered to be of European descent and samples outside this radius of
-#' non-European descent. The radius is computed as the maximum Euclidean distance
-#' of European reference samples to the centre of European reference samples.
+#' non-European descent. The radius is computed as the maximum Euclidean
+#' distance of European reference samples to the centre of European reference
+#' samples.
 #' @param refSamples [data.frame] Dataframe with sample identifiers
 #' [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
 #' population identifier [refSamplesPop] corresponding to population IDs
@@ -861,10 +867,11 @@ check_relatedness <- function(qcdir, alg, highIBDTh=0.1875, imissTh=0.03,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 #' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
-#' Only reqired if run.check_relatedness is TRUE.
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -931,9 +938,11 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
 #' permission to qcdir.
 #' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 #' alg.fam.
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -959,10 +968,10 @@ run_check_sex <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    checkPlink(path2plink)
     if (!is.null(path2plink)) {
-        paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
+    checkPlink(path2plink)
     if (verbose) message("Run check_sex via plink --check-sex")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --check-sex",
@@ -1022,10 +1031,11 @@ run_check_sex <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
-#' Only reqired if fixMixup is TRUE.
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1200,9 +1210,11 @@ evaluate_check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8,
 #' permission to qcdir.
 #' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 #' alg.fam.
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1228,10 +1240,10 @@ run_check_heterozygosity <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    checkPlink(path2plink)
     if (!is.null(path2plink)) {
-        paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
+    checkPlink(path2plink)
     if (verbose) message("Run check_heterozygosity via plink --het")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --het",
@@ -1254,9 +1266,11 @@ run_check_heterozygosity <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' permission to qcdir.
 #' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 #' alg.fam.
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1282,10 +1296,10 @@ run_check_missingness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    checkPlink(path2plink)
     if (!is.null(path2plink)) {
-        paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
+    checkPlink(path2plink)
     if (verbose) message("Run check_missingness via plink --missing")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --missing",
@@ -1456,9 +1470,11 @@ evaluate_check_het_and_miss <- function(qcdir, alg, imissTh=0.03,
 #' permission to qcdir.
 #' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 #' alg.fam.
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1472,8 +1488,8 @@ evaluate_check_het_and_miss <- function(qcdir, alg, imissTh=0.03,
 #' \dontrun{
 #' run <- run_check_relatedness(qcdir, alg)
 #' }
-run_check_relatedness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
-                                  showPlinkOutput=TRUE) {
+run_check_relatedness <- function(qcdir, alg, path2plink=NULL,
+                                  showPlinkOutput=TRUE, verbose=FALSE) {
     prefix <- paste(qcdir, "/", alg, sep="")
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -1486,10 +1502,10 @@ run_check_relatedness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
     }
     package.dir <- find.package('plinkQC')
     highld <- file.path(package.dir,'extdata', 'high-LD-regions.txt')
-    checkPlink(path2plink)
     if (!is.null(path2plink)) {
-        paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
+    checkPlink(path2plink)
     if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --exclude range ", highld,
@@ -1502,6 +1518,12 @@ run_check_relatedness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
                  " --maf 0.1 --genome",
                  " --out ", prefix, sep=""),
            ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    if (! file.exists(paste(prefix, ".imiss", sep=""))) {
+        system(paste(path2plink, "plink --bfile ", prefix,
+                     " --missing",
+                     " --out ", prefix, sep=""),
+           ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    }
 }
 
 #' Evaluate results from PLINK IBD estimation.
@@ -1653,9 +1675,11 @@ evaluate_check_relatedness <- function(qcdir, alg, highIBDTh=0.1875,
 #' @param prefixMergedDataset [character] Prefix of merged study and
 #' reference data files, i.e. prefixMergedDataset.bed, prefixMergedDataset.bim,
 #' prefixMergedDataset.fam.
-#' @param path2plink [character] Absolute path to where external plink software
-#' \url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-#' assumed that PATH set-up works and plink will be found by system("plink").
+#' @param path2plink [character] Absolute path to directory where external plink
+#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' plink should be accesible as path2plink/plink -h. If not
+#' provided, assumed that PATH set-up works and plink will be found by
+#' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1682,10 +1706,10 @@ run_check_ancestry <- function(qcdir, prefixMergedDataset,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    checkPlink(path2plink)
     if (!is.null(path2plink)) {
-        paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
+    checkPlink(path2plink)
     if (verbose) message("Run check_ancestry via plink --pca")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --pca",
