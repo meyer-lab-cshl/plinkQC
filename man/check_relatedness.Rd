@@ -37,10 +37,11 @@ other_arguments) or pdf(outfile) print(p_IBD) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
-\item{path2plink}{[character] Absolute path to where external plink software
-\url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").
-Only reqired if run.check_relatedness is TRUE.}
+\item{path2plink}{[character] Absolute path to directory where external plink
+software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}

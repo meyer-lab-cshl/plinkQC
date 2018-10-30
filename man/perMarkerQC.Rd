@@ -43,22 +43,24 @@ other_arguments) or pdf(outfile) print(p_marker) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
-\item{path2plink}{[character] Absolute path to where external plink software
-\url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").}
+\item{path2plink}{[character] Absolute path to directory where external plink
+software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
 }
 \value{
 Named [list] with i) fail_list, a named [list] with 1.
-SNP_missingness, containing SNP IDs [vector] failing the missingness threshold
-lmissTh, 2. hwe, containing SNP IDs [vector] failing the HWE exact test threshold
-hweTh and 3. maf, containing SNPs Ids [vector] failing the MAF threshold mafTh/MAC
-threshold macTh and ii) p_markerQC, a ggplot2-object 'containing' a
-sub-paneled plot with the QC-plots of \code{\link{check_snp_missingness}},
-\code{\link{check_hwe}} and \code{\link{check_maf}}, which can
-be shown by print(p_markerQC).
+SNP_missingness, containing SNP IDs [vector] failing the missingness
+threshold lmissTh, 2. hwe, containing SNP IDs [vector] failing the HWE exact
+test threshold hweTh and 3. maf, containing SNPs Ids [vector] failing the MAF
+threshold mafTh/MAC threshold macTh and ii) p_markerQC, a ggplot2-object
+'containing' a sub-paneled plot with the QC-plots of
+\code{\link{check_snp_missingness}}, \code{\link{check_hwe}} and
+\code{\link{check_maf}}, which can be shown by print(p_markerQC).
 List entries contain NULL if that specific check was not chosen.
 }
 \description{

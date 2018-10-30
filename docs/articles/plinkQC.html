@@ -61,6 +61,9 @@
     <li>
       <a href="../articles/HapMap.html">HapMap III reference</a>
     </li>
+    <li>
+      <a href="../articles/1000Genomes.html">1000 Genomes reference</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -101,7 +104,7 @@
       <h1>Genotype quality control with plinkQC</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2018-10-24</h4>
+            <h4 class="date">2018-10-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/plinkQC.Rmd"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="hidden name"><code>plinkQC.Rmd</code></div>
@@ -175,18 +178,12 @@ path2plink &lt;-<span class="st"> "~/bin"</span></code></pre></div>
 <h2 class="hasAnchor">
 <a href="#per-marker-quality-control-1" class="anchor"></a>Per-marker quality control</h2>
 <p><code>perMarkerQC</code> applies its checks to data in the specified directory (qcdir), starting with the specified prefix of the plink files (i.e. prefix.bim, prefix.bed, prefix.fam). Optionally, the user can specify different thresholds for the quality control checks and which check to conduct. Per default, all quality control checks will be conducted. <code>perMarkerQC</code> displays the results of the QC step in a multi-panel plot.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">las=</span><span class="dv">1</span>)
-fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/perMarkerQC.html">perMarkerQC</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">path2plink=</span>path2plink,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/perMarkerQC.html">perMarkerQC</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">path2plink=</span>path2plink,
                             <span class="dt">verbose=</span><span class="ot">TRUE</span>, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
-                            <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)
-<span class="co">#&gt; Identification of SNPs with high missingness rate</span>
-<span class="co">#&gt; Identification of SNPs with deviation from HWE</span>
-<span class="co">#&gt; Remove markers with a low minor allele frequency</span>
-<span class="co">#&gt; Both mafTh and macTh provided, macTh=20 is used (corresponds to mafTh=0.067568)</span></code></pre></div>
-<p><img src="plinkQC_files/figure-html/marker%20QC-1.png" width="576" style="display: block; margin: auto;"></p>
-<p><code>overviewPerMarkerQC</code> depicts an overview of the marker quality control failures and their overlaps.</p>
+                            <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
+<embed src="markerQC.pdf" style="display: block; margin: auto;" type="application/pdf"></embed><p><code>overviewPerMarkerQC</code> depicts an overview of the marker quality control failures and their overlaps.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">overview_marker &lt;-<span class="st"> </span><span class="kw"><a href="../reference/overviewPerMarkerQC.html">overviewPerMarkerQC</a></span>(fail_markers, <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/overview%20marker%20QC-1.png" width="700"></p>
+<p><embed src="overviewMarkerQC.pdf"></embed><!-- --></p>
 
 </div>
 <div id="create-qc-ed-dataset" class="section level2">
@@ -194,14 +191,12 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <a href="#create-qc-ed-dataset" class="anchor"></a>Create QC-ed dataset</h2>
 <p>After checking results of the per-individual and per-marker quality control, individuals and markers that fail the chosen criteria can automatically be removed from the dataset with <code>cleanData</code>, resulting in the new dataset qcdir/data.clean.bed,qcdir/data.clean.bim, qcdir/data.clean.fam. For convenience, <code>cleanData</code> returns a list of all individuals in the study split into keep and remove individuals.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Ids  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cleanData.html">cleanData</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">path2plink=</span>path2plink,
-                            <span class="dt">verbose=</span><span class="ot">TRUE</span>, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)
-<span class="co">#&gt; Both mafTh and macTh provided, macTh=20 is used (which corresponds to a mafTh=0.066225)</span></code></pre></div>
+                            <span class="dt">verbose=</span><span class="ot">TRUE</span>, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
 </div>
 </div>
 <div id="step-by-step" class="section level1">
 <h1 class="hasAnchor">
 <a href="#step-by-step" class="anchor"></a>Step-by-step</h1>
-<p>(for more details, see <span class="citation">[1]</span>).</p>
 <div id="individuals-with-discordant-sex-information" class="section level2">
 <h2 class="hasAnchor">
 <a href="#individuals-with-discordant-sex-information" class="anchor"></a>Individuals with discordant sex information</h2>
@@ -247,27 +242,24 @@ fail_markers &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <p>Markers with excessive missingness rate are removed as they are considered unreliable. Typically, thresholds for marker exclusion based on missingness range from 1%-5%. Identifying markers with high missingness rates is implemented in <code>snp_missingness</code>. It calculates the rates of missing genotype calls and frequency for all variants in the individuals that passed the <code>perIndividualQC</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_snpmissing &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_snp_missingness.html">check_snp_missingness</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                                          <span class="dt">path2plink=</span>path2plink, 
-                                         <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20snp%20missing-1.png" width="480" style="display: block; margin: auto;"></p>
+                                         <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
+<embed src="snpmissingness.pdf" style="display: block; margin: auto;" type="application/pdf"></embed>
 </div>
 <div id="markers-with-deviation-from-hwe" class="section level2">
 <h2 class="hasAnchor">
 <a href="#markers-with-deviation-from-hwe" class="anchor"></a>Markers with deviation from HWE</h2>
 <p>Markers with strong deviation from HWE might be indicative of genotyping or genotype-calling errors. As serious genotyping errors often yield very low p-values (in the order of <span class="math inline">\(10^-50\)</span>), it is recommended to choose a reasonably low threshold to avoid filtering too many variants (that might have slight, non-critical deviations). Identifying markers with deviation from HWE is implemented in <code>check_hwe</code>. It calculates the observed and expected heterozygote frequencies per SNP in the individuals that passed the <code>perIndividualQC</code> and computes the deviation of the frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_hwe &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_hwe.html">check_hwe</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
-                      <span class="dt">path2plink=</span>path2plink, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>,
-                      <span class="dt">verbose=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20hwe-1.png" width="480" style="display: block; margin: auto;"></p>
+                      <span class="dt">path2plink=</span>path2plink, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
+<embed src="hwe.pdf" style="display: block; margin: auto;" type="application/pdf"></embed>
 </div>
 <div id="markers-with-low-minor-allele-frequency" class="section level2">
 <h2 class="hasAnchor">
 <a href="#markers-with-low-minor-allele-frequency" class="anchor"></a>Markers with low minor allele frequency</h2>
 <p>Markers with low minor allele count are often removed as the actual genotype calling (via the calling algorithm) is very difficult due to the small sizes of the heterozygote and rare-homozygote clusters. Identifying markers with low minor allele count is implemented in <code>check_maf</code>. It calculates the minor allele frequencies for all variants in the individuals that passed the <code>perIndividualQC</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_maf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_maf.html">check_maf</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
-                      <span class="dt">path2plink=</span>path2plink, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>,
-                      <span class="dt">verbose=</span><span class="ot">TRUE</span>)
-<span class="co">#&gt; Both mafTh and macTh provided, macTh=20 is used (corresponds to mafTh=0.067568)</span></code></pre></div>
-<p><img src="plinkQC_files/figure-html/check%20maf-1.png" width="480" style="display: block; margin: auto;"></p>
+                      <span class="dt">path2plink=</span>path2plink, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
+<embed src="maf.pdf" style="display: block; margin: auto;" type="application/pdf"></embed>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

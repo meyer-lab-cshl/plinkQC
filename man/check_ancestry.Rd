@@ -27,8 +27,9 @@ prefixMergedDataset.eigenvec}
 \item{europeanTh}{[double] Scaling factor of radius to be drawn around center
 of European reference samples, with study samples inside this radius
 considered to be of European descent and samples outside this radius of
-non-European descent. The radius is computed as the maximum Euclidean distance
-of European reference samples to the centre of European reference samples.}
+non-European descent. The radius is computed as the maximum Euclidean
+distance of European reference samples to the centre of European reference
+samples.}
 
 \item{refSamples}{[data.frame] Dataframe with sample identifiers
 [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
@@ -81,10 +82,11 @@ other_arguments) or pdf(outfile) print(p_ancestry) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
-\item{path2plink}{[character] Absolute path to where external plink software
-\url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").
-Only reqired if run.check_relatedness is TRUE.}
+\item{path2plink}{[character] Absolute path to directory where external plink
+software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}

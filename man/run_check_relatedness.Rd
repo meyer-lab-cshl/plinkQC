@@ -4,8 +4,8 @@
 \alias{run_check_relatedness}
 \title{Run PLINK IBD estimation.}
 \usage{
-run_check_relatedness(qcdir, alg, verbose = FALSE, path2plink = NULL,
-  showPlinkOutput = TRUE)
+run_check_relatedness(qcdir, alg, path2plink = NULL,
+  showPlinkOutput = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory/with/QC/results containing the
@@ -15,14 +15,16 @@ permission to qcdir.}
 \item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
 alg.fam.}
 
-\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
-
-\item{path2plink}{[character] Absolute path to where external plink software
-\url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").}
+\item{path2plink}{[character] Absolute path to directory where external plink
+software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
+
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \description{
 Run LD pruning on dataset with plink --exclude range highldfile

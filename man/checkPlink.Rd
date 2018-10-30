@@ -7,9 +7,10 @@
 checkPlink(path2plink)
 }
 \arguments{
-\item{path2plink}{[character, optional] Absolute path to plink software. If
-not provided, assumed that PATH set-up works and plink will be found by
-system("plink").}
+\item{path2plink}{[character] Absolute path to directory where external plink
+software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not provided, assumed
+that PATH set-up works and plink will be found by system("plink").}
 }
 \description{
 checkPlink checks that the PLINK software
