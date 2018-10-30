@@ -33,10 +33,10 @@ Principal component analysis (PCA) on this combined genotype panel can then be
 used to detect population structure down to the level of the reference dataset.
 
 The following vignette shows the processing steps required to use samples of the
-1000 Genomes study [@1000Genomes2015][@1000Genomes2015] as a reference dataset. 
-Using this reference, population structure down to large-scale continental
-ancestry can be detected. A step-by-step instruction on how to conduct this
-ancestry analysis is described in this [vignette](https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html).
+1000 Genomes study [@a1000Genomes2015],[@b1000Genomes2015] as a reference
+dataset. Using the 1000 Genomes reference, population structure down to
+large-scale continental ancestry can be detected. A step-by-step instruction on
+how to conduct this ancestry analysis is described in this [vignette](https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html).
 
 
 # Workflow
@@ -53,96 +53,49 @@ refdir='~/reference'
 mkdir -r $qcdir/plink_log
 ```
 
-## Download and convert 1000 Genomes phase 3 data
-Hapmap phase 3 data (HapMapIII) is available in
-[PLINK text format](https://www.cog-genomics.org/plink/1.9/input#ped) at ncbi.
+## Download and decompress 1000 Genomes phase 3 data
+1000 Genomes phase III (1000GenomesIII) is available in
+[PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) at https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3.
 In addition, a sample file with information about the individuals' ancestry
 is available and shoud be downloaded as in input for `plinkQC::chec_Ancestry()`.
-The following code chunk downloads and unzips the data.
+The following code chunk downloads and decompresses the data.
+The genome build of
+these files is the same as the original release of the 1000GenomesIII, namely
+CGRCh37. 
+
+NB: CGRCh38 positions in vcf format can be found [here](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/)
+The remainder of this vignette will however look at the data processing required
+for the 1000GenomesIII available in
+[PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen).
 ```{bash download, eval=FALSE}
 cd $refdir
 
-pgen="https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst?dl=1"
-pvar="https://www.dropbox.com/s/0nz9ey756xfocjm/all_phase3.pvar.zst?dl=1"
-sample="https://www.dropbox.com/s/yozrzsdrwqej63q/phase3_corrected.psam?dl=1"
+pgen=https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst?dl=1
+pvar=https://www.dropbox.com/s/0nz9ey756xfocjm/all_phase3.pvar.zst?dl=1
+sample=https://www.dropbox.com/s/yozrzsdrwqej63q/phase3_corrected.psam?dl=1
 
+wget $pgen
+mv 'all_phase3.pgen.zst?dl=1' all_phase3.pgen.zst
+plink2 --zst-decompress all_phase3.pgen.zst > all_phase3.pgen
 
-wget $ftp/$prefix.map.bz2
-bunzip2 $prefix.map.bz2
+wget $pvar
+mv 'all_phase3.pvar.zst?dl=1' all_phase3.pvar.zst
+plink2 --zst-decompress all_phase3.pvar.zst > all_phase3.pvar
 
-wget $ftp/$prefix.ped.bz2
-bunzip2 $prefix.per.bz2
-
-wget $ftp/relationships_w_pops_121708.txt
+wget $sample
+mv 'phase3_corrected.psam\?dl\=1' phase3_corrected.psam
 ```
 
+## Convert 1000 Genomes phase 3 data to plink 1 binary format
 We then convert the
-[PLINK text format](https://www.cog-genomics.org/plink/1.9/input#ped) to the
-standardly used
-[PLINK binary format](https://www.cog-genomics.org/plink/1.9/inputbped).
+[PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) to the
+(at the moment) more standardly used
+[PLINK 1 binary format](https://www.cog-genomics.org/plink/1.9/inputbped).
 ```{bash convert, eval=FALSE}
-plink --file $refdir/$prefix \
+plink --file $refdir/all_phase3 \
       --make-bed \
-      --out $refdir/HapMapIII_NCBI36
-mv $refdir/HapMapIII_NCBI36.log $refdir/log
-```
-
-## Update annotation
-The genome build of HapMap III data is NCBI36. Currently most datasets are
-updated to CGRCh37 or CGRCh38. In order to update the HapMap III data to the
-desired build, we use the UCSC 
-[liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool. The liftOver tool
-takes information in a format similar to the [PLINK .bim](https://www.cog-genomics.org/plink/1.9/formats#bim) format, the [UCSC bed format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) and a
-[liftover chain](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/),
-containing the mapping information between the old genome (target) and new
-genome (query). 
-It returns the updated annotation (newFile) and a file with unmappable variants
-(unMapped):
-```{bash liftover example, eval=FALSE}
-liftOver oldFile liftover.chain newFile unMapped
-```
-
-We first need to download the liftOver tool from
-https://genome.ucsc.edu/cgi-bin/hgLiftOver and the appropriate liftover chain from http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/). We then convert the
-[PLINK .bim](https://www.cog-genomics.org/plink/1.9/formats#bim) format, to the
-zero-based [UCSC bed](https://genome.ucsc.edu/FAQ/FAQformat.html#format1)
-format.
-
-```{bash prepare liftover, eval=FALSE}
-awk '{print "chr" $1, $4 -1, $4, $2 }' $refdir/HapMapIII_NCBI36.bim | \
-    { sed 's/chr23/chrX/'; sed 's/chr24/chrY/'} > \
-    $refdir/HapMapIII_NCBI36.tolift
-```
-
-We use the liftOver tool and the UCSC bed formated annotation file together
-with the appropriate chain file to do the lift over.
-
-```{bash liftover, eval=FALSE}
-liftOver $refdir/HapMapIII_NCBI36.tolift $refdir/hg18ToHg19.over.chain \
-    $refdir/HapMapIII_CGRCh37 $refdir/HapMapIII_NCBI36.unMapped
-```
-
-After successful liftover, we will be able to extract i) the variants that were
-mappable from the old to the new genome and ii) their updated positions
-
-```{bash extract variants, eval=FALSE}
-# ectract mapped variants
-awk '{print $4}' $refdir/HapMapIII_CGRCh37 > $refdir/HapMapIII_CGRCh37.snps
-# ectract updated positions
-awk '{print $4, $3}' $refdir/HapMapIII_CGRCh37 > $refdir/HapMapIII_CGRCh37.pos
-```
-
-## Update the reference data
-We can now use PLINK to extract the mappable variants from the old build and
-update their position. After these steps, the HapMap III dataset can be used 
-for infering study ancestry as described in the corresponding [vignette](https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html).
-```{bash update annotation, eval=FALSE}
-plink --bfile $refdir/HapMapIII_NCBI36
-    --extract $refdir/HapMapIII_CGRCh37.snps \
-    --update-map $refdir/HapMapIII_CGRCh37.pos \
-    --make-bed \
-    --out $refdir/HapMapIII_CGRCh37
-mv $refdir/HapMapIII_CGRCh37.log $refdir/log
+      --out $refdir/all_phase3
+mv $refdir/all_phase3.log $refdir/log
 ```
 
 # References
