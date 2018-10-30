@@ -162,8 +162,8 @@ PI_HAT.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>run_check_relatedness</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>run_check_relatedness</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,19 +180,21 @@ permission to qcdir.</p></td>
 alg.fam.</p></td>
     </tr>
     <tr>
-      <th>verbose</th>
-      <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
-    </tr>
-    <tr>
       <th>path2plink</th>
-      <td><p>[character] Absolute path to where external plink software
-<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").</p></td>
+      <td><p>[character] Absolute path to directory where external plink
+software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>
       <td><p>[logical] If TRUE, plink log and error messages are
 printed to standard out.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
     </tr>
     </table>
     

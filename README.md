@@ -7,11 +7,11 @@
 
 Full documentation is available at <http://HannahVMeyer.github.io/plinkQC/>.
 
-**plinkQC** facilitates an ancestry check for study individuals based on comparison to reference datasets. The processing of the reference datasets is documented in detail [here](articles/AncestryCheck.html).
-
-**plinkQC** generates a per-individual and per-marker quality control report.
+**plinkQC** generates a per-individual and per-marker quality control report. A step-by-step guide on how to run these analyses can be found [here](https://hannahvmeyer.github.io/plinkQC/articles/plinkQC.html).
 
 Individuals and markers that fail the quality control can subsequently be removed with **plinkQC** to generate a new, clean dataset.
+
+**plinkQC** facilitates an ancestry check for study individuals based on comparison to reference datasets. The processing of the reference datasets is documented in detail [here](https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html).
 
 Removal of individuals based on relationship status via **plinkQC** is optimised to retain as many individuals as possible in the study.
 

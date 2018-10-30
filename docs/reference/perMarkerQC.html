@@ -233,9 +233,11 @@ other_arguments) or pdf(outfile) print(p_marker) dev.off().</p></td>
     </tr>
     <tr>
       <th>path2plink</th>
-      <td><p>[character] Absolute path to where external plink software
-<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").</p></td>
+      <td><p>[character] Absolute path to directory where external plink
+software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>
@@ -247,13 +249,13 @@ printed to standard out.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Named [list] with i) fail_list, a named [list] with 1.
-SNP_missingness, containing SNP IDs [vector] failing the missingness threshold
-lmissTh, 2. hwe, containing SNP IDs [vector] failing the HWE exact test threshold
-hweTh and 3. maf, containing SNPs Ids [vector] failing the MAF threshold mafTh/MAC
-threshold macTh and ii) p_markerQC, a ggplot2-object 'containing' a
-sub-paneled plot with the QC-plots of <code><a href='check_snp_missingness.html'>check_snp_missingness</a></code>,
-<code><a href='check_hwe.html'>check_hwe</a></code> and <code><a href='check_maf.html'>check_maf</a></code>, which can
-be shown by print(p_markerQC).
+SNP_missingness, containing SNP IDs [vector] failing the missingness
+threshold lmissTh, 2. hwe, containing SNP IDs [vector] failing the HWE exact
+test threshold hweTh and 3. maf, containing SNPs Ids [vector] failing the MAF
+threshold mafTh/MAC threshold macTh and ii) p_markerQC, a ggplot2-object
+'containing' a sub-paneled plot with the QC-plots of
+<code><a href='check_snp_missingness.html'>check_snp_missingness</a></code>, <code><a href='check_hwe.html'>check_hwe</a></code> and
+<code><a href='check_maf.html'>check_maf</a></code>, which can be shown by print(p_markerQC).
 List entries contain NULL if that specific check was not chosen.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>

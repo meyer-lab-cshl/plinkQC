@@ -229,10 +229,11 @@ save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
     </tr>
     <tr>
       <th>path2plink</th>
-      <td><p>[character] Absolute path to where external plink software
-<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").
-Only reqired if run.check_het_and_miss is TRUE.</p></td>
+      <td><p>[character] Absolute path to directory where external plink
+software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>

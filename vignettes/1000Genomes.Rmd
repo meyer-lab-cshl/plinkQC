@@ -53,6 +53,13 @@ refdir='~/reference'
 mkdir -r $qcdir/plink_log
 ```
 
+## PLINK software
+In addition to [PLINK v1.9](https://www.cog-genomics.org/plink/1.9/), which is a
+requirment for the `plinkQC` package, we will also need
+[PLINK v2](https://www.cog-genomics.org/plink/2.0/) for processing the
+downloaded the dataset. In the following, when `plink` is invoked, this
+corresponds to v1.9, whereas `plink2` corresponds to v2.
+
 ## Download and decompress 1000 Genomes phase 3 data
 1000 Genomes phase III (1000GenomesIII) is available in
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) at https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3.
