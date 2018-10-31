@@ -148,23 +148,29 @@ of the study and reference dataset.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>run_check_ancestry</span>(<span class='no'>qcdir</span>, <span class='no'>prefixMergedDataset</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>run_check_ancestry</span>(<span class='no'>indir</span>, <span class='no'>prefixMergedDataset</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>qcdir</th>
-      <td><p>[character] /path/to/directory/with/QC/results containing the
-basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-permission to qcdir.</p></td>
+      <th>indir</th>
+      <td><p>[character] /path/to/directory containing the basic PLINK data
+files prefixMergedDataset.bim,prefixMergedDataset.fam and
+prefixMergedDataset.bed.</p></td>
     </tr>
     <tr>
       <th>prefixMergedDataset</th>
       <td><p>[character] Prefix of merged study and
 reference data files, i.e. prefixMergedDataset.bed, prefixMergedDataset.bim,
 prefixMergedDataset.fam.</p></td>
+    </tr>
+    <tr>
+      <th>qcdir</th>
+      <td><p>[character] /path/to/directory to save
+prefixMergedDataset.eigenvec as returned by plink --pca. User needs writing
+permission to qcdir. Per default qcdir=indir.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -194,11 +200,12 @@ printed to standard out.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
-<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>,<span class='st'>'extdata'</span>)
+<span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>,<span class='st'>'extdata'</span>)
+<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>tempdir</span>()
 <span class='no'>prefixMergedDataset</span> <span class='kw'>&lt;-</span> <span class='st'>'data.HapMapIII'</span>
 <span class='co'># the following code is not run on package build, as the path2plink on the</span>
 <span class='co'># user system is not known.</span></div><span class='co'># NOT RUN {</span>
-<span class='no'>run</span> <span class='kw'>&lt;-</span> <span class='fu'>run_check_ancestry</span>(<span class='no'>qcdir</span>, <span class='no'>prefixMergedDataset</span>)
+<span class='no'>run</span> <span class='kw'>&lt;-</span> <span class='fu'>run_check_ancestry</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='no'>prefixMergedDataset</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

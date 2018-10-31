@@ -4,23 +4,26 @@
 \alias{evaluate_check_ancestry}
 \title{Evaluate results from PLINK PCA on combined study and reference data}
 \usage{
-evaluate_check_ancestry(qcdir, alg, prefixMergedDataset,
+evaluate_check_ancestry(indir, name, prefixMergedDataset, qcdir = indir,
   europeanTh = 1.5, refSamples = NULL, refColors = NULL,
   refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
   refSamplesPop = "Pop", refColorsColor = "Color",
   refColorsPop = "Pop", studyColor = "#2c7bb6", interactive = FALSE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing
-prefixMergedDataset.eigenvec results as returned by plink --pca.
-User needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
 
 \item{prefixMergedDataset}{[character] Prefix of merged dataset (study and
 reference samples) used in plink --pca, resulting in
-prefixMergedDataset.eigenvec}
+prefixMergedDataset.eigenvec.}
+
+\item{qcdir}{[character] /path/to/directory/with/QC/results containing
+prefixMergedDataset.eigenvec results as returned by plink --pca. Per default
+qcdir=indir.}
 
 \item{europeanTh}{[double] Scaling factor of radius to be drawn around center
 of European reference samples, with study samples inside this radius
@@ -97,14 +100,14 @@ samples of the reference populations and the study population.
 \details{
 Both \code{\link{run_check_ancestry}} and
 \code{\link{evaluate_check_ancestry}} can simply be invoked by
-\code{\link{check_ancestry}}).
+\code{\link{check_ancestry}}.
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
-fail_ancestry <- evaluate_check_ancestry(qcdir=qcdir, alg=alg,
-refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
-refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+indir <- file.path(package.dir, 'extdata')
+name <- "data"
+fail_ancestry <- evaluate_check_ancestry(indir=indir, name=name,
+refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE)
 }

@@ -4,19 +4,24 @@
 \alias{perMarkerQC}
 \title{Quality control for all markers in plink-dataset}
 \usage{
-perMarkerQC(qcdir, alg, do.check_snp_missingness = TRUE,
-  lmissTh = 0.01, do.check_hwe = TRUE, hweTh = 1e-05,
-  do.check_maf = TRUE, mafTh = 0.01, macTh = 20,
-  interactive = FALSE, verbose = TRUE, path2plink = NULL,
-  showPlinkOutput = TRUE)
+perMarkerQC(indir, qcdir = indir, name,
+  do.check_snp_missingness = TRUE, lmissTh = 0.01,
+  do.check_hwe = TRUE, hweTh = 1e-05, do.check_maf = TRUE,
+  mafTh = 0.01, macTh = 20, interactive = FALSE, verbose = TRUE,
+  path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing
-alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-individuals that failed QC. User needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{qcdir}{[character] /path/to/directory where results will be written to.
+If \code{\link{perIndividualQC}} was conducted, this directory should be the
+same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+permission to qcdir. Per default, qcdir=indir.}
+
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
 
 \item{do.check_snp_missingness}{[logical] If TRUE, run
 \code{\link{check_snp_missingness}}.}
@@ -24,7 +29,7 @@ alg.fam.}
 \item{lmissTh}{[double] Threshold for acceptable variant missing rate across
 samples.}
 
-\item{do.check_hwe}{[logical] If TRUE, run \code{\link{check_hwe}}}
+\item{do.check_hwe}{[logical] If TRUE, run \code{\link{check_hwe}}.}
 
 \item{hweTh}{[double] Significance threshold for deviation from HWE.}
 
@@ -33,7 +38,7 @@ samples.}
 \item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
 
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
-and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)}
+and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -68,10 +73,10 @@ perMarkerQC checks the markers in the plink dataset for their missingness
 rates across samples, their deviation from Hardy-Weinberg-Equilibrium (HWE)
 and their minor allele frequencies (MAF). Per default, it assumes that IDs of
 individuals that have failed \code{\link{perIndividualQC}} have been written
-to qcdir/alg.failIDs and removes these individuals when computing missingness
-rates, HWE p-values and MAF. If the qcdir/alg.failIDs file does not exist, a
-message is written to stdout but the analyses will continue for all samples
-in the alg.fam/al.bed/alg.bim dataset.
+to qcdir/name.fail.IDs and removes these individuals when computing
+missingness rates, HWE p-values and MAF. If the qcdir/name.fail.IDs file does
+not exist, a message is written to stdout but the analyses will continue for
+all samples in the name.fam/name.bed/name.bim dataset.
 Depicts i) SNP missingness rates (stratified by minor allele
 frequency) as histograms, ii) p-values of HWE exact test (stratified by all
 and low p-values) as histograms and iii) the minor allele frequency
@@ -85,14 +90,15 @@ these function documentations.
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- "data"
 path2plink <- '/path/to/plink'
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 # All quality control checks
 \dontrun{
-fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, interactive=FALSE,
-verbose=TRUE, path2plink=path2plink)
+fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
+interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 }
 }

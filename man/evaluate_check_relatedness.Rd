@@ -4,16 +4,16 @@
 \alias{evaluate_check_relatedness}
 \title{Evaluate results from PLINK IBD estimation.}
 \usage{
-evaluate_check_relatedness(qcdir, alg, highIBDTh = 0.1875,
+evaluate_check_relatedness(qcdir, name, highIBDTh = 0.1875,
   imissTh = 0.03, interactive = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{qcdir}{[character] path/to/directory/with/QC/results containing
-alg.imiss and alg.genome results as returned by plink --missing and plink
---genome. Users needs writing permission to qcdir.}
+name.imiss and name.genome results as returned by plink --missing and plink
+--genome.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam, alg.genome and alg.imiss.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam, name.genome and name.imiss.}
 
 \item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
 pair of individuals.}
@@ -50,26 +50,26 @@ shown by print(p_IBD).
 \description{
 Evaluates and depicts results from plink --genome on the LD pruned dataset
 (via \code{\link{run_check_relatedness}} or externally conducted IBD
-estimation. plink --genome calculates identity by state (IBS) for each pair
+estimation). plink --genome calculates identity by state (IBS) for each pair
 of individuals based on the average proportion of alleles shared at genotyped
 SNPs. The degree of recent shared ancestry, i.e. the identity by descent
 (IBD) can be estimated from the genome-wide IBS. The proportion of IBD
 between two individuals is returned by --genome as PI_HAT.
-check_relatedness finds pairs of samples whose proportion of IBD is larger
-than the specified highIBDTh. Subsequently, for pairs of individual that do
-not have additional relatives in the dataset, the individual with the greater
-genotype missingness rate is selected and returned as the individual failing
-the relatedness check. For more complex family structures, the unrelated
-individuals per family are selected (e.g. in a parents-offspring trio, the
-offspring will be marked as fail, while the parents will be kept in the
-analysis).
-check_relatedness depicts all pair-wise IBD-estimates as histograms
-stratified by value of PI_HAT.
+\code{evaluate_check_relatedness} finds pairs of samples whose proportion of
+IBD is larger than the specified highIBDTh. Subsequently, for pairs of
+individual that do not have additional relatives in the dataset, the
+individual with the greater genotype missingness rate is selected and
+returned as the individual failing the relatedness check. For more complex
+family structures, the unrelated individuals per family are selected (e.g. in
+a parents-offspring trio, the offspring will be marked as fail, while the
+parents will be kept in the analysis).
+\code{evaluate_check_relatedness} depicts all pair-wise IBD-estimates as
+histograms stratified by value of PI_HAT.
 }
 \details{
 Both \code{\link{run_check_relatedness}} and
 \code{\link{evaluate_check_relatedness}} can simply be invoked by
-\code{\link{check_relatedness}}).
+\code{\link{check_relatedness}}.
 
 For details on the output data.frame fail_high_IBD, check the original
 description on the PLINK output format page:
@@ -78,7 +78,7 @@ description on the PLINK output format page:
 \examples{
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir,'extdata')
-alg <- 'data'
-relatednessQC <- evaluate_check_relatedness(qcdir=qcdir, alg=alg,
+name <- 'data'
+relatednessQC <- evaluate_check_relatedness(qcdir=qcdir, name=name,
 interactive=FALSE)
 }

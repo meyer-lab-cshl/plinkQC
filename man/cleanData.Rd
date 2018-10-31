@@ -2,78 +2,85 @@
 % Please edit documentation in R/applyQC.R
 \name{cleanData}
 \alias{cleanData}
-\title{Create plink dataset with samples and markers passing quality control}
+\title{Create plink dataset with individuals and markers passing quality control}
 \usage{
-cleanData(qcdir, alg, lmissTh = 0.01, hweTh = 1e-05, macTh = 20,
-  mafTh = 0.01, filterAncestry = TRUE, filterRelated = TRUE,
-  filterSex = TRUE, filterHeterozygosity = TRUE,
-  filterSampleMissingness = TRUE, filterSNPMissingness = TRUE,
-  filterHWE = TRUE, filterMAF = TRUE, path2plink = NULL,
-  verbose = FALSE, showPlinkOutput = TRUE)
+cleanData(indir, name, qcdir = indir, filterSex = TRUE,
+  filterHeterozygosity = TRUE, filterSampleMissingness = TRUE,
+  filterAncestry = TRUE, filterRelated = TRUE,
+  filterSNPMissingness = TRUE, lmissTh = 0.01, filterHWE = TRUE,
+  hweTh = 1e-05, filterMAF = TRUE, macTh = 20, mafTh = 0.01,
+  path2plink = NULL, verbose = FALSE, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing
-alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-individuals that failed QC. User needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
 
-\item{lmissTh}{[double] Threshold for acceptable variant missing rate across
-samples.}
-
-\item{hweTh}{[double] Significance threshold for deviation from HWE.}
-
-\item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
-and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)}
-
-\item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
-
-\item{filterAncestry}{[logical] Set to exclude samples that failed ancestry
-check (via \code{\link{check_ancestry}} or \code{\link{perIndividualQC}}).
-Requires file qcdir/alg.fail-ancestry.IDs (automatically created by
-\code{\link{perIndividualQC}} if do.check_ancestry set to TRUE).}
-
-\item{filterRelated}{[logical] Set to exclude samples that failed relatedness
-check (via \code{\link{check_relatedness}} or \code{\link{perIndividualQC}}).
-Requires file qcdir/alg.fail-IBD.IDs (automatically created by
-\code{\link{perIndividualQC}} if do.evaluate_check_relatedness set to TRUE).}
+\item{qcdir}{[character] /path/to/directory where results will be written to.
+If \code{\link{perIndividualQC}} was conducted, this directory should be the
+same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+permission to qcdir. Per default, qcdir=indir.}
 
 \item{filterSex}{[logical] Set to exclude samples that failed the sex
 check (via \code{\link{check_sex}} or \code{\link{perIndividualQC}}).
-Requires file qcdir/alg.fail-sexcheck.IDs (automatically created by
+Requires file qcdir/name.fail-sexcheck.IDs (automatically created by
 \code{\link{perIndividualQC}} if do.evaluate_check_sex set to TRUE).}
 
 \item{filterHeterozygosity}{[logical] Set to exclude samples that failed
 check for outlying heterozygosity rates (via
 \code{\link{check_het_and_miss}} or
-\code{\link{perIndividualQC}}). Requires file qcdir/alg.fail-het.IDs
+\code{\link{perIndividualQC}}). Requires file qcdir/name.fail-het.IDs
 (automatically created by \code{\link{perIndividualQC}} if
 do.evaluate_check_het_and_miss set to TRUE).}
 
 \item{filterSampleMissingness}{[logical] Set to exclude samples that failed
 check for excessive missing genotype rates (via
 \code{\link{check_het_and_miss}} or
-\code{\link{perIndividualQC}}). Requires file qcdir/alg.fail-imiss.IDs
+\code{\link{perIndividualQC}}). Requires file qcdir/name.fail-imiss.IDs
 (automatically created by \code{\link{perIndividualQC}} if
 do.evaluate_check_het_and_miss set to TRUE).}
+
+\item{filterAncestry}{[logical] Set to exclude samples that failed ancestry
+check (via \code{\link{check_ancestry}} or \code{\link{perIndividualQC}}).
+Requires file qcdir/name.fail-ancestry.IDs (automatically created by
+\code{\link{perIndividualQC}} if do.check_ancestry set to TRUE).}
+
+\item{filterRelated}{[logical] Set to exclude samples that failed relatedness
+check (via \code{\link{check_relatedness}} or \code{\link{perIndividualQC}}).
+Requires file qcdir/name.fail-IBD.IDs (automatically created by
+\code{\link{perIndividualQC}} if do.evaluate_check_relatedness set to TRUE).}
 
 \item{filterSNPMissingness}{[logical] Set to exclude markers that have
 excessive missing rates across samples (via
 \code{\link{check_snp_missingness}} or \code{\link{perMarkerQC}}). Requires
 lmissTh to be set.}
 
+\item{lmissTh}{[double] Threshold for acceptable variant missing rate across
+samples.}
+
 \item{filterHWE}{[logical] Set to exclude markers that fail HWE exact test
 (via \code{\link{check_hwe}} or \code{\link{perMarkerQC}}). Requires hweTh to
 be set.}
+
+\item{hweTh}{[double] Significance threshold for deviation from HWE.}
 
 \item{filterMAF}{[logical] Set to exclude markers that fail minor allele
 freuqency or minor allele count threshold (via \code{\link{check_maf}} or
 \code{\link{perMarkerQC}}). Requires mafTh or macTh to be set.}
 
-\item{path2plink}{[character] Absolute path to where external plink software
-\url{https://www.cog-genomics.org/plink/1.9/} can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").}
+\item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
+and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).}
+
+\item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
+
+\item{path2plink}{[character] Absolute path to directory where external plink
+software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
@@ -87,24 +94,32 @@ containing a [data.frame] with family [FID] and individual [IID] IDs of
 samples that fail the QC.
 }
 \description{
-Remove samples that fail per-sample QC and remove markers that fail
-per-marker QC.
+Individuals that fail per-individual QC and markers that fail
+per-marker QC are removed from indir/name.bim/.bed/.fam and a new, dataset
+with the remaining individuals and markers is created as
+qcdir/name.clean.bim/.bed/.fam.
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
-path2plink <- '/path/2/plink'
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- "data"
+path2plink <- '/path/to/plink'
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
-# All checks
-ids_all <- cleanData(qcdir=qcdir, alg=alg, macTh=15, interactive=FALSE,
-verbose=TRUE, path2plink=path2plink, filterAncestry=TRUE, filterRelated=TRUE)
+# Run individual QC checks
+fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
+refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE)
 
-# Only filter samples failing check sex and heterozygosity/missingness
-ids_sex_miss_het <- cleanData(qcdir=qcdir, alg=alg, macTh=15,
-interactive=FALSE, verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
-filterRelated=FALSE)
+# Run marker QC checks
+fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name)
+
+# Create new dataset of indiviudals and markers passing QC
+ids_all <- cleanData(indir=indir, qcdir=qcdir, name=name, macTh=15,
+interactive=FALSE, verbose=TRUE, path2plink=path2plink, filterAncestry=TRUE,
+filterRelated=TRUE)
 }
 }

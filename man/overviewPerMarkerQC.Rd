@@ -7,8 +7,8 @@
 overviewPerMarkerQC(results_perMarkerQC, interactive = FALSE)
 }
 \arguments{
-\item{results_perMarkerQC}{[list] Output of \code{\link{perIndividualQC}} i.e.
-named [list] with i) fail_list, a named [list] with 1.
+\item{results_perMarkerQC}{[list] Output of \code{\link{perIndividualQC}}
+i.e. named [list] with i) fail_list, a named [list] with 1.
 SNP_missingness, containing SNP IDs failing the missingness threshold
 lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
 hweTh and 3. maf, containing SNPs failing the MAF threshold mafTh/MAC
@@ -30,21 +30,22 @@ columns are all QC steps applied by perMarkerQC (max=3), with entries=0 if
 passing the QC and entries=1 if failing that particular QC.
 }
 \description{
-overviewPerMarkerQC depicts results of perMarkerQC as intersection plot (via
-\code{\link[UpSetR]{upset}}) and returns dataframe indicating which QC
-checks were failed or passed.
+\code{overviewPerMarkerQC} depicts results of \code{\link{perMarkerQC}} as
+an intersection plot (via \code{\link[UpSetR]{upset}}) and returns a
+dataframe indicating which QC checks were failed or passed.
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- "data"
 path2plink <- '/path/to/plink'
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 # All quality control checks
 \dontrun{
-fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, interactive=FALSE,
-verbose=TRUE, path2plink=path2plink)
+fail_markers <- perMarkerQC(qcdir=qcdir, indir=indir, name=name,
+interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 overview <- overviewPerMarkerQC(fail_markers)
 }
 }

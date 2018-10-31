@@ -4,17 +4,21 @@
 \alias{run_check_ancestry}
 \title{Run PLINK principal component analysis}
 \usage{
-run_check_ancestry(qcdir, prefixMergedDataset, verbose = FALSE,
-  path2plink = NULL, showPlinkOutput = TRUE)
+run_check_ancestry(indir, prefixMergedDataset, qcdir = indir,
+  verbose = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing the
-basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files prefixMergedDataset.bim,prefixMergedDataset.fam and
+prefixMergedDataset.bed.}
 
 \item{prefixMergedDataset}{[character] Prefix of merged study and
 reference data files, i.e. prefixMergedDataset.bed, prefixMergedDataset.bim,
 prefixMergedDataset.fam.}
+
+\item{qcdir}{[character] /path/to/directory to save
+prefixMergedDataset.eigenvec as returned by plink --pca. User needs writing
+permission to qcdir. Per default qcdir=indir.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
@@ -38,11 +42,12 @@ Both, \code{\link{run_check_ancestry}} and its evaluation by
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir,'extdata')
+indir <- file.path(package.dir,'extdata')
+qcdir <- tempdir()
 prefixMergedDataset <- 'data.HapMapIII'
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
-run <- run_check_ancestry(qcdir, prefixMergedDataset)
+run <- run_check_ancestry(indir=indir, qcdir=qcdir, prefixMergedDataset)
 }
 }

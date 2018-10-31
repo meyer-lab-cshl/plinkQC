@@ -35,7 +35,7 @@
 <meta property="og:title" content="Identification of individuals with discordant sex information — check_sex" />
 
 <meta property="og:description" content="Runs and evaluates results from plink --check-sex.
-check_sex returns IIDs for samples whose SNPSEX != PEDSEX
+check_sex returns IIDs for individuals whose SNPSEX != PEDSEX
 (where the SNPSEX is determined by the heterozygosity rate across
 X-chromosomal variants).
 Mismatching SNPSEX and PEDSEX IDs can indicate plating errors, sample-mixup
@@ -44,10 +44,10 @@ likely to fail other QC steps as well.
 Optionally, an extra data.frame (externalSex) with sample IDs and sex can be
 provided to double check if external and PEDSEX data (often processed at
 different centers) match. If a mismatch between PEDSEX and SNPSEX was
-detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be
+detected, while SNPSEX == Sex, PEDSEX of these individuals can optionally be
 updated (fixMixup=TRUE).
-check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
-split by their (PEDSEX)." />
+check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of
+the individuals split by their (PEDSEX)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -156,7 +156,7 @@ split by their (PEDSEX)." />
     <div class="ref-description">
     
     <p>Runs and evaluates results from plink --check-sex.
-<code>check_sex</code> returns IIDs for samples whose SNPSEX != PEDSEX
+<code>check_sex</code> returns IIDs for individuals whose SNPSEX != PEDSEX
 (where the SNPSEX is determined by the heterozygosity rate across
 X-chromosomal variants).
 Mismatching SNPSEX and PEDSEX IDs can indicate plating errors, sample-mixup
@@ -165,33 +165,38 @@ likely to fail other QC steps as well.
 Optionally, an extra data.frame (externalSex) with sample IDs and sex can be
 provided to double check if external and PEDSEX data (often processed at
 different centers) match. If a mismatch between PEDSEX and SNPSEX was
-detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be
+detected, while SNPSEX == Sex, PEDSEX of these individuals can optionally be
 updated (fixMixup=TRUE).
-check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
-split by their (PEDSEX).</p>
+<code>check_sex</code> depicts the X-chromosomal heterozygosity (SNPSEX) of
+the individuals split by their (PEDSEX).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>check_sex</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>run.check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>, <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>, <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>,
-  <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>check_sex</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>run.check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>,
+  <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>, <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>, <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>qcdir</th>
-      <td><p>[character] /path/to/directory/with/QC/results containing plink
-dataset. If run.check_sex is FALSE, it is assumed that plink
---check-sex has been run and qcdir/alg.sexcheck is present. Users needs
-writing permission to qcdir.</p></td>
+      <th>indir</th>
+      <td><p>[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.</p></td>
     </tr>
     <tr>
-      <th>alg</th>
-      <td><p>[character] Prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam and alg.sexcheck.</p></td>
+      <th>name</th>
+      <td><p>[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam and name.sexcheck.</p></td>
+    </tr>
+    <tr>
+      <th>qcdir</th>
+      <td><p>[character] /path/to/directory to save name.sexcheck as returned
+by plink --check-sex. Per default qcdir=indir. If run.check_sex is FALSE, it
+is assumed that plink --check-sex has been run and qcdir/name.sexcheck is
+present. User needs writing permission to qcdir.</p></td>
     </tr>
     <tr>
       <th>maleTh</th>
@@ -207,14 +212,8 @@ females.</p></td>
       <th>run.check_sex</th>
       <td><p>[logical] Should plink --check-sex be run? if set to
 FALSE, it is assumed that plink --check-sex has been run and
-qcdir/alg.sexcheck is present; <code>check_sex</code>  will fail with
+qcdir/name.sexcheck is present; <code>check_sex</code>  will fail with
 missing file error otherwise.</p></td>
-    </tr>
-    <tr>
-      <th>fixMixup</th>
-      <td><p>[logical] Should PEDSEX of individuals with mismatch between
-PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
-change the alg.bim/.bed/.fam files!</p></td>
     </tr>
     <tr>
       <th>externalSex</th>
@@ -240,6 +239,12 @@ information in externalSex.</p></td>
       <th>externalSexID</th>
       <td><p>[character] Column identifier for column containing ID
 information in externalSex.</p></td>
+    </tr>
+    <tr>
+      <th>fixMixup</th>
+      <td><p>[logical] Should PEDSEX of individuals with mismatch between
+PEDSEX and Sex while Sex==SNPSEX automatically corrected: this will directly
+change the name.bim/.bed/.fam files!</p></td>
     </tr>
     <tr>
       <th>interactive</th>
@@ -283,7 +288,7 @@ the X-chromosomal heterozygosity (SNPSEX) of the sample split by their
     <p><code>check_sex</code> wraps around <code><a href='run_check_sex.html'>run_check_sex</a></code>  and
 <code><a href='evaluate_check_sex.html'>evaluate_check_sex</a></code> . If run.check_sex is TRUE,
 <code><a href='run_check_sex.html'>run_check_sex</a> </code> is excuted; otherwise it is assumed that plink
---check-sex has been run externally and qcdir/alg.sexcheck exists.
+--check-sex has been run externally and qcdir/name.sexcheck exists.
 <code>check_sex</code>  will fail with missing file error otherwise.</p>
 <p>For details on the output data.frame fail_sex, check the original
 description on the PLINK output format page:
@@ -293,9 +298,9 @@ description on the PLINK output format page:
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
 <span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
-<span class='no'>alg</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
-<span class='no'>fail_sex</span> <span class='kw'>&lt;-</span> <span class='fu'>check_sex</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>, <span class='kw'>run.check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_sex(qcdir = qcdir, alg = alg, externalSex = externalSex,     maleTh = maleTh, femaleTh = femaleTh, interactive = interactive,     fixMixup = fixMixup, externalFemale = externalFemale, externalMale = externalMale,     externalSexSex = externalSexSex, externalSexID = externalSexID,     verbose = verbose, path2plink = path2plink, showPlinkOutput = showPlinkOutput): plink --check-sex results file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.sexcheck does not exist.</span></div></pre>
+<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
+<span class='no'>fail_sex</span> <span class='kw'>&lt;-</span> <span class='fu'>check_sex</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>, <span class='kw'>run.check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

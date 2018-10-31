@@ -4,16 +4,22 @@
 \alias{check_snp_missingness}
 \title{Identification of SNPs with high missingness rate}
 \usage{
-check_snp_missingness(qcdir, alg, lmissTh = 0.01, interactive = FALSE,
-  path2plink = NULL, verbose = FALSE, showPlinkOutput = TRUE)
+check_snp_missingness(indir, name, qcdir = indir, lmissTh = 0.01,
+  interactive = FALSE, path2plink = NULL, verbose = FALSE,
+  showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing
-alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-individuals that failed QC. User needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
+
+\item{qcdir}{[character] /path/to/directory where results will be written to.
+If \code{\link{perIndividualQC}} was conducted, this directory should be the
+same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+permission to qcdir. Per default, qcdir=indir.}
 
 \item{lmissTh}{[double] Threshold for acceptable variant missing rate across
 samples.}
@@ -50,10 +56,11 @@ SNP missingness histogram which can be shown by (print(p_lmiss)).
 Runs and evaluates results from plink --missing --freq. It calculate the
 rates of missing genotype calls and frequency for all variants in the
 individuals that passed the \code{\link{perIndividualQC}}. The SNP
-missingness rates (stratified by minor allele frequency) as histograms.
+missingness rates (stratified by minor allele frequency) are depicted as
+histograms.
 }
 \details{
-\code{check_snp_missingness} uses plink --remove alg.fail.IDs --missing
+\code{check_snp_missingness} uses plink --remove name.fail.IDs --missing
 --freq to calculate rates of missing genotype calls and frequency per SNP in
 the individuals that passed the \code{\link{perIndividualQC}}. It does so
 without generating a new dataset but simply removes the IDs when calculating
@@ -65,13 +72,14 @@ description on the PLINK output format page:
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- "data"
 path2plink <- '/path/to/plink'
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
-fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, alg=alg,
-interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, indir=indir,
+name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 }
 }

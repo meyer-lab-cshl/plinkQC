@@ -2,18 +2,21 @@
 % Please edit documentation in R/individualQC.R
 \name{run_check_missingness}
 \alias{run_check_missingness}
-\title{Run PLINK missingness rate calculation.}
+\title{Run PLINK missingness rate calculation}
 \usage{
-run_check_missingness(qcdir, alg, verbose = FALSE, path2plink = NULL,
-  showPlinkOutput = TRUE)
+run_check_missingness(indir, name, qcdir = indir, verbose = FALSE,
+  path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing the
-basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
+
+\item{qcdir}{[character] /path/to/directory to save name.imiss as returned
+by plink --missing. User needs writing permission to qcdir. Per default
+qcdir=indir.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
@@ -38,11 +41,12 @@ All, \code{\link{run_check_heterozygosity}},
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir,'extdata')
-alg <- 'data'
+indir <- file.path(package.dir,'extdata')
+name <- 'data'
+qcdir <- tempdir()
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
-run <- run_check_missingnessness(qcdir, alg)
+run <- run_check_missingnessness(indir=indir, qcdir=qcdir, name=name)
 }
 }

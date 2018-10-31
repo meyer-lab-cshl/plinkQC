@@ -4,20 +4,24 @@
 #' rates across samples, their deviation from Hardy-Weinberg-Equilibrium (HWE)
 #' and their minor allele frequencies (MAF). Per default, it assumes that IDs of
 #' individuals that have failed \code{\link{perIndividualQC}} have been written
-#' to qcdir/alg.failIDs and removes these individuals when computing missingness
-#' rates, HWE p-values and MAF. If the qcdir/alg.failIDs file does not exist, a
-#' message is written to stdout but the analyses will continue for all samples
-#' in the alg.fam/al.bed/alg.bim dataset.
+#' to qcdir/name.fail.IDs and removes these individuals when computing
+#' missingness rates, HWE p-values and MAF. If the qcdir/name.fail.IDs file does
+#' not exist, a message is written to stdout but the analyses will continue for
+#' all samples in the name.fam/name.bed/name.bim dataset.
 #' Depicts i) SNP missingness rates (stratified by minor allele
 #' frequency) as histograms, ii) p-values of HWE exact test (stratified by all
 #' and low p-values) as histograms and iii) the minor allele frequency
 #' distribution as a histogram.
-#' @param qcdir [character] /path/to/directory/with/QC/results containing
-#' alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-#' individuals that failed QC. User needs writing permission to qcdir.
-#' @param alg [character] prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
-#' @param do.check_hwe [logical] If TRUE, run \code{\link{check_hwe}}
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory where results will be written to.
+#' If \code{\link{perIndividualQC}} was conducted, this directory should be the
+#' same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+#' name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+#' permission to qcdir. Per default, qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
+#' @param do.check_hwe [logical] If TRUE, run \code{\link{check_hwe}}.
 #' @param do.check_maf [logical] If TRUE, run \code{\link{check_maf}}.
 #' @param do.check_snp_missingness [logical] If TRUE, run
 #' \code{\link{check_snp_missingness}}.
@@ -26,7 +30,7 @@
 #' @param hweTh [double] Significance threshold for deviation from HWE.
 #' @param mafTh [double] Threshold for minor allele frequency cut-off.
 #' @param macTh [double] Threshold for minor allele cut cut-off, if both mafTh
-#' and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)
+#' and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -56,17 +60,18 @@
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
+#' indir <- file.path(package.dir, 'extdata')
+#' qcdir <- tempdir()
+#' name <- "data"
 #' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' # All quality control checks
 #' \dontrun{
-#' fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, interactive=FALSE,
-#' verbose=TRUE, path2plink=path2plink)
+#' fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
+#' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 #' }
-perMarkerQC <- function(qcdir, alg,
+perMarkerQC <- function(indir, qcdir=indir, name,
                         do.check_snp_missingness=TRUE, lmissTh=0.01,
                         do.check_hwe=TRUE, hweTh=1e-5,
                         do.check_maf=TRUE, mafTh=0.01, macTh=20,
@@ -76,7 +81,7 @@ perMarkerQC <- function(qcdir, alg,
     if (do.check_snp_missingness) {
         if (verbose) message("Identification of SNPs with high missingness",
                              " rate")
-        fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, alg=alg,
+        fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, name=name,
                                                       lmissTh=lmissTh,
                                                       path2plink=path2plink,
                                                       verbose=verbose,
@@ -89,7 +94,7 @@ perMarkerQC <- function(qcdir, alg,
     }
     if (do.check_hwe) {
         if (verbose) message("Identification of SNPs with deviation from HWE")
-        fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, hweTh=hweTh,
+        fail_hwe <- check_hwe(qcdir=qcdir, name=name, hweTh=hweTh,
                               path2plink=path2plink, verbose=verbose,
                               showPlinkOutput=showPlinkOutput)
         p_hwe <- fail_hwe$p_hwe
@@ -99,7 +104,7 @@ perMarkerQC <- function(qcdir, alg,
     }
     if (do.check_maf) {
         if (verbose) message("Remove markers with a low minor allele frequency")
-        fail_maf <- check_maf(qcdir=qcdir, alg=alg, mafTh=mafTh, macTh=macTh,
+        fail_maf <- check_maf(qcdir=qcdir, name=name, mafTh=mafTh, macTh=macTh,
                               path2plink=path2plink, verbose=verbose,
                               showPlinkOutput=showPlinkOutput)
         p_maf <- fail_maf$p_maf
@@ -126,12 +131,12 @@ perMarkerQC <- function(qcdir, alg,
 
 #' Overview of per marker QC
 #'
-#' overviewPerMarkerQC depicts results of perMarkerQC as intersection plot (via
-#' \code{\link[UpSetR]{upset}}) and returns dataframe indicating which QC
-#' checks were failed or passed.
+#' \code{overviewPerMarkerQC} depicts results of \code{\link{perMarkerQC}} as
+#' an intersection plot (via \code{\link[UpSetR]{upset}}) and returns a
+#' dataframe indicating which QC checks were failed or passed.
 #'
-#' @param results_perMarkerQC [list] Output of \code{\link{perIndividualQC}} i.e.
-#' named [list] with i) fail_list, a named [list] with 1.
+#' @param results_perMarkerQC [list] Output of \code{\link{perIndividualQC}}
+#' i.e. named [list] with i) fail_list, a named [list] with 1.
 #' SNP_missingness, containing SNP IDs failing the missingness threshold
 #' lmissTh, 2. hwe, containing SNP IDs failing the HWE exact test threshold
 #' hweTh and 3. maf, containing SNPs failing the MAF threshold mafTh/MAC
@@ -151,15 +156,16 @@ perMarkerQC <- function(qcdir, alg,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
+#' indir <- file.path(package.dir, 'extdata')
+#' qcdir <- tempdir()
+#' name <- "data"
 #' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' # All quality control checks
 #' \dontrun{
-#' fail_markers <- perMarkerQC(qcdir=qcdir, alg=alg, interactive=FALSE,
-#' verbose=TRUE, path2plink=path2plink)
+#' fail_markers <- perMarkerQC(qcdir=qcdir, indir=indir, name=name,
+#' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 #' overview <- overviewPerMarkerQC(fail_markers)
 #' }
 overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
@@ -212,9 +218,10 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' Runs and evaluates results from plink --missing --freq. It calculate the
 #' rates of missing genotype calls and frequency for all variants in the
 #' individuals that passed the \code{\link{perIndividualQC}}. The SNP
-#' missingness rates (stratified by minor allele frequency) as histograms.
+#' missingness rates (stratified by minor allele frequency) are depicted as
+#' histograms.
 #'
-#' \code{check_snp_missingness} uses plink --remove alg.fail.IDs --missing
+#' \code{check_snp_missingness} uses plink --remove name.fail.IDs --missing
 #' --freq to calculate rates of missing genotype calls and frequency per SNP in
 #' the individuals that passed the \code{\link{perIndividualQC}}. It does so
 #' without generating a new dataset but simply removes the IDs when calculating
@@ -224,11 +231,15 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' description on the PLINK output format page:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#lmiss}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing
-#' alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-#' individuals that failed QC. User needs writing permission to qcdir.
-#' @param alg [character] Prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory where results will be written to.
+#' If \code{\link{perIndividualQC}} was conducted, this directory should be the
+#' same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+#' name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+#' permission to qcdir. Per default, qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param lmissTh [double] Threshold for acceptable variant missing rate across
 #' samples.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -256,56 +267,59 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
+#' indir <- file.path(package.dir, 'extdata')
+#' qcdir <- tempdir()
+#' name <- "data"
 #' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, alg=alg,
-#' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+#' fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 #' }
-check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
-                                  path2plink=NULL, verbose=FALSE,
-                                  showPlinkOutput=TRUE) {
-    if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
-        stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
+check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
+                                  interactive=FALSE, path2plink=NULL,
+                                  verbose=FALSE, showPlinkOutput=TRUE) {
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
+    if (!file.exists(paste(prefix, ".fam",sep=""))){
+        stop("plink family file: ", prefix, ".fam does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".bim",sep=""))){
-        stop("plink snp file: ", qcdir,"/", alg, ".bim does not exist.")
+    if (!file.exists(paste(prefix, ".bim",sep=""))){
+        stop("plink snp file: ", prefix, ".bim does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".bed",sep=""))){
-        stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
+    if (!file.exists(paste(prefix, ".bed",sep=""))){
+        stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     if (!is.null(path2plink)) {
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
     checkPlink(path2plink)
-    if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
+    if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividual QC: ",
-                qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
-                "check_SNP_missingness for all samples in ", qcdir,"/", alg,
+                out, ".fail.IDs does not exist. Continue ",
+                "check_SNP_missingness for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
+        system(paste(path2plink, "plink --bfile ", prefix,
                      " --missing ",
                      "--freq ",
-                     "--out ", qcdir, "/", alg, suffix, sep=""),
+                     "--out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
-                     " --remove ", qcdir ,"/", alg, ".fail.IDs --missing ",
+        system(paste(path2plink, "plink --bfile ", prefix,
+                     " --remove ", out, ".fail.IDs --missing ",
                      "--freq ",
-                     "--out ", qcdir, "/", alg, suffix, sep=""),
+                     "--out ", out, suffix, sep=""),
                ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
     }
 
-    lmiss <- read.table(paste(qcdir, "/", alg, suffix, ".lmiss",sep=""),
-                       as.is=TRUE, header=TRUE)
+    lmiss <- read.table(paste(out, suffix, ".lmiss",sep=""), as.is=TRUE,
+                        header=TRUE)
 
-    frq <- read.table(paste(qcdir, "/", alg, suffix, ".frq", sep=""),
-                  header=TRUE, as.is=TRUE)
+    frq <- read.table(paste(out, suffix, ".frq", sep=""), header=TRUE,
+                      as.is=TRUE)
     lmiss_frq <- merge(lmiss, frq)
     lmiss_frq$MAF_bin <- ifelse(lmiss_frq$MAF < 0.05, 1, 0)
     p_highMAF <- ggplot(dplyr::filter_(lmiss_frq, ~MAF_bin == 0),
@@ -352,7 +366,7 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' all and low p-values), where the hweTh is used to depict the quality control
 #' cut-off for SNPs.
 #'
-#' \code{check_hwe} uses plink --remove alg.fail.IDs --hardy to
+#' \code{check_hwe} uses plink --remove name.fail.IDs --hardy to
 #' calculate the observed and expected heterozygote frequencies per SNP in the
 #' individuals that passed the \code{\link{perIndividualQC}}. It does so
 #' without generating a new dataset but simply removes the IDs when calculating
@@ -362,11 +376,15 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' description on the PLINK output format page:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#hwe}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing
-#' alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-#' individuals that failed QC. User needs writing permission to qcdir.
-#' @param alg [character] Prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory where results will be written to.
+#' If \code{\link{perIndividualQC}} was conducted, this directory should be the
+#' same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+#' name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+#' permission to qcdir. Per default, qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param hweTh [double] Significance threshold for deviation from HWE.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
@@ -394,49 +412,52 @@ check_snp_missingness <- function(qcdir, alg, lmissTh=0.01, interactive=FALSE,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
+#' indir <- file.path(package.dir, 'extdata')
+#' qcdir <- tempdir()
+#' name <- "data"
 #' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, interactive=FALSE, verbose=TRUE,
-#' path2plink=path2plink)
+#' fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, interactive=FALSE,
+#' verbose=TRUE, path2plink=path2plink)
 #' }
-check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
+check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                       path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE) {
-    if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
-        stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
+    if (!file.exists(paste(prefix, ".fam",sep=""))){
+        stop("plink family file: ", prefix, ".fam does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".bim",sep=""))){
-        stop("plink snp file: ", qcdir,"/", alg, ".bim does not exist.")
+    if (!file.exists(paste(prefix, ".bim",sep=""))){
+        stop("plink snp file: ", prefix, ".bim does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".bed",sep=""))){
-        stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
+    if (!file.exists(paste(prefix, ".bed",sep=""))){
+        stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     if (!is.null(path2plink)) {
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
     checkPlink(path2plink)
-    if (!file.exists(paste(qcdir,"/", alg, ".fail.IDs",sep=""))){
+    if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividualQC: ",
-                qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
-                "check_HWE for all samples in ", qcdir,"/", alg,
+                out, ".fail.IDs does not exist. Continue ",
+                "check_HWE for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
+        system(paste(path2plink, "plink --bfile ", prefix,
                      " --hardy",
-                     " --out ", qcdir, "/", alg, suffix, sep=""),
+                     " --out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
-                     " --remove ", qcdir, "/", alg, ".fail.IDs --hardy",
-                     " --out ", qcdir, "/", alg, suffix, sep=""),
+        system(paste(path2plink, "plink --bfile ", prefix,
+                     " --remove ", out, ".fail.IDs --hardy",
+                     " --out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     }
-    hwe <- read.table(paste(qcdir, "/", alg, suffix, ".hwe", sep=""),
-                       header=TRUE, as.is=TRUE)
+    hwe <- read.table(paste(out, suffix, ".hwe", sep=""), header=TRUE,
+                      as.is=TRUE)
     hwe <- hwe[grepl("ALL", hwe$TEST),]
     hwe$P_bin <- ifelse(hwe$P < 0.01, 1, 0)
     hwe$minus_log10P <- -log10(hwe$P)
@@ -478,7 +499,7 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' \code{\link{perIndividualQC}}. The minor allele frequency distributions is
 #' plotted as a histogram.
 #'
-#' \code{check_maf} uses plink --remove alg.fail.IDs --freq to calculate the
+#' \code{check_maf} uses plink --remove name.fail.IDs --freq to calculate the
 #' minor allele frequencies for all variants in the individuals that passed the
 #' \code{\link{perIndividualQC}}. It does so without generating a new dataset
 #' but simply removes the IDs when calculating the statistics.
@@ -487,14 +508,18 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' description on the PLINK output format page:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#frq}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing
-#' alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-#' individuals that failed QC. User needs writing permission to qcdir.
-#' @param alg [character] Prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory where results will be written to.
+#' If \code{\link{perIndividualQC}} was conducted, this directory should be the
+#' same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+#' name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+#' permission to qcdir. Per default, qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param mafTh [double] Threshold for minor allele frequency cut-off.
 #' @param macTh [double] Threshold for minor allele cut cut-off, if both mafTh
-#' and macTh are specied, macTh is used (macTh = mafTh\*2\*NrSamples)
+#' and macTh are specied, macTh is used (macTh = mafTh\*2\*NrSamples).
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -518,53 +543,56 @@ check_hwe <- function(qcdir, alg, hweTh=1e-5, interactive=FALSE,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
+#' indir <- file.path(package.dir, 'extdata')
+#' qcdir <- tempdir()
+#' name <- "data"
 #' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' fail_maf <- check_maf(qcdir=qcdir, alg=alg, macTh=15, interactive=FALSE,
-#' verbose=TRUE, path2plink=path2plink)
+#' fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, macTh=15,
+#' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 #' }
-check_maf <- function(qcdir, alg, mafTh=0.01, macTh=20, verbose=FALSE,
-                      interactive=FALSE, path2plink=NULL,
+check_maf <- function(indir, name, qcdir=indir, mafTh=0.01, macTh=20,
+                      verbose=FALSE, interactive=FALSE, path2plink=NULL,
                       showPlinkOutput=TRUE) {
-    if (!file.exists(paste(qcdir,"/", alg, ".fam",sep=""))){
-        stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
+    if (!file.exists(paste(prefix, ".fam",sep=""))){
+        stop("plink family file: ", prefix, ".fam does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".bim",sep=""))){
-        stop("plink snp file: ", qcdir,"/", alg, ".bim does not exist.")
+    if (!file.exists(paste(prefix, ".bim",sep=""))){
+        stop("plink snp file: ", prefix, ".bim does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".bed",sep=""))){
-        stop("plink binary file: ", qcdir,"/", alg, ".bed does not exist.")
+    if (!file.exists(paste(prefix, ".bed",sep=""))){
+        stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     if (!is.null(path2plink)) {
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
     checkPlink(path2plink)
-    if (!file.exists(paste(qcdir, "/", alg, ".fail.IDs",sep=""))){
+    if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividualQC: ",
-                qcdir,"/", alg, ".fail.IDs does not exist. Continue ",
-                "check_maf for all samples in ", qcdir,"/", alg,
+                out, ".fail.IDs does not exist. Continue ",
+                "check_maf for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
+        system(paste(path2plink, "plink --bfile ", prefix,
                      " --freq ",
-                     " --out ", qcdir, "/", alg, suffix, sep=""),
+                     " --out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
-                     " --remove ", qcdir ,"/", alg, ".fail.IDs --freq",
-                     " --out ", qcdir, "/", alg, suffix, sep=""),
+        system(paste(path2plink, "plink --bfile ", prefix,
+                     " --remove ", out, ".fail.IDs --freq",
+                     " --out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     }
-    maf <- read.table(paste(qcdir,"/", alg, suffix, ".frq",sep=""),
+    maf <- read.table(paste(out, suffix, ".frq",sep=""),
                        header=TRUE, as.is=TRUE)
 
-    all_samples <-  R.utils::countLines(paste(qcdir,"/",alg, ".fam",sep=""))
-    fail_samples <-  R.utils::countLines(paste(qcdir,"/",alg, ".fail.IDs",
+    all_samples <-  R.utils::countLines(paste(prefix, ".fam",sep=""))
+    fail_samples <-  R.utils::countLines(paste(out, ".fail.IDs",
                                                sep=""))
     keep_samples <- as.numeric(all_samples - fail_samples)
 

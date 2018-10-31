@@ -4,20 +4,23 @@
 \alias{check_sex}
 \title{Identification of individuals with discordant sex information}
 \usage{
-check_sex(qcdir, alg, maleTh = 0.8, femaleTh = 0.2,
-  run.check_sex = TRUE, fixMixup = FALSE, externalSex = NULL,
-  externalFemale = "F", externalMale = "M", externalSexSex = "Sex",
-  externalSexID = "IID", interactive = FALSE, verbose = FALSE,
+check_sex(indir, name, qcdir = indir, maleTh = 0.8, femaleTh = 0.2,
+  run.check_sex = TRUE, externalSex = NULL, externalFemale = "F",
+  externalMale = "M", externalSexSex = "Sex", externalSexID = "IID",
+  fixMixup = FALSE, interactive = FALSE, verbose = FALSE,
   path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing plink
-dataset. If run.check_sex is FALSE, it is assumed that plink
---check-sex has been run and qcdir/alg.sexcheck is present. Users needs
-writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam and alg.sexcheck.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam and name.sexcheck.}
+
+\item{qcdir}{[character] /path/to/directory to save name.sexcheck as returned
+by plink --check-sex. Per default qcdir=indir. If run.check_sex is FALSE, it
+is assumed that plink --check-sex has been run and qcdir/name.sexcheck is
+present. User needs writing permission to qcdir.}
 
 \item{maleTh}{[double] Threshold of X-chromosomal heterozygosity rate for
 males.}
@@ -27,12 +30,8 @@ females.}
 
 \item{run.check_sex}{[logical] Should plink --check-sex be run? if set to
 FALSE, it is assumed that plink --check-sex has been run and
-qcdir/alg.sexcheck is present; \code{\link{check_sex}}  will fail with
+qcdir/name.sexcheck is present; \code{\link{check_sex}}  will fail with
 missing file error otherwise.}
-
-\item{fixMixup}{[logical] Should PEDSEX of individuals with mismatch between
-PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
-change the alg.bim/.bed/.fam files!}
 
 \item{externalSex}{[data.frame, optional] Dataframe with sample IDs
 [externalSexID] and sex [externalSexSex] to double check if external and
@@ -48,6 +47,10 @@ information in externalSex.}
 
 \item{externalSexID}{[character] Column identifier for column containing ID
 information in externalSex.}
+
+\item{fixMixup}{[logical] Should PEDSEX of individuals with mismatch between
+PEDSEX and Sex while Sex==SNPSEX automatically corrected: this will directly
+change the name.bim/.bed/.fam files!}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -77,7 +80,7 @@ the X-chromosomal heterozygosity (SNPSEX) of the sample split by their
 }
 \description{
 Runs and evaluates results from plink --check-sex.
-\code{\link{check_sex}} returns IIDs for samples whose SNPSEX != PEDSEX
+\code{\link{check_sex}} returns IIDs for individuals whose SNPSEX != PEDSEX
 (where the SNPSEX is determined by the heterozygosity rate across
 X-chromosomal variants).
 Mismatching SNPSEX and PEDSEX IDs can indicate plating errors, sample-mixup
@@ -86,16 +89,16 @@ likely to fail other QC steps as well.
 Optionally, an extra data.frame (externalSex) with sample IDs and sex can be
 provided to double check if external and PEDSEX data (often processed at
 different centers) match. If a mismatch between PEDSEX and SNPSEX was
-detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be
+detected, while SNPSEX == Sex, PEDSEX of these individuals can optionally be
 updated (fixMixup=TRUE).
-check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
-split by their (PEDSEX).
+\code{\link{check_sex}} depicts the X-chromosomal heterozygosity (SNPSEX) of
+the individuals split by their (PEDSEX).
 }
 \details{
 \code{\link{check_sex}} wraps around \code{\link{run_check_sex}}  and
 \code{\link{evaluate_check_sex}} . If run.check_sex is TRUE,
 \code{\link{run_check_sex} } is excuted; otherwise it is assumed that plink
---check-sex has been run externally and qcdir/alg.sexcheck exists.
+--check-sex has been run externally and qcdir/name.sexcheck exists.
 \code{\link{check_sex}}  will fail with missing file error otherwise.
 
 For details on the output data.frame fail_sex, check the original
@@ -105,7 +108,7 @@ description on the PLINK output format page:
 \examples{
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
-fail_sex <- check_sex(qcdir=qcdir, alg=alg, run.check_sex=FALSE,
+name <- "data"
+fail_sex <- check_sex(indir=qcdir, name=name, run.check_sex=FALSE,
 interactive=FALSE, verbose=FALSE)
 }

@@ -8,16 +8,16 @@ testNumerics(numbers, positives = NULL, integers = NULL,
   proportions = NULL)
 }
 \arguments{
-\item{numbers}{List whose elements are tested for being numeric}
+\item{numbers}{[list] whose elements are tested for being numeric.}
 
-\item{positives}{List whose elements are tested for being positive numbers}
+\item{positives}{[list] whose elements are tested for being positive numbers.}
 
-\item{integers}{List whose elements are tested for being integers}
+\item{integers}{[list] whose elements are tested for being integers.}
 
-\item{proportions}{List whose elements are tested for being proportions
-between 0 and 1}
+\item{proportions}{[list] whose elements are tested for being proportions.
+between 0 and 1.}
 }
 \description{
 Test all elements of a list if they are numeric, positive numbers, integers
-or proportions (range 0-1)
+or proportions (range 0-1).
 }

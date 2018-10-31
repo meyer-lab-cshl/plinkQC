@@ -48,8 +48,9 @@ Mean heterozygosity can differ between populations and SNP genotyping panels.
 Within a population and genotyping panel, a reduced heterozygosity rate can
 indicate inbreeding - these individuals will then likely be returned by
 check_relatedness as individuals that fail the relatedness
-filters. check_het_and_miss creates a scatter plot with the samples'
-missingness rates on x-axis and their heterozygosity rates on the y-axis." />
+filters. check_het_and_miss creates a scatter plot with the
+individuals' missingness rates on x-axis and their heterozygosity rates on
+the y-axis." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -170,39 +171,46 @@ Mean heterozygosity can differ between populations and SNP genotyping panels.
 Within a population and genotyping panel, a reduced heterozygosity rate can
 indicate inbreeding - these individuals will then likely be returned by
 <code><a href='check_relatedness.html'>check_relatedness</a></code> as individuals that fail the relatedness
-filters. <code>check_het_and_miss</code> creates a scatter plot with the samples'
-missingness rates on x-axis and their heterozygosity rates on the y-axis.</p>
+filters. <code>check_het_and_miss</code> creates a scatter plot with the
+individuals' missingness rates on x-axis and their heterozygosity rates on
+the y-axis.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>check_het_and_miss</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>run.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>check_het_and_miss</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
+  <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>run.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>qcdir</th>
-      <td><p>[character] /path/to/directory/with/QC/results containing plink
-dataset. If run.check_het_and_miss is FALSE, it is assumed that plink
---missing and plink --het have been run and qcdir/alg.imiss and qcdir/alg.het
-are present. Users needs writing permission to qcdir.</p></td>
+      <th>indir</th>
+      <td><p>[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.</p></td>
     </tr>
     <tr>
-      <th>alg</th>
-      <td><p>[character] Prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam, alg.het and alg.imiss.</p></td>
+      <th>name</th>
+      <td><p>[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam, name.het and name.imiss.</p></td>
+    </tr>
+    <tr>
+      <th>qcdir</th>
+      <td><p>[character] /path/to/directory where name.het as returned by
+plink --het and name.imiss as returned by plink --missing will be saved. Per
+default qcdir=indir. If run.check_het_and_miss is FALSE, it is assumed that
+plink --missing and plink --het have been run and qcdir/name.imiss and
+qcdir/name.het are present. User needs writing permission to qcdir.</p></td>
     </tr>
     <tr>
       <th>imissTh</th>
-      <td><p>[double] Threshold for acceptable missing genotype rate in any
+      <td><p>[double] Threshold for acceptable missing genotype rate per
 individual; has to be proportion between (0,1)</p></td>
     </tr>
     <tr>
       <th>hetTh</th>
       <td><p>[double] Threshold for acceptable deviation from mean
-heterozygosity in any individual. Expressed as multiples of standard
+heterozygosity per individual. Expressed as multiples of standard
 deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 larger than 0.</p></td>
@@ -212,7 +220,7 @@ larger than 0.</p></td>
       <td><p>[logical] Should plink --missing and plink
 --het be run to determine genotype missingness and heterozygosity rates; if
 FALSE, it is assumed that plink --missing and plink --het have been run and
-qcdir/alg.imiss and qcdir/alg.het are present;
+qcdir/name.imiss and qcdir/name.het are present;
 <code>check_het_and_miss</code> will fail with missing file error otherwise.</p></td>
     </tr>
     <tr>
@@ -266,7 +274,7 @@ which can be shown by print(p_het_imiss).</p>
 If run.check_het_and_miss is TRUE, <code><a href='run_check_heterozygosity.html'>run_check_heterozygosity</a></code> and
 <code><a href='run_check_missingness.html'>run_check_missingness</a></code> are excuted; otherwise it is assumed
 that plink --missing and plink --het have been run externally and
-qcdir/alg.het and qcdir/alg.imiss exist.  <code>check_het_and_miss</code>
+qcdir/name.het and qcdir/name.imiss exist.  <code>check_het_and_miss</code>
 will fail with missing file error otherwise.</p>
 <p>For details on the output data.frame fail_imiss and fail_het, check the
 original description on the PLINK output format page:
@@ -277,9 +285,9 @@ original description on the PLINK output format page:
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
 <span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
-<span class='no'>alg</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
-<span class='no'>fail_het_miss</span> <span class='kw'>&lt;-</span> <span class='fu'>check_het_and_miss</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>,
-<span class='kw'>run.check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_het_and_miss(qcdir = qcdir, alg = alg, hetTh = hetTh,     imissTh = imissTh, interactive = interactive): plink --missing output file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.imiss does not exist.</span></div></pre>
+<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
+<span class='no'>fail_het_miss</span> <span class='kw'>&lt;-</span> <span class='fu'>check_het_and_miss</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
+<span class='kw'>run.check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

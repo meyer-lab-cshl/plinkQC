@@ -172,7 +172,7 @@ samples of the reference populations and the study population.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>evaluate_check_ancestry</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='no'>prefixMergedDataset</span>,
+    <pre class="usage"><span class='fu'>evaluate_check_ancestry</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='no'>prefixMergedDataset</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
   <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
   <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
@@ -182,21 +182,26 @@ samples of the reference populations and the study population.</p>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>qcdir</th>
-      <td><p>[character] /path/to/directory/with/QC/results containing
-prefixMergedDataset.eigenvec results as returned by plink --pca.
-User needs writing permission to qcdir.</p></td>
+      <th>indir</th>
+      <td><p>[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.</p></td>
     </tr>
     <tr>
-      <th>alg</th>
-      <td><p>[character] prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam.</p></td>
+      <th>name</th>
+      <td><p>[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.</p></td>
     </tr>
     <tr>
       <th>prefixMergedDataset</th>
       <td><p>[character] Prefix of merged dataset (study and
 reference samples) used in plink --pca, resulting in
-prefixMergedDataset.eigenvec</p></td>
+prefixMergedDataset.eigenvec.</p></td>
+    </tr>
+    <tr>
+      <th>qcdir</th>
+      <td><p>[character] /path/to/directory/with/QC/results containing
+prefixMergedDataset.eigenvec results as returned by plink --pca. Per default
+qcdir=indir.</p></td>
     </tr>
     <tr>
       <th>europeanTh</th>
@@ -283,17 +288,17 @@ print(p_ancestry).</p>
 
     <p>Both <code><a href='run_check_ancestry.html'>run_check_ancestry</a></code> and
 <code>evaluate_check_ancestry</code> can simply be invoked by
-<code><a href='check_ancestry.html'>check_ancestry</a></code>).</p>
+<code><a href='check_ancestry.html'>check_ancestry</a></code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
-<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
-<span class='no'>alg</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
-<span class='no'>fail_ancestry</span> <span class='kw'>&lt;-</span> <span class='fu'>evaluate_check_ancestry</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>,
-<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
-<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
-<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_ancestry(qcdir = qcdir, alg = alg, refSamplesFile = paste(qcdir,     "/HapMap_ID2Pop.txt", sep = ""), refColorsFile = paste(qcdir,     "/HapMap_PopColors.txt", sep = ""), prefixMergedDataset = "data.HapMapIII",     interactive = FALSE): plink family file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.fam does not exist.</span></div></pre>
+<span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
+<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
+<span class='no'>fail_ancestry</span> <span class='kw'>&lt;-</span> <span class='fu'>evaluate_check_ancestry</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
+<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>indir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>indir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

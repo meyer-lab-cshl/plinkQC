@@ -2,20 +2,24 @@
 % Please edit documentation in R/individualQC.R
 \name{check_relatedness}
 \alias{check_relatedness}
-\title{Identification of related individuals.}
+\title{Identification of related individuals}
 \usage{
-check_relatedness(qcdir, alg, highIBDTh = 0.1875, imissTh = 0.03,
-  run.check_relatedness = TRUE, interactive = FALSE, verbose = FALSE,
-  path2plink = NULL, showPlinkOutput = TRUE)
+check_relatedness(indir, name, qcdir = indir, highIBDTh = 0.1875,
+  imissTh = 0.03, run.check_relatedness = TRUE, interactive = FALSE,
+  verbose = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing plink
-dataset. If run.check_relatedness is FALSE, it is assumed that plink
---missing and plink --genome have been run and qcdir/alg.imiss and
-qcdir/alg.genome. Users needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] Prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam, alg.genome and alg.imiss.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam, name.genome and name.imiss.}
+
+\item{qcdir}{[character] /path/to/directory to where name.genome as returned
+by plink --genome will be saved.  Per default qcdir=indir. If
+run.check_relatedness is FALSE, it is assumed that plink
+--missing and plink --genome have been run and qcdir/name.imiss and
+qcdir/name.genome exist. User needs writing permission to qcdir.}
 
 \item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
 pair of individuals.}
@@ -25,8 +29,8 @@ individual; has to be proportion between (0,1)}
 
 \item{run.check_relatedness}{[logical] Should plink --genome be run to
 determine pairwise IBD of individuals; if FALSE, it is assumed that
-plink --genome and plink --missing have been run and qcdir/alg.imiss and
-qcdir/alg.genome are present;
+plink --genome and plink --missing have been run and qcdir/name.imiss and
+qcdir/name.genome are present;
 \code{\link{check_relatedness}} will fail with missing file error otherwise.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
@@ -72,7 +76,7 @@ SNPs. The degree of recent shared ancestry, i.e. the identity by descent
 (IBD) can be estimated from the genome-wide IBS. The proportion of IBD
 between two individuals is returned by plink --genome as PI_HAT.
 check_relatedness finds pairs of samples whose proportion of IBD is larger
-than the specified highIBDTh. Subsequently, for pairs of individual that do
+than the specified highIBDTh. Subsequently, for pairs of individuals that do
 not have additional relatives in the dataset, the individual with the greater
 genotype missingness rate is selected and returned as the individual failing
 the relatedness check. For more complex family structures, the unrelated
@@ -87,7 +91,7 @@ stratified by value of PI_HAT.
 \code{\link{run_check_relatedness}} and
 \code{\link{evaluate_check_relatedness}}. If run.check_relatedness is TRUE,
 \code{\link{run_check_relatedness}} is excuted; otherwise it is assumed that
-plink --genome has been run externally and qcdir/alg.genome exists.
+plink --genome has been run externally and qcdir/name.genome exists.
 \code{\link{check_relatedness}}  will fail with missing file error otherwise.
 
 For details on the output data.frame fail_high_IBD, check the original
@@ -97,7 +101,7 @@ description on the PLINK output format page:
 \examples{
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir,'extdata')
-alg <- 'data'
-relatednessQC <- check_relatedness(qcdir=qcdir, alg=alg, interactive=FALSE,
+name <- 'data'
+relatednessQC <- check_relatedness(indir=qcdir, name=name, interactive=FALSE,
 run.check_relatedness=FALSE)
 }

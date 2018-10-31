@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create plink dataset with samples and markers passing quality control — cleanData • plinkQC</title>
+<title>Create plink dataset with individuals and markers passing quality control — cleanData • plinkQC</title>
 
 <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
 
@@ -32,10 +32,12 @@
 
 
 
-<meta property="og:title" content="Create plink dataset with samples and markers passing quality control — cleanData" />
+<meta property="og:title" content="Create plink dataset with individuals and markers passing quality control — cleanData" />
 
-<meta property="og:description" content="Remove samples that fail per-sample QC and remove markers that fail
-per-marker QC." />
+<meta property="og:description" content="Individuals that fail per-individual QC and markers that fail
+per-marker QC are removed from indir/name.bim/.bed/.fam and a new, dataset
+with the remaining individuals and markers is created as
+qcdir/name.clean.bim/.bed/.fam." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,76 +138,53 @@ per-marker QC." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create plink dataset with samples and markers passing quality control</h1>
+    <h1>Create plink dataset with individuals and markers passing quality control</h1>
     <small class="dont-index">Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/R/applyQC.R'><code>R/applyQC.R</code></a></small>
     <div class="hidden name"><code>cleanData.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Remove samples that fail per-sample QC and remove markers that fail
-per-marker QC.</p>
+    <p>Individuals that fail per-individual QC and markers that fail
+per-marker QC are removed from indir/name.bim/.bed/.fam and a new, dataset
+with the remaining individuals and markers is created as
+qcdir/name.clean.bim/.bed/.fam.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>cleanData</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>lmissTh</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>hweTh</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>, <span class='kw'>macTh</span> <span class='kw'>=</span> <span class='fl'>20</span>,
-  <span class='kw'>mafTh</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>filterAncestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>filterRelated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>filterSex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>filterHeterozygosity</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>filterSampleMissingness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>filterSNPMissingness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>filterHWE</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>filterMAF</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>cleanData</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>filterSex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>filterHeterozygosity</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>filterSampleMissingness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>filterAncestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>filterRelated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>filterSNPMissingness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lmissTh</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>filterHWE</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>hweTh</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>, <span class='kw'>filterMAF</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>macTh</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>mafTh</span> <span class='kw'>=</span> <span class='fl'>0.01</span>,
+  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>indir</th>
+      <td><p>[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.</p></td>
+    </tr>
+    <tr>
       <th>qcdir</th>
-      <td><p>[character] /path/to/directory/with/QC/results containing
-alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-individuals that failed QC. User needs writing permission to qcdir.</p></td>
-    </tr>
-    <tr>
-      <th>alg</th>
-      <td><p>[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam.</p></td>
-    </tr>
-    <tr>
-      <th>lmissTh</th>
-      <td><p>[double] Threshold for acceptable variant missing rate across
-samples.</p></td>
-    </tr>
-    <tr>
-      <th>hweTh</th>
-      <td><p>[double] Significance threshold for deviation from HWE.</p></td>
-    </tr>
-    <tr>
-      <th>macTh</th>
-      <td><p>[double] Threshold for minor allele cut cut-off, if both mafTh
-and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples)</p></td>
-    </tr>
-    <tr>
-      <th>mafTh</th>
-      <td><p>[double] Threshold for minor allele frequency cut-off.</p></td>
-    </tr>
-    <tr>
-      <th>filterAncestry</th>
-      <td><p>[logical] Set to exclude samples that failed ancestry
-check (via <code><a href='check_ancestry.html'>check_ancestry</a></code> or <code><a href='perIndividualQC.html'>perIndividualQC</a></code>).
-Requires file qcdir/alg.fail-ancestry.IDs (automatically created by
-<code><a href='perIndividualQC.html'>perIndividualQC</a></code> if do.check_ancestry set to TRUE).</p></td>
-    </tr>
-    <tr>
-      <th>filterRelated</th>
-      <td><p>[logical] Set to exclude samples that failed relatedness
-check (via <code><a href='check_relatedness.html'>check_relatedness</a></code> or <code><a href='perIndividualQC.html'>perIndividualQC</a></code>).
-Requires file qcdir/alg.fail-IBD.IDs (automatically created by
-<code><a href='perIndividualQC.html'>perIndividualQC</a></code> if do.evaluate_check_relatedness set to TRUE).</p></td>
+      <td><p>[character] /path/to/directory where results will be written to.
+If <code><a href='perIndividualQC.html'>perIndividualQC</a></code> was conducted, this directory should be the
+same as qcdir specified in <code><a href='perIndividualQC.html'>perIndividualQC</a></code>, i.e. it contains
+name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+permission to qcdir. Per default, qcdir=indir.</p></td>
     </tr>
     <tr>
       <th>filterSex</th>
       <td><p>[logical] Set to exclude samples that failed the sex
 check (via <code><a href='check_sex.html'>check_sex</a></code> or <code><a href='perIndividualQC.html'>perIndividualQC</a></code>).
-Requires file qcdir/alg.fail-sexcheck.IDs (automatically created by
+Requires file qcdir/name.fail-sexcheck.IDs (automatically created by
 <code><a href='perIndividualQC.html'>perIndividualQC</a></code> if do.evaluate_check_sex set to TRUE).</p></td>
     </tr>
     <tr>
@@ -213,7 +192,7 @@ Requires file qcdir/alg.fail-sexcheck.IDs (automatically created by
       <td><p>[logical] Set to exclude samples that failed
 check for outlying heterozygosity rates (via
 <code><a href='check_het_and_miss.html'>check_het_and_miss</a></code> or
-<code><a href='perIndividualQC.html'>perIndividualQC</a></code>). Requires file qcdir/alg.fail-het.IDs
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code>). Requires file qcdir/name.fail-het.IDs
 (automatically created by <code><a href='perIndividualQC.html'>perIndividualQC</a></code> if
 do.evaluate_check_het_and_miss set to TRUE).</p></td>
     </tr>
@@ -222,9 +201,23 @@ do.evaluate_check_het_and_miss set to TRUE).</p></td>
       <td><p>[logical] Set to exclude samples that failed
 check for excessive missing genotype rates (via
 <code><a href='check_het_and_miss.html'>check_het_and_miss</a></code> or
-<code><a href='perIndividualQC.html'>perIndividualQC</a></code>). Requires file qcdir/alg.fail-imiss.IDs
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code>). Requires file qcdir/name.fail-imiss.IDs
 (automatically created by <code><a href='perIndividualQC.html'>perIndividualQC</a></code> if
 do.evaluate_check_het_and_miss set to TRUE).</p></td>
+    </tr>
+    <tr>
+      <th>filterAncestry</th>
+      <td><p>[logical] Set to exclude samples that failed ancestry
+check (via <code><a href='check_ancestry.html'>check_ancestry</a></code> or <code><a href='perIndividualQC.html'>perIndividualQC</a></code>).
+Requires file qcdir/name.fail-ancestry.IDs (automatically created by
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code> if do.check_ancestry set to TRUE).</p></td>
+    </tr>
+    <tr>
+      <th>filterRelated</th>
+      <td><p>[logical] Set to exclude samples that failed relatedness
+check (via <code><a href='check_relatedness.html'>check_relatedness</a></code> or <code><a href='perIndividualQC.html'>perIndividualQC</a></code>).
+Requires file qcdir/name.fail-IBD.IDs (automatically created by
+<code><a href='perIndividualQC.html'>perIndividualQC</a></code> if do.evaluate_check_relatedness set to TRUE).</p></td>
     </tr>
     <tr>
       <th>filterSNPMissingness</th>
@@ -234,10 +227,19 @@ excessive missing rates across samples (via
 lmissTh to be set.</p></td>
     </tr>
     <tr>
+      <th>lmissTh</th>
+      <td><p>[double] Threshold for acceptable variant missing rate across
+samples.</p></td>
+    </tr>
+    <tr>
       <th>filterHWE</th>
       <td><p>[logical] Set to exclude markers that fail HWE exact test
 (via <code><a href='check_hwe.html'>check_hwe</a></code> or <code><a href='perMarkerQC.html'>perMarkerQC</a></code>). Requires hweTh to
 be set.</p></td>
+    </tr>
+    <tr>
+      <th>hweTh</th>
+      <td><p>[double] Significance threshold for deviation from HWE.</p></td>
     </tr>
     <tr>
       <th>filterMAF</th>
@@ -246,10 +248,21 @@ freuqency or minor allele count threshold (via <code><a href='check_maf.html'>ch
 <code><a href='perMarkerQC.html'>perMarkerQC</a></code>). Requires mafTh or macTh to be set.</p></td>
     </tr>
     <tr>
+      <th>macTh</th>
+      <td><p>[double] Threshold for minor allele cut cut-off, if both mafTh
+and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).</p></td>
+    </tr>
+    <tr>
+      <th>mafTh</th>
+      <td><p>[double] Threshold for minor allele frequency cut-off.</p></td>
+    </tr>
+    <tr>
       <th>path2plink</th>
-      <td><p>[character] Absolute path to where external plink software
-<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found. If not provided,
-assumed that PATH set-up works and plink will be found by system("plink").</p></td>
+      <td><p>[character] Absolute path to directory where external plink
+software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
+plink should be accesible as path2plink/plink -h. If not
+provided, assumed that PATH set-up works and plink will be found by
+system("plink").</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -272,19 +285,25 @@ samples that fail the QC.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
-<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
-<span class='no'>alg</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
-<span class='no'>path2plink</span> <span class='kw'>&lt;-</span> <span class='st'>'/path/2/plink'</span>
+<span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
+<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>tempdir</span>()
+<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
+<span class='no'>path2plink</span> <span class='kw'>&lt;-</span> <span class='st'>'/path/to/plink'</span>
 <span class='co'># the following code is not run on package build, as the path2plink on the</span>
 <span class='co'># user system is not known.</span></div><span class='co'># NOT RUN {</span>
-<span class='co'># All checks</span>
-<span class='no'>ids_all</span> <span class='kw'>&lt;-</span> <span class='fu'>cleanData</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>, <span class='kw'>macTh</span><span class='kw'>=</span><span class='fl'>15</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>path2plink</span><span class='kw'>=</span><span class='no'>path2plink</span>, <span class='kw'>filterAncestry</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>filterRelated</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='co'># Run individual QC checks</span>
+<span class='no'>fail_individuals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='perIndividualQC.html'>perIndividualQC</a></span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
+<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
 
-<span class='co'># Only filter samples failing check sex and heterozygosity/missingness</span>
-<span class='no'>ids_sex_miss_het</span> <span class='kw'>&lt;-</span> <span class='fu'>cleanData</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>, <span class='kw'>macTh</span><span class='kw'>=</span><span class='fl'>15</span>,
-<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>path2plink</span><span class='kw'>=</span><span class='no'>path2plink</span>, <span class='kw'>filterAncestry</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>filterRelated</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='co'># Run marker QC checks</span>
+<span class='no'>fail_markers</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='perMarkerQC.html'>perMarkerQC</a></span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>)
+
+<span class='co'># Create new dataset of indiviudals and markers passing QC</span>
+<span class='no'>ids_all</span> <span class='kw'>&lt;-</span> <span class='fu'>cleanData</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>, <span class='kw'>macTh</span><span class='kw'>=</span><span class='fl'>15</span>,
+<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>path2plink</span><span class='kw'>=</span><span class='no'>path2plink</span>, <span class='kw'>filterAncestry</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
+<span class='kw'>filterRelated</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

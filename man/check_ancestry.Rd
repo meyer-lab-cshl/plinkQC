@@ -2,27 +2,33 @@
 % Please edit documentation in R/individualQC.R
 \name{check_ancestry}
 \alias{check_ancestry}
-\title{Identification of individuals of divergent ancestry.}
+\title{Identification of individuals of divergent ancestry}
 \usage{
-check_ancestry(qcdir, alg, prefixMergedDataset, europeanTh = 1.5,
-  refSamples = NULL, refColors = NULL, refSamplesFile = NULL,
-  refColorsFile = NULL, refSamplesIID = "IID", refSamplesPop = "Pop",
-  refColorsColor = "Color", refColorsPop = "Pop",
-  studyColor = "#2c7bb6", run.check_ancestry = TRUE,
-  interactive = FALSE, verbose = verbose, path2plink = NULL,
-  showPlinkOutput = TRUE)
+check_ancestry(indir, name, qcdir = indir, prefixMergedDataset,
+  europeanTh = 1.5, refSamples = NULL, refColors = NULL,
+  refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
+  refSamplesPop = "Pop", refColorsColor = "Color",
+  refColorsPop = "Pop", studyColor = "#2c7bb6",
+  run.check_ancestry = TRUE, interactive = FALSE, verbose = verbose,
+  path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing
-prefixMergedDataset.eigenvec results as returned by plink --pca.
-User needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{name}{[character] prefix of plink files, i.e. name.bed, name.bim,
+name.fam.}
+
+\item{qcdir}{[character] /path/to/directory where
+prefixMergedDataset.eigenvec results as returned by plink --pca should be
+saved. Per default qcdir=indir. If run.check_ancestry is FALSE, it is assumed
+that plink --pca prefixMergedDataset has been run and
+qcdir/prefixMergedDataset.eigenvec exists.User needs writing permission to
+qcdir.}
 
 \item{prefixMergedDataset}{[character] Prefix of merged dataset (study and
 reference samples) used in plink --pca, resulting in
-prefixMergedDataset.eigenvec}
+prefixMergedDataset.eigenvec.}
 
 \item{europeanTh}{[double] Scaling factor of radius to be drawn around center
 of European reference samples, with study samples inside this radius
@@ -65,8 +71,7 @@ refColors/refColorsFile}
 \item{refColorsPop}{[character] Column name of reference sample population
 IDs in refColors/refColorsFile.}
 
-\item{studyColor}{[character] Colour to be used for study population if plot
-is TRUE.}
+\item{studyColor}{[character] Colour to be used for study population.}
 
 \item{run.check_ancestry}{[logical] Should plink --pca be run to
 determine principal components of merged dataset; if FALSE, it is assumed
@@ -116,8 +121,8 @@ for samples of the reference populations and the study population.
 \examples{
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
-fail_ancestry <- check_ancestry(qcdir=qcdir, alg=alg,
+name <- "data"
+fail_ancestry <- check_ancestry(indir=qcdir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE,

@@ -4,16 +4,16 @@
 \alias{evaluate_check_het_and_miss}
 \title{Evaluate results from PLINK missing genotype and heterozygosity rate check.}
 \usage{
-evaluate_check_het_and_miss(qcdir, alg, imissTh = 0.03, hetTh = 3,
+evaluate_check_het_and_miss(qcdir, name, imissTh = 0.03, hetTh = 3,
   interactive = FALSE)
 }
 \arguments{
 \item{qcdir}{[character] path/to/directory/with/QC/results containing
-alg.imiss and alg.het results as returned by plink --missing and plink
---het. Users needs writing permission to qcdir.}
+name.imiss and name.het results as returned by plink --missing and plink
+--het.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam, alg.het and alg.imiss.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam, name.het and name.imiss.}
 
 \item{imissTh}{[double] Threshold for acceptable missing genotype rate in any
 individual; has to be proportion between (0,1)}
@@ -59,8 +59,9 @@ Mean heterozygosity can differ between populations and SNP genotyping panels.
 Within a population and genotyping panel, a reduced heterozygosity rate can
 indicate inbreeding - these individuals will then be returned by
 check_relatedness as individuals that fail the relatedness filters.
-check_heterozygosity_and_missingness creates a scatter plot with the samples'
-missingness rates on x-axis and their heterozygosity rates on the y-axis.
+\code{evaluate_check_het_and_miss} creates a scatter plot with the
+individuals' missingness rates on x-axis and their heterozygosity rates on
+the y-axis.
 }
 \details{
 All, \code{\link{run_check_heterozygosity}},
@@ -76,7 +77,7 @@ original description on the PLINK output format page:
 \examples{
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
-fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, alg=alg,
+name <- "data"
+fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
 interactive=FALSE)
 }

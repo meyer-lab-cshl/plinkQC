@@ -4,23 +4,18 @@
 \alias{evaluate_check_sex}
 \title{Evaluate results from PLINK sex check.}
 \usage{
-evaluate_check_sex(qcdir, alg, externalSex = NULL, maleTh = 0.8,
-  femaleTh = 0.2, interactive = FALSE, fixMixup = FALSE,
+evaluate_check_sex(qcdir, name, maleTh = 0.8, femaleTh = 0.2,
+  externalSex = NULL, fixMixup = FALSE, indir = qcdir,
   externalFemale = "F", externalMale = "M", externalSexSex = "Sex",
   externalSexID = "IID", verbose = FALSE, path2plink = NULL,
-  showPlinkOutput = TRUE)
+  showPlinkOutput = TRUE, interactive = FALSE)
 }
 \arguments{
-\item{qcdir}{[character] path/to/directory/with/QC/results containing
-alg.sexcheck results as returned by plink --check-sex. Users needs writing
-permission to qcdir.}
+\item{qcdir}{[character] /path/to/directory containing name.sexcheck as
+returned by plink --check-sex.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam and alg.sexcheck.}
-
-\item{externalSex}{[data.frame, optional] with sample IDs [externalSexID] and
-sex [externalSexSex] to double check if external and PEDSEX data (often
-processed at different centers) match.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam and name.sexcheck.}
 
 \item{maleTh}{[double] Threshold of X-chromosomal heterozygosity rate for
 males.}
@@ -28,15 +23,17 @@ males.}
 \item{femaleTh}{[double] Threshold of X-chromosomal heterozygosity rate for
 females.}
 
-\item{interactive}{[logical] Should plots be shown interactively? When
-choosing this option, make sure you have X-forwarding/graphical interface
-available for interactive plotting. Alternatively, set interactive=FALSE and
-save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
-other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().}
+\item{externalSex}{[data.frame, optional] with sample IDs [externalSexID] and
+sex [externalSexSex] to double check if external and PEDSEX data (often
+processed at different centers) match.}
 
 \item{fixMixup}{[logical] Should PEDSEX of individuals with mismatch between
 PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
-change the alg.bim/.bed/.fam files!}
+change the name.bim/.bed/.fam files!}
+
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files; only required of fixMixup==TRUE. User
+needs writing permission to indir.}
 
 \item{externalFemale}{[integer/character] Identifier for 'female' in
 externalSex.}
@@ -59,6 +56,12 @@ system("plink").}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
+
+\item{interactive}{[logical] Should plots be shown interactively? When
+choosing this option, make sure you have X-forwarding/graphical interface
+available for interactive plotting. Alternatively, set interactive=FALSE and
+save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
+other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().}
 }
 \value{
 named list with i) fail_sex: dataframe with FID, IID, PEDSEX, SNPSEX
@@ -66,13 +69,13 @@ and Sex (if externalSex was provided) of individuals failing sex check,
 ii) mixup: dataframe with FID, IID, PEDSEX, SNPSEX and Sex (if externalSex
 was provided) of individuals whose PEDSEX != Sex and Sex == SNPSEX and iii)
 p_sexcheck, a ggplot2-object 'containing' a scatter plot of the X-chromosomal
-heterozygosity (SNPSEX) of the sample split by their (PEDSEX), which can be
-shown by print(p_sexcheck).
+heterozygosity (SNPSEX) of the individuals split by their (PEDSEX), which can
+be shown by print(p_sexcheck).
 }
 \description{
 Evaluates and depicts results from plink --check-sex (via
-\code{\link{run_check_sex}} or externally conducted sex check.
-Takes file qcdir/alg.sexcheck and returns IIDs for samples whose
+\code{\link{run_check_sex}} or externally conducted sex check).
+Takes file qcdir/name.sexcheck and returns IIDs for samples whose
 SNPSEX != PEDSEX (where the SNPSEX is determined by the heterozygosity rate
 across X-chromosomal variants).
 Mismatching SNPSEX and PEDSEX IDs can indicate plating errors, sample-mixup
@@ -81,14 +84,14 @@ likely to fail other QC steps as well.
 Optionally, an extra data.frame (externalSex) with sample IDs and sex can be
 provided to double check if external and PEDSEX data (often processed at
 different centers) match. If a mismatch between PEDSEX and SNPSEX was
-detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be
+detected while SNPSEX == Sex, PEDSEX of these individuals can optionally be
 updated (fixMixup=TRUE).
-check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
-split by their (PEDSEX).
+\code{evaluate_check_sex} depicts the X-chromosomal heterozygosity (SNPSEX)
+of the samples split by their (PEDSEX).
 }
 \details{
 Both \code{\link{run_check_sex}} and \code{\link{evaluate_check_sex}} can
-simply be invoked by \code{\link{check_sex}}).
+simply be invoked by \code{\link{check_sex}}.
 
 For details on the output data.frame fail_sex, check the original
 description on the PLINK output format page:
@@ -97,7 +100,7 @@ description on the PLINK output format page:
 \examples{
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
-fail_sex <- evaluate_check_sex(qcdir=qcdir, alg=alg, interactive=FALSE,
+name <- "data"
+fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
 verbose=FALSE)
 }

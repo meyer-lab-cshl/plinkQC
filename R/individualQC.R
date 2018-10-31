@@ -5,19 +5,20 @@
 #' to their SNP sex, their relatedness to other study individuals and their
 #' genetic ancestry.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing the
-#' basic data files alg.bim, alg.bed, alg.fam files. In addition, if
-#' do.evaluate_[analysis] is set to TRUE and do.run_[analysis] is FALSE,
-#' it expects the analysis-specific plink output
-#' files in qcdir i.e. do.check_sex expects alg.sexcheck,
-#' do.evaluate_check_het_and_miss expects alg.het and alg.imiss,
-#' do.evauluate_check_relatedness expects alg.genome and alg.imiss and
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory where results will be saved.
+#' Per default, qcdir=indir. If do.evaluate_[analysis] is set to TRUE and
+#' do.run_[analysis] is FALSE, \code{perIndividualQC} expects the
+#' analysis-specific plink output files in qcdir i.e. do.check_sex expects
+#' name.sexcheck, do.evaluate_check_het_and_miss expects name.het and name.imiss,
+#' do.evauluate_check_relatedness expects name.genome and name.imiss and
 #' do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
-#' are not present \code{perIndividualQC} will fail with missing file error
+#' are not present \code{perIndividualQC} will fail with missing file error.
 #' Setting do.run_[analysis] TRUE will execute the checks and create the
 #' required files. User needs writing permission to qcdir.
-#' @param alg [character] Prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param dont.check_sex [logical] If TRUE, no sex check will be conducted;
 #' short for do.run_check_sex=FALSE and do.evaluate_check_sex=FALSE.
 #' Takes precendence over do.run_check_sex and do.evaluate_check_sex.
@@ -37,7 +38,8 @@
 #' do.run_check_ancestry and do.evaluate_check_ancestry.
 #' @param do.run_check_sex [logical] If TRUE, run \code{\link{run_check_sex}}
 #' @param do.run_check_het_and_miss [logical] If TRUE, run
-#' \code{\link{run_check_heterozygosity}} and \code{\link{run_check_missingness}}
+#' \code{\link{run_check_heterozygosity}} and
+#' \code{\link{run_check_missingness}}
 #' @param do.run_check_relatedness [logical] If TRUE, run
 #' \code{\link{run_check_relatedness}}.
 #' @param do.run_check_ancestry [logical] If TRUE, run
@@ -54,9 +56,6 @@
 #' males.
 #' @param femaleTh [double] Threshold of X-chromosomal heterozygosity rate for
 #' females.
-#' @param fixMixup [logical] Should PEDSEX of individuals with mismatch between
-#' PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
-#' change the alg.bim/.bed/.fam files!
 #' @param externalSex [data.frame, optional] Dataframe with sample IDs
 #' [externalSexID] and sex [externalSexSex] to double check if external and
 #' PEDSEX data (often processed at different centers) match.
@@ -67,10 +66,13 @@
 #' information in externalSex.
 #' @param externalSexID [character] Column identifier for column containing ID
 #' information in externalSex.
-#' @param imissTh [double] Threshold for acceptable missing genotype rate in any
-#' individual
+#' @param fixMixup [logical] Should PEDSEX of individuals with mismatch between
+#' PEDSEX and Sex while Sex==SNPSEX automatically corrected: this will directly
+#' change the name.bim/.bed/.fam files!
+#' @param imissTh [double] Threshold for acceptable missing genotype rate per
+#' individual.
 #' @param hetTh [double] Threshold for acceptable deviation from mean
-#' heterozygosity in any individual. Expressed as multiples of standard
+#' heterozygosity per individual. Expressed as multiples of standard
 #' deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 #' hetTh*sd(het) will be returned as failing heterozygosity check.
 #' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
@@ -110,8 +112,7 @@
 #' refColors/refColorsFile
 #' @param refColorsPop [character] Column name of reference sample population
 #' IDs in refColors/refColorsFile.
-#' @param studyColor [character] Color to be used for study population if plot
-#' is TRUE.
+#' @param studyColor [character] Color to be used for study population.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink/plink -h. If not
@@ -158,29 +159,33 @@
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
+#' indir <- file.path(package.dir, 'extdata')
+#' qcdir <- tempdir()
+#' name <- "data"
 #' # All quality control checks
 #' # In this examples, run_check* already conducted and outcome files present
 #' # in qcdir, hence dont.check_* all set to FALSE
-#' fail_individuals <- perIndividualQC(qcdir=qcdir, alg=alg,
+#' \dontrun{
+#' fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 #' do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
 #' do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
+#'
 #' # Only check sex and missingness/heterozygosity
-#' fail_sex_het_miss <- perIndividualQC(qcdir=qcdir, alg=alg,
+#' fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 #' dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
 #' interactive=FALSE, verbose=FALSE, do.run_check_het_and_miss=FALSE,
 #' do.run_check_sex=FALSE)
-perIndividualQC <- function(qcdir, alg,
+#' }
+perIndividualQC <- function(indir, name, qcdir=indir,
                             dont.check_sex=FALSE,
                             do.run_check_sex=TRUE, do.evaluate_check_sex=TRUE,
-                            maleTh=0.8, femaleTh=0.2, fixMixup=FALSE,
+                            maleTh=0.8, femaleTh=0.2,
                             externalSex=NULL, externalMale="M",
                             externalSexSex="Sex", externalSexID="IID",
-                            externalFemale="F",
+                            externalFemale="F", fixMixup=FALSE,
                             dont.check_het_and_miss=FALSE,
                             do.run_check_het_and_miss=TRUE,
                             do.evaluate_check_het_and_miss=TRUE,
@@ -210,9 +215,11 @@ perIndividualQC <- function(qcdir, alg,
     p_relatedness <- NULL
     p_ancestry <- NULL
 
+    prefix <- paste(qcdir, "/", name, sep="")
     if (!dont.check_sex) {
         if (do.run_check_sex) {
-            run <- run_check_sex(qcdir=qcdir, alg=alg, path2plink=path2plink,
+            run <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
+                                 path2plink=path2plink,
                                  showPlinkOutput=showPlinkOutput,
                                  verbose=verbose)
         }
@@ -221,24 +228,26 @@ perIndividualQC <- function(qcdir, alg,
                 message("Identification of individuals with discordant sex ",
                         "information")
             }
-            fail_sex <- evaluate_check_sex(qcdir=qcdir, alg=alg, maleTh=maleTh,
-                                     femaleTh=femaleTh, externalSex=externalSex,
-                                     externalMale=externalMale,
-                                     externalFemale=externalFemale,
-                                     externalSexSex=externalSexSex,
-                                     externalSexID=externalSexID,
-                                     verbose=verbose, path2plink=path2plink,
-                                     showPlinkOutput=showPlinkOutput,
-                                     fixMixup=fixMixup, interactive=FALSE)
+            fail_sex <- evaluate_check_sex(qcdir=qcdir, indir=indir, name=name,
+                                           maleTh=maleTh, femaleTh=femaleTh,
+                                           externalSex=externalSex,
+                                           externalMale=externalMale,
+                                           externalFemale=externalFemale,
+                                           externalSexSex=externalSexSex,
+                                           externalSexID=externalSexID,
+                                           verbose=verbose,
+                                           path2plink=path2plink,
+                                           showPlinkOutput=showPlinkOutput,
+                                           fixMixup=fixMixup, interactive=FALSE)
             if (!is.null(fail_sex$fail_sex)) {
                 write.table(fail_sex$fail_sex[,1:2],
-                            file=paste(qcdir,"/",alg, ".fail-sexcheck.IDs",
+                            file=paste(prefix, ".fail-sexcheck.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
             if (!is.null(fail_sex$mixup)) {
                 write.table(fail_sex$mixup[,1:2],
-                            file=paste(qcdir,"/",alg, ".sexcheck_mixup.IDs",
+                            file=paste(prefix, ".sexcheck_mixup.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
@@ -247,11 +256,12 @@ perIndividualQC <- function(qcdir, alg,
     }
     if (!dont.check_het_and_miss) {
         if (do.run_check_het_and_miss) {
-            run_miss <- run_check_missingness(qcdir=qcdir, alg=alg,
+            run_miss <- run_check_missingness(qcdir=qcdir, indir=indir, name=name,
                                               path2plink=path2plink,
                                               showPlinkOutput=showPlinkOutput,
                                               verbose=verbose)
-            run_het <- run_check_heterozygosity(qcdir=qcdir, alg=alg,
+            run_het <- run_check_heterozygosity(qcdir=qcdir, indir=indir,
+                                                name=name,
                                                 path2plink=path2plink,
                                                 showPlinkOutput=showPlinkOutput,
                                                 verbose=verbose)
@@ -262,19 +272,19 @@ perIndividualQC <- function(qcdir, alg,
                         "genotype or heterozygosity rates")
             }
             fail_het_imiss <-
-                evaluate_check_het_and_miss(qcdir=qcdir, alg=alg,
+                evaluate_check_het_and_miss(qcdir=qcdir, name=name,
                                             imissTh=imissTh,
                                             hetTh=hetTh,
                                             interactive=FALSE)
             if (!is.null(fail_het_imiss$fail_imiss)) {
                 write.table(fail_het_imiss$fail_imiss[,1:2],
-                            file=paste(qcdir, "/", alg, ".fail-imiss.IDs",
+                            file=paste(prefix, ".fail-imiss.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
             if (!is.null(fail_het_imiss$fail_het)) {
                 write.table(fail_het_imiss$fail_het[,1:2],
-                            file=paste(qcdir, "/", alg, ".fail-het.IDs",
+                            file=paste(prefix, ".fail-het.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
@@ -283,20 +293,20 @@ perIndividualQC <- function(qcdir, alg,
     }
     if (!dont.check_relatedness) {
         if (do.run_check_relatedness) {
-            run <- run_check_relatedness(qcdir=qcdir, alg=alg,
+            run <- run_check_relatedness(qcdir=qcdir, indir=indir, name=name,
                                           path2plink=path2plink,
                                           showPlinkOutput=showPlinkOutput,
                                           verbose=verbose)
         }
         if (do.evaluate_check_relatedness) {
             if (verbose) message("Identification of related individuals")
-            fail_relatedness <- evaluate_check_relatedness(qcdir=qcdir, alg=alg,
+            fail_relatedness <- evaluate_check_relatedness(qcdir=qcdir, name=name,
                                                   imissTh=imissTh,
                                                   highIBDTh=highIBDTh,
                                                   interactive=FALSE)
             if (!is.null(fail_relatedness$failIDs)) {
                write.table(fail_relatedness$failIDs,
-                           file=paste(qcdir,"/", alg,".fail-IBD.IDs", sep=""),
+                           file=paste(prefix, ".fail-IBD.IDs", sep=""),
                            row.names=FALSE, quote=FALSE, col.names=TRUE,
                            sep="\t")
             }
@@ -305,7 +315,7 @@ perIndividualQC <- function(qcdir, alg,
     }
     if (!dont.check_ancestry) {
         if (do.run_check_ancestry) {
-            run <- run_check_ancestry(qcdir=qcdir,
+            run <- run_check_ancestry(qcdir=qcdir, indir=indir,
                                       prefixMergedDataset=prefixMergedDataset,
                                       path2plink=path2plink,
                                       showPlinkOutput=showPlinkOutput,
@@ -315,23 +325,30 @@ perIndividualQC <- function(qcdir, alg,
             if (verbose) {
                 message("Identification of individuals of divergent ancestry")
             }
-            fail_ancestry <- evaluate_check_ancestry(qcdir=qcdir, alg=alg,
-                                            prefixMergedDataset=
-                                                prefixMergedDataset,
-                                            europeanTh=europeanTh,
-                                            refSamples=refSamples,
-                                            refColors=refColors,
-                                            refSamplesFile=refSamplesFile,
-                                            refColorsFile=refColorsFile,
-                                            refSamplesIID=refSamplesIID,
-                                            refSamplesPop=refSamplesPop,
-                                            refColorsColor=refColorsColor,
-                                            refColorsPop=refColorsPop,
-                                            studyColor=studyColor,
-                                            interactive=FALSE)
+            fail_ancestry <- evaluate_check_ancestry(qcdir=qcdir, indir=indir,
+                                                     name=name,
+                                                     prefixMergedDataset=
+                                                        prefixMergedDataset,
+                                                     europeanTh=europeanTh,
+                                                     refSamples=refSamples,
+                                                     refColors=refColors,
+                                                     refSamplesFile=
+                                                         refSamplesFile,
+                                                     refColorsFile=
+                                                         refColorsFile,
+                                                     refSamplesIID=
+                                                         refSamplesIID,
+                                                     refSamplesPop=
+                                                         refSamplesPop,
+                                                     refColorsColor=
+                                                         refColorsColor,
+                                                     refColorsPop=
+                                                         refColorsPop,
+                                                     studyColor=studyColor,
+                                                     interactive=FALSE)
             if (!is.null(fail_ancestry$fail_ancestry)) {
                 write.table(fail_ancestry$fail_ancestry,
-                            file=paste(qcdir, "/",alg,".fail-ancestry.IDs",
+                            file=paste(prefix, ".fail-ancestry.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
@@ -346,11 +363,11 @@ perIndividualQC <- function(qcdir, alg,
                       mismatched_sex=as.vector(fail_sex$fail_sex$IID),
                       ancestry=as.vector(fail_ancestry$fail_ancestry$IID))
 
-    if(verbose) message(paste("Combine fail IDs into ", qcdir, "/", alg,
+    if(verbose) message(paste("Combine fail IDs into ", prefix,
                                ".fail.IDs", sep=""))
     uniqueFails <- unique(unlist(fail_list))
     write.table(cbind(uniqueFails, uniqueFails),
-                        file=paste(qcdir, "/",alg,".fail.IDs",sep=""),
+                        file=paste(prefix, ".fail.IDs",sep=""),
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
 
     plots_sampleQC <- list(p_sexcheck, p_het_imiss, p_relatedness, p_ancestry)
@@ -371,9 +388,10 @@ perIndividualQC <- function(qcdir, alg,
 
 #' Overview of per sample QC
 #'
-#' overviewperIndividualQC depicts results of perIndividualQC as intersection
-#' plot (via \code{\link[UpSetR]{upset}}) and returns dataframes indicating
-#' which QC checks any sample failed or passed.
+#' \code{overviewPerIndividualQC} depicts results of
+#' \code{\link{perIndividualQC}} as intersection plots
+#' (via \code{\link[UpSetR]{upset}}) and returns dataframes indicating
+#' which QC checks individuals failed or passed.
 #'
 #'
 #' @param results_perIndividualQC [list] Output of \code{\link{perIndividualQC}}
@@ -406,15 +424,19 @@ perIndividualQC <- function(qcdir, alg,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
-#' fail_individuals <- perIndividualQC(qcdir=qcdir, alg=alg,
+#' indir <- file.path(package.dir, 'extdata')
+#' qcdir <- tempdir()
+#' name <- "data"
+#' \dontrun{
+#' fail_individuals <- perIndividualQC(qcdir=qcdir, indir=indir, name=name,
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 #' do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
 #' do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
+#'
 #' overview <- overviewPerIndividualQC(fail_individuals)
+#' }
 
 overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) {
     list2counts <- function(element, all_names) {
@@ -497,7 +519,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' Identification of individuals with discordant sex information
 #'
 #' Runs and evaluates results from plink --check-sex.
-#' \code{\link{check_sex}} returns IIDs for samples whose SNPSEX != PEDSEX
+#' \code{\link{check_sex}} returns IIDs for individuals whose SNPSEX != PEDSEX
 #' (where the SNPSEX is determined by the heterozygosity rate across
 #' X-chromosomal variants).
 #' Mismatching SNPSEX and PEDSEX IDs can indicate plating errors, sample-mixup
@@ -506,38 +528,40 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' Optionally, an extra data.frame (externalSex) with sample IDs and sex can be
 #' provided to double check if external and PEDSEX data (often processed at
 #' different centers) match. If a mismatch between PEDSEX and SNPSEX was
-#' detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be
+#' detected, while SNPSEX == Sex, PEDSEX of these individuals can optionally be
 #' updated (fixMixup=TRUE).
-#' check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
-#' split by their (PEDSEX).
+#' \code{\link{check_sex}} depicts the X-chromosomal heterozygosity (SNPSEX) of
+#' the individuals split by their (PEDSEX).
 #'
 #' \code{\link{check_sex}} wraps around \code{\link{run_check_sex}}  and
 #' \code{\link{evaluate_check_sex}} . If run.check_sex is TRUE,
 #' \code{\link{run_check_sex} } is excuted; otherwise it is assumed that plink
-#' --check-sex has been run externally and qcdir/alg.sexcheck exists.
+#' --check-sex has been run externally and qcdir/name.sexcheck exists.
 #' \code{\link{check_sex}}  will fail with missing file error otherwise.
 #'
 #' For details on the output data.frame fail_sex, check the original
 #' description on the PLINK output format page:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#sexcheck}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing plink
-#' dataset. If run.check_sex is FALSE, it is assumed that plink
-#' --check-sex has been run and qcdir/alg.sexcheck is present. Users needs
-#' writing permission to qcdir.
-#' @param alg [character] Prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam and alg.sexcheck.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory to save name.sexcheck as returned
+#' by plink --check-sex. Per default qcdir=indir. If run.check_sex is FALSE, it
+#' is assumed that plink --check-sex has been run and qcdir/name.sexcheck is
+#' present. User needs writing permission to qcdir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam and name.sexcheck.
 #' @param maleTh [double] Threshold of X-chromosomal heterozygosity rate for
 #' males.
 #' @param femaleTh [double] Threshold of X-chromosomal heterozygosity rate for
 #' females.
 #' @param run.check_sex [logical] Should plink --check-sex be run? if set to
 #' FALSE, it is assumed that plink --check-sex has been run and
-#' qcdir/alg.sexcheck is present; \code{\link{check_sex}}  will fail with
+#' qcdir/name.sexcheck is present; \code{\link{check_sex}}  will fail with
 #' missing file error otherwise.
 #' @param fixMixup [logical] Should PEDSEX of individuals with mismatch between
-#' PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
-#' change the alg.bim/.bed/.fam files!
+#' PEDSEX and Sex while Sex==SNPSEX automatically corrected: this will directly
+#' change the name.bim/.bed/.fam files!
 #' @param externalSex [data.frame, optional] Dataframe with sample IDs
 #' [externalSexID] and sex [externalSexSex] to double check if external and
 #' PEDSEX data (often processed at different centers) match.
@@ -572,23 +596,27 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' @examples
 #' package.dir <- find.package('plinkQC')
 #' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
-#' fail_sex <- check_sex(qcdir=qcdir, alg=alg, run.check_sex=FALSE,
+#' name <- "data"
+#' fail_sex <- check_sex(indir=qcdir, name=name, run.check_sex=FALSE,
 #' interactive=FALSE, verbose=FALSE)
-check_sex <- function(qcdir, alg, maleTh=0.8, femaleTh=0.2, run.check_sex=TRUE,
-                      fixMixup=FALSE, externalSex=NULL,
+check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
+                      run.check_sex=TRUE,
+                      externalSex=NULL,
                       externalFemale="F", externalMale="M",
                       externalSexSex="Sex", externalSexID="IID",
+                      fixMixup=FALSE,
                       interactive=FALSE, verbose=FALSE,
                       path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_sex) {
-        run_sex <- run_check_sex(qcdir=qcdir, alg=alg, verbose=verbose,
+        run_sex <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
+                                 verbose=verbose,
                                  path2plink=path2plink,
                                  showPlinkOutput=showPlinkOutput)
     }
-    fail <- evaluate_check_sex(qcdir=qcdir, alg=alg, externalSex=externalSex,
+    fail <- evaluate_check_sex(qcdir=qcdir, name=name, externalSex=externalSex,
                                maleTh=maleTh, femaleTh=femaleTh,
                                interactive=interactive, fixMixup=fixMixup,
+                               indir=indir,
                                externalFemale=externalFemale,
                                externalMale=externalMale,
                                externalSexSex=externalSexSex,
@@ -614,8 +642,9 @@ check_sex <- function(qcdir, alg, maleTh=0.8, femaleTh=0.2, run.check_sex=TRUE,
 #' Within a population and genotyping panel, a reduced heterozygosity rate can
 #' indicate inbreeding - these individuals will then likely be returned by
 #' \code{\link{check_relatedness}} as individuals that fail the relatedness
-#' filters. \code{check_het_and_miss} creates a scatter plot with the samples'
-#' missingness rates on x-axis and their heterozygosity rates on the y-axis.
+#' filters. \code{check_het_and_miss} creates a scatter plot with the
+#' individuals' missingness rates on x-axis and their heterozygosity rates on
+#' the y-axis.
 #'
 #' \code{\link{check_het_and_miss}} wraps around
 #' \code{\link{run_check_missingness}},
@@ -624,7 +653,7 @@ check_sex <- function(qcdir, alg, maleTh=0.8, femaleTh=0.2, run.check_sex=TRUE,
 #' If run.check_het_and_miss is TRUE, \code{\link{run_check_heterozygosity}} and
 #' \code{\link{run_check_missingness}} are excuted; otherwise it is assumed
 #' that plink --missing and plink --het have been run externally and
-#' qcdir/alg.het and qcdir/alg.imiss exist.  \code{\link{check_het_and_miss}}
+#' qcdir/name.het and qcdir/name.imiss exist.  \code{\link{check_het_and_miss}}
 #' will fail with missing file error otherwise.
 #'
 #' For details on the output data.frame fail_imiss and fail_het, check the
@@ -632,21 +661,24 @@ check_sex <- function(qcdir, alg, maleTh=0.8, femaleTh=0.2, run.check_sex=TRUE,
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#imiss} and
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#het}
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing plink
-#' dataset. If run.check_het_and_miss is FALSE, it is assumed that plink
-#' --missing and plink --het have been run and qcdir/alg.imiss and qcdir/alg.het
-#' are present. Users needs writing permission to qcdir.
-#' @param alg [character] Prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam, alg.het and alg.imiss.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory where name.het as returned by
+#' plink --het and name.imiss as returned by plink --missing will be saved. Per
+#' default qcdir=indir. If run.check_het_and_miss is FALSE, it is assumed that
+#' plink --missing and plink --het have been run and qcdir/name.imiss and
+#' qcdir/name.het are present. User needs writing permission to qcdir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam, name.het and name.imiss.
 #' @param run.check_het_and_miss [logical] Should plink --missing and plink
 #' --het be run to determine genotype missingness and heterozygosity rates; if
 #' FALSE, it is assumed that plink --missing and plink --het have been run and
-#' qcdir/alg.imiss and qcdir/alg.het are present;
+#' qcdir/name.imiss and qcdir/name.het are present;
 #' \code{\link{check_het_and_miss}} will fail with missing file error otherwise.
-#' @param imissTh [double] Threshold for acceptable missing genotype rate in any
+#' @param imissTh [double] Threshold for acceptable missing genotype rate per
 #' individual; has to be proportion between (0,1)
 #' @param hetTh [double] Threshold for acceptable deviation from mean
-#' heterozygosity in any individual. Expressed as multiples of standard
+#' heterozygosity per individual. Expressed as multiples of standard
 #' deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 #' hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 #' larger than 0.
@@ -679,28 +711,29 @@ check_sex <- function(qcdir, alg, maleTh=0.8, femaleTh=0.2, run.check_sex=TRUE,
 #' @examples
 #' package.dir <- find.package('plinkQC')
 #' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
-#' fail_het_miss <- check_het_and_miss(qcdir=qcdir, alg=alg,
+#' name <- "data"
+#' fail_het_miss <- check_het_and_miss(indir=qcdir, name=name,
 #' run.check_het_and_miss=FALSE, interactive=FALSE)
-check_het_and_miss <- function(qcdir, alg, imissTh=0.03, hetTh=3,
+check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                run.check_het_and_miss=TRUE,
                                interactive=FALSE, verbose=FALSE,
                                path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_het_and_miss) {
-        run_het <- run_check_heterozygosity(qcdir=qcdir, alg=alg,
+        run_het <- run_check_heterozygosity(indir=indir,qcdir=qcdir, name=name,
                                             verbose=verbose,
                                             path2plink=path2plink,
                                             showPlinkOutput=showPlinkOutput)
-        run_miss <- run_check_missingness(qcdir=qcdir, alg=alg, verbose=verbose,
+        run_miss <- run_check_missingness(indir=indir, qcdir=qcdir, name=name,
+                                          verbose=verbose,
                                           path2plink=path2plink,
                                           showPlinkOutput=showPlinkOutput)
     }
-    fail <- evaluate_check_het_and_miss(qcdir=qcdir, alg=alg,  hetTh=hetTh,
+    fail <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,  hetTh=hetTh,
                                  imissTh=imissTh, interactive=interactive)
     return(fail)
 }
 
-#' Identification of related individuals.
+#' Identification of related individuals
 #'
 #' Runs and evaluates results from plink --genome.
 #' plink --genome calculates identity by state (IBS) for each pair of
@@ -709,7 +742,7 @@ check_het_and_miss <- function(qcdir, alg, imissTh=0.03, hetTh=3,
 #' (IBD) can be estimated from the genome-wide IBS. The proportion of IBD
 #' between two individuals is returned by plink --genome as PI_HAT.
 #' check_relatedness finds pairs of samples whose proportion of IBD is larger
-#' than the specified highIBDTh. Subsequently, for pairs of individual that do
+#' than the specified highIBDTh. Subsequently, for pairs of individuals that do
 #' not have additional relatives in the dataset, the individual with the greater
 #' genotype missingness rate is selected and returned as the individual failing
 #' the relatedness check. For more complex family structures, the unrelated
@@ -723,23 +756,26 @@ check_het_and_miss <- function(qcdir, alg, imissTh=0.03, hetTh=3,
 #' \code{\link{run_check_relatedness}} and
 #' \code{\link{evaluate_check_relatedness}}. If run.check_relatedness is TRUE,
 #' \code{\link{run_check_relatedness}} is excuted; otherwise it is assumed that
-#' plink --genome has been run externally and qcdir/alg.genome exists.
+#' plink --genome has been run externally and qcdir/name.genome exists.
 #' \code{\link{check_relatedness}}  will fail with missing file error otherwise.
 #'
 #' For details on the output data.frame fail_high_IBD, check the original
 #' description on the PLINK output format page:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#genome}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing plink
-#' dataset. If run.check_relatedness is FALSE, it is assumed that plink
-#' --missing and plink --genome have been run and qcdir/alg.imiss and
-#' qcdir/alg.genome. Users needs writing permission to qcdir.
-#' @param alg [character] Prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-#' alg.fam, alg.genome and alg.imiss.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory to where name.genome as returned
+#' by plink --genome will be saved.  Per default qcdir=indir. If
+#' run.check_relatedness is FALSE, it is assumed that plink
+#' --missing and plink --genome have been run and qcdir/name.imiss and
+#' qcdir/name.genome exist. User needs writing permission to qcdir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam, name.genome and name.imiss.
 #' @param run.check_relatedness [logical] Should plink --genome be run to
 #' determine pairwise IBD of individuals; if FALSE, it is assumed that
-#' plink --genome and plink --missing have been run and qcdir/alg.imiss and
-#' qcdir/alg.genome are present;
+#' plink --genome and plink --missing have been run and qcdir/name.imiss and
+#' qcdir/name.genome are present;
 #' \code{\link{check_relatedness}} will fail with missing file error otherwise.
 #' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
 #' pair of individuals.
@@ -778,19 +814,20 @@ check_het_and_miss <- function(qcdir, alg, imissTh=0.03, hetTh=3,
 #' @examples
 #' package.dir <- find.package('plinkQC')
 #' qcdir <- file.path(package.dir,'extdata')
-#' alg <- 'data'
-#' relatednessQC <- check_relatedness(qcdir=qcdir, alg=alg, interactive=FALSE,
+#' name <- 'data'
+#' relatednessQC <- check_relatedness(indir=qcdir, name=name, interactive=FALSE,
 #' run.check_relatedness=FALSE)
-check_relatedness <- function(qcdir, alg, highIBDTh=0.1875, imissTh=0.03,
-                              run.check_relatedness=TRUE,
+check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
+                              imissTh=0.03, run.check_relatedness=TRUE,
                               interactive=FALSE, verbose=FALSE,
                               path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_relatedness) {
-        run <- run_check_relatedness(qcdir=qcdir, alg=alg, verbose=verbose,
-                                    path2plink=path2plink,
-                                    showPlinkOutput=showPlinkOutput)
+        run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name,
+                                     verbose=verbose,
+                                     path2plink=path2plink,
+                                     showPlinkOutput=showPlinkOutput)
     }
-    fail <- evaluate_check_relatedness(qcdir=qcdir, alg=alg,
+    fail <- evaluate_check_relatedness(qcdir=qcdir, name=name,
                                        highIBDTh=highIBDTh,
                                        imissTh=imissTh, interactive=interactive,
                                        verbose=verbose)
@@ -799,7 +836,7 @@ check_relatedness <- function(qcdir, alg, highIBDTh=0.1875, imissTh=0.03,
 
 
 
-#' Identification of individuals of divergent ancestry.
+#' Identification of individuals of divergent ancestry
 #'
 #' Runs and evaluates results of plink --pca on merged genotypes from
 #' individuals to be QCed and individuals of reference population of known
@@ -815,14 +852,19 @@ check_relatedness <- function(qcdir, alg, highIBDTh=0.1875, imissTh=0.03,
 #' \code{check_ancestry} creates a scatter plot of PC1 versus PC2 colour-coded
 #' for samples of the reference populations and the study population.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing
-#' prefixMergedDataset.eigenvec results as returned by plink --pca.
-#' User needs writing permission to qcdir.
-#' @param alg [character] prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory where
+#' prefixMergedDataset.eigenvec results as returned by plink --pca should be
+#' saved. Per default qcdir=indir. If run.check_ancestry is FALSE, it is assumed
+#' that plink --pca prefixMergedDataset has been run and
+#' qcdir/prefixMergedDataset.eigenvec exists.User needs writing permission to
+#' qcdir.
+#' @param name [character] prefix of plink files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param prefixMergedDataset [character] Prefix of merged dataset (study and
 #' reference samples) used in plink --pca, resulting in
-#' prefixMergedDataset.eigenvec
+#' prefixMergedDataset.eigenvec.
 #' @param europeanTh [double] Scaling factor of radius to be drawn around center
 #' of European reference samples, with study samples inside this radius
 #' considered to be of European descent and samples outside this radius of
@@ -855,8 +897,7 @@ check_relatedness <- function(qcdir, alg, highIBDTh=0.1875, imissTh=0.03,
 #' refColors/refColorsFile
 #' @param refColorsPop [character] Column name of reference sample population
 #' IDs in refColors/refColorsFile.
-#' @param studyColor [character] Colour to be used for study population if plot
-#' is TRUE.
+#' @param studyColor [character] Colour to be used for study population.
 #' @param run.check_ancestry [logical] Should plink --pca be run to
 #' determine principal components of merged dataset; if FALSE, it is assumed
 #' that plink --pca has been run successfuly and
@@ -884,14 +925,15 @@ check_relatedness <- function(qcdir, alg, highIBDTh=0.1875, imissTh=0.03,
 #' @examples
 #' package.dir <- find.package('plinkQC')
 #' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
-#' fail_ancestry <- check_ancestry(qcdir=qcdir, alg=alg,
+#' name <- "data"
+#' fail_ancestry <- check_ancestry(indir=qcdir, name=name,
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE,
 #' run.check_ancestry=FALSE)
 
-check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
+check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
+                           europeanTh=1.5,
                            refSamples=NULL, refColors=NULL,
                            refSamplesFile=NULL, refColorsFile=NULL,
                            refSamplesIID="IID", refSamplesPop="Pop",
@@ -901,13 +943,13 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
                            interactive=FALSE, verbose=verbose,
                            path2plink=NULL, showPlinkOutput=TRUE) {
         if (run.check_ancestry) {
-            run <- run_check_ancestry(qcdir=qcdir,
+            run <- run_check_ancestry(indir=indir, qcdir=qcdir,
                                       prefixMergedDataset=prefixMergedDataset,
                                       verbose=verbose,
                                       path2plink=path2plink,
                                       showPlinkOutput=showPlinkOutput)
         }
-        fail <- evaluate_check_ancestry(qcdir=qcdir, alg=alg,
+        fail <- evaluate_check_ancestry(qcdir=qcdir,indir=indir, name=name,
                                         prefixMergedDataset=prefixMergedDataset,
                                         europeanTh=europeanTh,
                                         refSamples=refSamples,
@@ -924,20 +966,22 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
 }
 
 
-#' Run PLINK sexcheck.
+#' Run PLINK sexcheck
 #'
 #' Run  plink --sexcheck to calculate the heterozygosity rate
 #' across X-chromosomal variants.
 #'
 #' Both \code{\link{run_check_sex}} and its evaluation
 #' \code{\link{evaluate_check_sex}} can simply be invoked by
-#' \code{\link{check_sex}}).
+#' \code{\link{check_sex}}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing the
-#' basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-#' permission to qcdir.
-#' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory to save name.sexcheck as returned
+#' by plink --check-sex. User needs writing permission to qcdir. Per default
+#' qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink/plink -h. If not
@@ -949,16 +993,18 @@ check_ancestry <- function(qcdir, alg, prefixMergedDataset, europeanTh=1.5,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir,'extdata')
-#' alg <- 'data'
+#' indir <- file.path(package.dir,'extdata')
+#' name <- 'data'
+#' qcdir <- tempdir()
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_heterozygosity(qcdir, alg)
+#' run <- run_check_sex(indir=indir, qcdir=qcdir, name=name)
 #' }
-run_check_sex <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
-                          showPlinkOutput=TRUE) {
-    prefix <- paste(qcdir, "/", alg, sep="")
+run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
+                          path2plink=NULL,showPlinkOutput=TRUE) {
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -975,15 +1021,15 @@ run_check_sex <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
     if (verbose) message("Run check_sex via plink --check-sex")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --check-sex",
-                 " --out ", prefix, sep=""),
+                 " --out ", out, sep=""),
            ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
 }
 
 #' Evaluate results from PLINK sex check.
 #'
 #' Evaluates and depicts results from plink --check-sex (via
-#' \code{\link{run_check_sex}} or externally conducted sex check.
-#' Takes file qcdir/alg.sexcheck and returns IIDs for samples whose
+#' \code{\link{run_check_sex}} or externally conducted sex check).
+#' Takes file qcdir/name.sexcheck and returns IIDs for samples whose
 #' SNPSEX != PEDSEX (where the SNPSEX is determined by the heterozygosity rate
 #' across X-chromosomal variants).
 #' Mismatching SNPSEX and PEDSEX IDs can indicate plating errors, sample-mixup
@@ -992,30 +1038,32 @@ run_check_sex <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' Optionally, an extra data.frame (externalSex) with sample IDs and sex can be
 #' provided to double check if external and PEDSEX data (often processed at
 #' different centers) match. If a mismatch between PEDSEX and SNPSEX was
-#' detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be
+#' detected while SNPSEX == Sex, PEDSEX of these individuals can optionally be
 #' updated (fixMixup=TRUE).
-#' check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
-#' split by their (PEDSEX).
+#' \code{evaluate_check_sex} depicts the X-chromosomal heterozygosity (SNPSEX)
+#' of the samples split by their (PEDSEX).
 #'
 #' Both \code{\link{run_check_sex}} and \code{\link{evaluate_check_sex}} can
-#' simply be invoked by \code{\link{check_sex}}).
+#' simply be invoked by \code{\link{check_sex}}.
 #'
 #' For details on the output data.frame fail_sex, check the original
 #' description on the PLINK output format page:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#sexcheck}.
 #'
-#' @param qcdir [character] path/to/directory/with/QC/results containing
-#' alg.sexcheck results as returned by plink --check-sex. Users needs writing
-#' permission to qcdir.
-#' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-#' alg.fam and alg.sexcheck.
+#' @param qcdir [character] /path/to/directory containing name.sexcheck as
+#' returned by plink --check-sex.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam and name.sexcheck.
 #' @param maleTh [double] Threshold of X-chromosomal heterozygosity rate for
 #' males.
 #' @param femaleTh [double] Threshold of X-chromosomal heterozygosity rate for
 #' females.
 #' @param fixMixup [logical] Should PEDSEX of individuals with mismatch between
 #' PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
-#' change the alg.bim/.bed/.fam files!
+#' change the name.bim/.bed/.fam files!
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files; only required of fixMixup==TRUE. User
+#' needs writing permission to indir.
 #' @param externalSex [data.frame, optional] with sample IDs [externalSexID] and
 #' sex [externalSexSex] to double check if external and PEDSEX data (often
 #' processed at different centers) match.
@@ -1044,35 +1092,38 @@ run_check_sex <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' ii) mixup: dataframe with FID, IID, PEDSEX, SNPSEX and Sex (if externalSex
 #' was provided) of individuals whose PEDSEX != Sex and Sex == SNPSEX and iii)
 #' p_sexcheck, a ggplot2-object 'containing' a scatter plot of the X-chromosomal
-#' heterozygosity (SNPSEX) of the sample split by their (PEDSEX), which can be
-#' shown by print(p_sexcheck).
+#' heterozygosity (SNPSEX) of the individuals split by their (PEDSEX), which can
+#' be shown by print(p_sexcheck).
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
 #' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
-#' fail_sex <- evaluate_check_sex(qcdir=qcdir, alg=alg, interactive=FALSE,
+#' name <- "data"
+#' fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
 #' verbose=FALSE)
-evaluate_check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8,
-                               femaleTh=0.2,
-                               interactive=FALSE, fixMixup=FALSE,
+evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
+                               femaleTh=0.2, externalSex=NULL,
+                               fixMixup=FALSE, indir=qcdir,
                                externalFemale="F", externalMale="M",
                                externalSexSex="Sex", externalSexID="IID",
                                verbose=FALSE,
                                path2plink=NULL,
-                               showPlinkOutput=TRUE) {
-    if (!file.exists(paste(qcdir,"/", alg, ".sexcheck", sep=""))){
-        stop("plink --check-sex results file: ", qcdir,"/", alg,
+                               showPlinkOutput=TRUE,
+                               interactive=FALSE) {
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
+    if (!file.exists(paste(out, ".sexcheck", sep=""))){
+        stop("plink --check-sex results file: ", out,
              ".sexcheck does not exist.")
     }
     testNumerics(numbers=c(maleTh, femaleTh), positives=c(maleTh, femaleTh),
                  proportions=c(maleTh, femaleTh))
-    sexcheck <- read.table(paste(qcdir,"/", alg, ".sexcheck",sep=""),
+    sexcheck <- read.table(paste(out, ".sexcheck",sep=""),
                            header=TRUE, stringsAsFactors=FALSE)
 
     names_sexcheck <- c("FID", "IID", "PEDSEX", "SNPSEX", "STATUS", "F")
     if (!all(names_sexcheck == names(sexcheck))) {
-        stop("Header of", qcdir,"/", alg, ".sexcheck is not correct. Was your
+        stop("Header of", out, ".sexcheck is not correct. Was your
              file generated with plink --check-sex?")
     }
     if (is.null(externalSex)) {
@@ -1122,21 +1173,33 @@ evaluate_check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8,
                                ~SNPSEX, ~F)[which(!sex_mismatch),]
             # Fix mismatch between PEDSEX and sex
             if (fixMixup) {
-                checkPlink(path2plink)
                 if (!is.null(path2plink)) {
-                    paste(gsub("/$", "", path2plink), "/", sep="")
+                    path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
                 }
+                checkPlink(path2plink)
                 if (nrow(mixup_geno_pheno) != 0) {
-                    file_mixup <- paste(qcdir, "/", alg,
-                                        ".mismatched_sex_geno_pheno", sep="")
+                    file_mixup <- paste(out, ".mismatched_sex_geno_pheno",
+                                        sep="")
                     write.table(dplyr::select_(mixup_geno_pheno, ~FID, ~IID,
                                                ~SNPSEX),
                                 file=file_mixup,
                                 row.names=FALSE, quote=FALSE, col.names=FALSE)
-                    system(paste(path2plink, "plink --bfile ", qcdir, "/", alg,
+                    if (!file.exists(paste(prefix, ".fam", sep=""))){
+                        stop("plink family file: ", prefix,
+                             ".fam does not exist.")
+                    }
+                    if (!file.exists(paste(prefix, ".bim", sep=""))){
+                        stop("plink snp file: ", prefix,
+                             ".bim does not exist.")
+                    }
+                    if (!file.exists(paste(prefix, ".bed", sep=""))){
+                        stop("plink binary file: ", prefix,
+                             ".bed does not exist.")
+                    }
+                    system(paste(path2plink, "plink --bfile ", prefix,
                                  " --update-sex ", file_mixup,
                                  " --make-bed ",
-                                 " --out ", qcdir , "/", alg, sep=""),
+                                 " --out ", prefix, sep=""),
                            ignore.stdout=showPlinkOutput,
                            ignore.stderr=!showPlinkOutput)
                 } else {
@@ -1196,7 +1259,7 @@ evaluate_check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8,
                 p_sexcheck=p_sexcheck))
 }
 
-#' Run PLINK heterozygosity rate calculation.
+#' Run PLINK heterozygosity rate calculation
 #'
 #' Run plink --het to calculate heterozygosity rates per individual.
 #'
@@ -1205,11 +1268,13 @@ evaluate_check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8,
 #' \code{\link{evaluate_check_het_and_miss}} can simply be invoked by
 #' \code{\link{check_het_and_miss}}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing the
-#' basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-#' permission to qcdir.
-#' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory to save name.het as returned by
+#' plink --het. User needs writing permission to qcdir. Per default
+#' qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink/plink -h. If not
@@ -1221,16 +1286,19 @@ evaluate_check_sex <- function(qcdir, alg, externalSex=NULL, maleTh=0.8,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir,'extdata')
-#' alg <- 'data'
+#' indir <- file.path(package.dir,'extdata')
+#' name <- 'data'
+#' qcdir <- tempdir()
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_heterozygosity(qcdir, alg)
+#' run <- run_check_heterozygosity(indir=indir, qcdir=qcdir, name=name)
 #' }
-run_check_heterozygosity <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
+run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
+                                     path2plink=NULL,
                                      showPlinkOutput=TRUE) {
-    prefix <- paste(qcdir, "/", alg, sep="")
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1247,11 +1315,11 @@ run_check_heterozygosity <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
     if (verbose) message("Run check_heterozygosity via plink --het")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --het",
-                 " --out ", prefix, sep=""),
+                 " --out ", out, sep=""),
            ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
 }
 
-#' Run PLINK missingness rate calculation.
+#' Run PLINK missingness rate calculation
 #'
 #' Run  plink --missing to calculate missing genotype rates
 #' per individual.
@@ -1261,11 +1329,13 @@ run_check_heterozygosity <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' \code{\link{evaluate_check_het_and_miss}} can simply be invoked by
 #' \code{\link{check_het_and_miss}}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing the
-#' basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-#' permission to qcdir.
-#' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory to save name.imiss as returned
+#' by plink --missing. User needs writing permission to qcdir. Per default
+#' qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink/plink -h. If not
@@ -1277,16 +1347,19 @@ run_check_heterozygosity <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir,'extdata')
-#' alg <- 'data'
+#' indir <- file.path(package.dir,'extdata')
+#' name <- 'data'
+#' qcdir <- tempdir()
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_missingnessness(qcdir, alg)
+#' run <- run_check_missingnessness(indir=indir, qcdir=qcdir, name=name)
 #' }
-run_check_missingness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
+run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
+                                  path2plink=NULL,
                                   showPlinkOutput=TRUE) {
-    prefix <- paste(qcdir, "/", alg, sep="")
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1303,7 +1376,7 @@ run_check_missingness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
     if (verbose) message("Run check_missingness via plink --missing")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --missing",
-                 " --out ", prefix, sep=""),
+                 " --out ", out, sep=""),
            ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
 }
 
@@ -1323,8 +1396,9 @@ run_check_missingness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' Within a population and genotyping panel, a reduced heterozygosity rate can
 #' indicate inbreeding - these individuals will then be returned by
 #' check_relatedness as individuals that fail the relatedness filters.
-#' check_heterozygosity_and_missingness creates a scatter plot with the samples'
-#' missingness rates on x-axis and their heterozygosity rates on the y-axis.
+#' \code{evaluate_check_het_and_miss} creates a scatter plot with the
+#' individuals' missingness rates on x-axis and their heterozygosity rates on
+#' the y-axis.
 #'
 #' All, \code{\link{run_check_heterozygosity}},
 #' \code{\link{run_check_missingness}} and
@@ -1337,10 +1411,10 @@ run_check_missingness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#het}
 #'
 #' @param qcdir [character] path/to/directory/with/QC/results containing
-#' alg.imiss and alg.het results as returned by plink --missing and plink
-#' --het. Users needs writing permission to qcdir.
-#' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-#' alg.fam, alg.het and alg.imiss.
+#' name.imiss and name.het results as returned by plink --missing and plink
+#' --het.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam, name.het and name.imiss.
 #' @param imissTh [double] Threshold for acceptable missing genotype rate in any
 #' individual; has to be proportion between (0,1)
 #' @param hetTh [double] Threshold for acceptable deviation from mean
@@ -1369,35 +1443,35 @@ run_check_missingness <- function(qcdir, alg, verbose=FALSE, path2plink=NULL,
 #' @examples
 #' package.dir <- find.package('plinkQC')
 #' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
-#' fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, alg=alg,
+#' name <- "data"
+#' fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
 #' interactive=FALSE)
-evaluate_check_het_and_miss <- function(qcdir, alg, imissTh=0.03,
+evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                                   hetTh=3, interactive=FALSE) {
-
-    if (!file.exists(paste(qcdir,"/", alg, ".imiss",sep=""))){
-        stop("plink --missing output file: ", qcdir,"/", alg,
+    prefix <- paste(qcdir, "/", name, sep="")
+    if (!file.exists(paste(prefix, ".imiss",sep=""))){
+        stop("plink --missing output file: ", prefix,
              ".imiss does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".het",sep=""))){
-        stop("plink --het output file: ", qcdir,"/", alg,
+    if (!file.exists(paste(prefix, ".het",sep=""))){
+        stop("plink --het output file: ", prefix,
              ".het does not exist.")
     }
-    testNumerics(numbers=c(imissTh,hetTh), positives=c(imissTh, hetTh),
+    testNumerics(numbers=c(imissTh, hetTh), positives=c(imissTh, hetTh),
                  proportions=imissTh)
     names_imiss <- c("FID", "IID", "MISS_PHENO", "N_MISS", "N_GENO", "F_MISS")
-    imiss <- read.table(paste(qcdir, "/", alg, ".imiss", sep=""), header=TRUE,
+    imiss <- read.table(paste(prefix, ".imiss", sep=""), header=TRUE,
                         as.is=TRUE)
     if (!all(names_imiss == names(imiss))) {
-        stop("Header of ", qcdir,"/", alg, ".imiss is not correct. Was your
+        stop("Header of ", prefix, ".imiss is not correct. Was your
              file generated with plink --imiss?")
     }
     fail_imiss <- imiss[imiss$F_MISS > imissTh,]
 
     names_het <- c("FID", "IID", "O.HOM.", "E.HOM.", "N.NM.", "F")
-    het <- read.table(paste(qcdir, "/", alg, ".het", sep=""), header=TRUE)
+    het <- read.table(paste(prefix, ".het", sep=""), header=TRUE)
     if (!all(names_het == names(het))) {
-        stop("Header of ", qcdir,"/", alg, ".het is not correct. Was your
+        stop("Header of ", prefix, ".het is not correct. Was your
              file generated with plink --het?")
     }
     fail_het <- het[het$F < (mean(het$F)  - hetTh*sd(het$F)) |
@@ -1449,7 +1523,7 @@ evaluate_check_het_and_miss <- function(qcdir, alg, imissTh=0.03,
                 p_het_imiss=p_het_imiss))
 }
 
-#' Run PLINK IBD estimation.
+#' Run PLINK IBD estimation
 #'
 #' Run LD pruning on dataset with plink --exclude range highldfile
 #' --indep-pairwise 50 5 0.2, where highldfile contains regions of high LD as
@@ -1463,13 +1537,15 @@ evaluate_check_het_and_miss <- function(qcdir, alg, imissTh=0.03,
 #'
 #' Both \code{\link{run_check_relatedness}} and its evaluation via
 #' \code{\link{evaluate_check_relatedness}} can simply be invoked by
-#' \code{\link{check_relatedness}}).
+#' \code{\link{check_relatedness}}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing the
-#' basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-#' permission to qcdir.
-#' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory to save name.genome as returned
+#' by plink --genome. User needs writing permission to qcdir. Per default
+#' qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink/plink -h. If not
@@ -1481,16 +1557,18 @@ evaluate_check_het_and_miss <- function(qcdir, alg, imissTh=0.03,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir,'extdata')
-#' alg <- 'data'
+#' indir <- file.path(package.dir,'extdata')
+#' name <- 'data'
+#' qcdir <- tempdir()
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_relatedness(qcdir, alg)
+#' run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name)
 #' }
-run_check_relatedness <- function(qcdir, alg, path2plink=NULL,
+run_check_relatedness <- function(indir, name, qcdir=indir, path2plink=NULL,
                                   showPlinkOutput=TRUE, verbose=FALSE) {
-    prefix <- paste(qcdir, "/", alg, sep="")
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1510,18 +1588,18 @@ run_check_relatedness <- function(qcdir, alg, path2plink=NULL,
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --exclude range ", highld,
                  " --indep-pairwise 50 5 0.2",
-                 " --out ", prefix, sep=""),
+                 " --out ", out, sep=""),
            ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
     if (verbose) message("Run check_relatedness via plink --genome")
     system(paste(path2plink, "plink --bfile ", prefix,
-                 " --extract ", prefix, ".prune.in",
+                 " --extract ", out, ".prune.in",
                  " --maf 0.1 --genome",
-                 " --out ", prefix, sep=""),
+                 " --out ", out, sep=""),
            ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
     if (! file.exists(paste(prefix, ".imiss", sep=""))) {
         system(paste(path2plink, "plink --bfile ", prefix,
                      " --missing",
-                     " --out ", prefix, sep=""),
+                     " --out ", out, sep=""),
            ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
     }
 }
@@ -1530,35 +1608,35 @@ run_check_relatedness <- function(qcdir, alg, path2plink=NULL,
 #'
 #' Evaluates and depicts results from plink --genome on the LD pruned dataset
 #' (via \code{\link{run_check_relatedness}} or externally conducted IBD
-#' estimation. plink --genome calculates identity by state (IBS) for each pair
+#' estimation). plink --genome calculates identity by state (IBS) for each pair
 #' of individuals based on the average proportion of alleles shared at genotyped
 #' SNPs. The degree of recent shared ancestry, i.e. the identity by descent
 #' (IBD) can be estimated from the genome-wide IBS. The proportion of IBD
 #' between two individuals is returned by --genome as PI_HAT.
-#' check_relatedness finds pairs of samples whose proportion of IBD is larger
-#' than the specified highIBDTh. Subsequently, for pairs of individual that do
-#' not have additional relatives in the dataset, the individual with the greater
-#' genotype missingness rate is selected and returned as the individual failing
-#' the relatedness check. For more complex family structures, the unrelated
-#' individuals per family are selected (e.g. in a parents-offspring trio, the
-#' offspring will be marked as fail, while the parents will be kept in the
-#' analysis).
-#' check_relatedness depicts all pair-wise IBD-estimates as histograms
-#' stratified by value of PI_HAT.
+#' \code{evaluate_check_relatedness} finds pairs of samples whose proportion of
+#' IBD is larger than the specified highIBDTh. Subsequently, for pairs of
+#' individual that do not have additional relatives in the dataset, the
+#' individual with the greater genotype missingness rate is selected and
+#' returned as the individual failing the relatedness check. For more complex
+#' family structures, the unrelated individuals per family are selected (e.g. in
+#' a parents-offspring trio, the offspring will be marked as fail, while the
+#' parents will be kept in the analysis).
+#' \code{evaluate_check_relatedness} depicts all pair-wise IBD-estimates as
+#' histograms stratified by value of PI_HAT.
 #'
 #' Both \code{\link{run_check_relatedness}} and
 #' \code{\link{evaluate_check_relatedness}} can simply be invoked by
-#' \code{\link{check_relatedness}}).
+#' \code{\link{check_relatedness}}.
 #'
 #' For details on the output data.frame fail_high_IBD, check the original
 #' description on the PLINK output format page:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#genome}.
 #'
 #' @param qcdir [character] path/to/directory/with/QC/results containing
-#' alg.imiss and alg.genome results as returned by plink --missing and plink
-#' --genome. Users needs writing permission to qcdir.
-#' @param alg [character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-#' alg.fam, alg.genome and alg.imiss.
+#' name.imiss and name.genome results as returned by plink --missing and plink
+#' --genome.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam, name.genome and name.imiss.
 #' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
 #' pair of individuals.
 #' @param imissTh [double] Threshold for acceptable missing genotype rate in any
@@ -1589,34 +1667,35 @@ run_check_relatedness <- function(qcdir, alg, path2plink=NULL,
 #' @examples
 #' package.dir <- find.package('plinkQC')
 #' qcdir <- file.path(package.dir,'extdata')
-#' alg <- 'data'
-#' relatednessQC <- evaluate_check_relatedness(qcdir=qcdir, alg=alg,
+#' name <- 'data'
+#' relatednessQC <- evaluate_check_relatedness(qcdir=qcdir, name=name,
 #' interactive=FALSE)
-evaluate_check_relatedness <- function(qcdir, alg, highIBDTh=0.1875,
+evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                                        imissTh=0.03, interactive=FALSE,
                                        verbose=FALSE) {
-    if (!file.exists(paste(qcdir,"/", alg, ".imiss", sep=""))){
-        stop("plink --missing output file: ", qcdir,"/", alg,
+    prefix <- paste(qcdir, "/", name, sep="")
+    if (!file.exists(paste(prefix, ".imiss", sep=""))){
+        stop("plink --missing output file: ", prefix,
              ".imiss does not exist.")
     }
-    if (!file.exists(paste(qcdir,"/", alg, ".genome",sep=""))){
-        stop("plink --genome output file: ", qcdir,"/", alg,
+    if (!file.exists(paste(prefix, ".genome",sep=""))){
+        stop("plink --genome output file: ", prefix,
              ".genome does not exist.")
     }
     testNumerics(numbers=highIBDTh, positives=highIBDTh, proportions=highIBDTh)
     names_imiss <- c("FID", "IID", "MISS_PHENO", "N_MISS", "N_GENO", "F_MISS")
-    imiss <- read.table(paste(qcdir, "/", alg, ".imiss", sep=""), header=TRUE,
+    imiss <- read.table(paste(prefix, ".imiss", sep=""), header=TRUE,
                         as.is=TRUE)
     if (!all(names_imiss == names(imiss))) {
-        stop("Header of ", qcdir,"/", alg, ".imiss is not correct. Was your
+        stop("Header of ", prefix, ".imiss is not correct. Was your
              file generated with plink --imiss?")
     }
     names_genome <- c("FID1", "IID1", "FID2", "IID2", "RT", "EZ", "Z0", "Z1",
                       "Z2", "PI_HAT", "PHE", "DST", "PPC", "RATIO")
-    genome <- read.table(paste(qcdir, "/", alg, ".genome", sep=""), header=TRUE,
+    genome <- read.table(paste(prefix, ".genome", sep=""), header=TRUE,
                          as.is=TRUE)
     if (!all(names_genome == names(genome))) {
-        stop("Header of ", qcdir,"/", alg, ".genome is not correct. Was your
+        stop("Header of ", prefix, ".genome is not correct. Was your
              file generated with plink --genome?")
     }
 
@@ -1669,9 +1748,12 @@ evaluate_check_relatedness <- function(qcdir, alg, highIBDTh=0.1875,
 #' \code{\link{evaluate_check_ancestry}} can simply be invoked by
 #' \code{\link{check_ancestry}}.
 #'
-#' @param qcdir [character] /path/to/directory/with/QC/results containing the
-#' basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-#' permission to qcdir.
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files prefixMergedDataset.bim,prefixMergedDataset.fam and
+#' prefixMergedDataset.bed.
+#' @param qcdir [character] /path/to/directory to save
+#' prefixMergedDataset.eigenvec as returned by plink --pca. User needs writing
+#' permission to qcdir. Per default qcdir=indir.
 #' @param prefixMergedDataset [character] Prefix of merged study and
 #' reference data files, i.e. prefixMergedDataset.bed, prefixMergedDataset.bim,
 #' prefixMergedDataset.fam.
@@ -1686,17 +1768,20 @@ evaluate_check_relatedness <- function(qcdir, alg, highIBDTh=0.1875,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir,'extdata')
+#' indir <- file.path(package.dir,'extdata')
+#' qcdir <- tempdir()
 #' prefixMergedDataset <- 'data.HapMapIII'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_ancestry(qcdir, prefixMergedDataset)
+#' run <- run_check_ancestry(indir=indir, qcdir=qcdir, prefixMergedDataset)
 #' }
-run_check_ancestry <- function(qcdir, prefixMergedDataset,
+run_check_ancestry <- function(indir, prefixMergedDataset,
+                               qcdir=indir,
                                verbose=FALSE, path2plink=NULL,
                                showPlinkOutput=TRUE) {
-    prefix <- paste(qcdir, "/", prefixMergedDataset, sep="")
+    prefix <- paste(indir, "/", prefixMergedDataset, sep="")
+    out <- paste(qcdir, "/", prefixMergedDataset, sep="")
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1713,7 +1798,7 @@ run_check_ancestry <- function(qcdir, prefixMergedDataset,
     if (verbose) message("Run check_ancestry via plink --pca")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --pca",
-                 " --out ", prefix, sep=""),
+                 " --out ", out, sep=""),
            ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
 }
 
@@ -1736,16 +1821,18 @@ run_check_ancestry <- function(qcdir, prefixMergedDataset,
 #'
 #' Both \code{\link{run_check_ancestry}} and
 #' \code{\link{evaluate_check_ancestry}} can simply be invoked by
-#' \code{\link{check_ancestry}}).
+#' \code{\link{check_ancestry}}.
 #'
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
 #' @param qcdir [character] /path/to/directory/with/QC/results containing
-#' prefixMergedDataset.eigenvec results as returned by plink --pca.
-#' User needs writing permission to qcdir.
-#' @param alg [character] prefix of plink files, i.e. alg.bed, alg.bim,
-#' alg.fam.
+#' prefixMergedDataset.eigenvec results as returned by plink --pca. Per default
+#' qcdir=indir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam.
 #' @param prefixMergedDataset [character] Prefix of merged dataset (study and
 #' reference samples) used in plink --pca, resulting in
-#' prefixMergedDataset.eigenvec
+#' prefixMergedDataset.eigenvec.
 #' @param europeanTh [double] Scaling factor of radius to be drawn around center
 #' of European reference samples, with study samples inside this radius
 #' considered to be of European descent and samples outside this radius of
@@ -1792,14 +1879,15 @@ run_check_ancestry <- function(qcdir, prefixMergedDataset,
 #' @export
 #' @examples
 #' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
-#' alg <- "data"
-#' fail_ancestry <- evaluate_check_ancestry(qcdir=qcdir, alg=alg,
-#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
-#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+#' indir <- file.path(package.dir, 'extdata')
+#' name <- "data"
+#' fail_ancestry <- evaluate_check_ancestry(indir=indir, name=name,
+#' refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",sep=""),
+#' refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE)
 
-evaluate_check_ancestry <- function(qcdir, alg, prefixMergedDataset,
+evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
+                                    qcdir=indir,
                                     europeanTh=1.5,
                                     refSamples=NULL, refColors=NULL,
                                     refSamplesFile=NULL, refColorsFile=NULL,
@@ -1807,21 +1895,20 @@ evaluate_check_ancestry <- function(qcdir, alg, prefixMergedDataset,
                                     refColorsColor="Color", refColorsPop="Pop",
                                     studyColor="#2c7bb6",
                                     interactive=FALSE) {
-    if (!file.exists(paste(qcdir,"/", alg, ".fam", sep=""))){
-        stop("plink family file: ", qcdir,"/", alg, ".fam does not exist.")
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", prefixMergedDataset, sep="")
+    if (!file.exists(paste(prefix, ".fam", sep=""))){
+        stop("plink family file: ", prefix, ".fam does not exist.")
     }
-    samples <- data.table::fread(paste(qcdir, "/", alg, ".fam", sep=""),
+    samples <- data.table::fread(paste(prefix, ".fam", sep=""),
                                  header=FALSE, stringsAsFactors=FALSE,
                                  data.table=FALSE)[,1:2]
     colnames(samples) <- c("FID", "IID")
-    if (!file.exists(paste(qcdir,"/", prefixMergedDataset, ".eigenvec",
-                           sep=""))){
-        stop("plink --pca output file: ", qcdir,"/", prefixMergedDataset,
-             ".eigenvec does not exist.")
+    if (!file.exists(paste(out, ".eigenvec", sep=""))){
+        stop("plink --pca output file: ", out, ".eigenvec does not exist.")
     }
     testNumerics(numbers=europeanTh, positives=europeanTh)
-    pca_data <- data.table::fread(paste(qcdir, "/", prefixMergedDataset,
-                                        ".eigenvec", sep=""),
+    pca_data <- data.table::fread(paste(out, ".eigenvec", sep=""),
                                   stringsAsFactors=FALSE, data.table=FALSE)
     colnames(pca_data) <- c("FID", "IID", paste("PC",1:(ncol(pca_data)-2),
                                                 sep=""))
@@ -1869,11 +1956,11 @@ evaluate_check_ancestry <- function(qcdir, alg, prefixMergedDataset,
 
     ## Combine pca data and population information ####
     data_all <- merge(pca_data, refSamples, by="IID", all.x=TRUE)
-    data_all$Pop[is.na(data_all$Pop)] <- alg
+    data_all$Pop[is.na(data_all$Pop)] <- name
     data_all$Color[is.na(data_all$Color)] <- studyColor
     data_all <- data_all[order(data_all$Pop, decreasing=FALSE),]
 
-    refColors <- rbind(refColors, c(alg, studyColor))
+    refColors <- rbind(refColors, c(name, studyColor))
     data_all$Color <- as.factor(data_all$Color)
     data_all$Pop <- factor(data_all$Pop, levels=refColors$Pop)
 
@@ -1888,17 +1975,17 @@ evaluate_check_ancestry <- function(qcdir, alg, prefixMergedDataset,
     max_euclid_dist <- max(all_european$euclid_dist)
 
     ## Find samples' distances to reference Europeans ####
-    data_alg <- dplyr::filter_(data_all, ~Pop == alg)
-    data_alg$euclid_dist <- sqrt((data_alg$PC1 - euro_pc1_mean)^2 +
-                                     (data_alg$PC2 - euro_pc2_mean)^2)
-    non_europeans <- dplyr::filter_(data_alg, ~euclid_dist >
+    data_name <- dplyr::filter_(data_all, ~Pop == name)
+    data_name$euclid_dist <- sqrt((data_name$PC1 - euro_pc1_mean)^2 +
+                                     (data_name$PC2 - euro_pc2_mean)^2)
+    non_europeans <- dplyr::filter_(data_name, ~euclid_dist >
                                         (max_euclid_dist * europeanTh))
     fail_ancestry <- dplyr::select_(non_europeans, ~FID, ~IID)
     p_ancestry <- ggplot()
     p_ancestry <- p_ancestry + geom_point(data=data_all,
                                           aes_string(x='PC1', y='PC2',
                                                      color='Pop')) +
-        geom_point(data=dplyr::filter_(data_all, ~Pop != alg),
+        geom_point(data=dplyr::filter_(data_all, ~Pop != name),
                    aes_string(x='PC1', y='PC2',
                               color='Pop'),
                    size=1) +

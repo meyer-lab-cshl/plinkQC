@@ -1,6 +1,6 @@
 Package: plinkQC
 Type: Package
-Title: Genotype Quality Control with PLINK
+Title: Genotype Quality Control with 'PLINK'
 Version: 0.1.0
 Authors@R:
     person("Hannah", "Meyer", email = "hannah@ebi.ac.uk",
@@ -9,15 +9,16 @@ URL: https://github.com/HannahVMeyer/plinkQC
 BugReports: https://github.com/HannahVMeyer/plinkQC/issues
 Maintainer: Hannah Meyer <hannah@ebi.ac.uk>
 Description: Genotyping arrays enable the direct measurement of an individuals
-    genotype at thousands of markers. plinkQC facilitates genotype quality
-    control for genetic association studies as described by Anderson et al.
-    (2010) Nature Protocols. It wraps around PLINK basic statistics (e.g.
-    missing genotyping rates per individual, allele frequencies per genetic
-    marker) and relationship functions and generates a per-individual and
-    per-marker quality control report. Individuals and markers that fail the
-    quality control can subsequently be removed to generate a new, clean
-    dataset. Removal of individuals based on relationship status is optimised
-    to retain as many individuals as possible in the study.
+    genotype at thousands of markers. 'plinkQC' facilitates genotype quality
+    control for genetic association studies as described by Anderson and
+    colleagues (2010) <doi:10.1038/nprot.2010.116>. It makes 'PLINK' basic
+    statistics (e.g. missing genotyping rates per individual, allele frequencies
+    per genetic marker) and relationship functions accessible from 'R' and
+    generates a per-individual and per-marker quality control report.
+    Individuals and markers that fail the quality control can subsequently be
+    removed to generate a new, clean dataset. Removal of individuals based on
+    relationship status is optimised to retain as many individuals as possible
+    in the study.
 Depends:
     R (>= 3.3.0)
 Imports:
@@ -37,7 +38,7 @@ Suggests:
     rmarkdown
 License: MIT + file LICENSE
 SystemRequirements:
-    plink (>= 1.9)
+    plink (1.9)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0

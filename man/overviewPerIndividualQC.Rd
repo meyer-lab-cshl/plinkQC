@@ -39,19 +39,24 @@ ancestry and QC checks: samples IIDs in rows, columns are QC_fail and
 Ancestry_fail, with entries=0 if passing and entries=1 if failing that check.
 }
 \description{
-overviewperIndividualQC depicts results of perIndividualQC as intersection
-plot (via \code{\link[UpSetR]{upset}}) and returns dataframes indicating
-which QC checks any sample failed or passed.
+\code{overviewPerIndividualQC} depicts results of
+\code{\link{perIndividualQC}} as intersection plots
+(via \code{\link[UpSetR]{upset}}) and returns dataframes indicating
+which QC checks individuals failed or passed.
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
-fail_individuals <- perIndividualQC(qcdir=qcdir, alg=alg,
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- "data"
+\dontrun{
+fail_individuals <- perIndividualQC(qcdir=qcdir, indir=indir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
 do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
+
 overview <- overviewPerIndividualQC(fail_individuals)
+}
 }

@@ -36,21 +36,21 @@
 
 <meta property="og:description" content="Evaluates and depicts results from plink --genome on the LD pruned dataset
 (via run_check_relatedness or externally conducted IBD
-estimation. plink --genome calculates identity by state (IBS) for each pair
+estimation). plink --genome calculates identity by state (IBS) for each pair
 of individuals based on the average proportion of alleles shared at genotyped
 SNPs. The degree of recent shared ancestry, i.e. the identity by descent
 (IBD) can be estimated from the genome-wide IBS. The proportion of IBD
 between two individuals is returned by --genome as PI_HAT.
-check_relatedness finds pairs of samples whose proportion of IBD is larger
-than the specified highIBDTh. Subsequently, for pairs of individual that do
-not have additional relatives in the dataset, the individual with the greater
-genotype missingness rate is selected and returned as the individual failing
-the relatedness check. For more complex family structures, the unrelated
-individuals per family are selected (e.g. in a parents-offspring trio, the
-offspring will be marked as fail, while the parents will be kept in the
-analysis).
-check_relatedness depicts all pair-wise IBD-estimates as histograms
-stratified by value of PI_HAT." />
+evaluate_check_relatedness finds pairs of samples whose proportion of
+IBD is larger than the specified highIBDTh. Subsequently, for pairs of
+individual that do not have additional relatives in the dataset, the
+individual with the greater genotype missingness rate is selected and
+returned as the individual failing the relatedness check. For more complex
+family structures, the unrelated individuals per family are selected (e.g. in
+a parents-offspring trio, the offspring will be marked as fail, while the
+parents will be kept in the analysis).
+evaluate_check_relatedness depicts all pair-wise IBD-estimates as
+histograms stratified by value of PI_HAT." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -160,25 +160,25 @@ stratified by value of PI_HAT." />
     
     <p>Evaluates and depicts results from plink --genome on the LD pruned dataset
 (via <code><a href='run_check_relatedness.html'>run_check_relatedness</a></code> or externally conducted IBD
-estimation. plink --genome calculates identity by state (IBS) for each pair
+estimation). plink --genome calculates identity by state (IBS) for each pair
 of individuals based on the average proportion of alleles shared at genotyped
 SNPs. The degree of recent shared ancestry, i.e. the identity by descent
 (IBD) can be estimated from the genome-wide IBS. The proportion of IBD
 between two individuals is returned by --genome as PI_HAT.
-check_relatedness finds pairs of samples whose proportion of IBD is larger
-than the specified highIBDTh. Subsequently, for pairs of individual that do
-not have additional relatives in the dataset, the individual with the greater
-genotype missingness rate is selected and returned as the individual failing
-the relatedness check. For more complex family structures, the unrelated
-individuals per family are selected (e.g. in a parents-offspring trio, the
-offspring will be marked as fail, while the parents will be kept in the
-analysis).
-check_relatedness depicts all pair-wise IBD-estimates as histograms
-stratified by value of PI_HAT.</p>
+<code>evaluate_check_relatedness</code> finds pairs of samples whose proportion of
+IBD is larger than the specified highIBDTh. Subsequently, for pairs of
+individual that do not have additional relatives in the dataset, the
+individual with the greater genotype missingness rate is selected and
+returned as the individual failing the relatedness check. For more complex
+family structures, the unrelated individuals per family are selected (e.g. in
+a parents-offspring trio, the offspring will be marked as fail, while the
+parents will be kept in the analysis).
+<code>evaluate_check_relatedness</code> depicts all pair-wise IBD-estimates as
+histograms stratified by value of PI_HAT.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>evaluate_check_relatedness</span>(<span class='no'>qcdir</span>, <span class='no'>alg</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
+    <pre class="usage"><span class='fu'>evaluate_check_relatedness</span>(<span class='no'>qcdir</span>, <span class='no'>name</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
   <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -187,13 +187,13 @@ stratified by value of PI_HAT.</p>
     <tr>
       <th>qcdir</th>
       <td><p>[character] path/to/directory/with/QC/results containing
-alg.imiss and alg.genome results as returned by plink --missing and plink
---genome. Users needs writing permission to qcdir.</p></td>
+name.imiss and name.genome results as returned by plink --missing and plink
+--genome.</p></td>
     </tr>
     <tr>
-      <th>alg</th>
-      <td><p>[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam, alg.genome and alg.imiss.</p></td>
+      <th>name</th>
+      <td><p>[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam, name.genome and name.imiss.</p></td>
     </tr>
     <tr>
       <th>highIBDTh</th>
@@ -242,7 +242,7 @@ shown by print(p_IBD).</p>
 
     <p>Both <code><a href='run_check_relatedness.html'>run_check_relatedness</a></code> and
 <code>evaluate_check_relatedness</code> can simply be invoked by
-<code><a href='check_relatedness.html'>check_relatedness</a></code>).</p>
+<code><a href='check_relatedness.html'>check_relatedness</a></code>.</p>
 <p>For details on the output data.frame fail_high_IBD, check the original
 description on the PLINK output format page:
 <a href='https://www.cog-genomics.org/plink/1.9/formats#genome'>https://www.cog-genomics.org/plink/1.9/formats#genome</a>.</p>
@@ -251,9 +251,9 @@ description on the PLINK output format page:
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
 <span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>,<span class='st'>'extdata'</span>)
-<span class='no'>alg</span> <span class='kw'>&lt;-</span> <span class='st'>'data'</span>
-<span class='no'>relatednessQC</span> <span class='kw'>&lt;-</span> <span class='fu'>evaluate_check_relatedness</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>alg</span><span class='kw'>=</span><span class='no'>alg</span>,
-<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in evaluate_check_relatedness(qcdir = qcdir, alg = alg, interactive = FALSE): plink --missing output file: /Users/hannah/RPackagesDevel/plinkQC/extdata/data.imiss does not exist.</span></div></pre>
+<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>'data'</span>
+<span class='no'>relatednessQC</span> <span class='kw'>&lt;-</span> <span class='fu'>evaluate_check_relatedness</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
+<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

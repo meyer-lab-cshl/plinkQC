@@ -32,13 +32,13 @@ checkPlink <- function(path2plink) {
 #' Test lists for different properties of numerics
 #'
 #' Test all elements of a list if they are numeric, positive numbers, integers
-#' or proportions (range 0-1)
+#' or proportions (range 0-1).
 #'
-#' @param numbers List whose elements are tested for being numeric
-#' @param positives List whose elements are tested for being positive numbers
-#' @param integers List whose elements are tested for being integers
-#' @param proportions List whose elements are tested for being proportions
-#' between 0 and 1
+#' @param numbers [list] whose elements are tested for being numeric.
+#' @param positives [list] whose elements are tested for being positive numbers.
+#' @param integers [list] whose elements are tested for being integers.
+#' @param proportions [list] whose elements are tested for being proportions.
+#' between 0 and 1.
 #' @return NULL
 testNumerics <- function(numbers, positives=NULL, integers=NULL,
                          proportions=NULL) {
@@ -81,16 +81,16 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
     }
 }
 
-#' Remove related samples while keeping maximum number of samples in cohort.
+#' Remove related individuals while keeping maximum number of individuals
 #'
-#' filterRelatedness takes a data.frame with pair-wise relatedness measures
-#' of samples and returns, returns samples
-#'
-#' filterRelatedness finds pairs of samples whose relatedness estimate is larger
-#' than the specified relatednessTh. Subsequently, for pairs of individual that
-#' do not have additional relatives in the dataset, the individual with the
-#' worse otherCriterionMeasure (if provided) or arbitrarily individual 1 of that
-#' pair is selected and returned as the individual failing
+#' \code{filterRelatedness} takes a data.frame with pair-wise relatedness
+#' measures of samples and returns pairs of individual IDs that are related as
+#' well as a list of suggested individual IDs to remove.
+#' \code{filterRelatedness} finds pairs of samples whose relatedness estimate is
+#' larger than the specified relatednessTh. Subsequently, for pairs of
+#' individual that do not have additional relatives in the dataset, the
+#' individual with the worse otherCriterionMeasure (if provided) or arbitrarily
+#' individual 1 of that pair is selected and returned as the individual failing
 #' the relatedness check. For more complex family structures, the unrelated
 #' individuals per family are selected (e.g. in a parents-offspring trio, the
 #' offspring will be marked as fail, while the parents will be kept in the
@@ -104,7 +104,7 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' (\url{https://www.cog-genomics.org/plink/1.9/ibd}). All original
 #' columns for pair-wise highIBDTh fails will be returned in fail_IBD.
 #' @param relatednessTh [double] Threshold for filtering related individuals.
-#' Individuals, whose pair-wise relatedness estimates that are greater than this
+#' Individuals, whose pair-wise relatedness estimates are greater than this
 #' threshold are considered related.
 #' @param otherCriterion [data.frame] containing a QC measure (in column
 #' [otherCriterionMeasure]) per individual (in column [otherCriterionIID]).
@@ -115,7 +115,7 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' otherCriterionMeasure. If related individuals fail this threshold they will
 #' automatically be excluded.
 #' @param otherCriterionThDirection [character] Used to determine the direction
-#' for failing the otherCriterionTh. If 'gt', indiviuals whose
+#' for failing the otherCriterionTh. If 'gt', individuals whose
 #' otherCriterionMeasure > otherCriterionTh will automatically be excluded.
 #' For pairs of individuals that have no other related samples in the cohort:
 #' if both otherCriterionMeasure < otherCriterionTh, the individual with the

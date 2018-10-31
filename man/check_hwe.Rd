@@ -5,16 +5,22 @@
 \title{Identification of SNPs showing a significant deviation from Hardy-Weinberg-
 equilibrium (HWE)}
 \usage{
-check_hwe(qcdir, alg, hweTh = 1e-05, interactive = FALSE,
-  path2plink = NULL, verbose = FALSE, showPlinkOutput = TRUE)
+check_hwe(indir, name, qcdir = indir, hweTh = 1e-05,
+  interactive = FALSE, path2plink = NULL, verbose = FALSE,
+  showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing
-alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-individuals that failed QC. User needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
+
+\item{qcdir}{[character] /path/to/directory where results will be written to.
+If \code{\link{perIndividualQC}} was conducted, this directory should be the
+same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+permission to qcdir. Per default, qcdir=indir.}
 
 \item{hweTh}{[double] Significance threshold for deviation from HWE.}
 
@@ -57,7 +63,7 @@ all and low p-values), where the hweTh is used to depict the quality control
 cut-off for SNPs.
 }
 \details{
-\code{check_hwe} uses plink --remove alg.fail.IDs --hardy to
+\code{check_hwe} uses plink --remove name.fail.IDs --hardy to
 calculate the observed and expected heterozygote frequencies per SNP in the
 individuals that passed the \code{\link{perIndividualQC}}. It does so
 without generating a new dataset but simply removes the IDs when calculating
@@ -69,13 +75,14 @@ description on the PLINK output format page:
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- "data"
 path2plink <- '/path/to/plink'
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
-fail_hwe <- check_hwe(qcdir=qcdir, alg=alg, interactive=FALSE, verbose=TRUE,
-path2plink=path2plink)
+fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, interactive=FALSE,
+verbose=TRUE, path2plink=path2plink)
 }
 }

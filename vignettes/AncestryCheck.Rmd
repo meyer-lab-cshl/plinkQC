@@ -220,17 +220,19 @@ population. From within R, run the following command to the ancestry check:
 ```{r check ancestry, eval=TRUE, fig.height=3, fig.width=5, fig.align='center'}
 library(plinkQC)
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir,'extdata')
-alg <- 'data'
+indir <- file.path(package.dir,'extdata')
+name <- 'data'
 refname <- 'HapMapIII'
-prefixMergedDataset <- paste(alg, ".", refname, sep="")
+prefixMergedDataset <- paste(name, ".", refname, sep="")
 
 exclude_ancestry <-
-    check_ancestry(qcdir=qcdir, alg=alg,
-                   prefixMergedDataset=prefixMergedDataset,
-                   refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt", sep=""), 
-                   refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
-                   run.check_ancestry=FALSE, interactive=TRUE)
+    evaluate_check_ancestry(indir=indir, name=name,
+                            prefixMergedDataset=prefixMergedDataset,
+                            refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",
+                                                 sep=""), 
+                            refColorsFile=paste(indir, "/HapMap_PopColors.txt",
+                                                sep=""),
+                            interactive=TRUE)
 ```
 
 # References

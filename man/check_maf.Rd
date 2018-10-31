@@ -4,21 +4,27 @@
 \alias{check_maf}
 \title{Identification of SNPs with low minor allele frequency}
 \usage{
-check_maf(qcdir, alg, mafTh = 0.01, macTh = 20, verbose = FALSE,
-  interactive = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
+check_maf(indir, name, qcdir = indir, mafTh = 0.01, macTh = 20,
+  verbose = FALSE, interactive = FALSE, path2plink = NULL,
+  showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing
-alg.bim, alg.bed, alg.fam files and alg.fail.IDs containing IIDs of
-individuals that failed QC. User needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
+
+\item{qcdir}{[character] /path/to/directory where results will be written to.
+If \code{\link{perIndividualQC}} was conducted, this directory should be the
+same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
+name.fail.IDs with IIDs of individuals that failed QC. User needs writing
+permission to qcdir. Per default, qcdir=indir.}
 
 \item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
 
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
-and macTh are specied, macTh is used (macTh = mafTh\*2\*NrSamples)}
+and macTh are specied, macTh is used (macTh = mafTh\*2\*NrSamples).}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out
 and specifically, if TRUE, plink log will be displayed.}
@@ -53,7 +59,7 @@ frequencies for all variants in the individuals that passed the
 plotted as a histogram.
 }
 \details{
-\code{check_maf} uses plink --remove alg.fail.IDs --freq to calculate the
+\code{check_maf} uses plink --remove name.fail.IDs --freq to calculate the
 minor allele frequencies for all variants in the individuals that passed the
 \code{\link{perIndividualQC}}. It does so without generating a new dataset
 but simply removes the IDs when calculating the statistics.
@@ -64,13 +70,14 @@ description on the PLINK output format page:
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- "data"
 path2plink <- '/path/to/plink'
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
-fail_maf <- check_maf(qcdir=qcdir, alg=alg, macTh=15, interactive=FALSE,
-verbose=TRUE, path2plink=path2plink)
+fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, macTh=15,
+interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 }
 }

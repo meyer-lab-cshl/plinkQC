@@ -5,24 +5,28 @@
 \title{Identification of individuals with outlying missing genotype or
 heterozygosity rates}
 \usage{
-check_het_and_miss(qcdir, alg, imissTh = 0.03, hetTh = 3,
-  run.check_het_and_miss = TRUE, interactive = FALSE,
+check_het_and_miss(indir, name, qcdir = indir, imissTh = 0.03,
+  hetTh = 3, run.check_het_and_miss = TRUE, interactive = FALSE,
   verbose = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing plink
-dataset. If run.check_het_and_miss is FALSE, it is assumed that plink
---missing and plink --het have been run and qcdir/alg.imiss and qcdir/alg.het
-are present. Users needs writing permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam, alg.het and alg.imiss.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam, name.het and name.imiss.}
 
-\item{imissTh}{[double] Threshold for acceptable missing genotype rate in any
+\item{qcdir}{[character] /path/to/directory where name.het as returned by
+plink --het and name.imiss as returned by plink --missing will be saved. Per
+default qcdir=indir. If run.check_het_and_miss is FALSE, it is assumed that
+plink --missing and plink --het have been run and qcdir/name.imiss and
+qcdir/name.het are present. User needs writing permission to qcdir.}
+
+\item{imissTh}{[double] Threshold for acceptable missing genotype rate per
 individual; has to be proportion between (0,1)}
 
 \item{hetTh}{[double] Threshold for acceptable deviation from mean
-heterozygosity in any individual. Expressed as multiples of standard
+heterozygosity per individual. Expressed as multiples of standard
 deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 larger than 0.}
@@ -30,7 +34,7 @@ larger than 0.}
 \item{run.check_het_and_miss}{[logical] Should plink --missing and plink
 --het be run to determine genotype missingness and heterozygosity rates; if
 FALSE, it is assumed that plink --missing and plink --het have been run and
-qcdir/alg.imiss and qcdir/alg.het are present;
+qcdir/name.imiss and qcdir/name.het are present;
 \code{\link{check_het_and_miss}} will fail with missing file error otherwise.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
@@ -77,8 +81,9 @@ Mean heterozygosity can differ between populations and SNP genotyping panels.
 Within a population and genotyping panel, a reduced heterozygosity rate can
 indicate inbreeding - these individuals will then likely be returned by
 \code{\link{check_relatedness}} as individuals that fail the relatedness
-filters. \code{check_het_and_miss} creates a scatter plot with the samples'
-missingness rates on x-axis and their heterozygosity rates on the y-axis.
+filters. \code{check_het_and_miss} creates a scatter plot with the
+individuals' missingness rates on x-axis and their heterozygosity rates on
+the y-axis.
 }
 \details{
 \code{\link{check_het_and_miss}} wraps around
@@ -88,7 +93,7 @@ missingness rates on x-axis and their heterozygosity rates on the y-axis.
 If run.check_het_and_miss is TRUE, \code{\link{run_check_heterozygosity}} and
 \code{\link{run_check_missingness}} are excuted; otherwise it is assumed
 that plink --missing and plink --het have been run externally and
-qcdir/alg.het and qcdir/alg.imiss exist.  \code{\link{check_het_and_miss}}
+qcdir/name.het and qcdir/name.imiss exist.  \code{\link{check_het_and_miss}}
 will fail with missing file error otherwise.
 
 For details on the output data.frame fail_imiss and fail_het, check the
@@ -99,7 +104,7 @@ original description on the PLINK output format page:
 \examples{
 package.dir <- find.package('plinkQC')
 qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
-fail_het_miss <- check_het_and_miss(qcdir=qcdir, alg=alg,
+name <- "data"
+fail_het_miss <- check_het_and_miss(indir=qcdir, name=name,
 run.check_het_and_miss=FALSE, interactive=FALSE)
 }

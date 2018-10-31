@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{relatednessFilter}
 \alias{relatednessFilter}
-\title{Remove related samples while keeping maximum number of samples in cohort.}
+\title{Remove related individuals while keeping maximum number of individuals}
 \usage{
 relatednessFilter(relatedness, otherCriterion = NULL, relatednessTh,
   otherCriterionTh = NULL, otherCriterionThDirection = c("gt", "ge",
@@ -28,7 +28,7 @@ columns such as family IDs can be present. IIDs in relatednessIID1 have to
 be present in otherCriterionIID.}
 
 \item{relatednessTh}{[double] Threshold for filtering related individuals.
-Individuals, whose pair-wise relatedness estimates that are greater than this
+Individuals, whose pair-wise relatedness estimates are greater than this
 threshold are considered related.}
 
 \item{otherCriterionTh}{[double] Threshold for filtering individuals based on
@@ -36,7 +36,7 @@ otherCriterionMeasure. If related individuals fail this threshold they will
 automatically be excluded.}
 
 \item{otherCriterionThDirection}{[character] Used to determine the direction
-for failing the otherCriterionTh. If 'gt', indiviuals whose
+for failing the otherCriterionTh. If 'gt', individuals whose
 otherCriterionMeasure > otherCriterionTh will automatically be excluded.
 For pairs of individuals that have no other related samples in the cohort:
 if both otherCriterionMeasure < otherCriterionTh, the individual with the
@@ -75,15 +75,14 @@ QC and ii) failIDs, a [data.frame] with the [IID]s (and [FID]s if provided)
 of the individuals that fail the relatednessTh.
 }
 \description{
-filterRelatedness takes a data.frame with pair-wise relatedness measures
-of samples and returns, returns samples
-}
-\details{
-filterRelatedness finds pairs of samples whose relatedness estimate is larger
-than the specified relatednessTh. Subsequently, for pairs of individual that
-do not have additional relatives in the dataset, the individual with the
-worse otherCriterionMeasure (if provided) or arbitrarily individual 1 of that
-pair is selected and returned as the individual failing
+\code{filterRelatedness} takes a data.frame with pair-wise relatedness
+measures of samples and returns pairs of individual IDs that are related as
+well as a list of suggested individual IDs to remove.
+\code{filterRelatedness} finds pairs of samples whose relatedness estimate is
+larger than the specified relatednessTh. Subsequently, for pairs of
+individual that do not have additional relatives in the dataset, the
+individual with the worse otherCriterionMeasure (if provided) or arbitrarily
+individual 1 of that pair is selected and returned as the individual failing
 the relatedness check. For more complex family structures, the unrelated
 individuals per family are selected (e.g. in a parents-offspring trio, the
 offspring will be marked as fail, while the parents will be kept in the

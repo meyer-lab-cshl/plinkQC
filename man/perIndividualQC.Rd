@@ -4,11 +4,11 @@
 \alias{perIndividualQC}
 \title{Quality control for all individuals in plink-dataset}
 \usage{
-perIndividualQC(qcdir, alg, dont.check_sex = FALSE,
+perIndividualQC(indir, name, qcdir = indir, dont.check_sex = FALSE,
   do.run_check_sex = TRUE, do.evaluate_check_sex = TRUE,
-  maleTh = 0.8, femaleTh = 0.2, fixMixup = FALSE,
-  externalSex = NULL, externalMale = "M", externalSexSex = "Sex",
-  externalSexID = "IID", externalFemale = "F",
+  maleTh = 0.8, femaleTh = 0.2, externalSex = NULL,
+  externalMale = "M", externalSexSex = "Sex", externalSexID = "IID",
+  externalFemale = "F", fixMixup = FALSE,
   dont.check_het_and_miss = FALSE, do.run_check_het_and_miss = TRUE,
   do.evaluate_check_het_and_miss = TRUE, imissTh = 0.03, hetTh = 3,
   dont.check_relatedness = FALSE, do.run_check_relatedness = TRUE,
@@ -22,20 +22,22 @@ perIndividualQC(qcdir, alg, dont.check_sex = FALSE,
   verbose = TRUE, path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing the
-basic data files alg.bim, alg.bed, alg.fam files. In addition, if
-do.evaluate_[analysis] is set to TRUE and do.run_[analysis] is FALSE,
-it expects the analysis-specific plink output
-files in qcdir i.e. do.check_sex expects alg.sexcheck,
-do.evaluate_check_het_and_miss expects alg.het and alg.imiss,
-do.evauluate_check_relatedness expects alg.genome and alg.imiss and
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
+
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
+
+\item{qcdir}{[character] /path/to/directory where results will be saved.
+Per default, qcdir=indir. If do.evaluate_[analysis] is set to TRUE and
+do.run_[analysis] is FALSE, \code{perIndividualQC} expects the
+analysis-specific plink output files in qcdir i.e. do.check_sex expects
+name.sexcheck, do.evaluate_check_het_and_miss expects name.het and name.imiss,
+do.evauluate_check_relatedness expects name.genome and name.imiss and
 do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
-are not present \code{perIndividualQC} will fail with missing file error
+are not present \code{perIndividualQC} will fail with missing file error.
 Setting do.run_[analysis] TRUE will execute the checks and create the
 required files. User needs writing permission to qcdir.}
-
-\item{alg}{[character] Prefix of plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
 
 \item{dont.check_sex}{[logical] If TRUE, no sex check will be conducted;
 short for do.run_check_sex=FALSE and do.evaluate_check_sex=FALSE.
@@ -52,10 +54,6 @@ males.}
 \item{femaleTh}{[double] Threshold of X-chromosomal heterozygosity rate for
 females.}
 
-\item{fixMixup}{[logical] Should PEDSEX of individuals with mismatch between
-PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
-change the alg.bim/.bed/.fam files!}
-
 \item{externalSex}{[data.frame, optional] Dataframe with sample IDs
 [externalSexID] and sex [externalSexSex] to double check if external and
 PEDSEX data (often processed at different centers) match.}
@@ -71,6 +69,10 @@ information in externalSex.}
 \item{externalFemale}{[integer/character] Identifier for 'female' in
 externalSex.}
 
+\item{fixMixup}{[logical] Should PEDSEX of individuals with mismatch between
+PEDSEX and Sex while Sex==SNPSEX automatically corrected: this will directly
+change the name.bim/.bed/.fam files!}
+
 \item{dont.check_het_and_miss}{[logical] If TRUE, no heterozygosity and
 missingness check will be conducted; short for
 do.run_check_heterozygosity=FALSE, do.run_check_missingness=FALSE and
@@ -79,16 +81,17 @@ do.run_check_heterozygosity, do.run_check_missingness and
 do.evaluate_check_het_and_miss.}
 
 \item{do.run_check_het_and_miss}{[logical] If TRUE, run
-\code{\link{run_check_heterozygosity}} and \code{\link{run_check_missingness}}}
+\code{\link{run_check_heterozygosity}} and
+\code{\link{run_check_missingness}}}
 
 \item{do.evaluate_check_het_and_miss}{[logical] If TRUE, run
 \code{\link{evaluate_check_het_and_miss}}.}
 
-\item{imissTh}{[double] Threshold for acceptable missing genotype rate in any
-individual}
+\item{imissTh}{[double] Threshold for acceptable missing genotype rate per
+individual.}
 
 \item{hetTh}{[double] Threshold for acceptable deviation from mean
-heterozygosity in any individual. Expressed as multiples of standard
+heterozygosity per individual. Expressed as multiples of standard
 deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check.}
 
@@ -162,8 +165,7 @@ refColors/refColorsFile}
 \item{refColorsPop}{[character] Column name of reference sample population
 IDs in refColors/refColorsFile.}
 
-\item{studyColor}{[character] Color to be used for study population if plot
-is TRUE.}
+\item{studyColor}{[character] Color to be used for study population.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -224,20 +226,24 @@ function individually.
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
-alg <- "data"
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- "data"
 # All quality control checks
 # In this examples, run_check* already conducted and outcome files present
 # in qcdir, hence dont.check_* all set to FALSE
-fail_individuals <- perIndividualQC(qcdir=qcdir, alg=alg,
+\dontrun{
+fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
 do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
+
 # Only check sex and missingness/heterozygosity
-fail_sex_het_miss <- perIndividualQC(qcdir=qcdir, alg=alg,
+fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
 interactive=FALSE, verbose=FALSE, do.run_check_het_and_miss=FALSE,
 do.run_check_sex=FALSE)
+}
 }

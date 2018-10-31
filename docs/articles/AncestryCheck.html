@@ -104,7 +104,7 @@
       <h1>Ancestry estimation based on reference samples of known ethnicities</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2018-10-30</h4>
+            <h4 class="date">2018-10-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/AncestryCheck.Rmd"><code>vignettes/AncestryCheck.Rmd</code></a></small>
       <div class="hidden name"><code>AncestryCheck.Rmd</code></div>
@@ -254,17 +254,19 @@
 <p>We can use the .eigenvec file to estimate the ancestry of the study samples. Identifying individuals of divergent ancestry is implemented in <code>check_ancestry</code>. Currently, check ancestry only supports automatic selection of individuals of European descent. It uses principal components 1 and 2 to find the center of the known European reference samples. All study samples whose Euclidean distance from the centre falls outside the radius specified by the maximum Euclidean distance of the reference samples multiplied by the chosen <code>europeanTh</code> are considered non-European. <code>check_ancestry</code> shows the result of the ancestry analysis in a scatter plot of PC1 versus PC2 colour-coded for samples of the reference populations and the study population. From within R, run the following command to the ancestry check:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plinkQC)
 package.dir &lt;-<span class="st"> </span><span class="kw">find.package</span>(<span class="st">'plinkQC'</span>)
-qcdir &lt;-<span class="st"> </span><span class="kw">file.path</span>(package.dir,<span class="st">'extdata'</span>)
-alg &lt;-<span class="st"> 'data'</span>
+indir &lt;-<span class="st"> </span><span class="kw">file.path</span>(package.dir,<span class="st">'extdata'</span>)
+name &lt;-<span class="st"> 'data'</span>
 refname &lt;-<span class="st"> 'HapMapIII'</span>
-prefixMergedDataset &lt;-<span class="st"> </span><span class="kw">paste</span>(alg, <span class="st">"."</span>, refname, <span class="dt">sep=</span><span class="st">""</span>)
+prefixMergedDataset &lt;-<span class="st"> </span><span class="kw">paste</span>(name, <span class="st">"."</span>, refname, <span class="dt">sep=</span><span class="st">""</span>)
 
 exclude_ancestry &lt;-
-<span class="st">    </span><span class="kw"><a href="../reference/check_ancestry.html">check_ancestry</a></span>(<span class="dt">qcdir=</span>qcdir, <span class="dt">alg=</span>alg,
-                   <span class="dt">prefixMergedDataset=</span>prefixMergedDataset,
-                   <span class="dt">refSamplesFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_ID2Pop.txt"</span>, <span class="dt">sep=</span><span class="st">""</span>), 
-                   <span class="dt">refColorsFile=</span><span class="kw">paste</span>(qcdir, <span class="st">"/HapMap_PopColors.txt"</span>, <span class="dt">sep=</span><span class="st">""</span>),
-                   <span class="dt">run.check_ancestry=</span><span class="ot">FALSE</span>, <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
+<span class="st">    </span><span class="kw"><a href="../reference/evaluate_check_ancestry.html">evaluate_check_ancestry</a></span>(<span class="dt">indir=</span>indir, <span class="dt">name=</span>name,
+                            <span class="dt">prefixMergedDataset=</span>prefixMergedDataset,
+                            <span class="dt">refSamplesFile=</span><span class="kw">paste</span>(indir, <span class="st">"/HapMap_ID2Pop.txt"</span>,
+                                                 <span class="dt">sep=</span><span class="st">""</span>), 
+                            <span class="dt">refColorsFile=</span><span class="kw">paste</span>(indir, <span class="st">"/HapMap_PopColors.txt"</span>,
+                                                <span class="dt">sep=</span><span class="st">""</span>),
+                            <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="AncestryCheck_files/figure-html/check%20ancestry-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>

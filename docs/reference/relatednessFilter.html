@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Remove related samples while keeping maximum number of samples in cohort. — relatednessFilter • plinkQC</title>
+<title>Remove related individuals while keeping maximum number of individuals — relatednessFilter • plinkQC</title>
 
 <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
 
@@ -32,10 +32,20 @@
 
 
 
-<meta property="og:title" content="Remove related samples while keeping maximum number of samples in cohort. — relatednessFilter" />
+<meta property="og:title" content="Remove related individuals while keeping maximum number of individuals — relatednessFilter" />
 
-<meta property="og:description" content="filterRelatedness takes a data.frame with pair-wise relatedness measures
-of samples and returns, returns samples" />
+<meta property="og:description" content="filterRelatedness takes a data.frame with pair-wise relatedness
+measures of samples and returns pairs of individual IDs that are related as
+well as a list of suggested individual IDs to remove.
+filterRelatedness finds pairs of samples whose relatedness estimate is
+larger than the specified relatednessTh. Subsequently, for pairs of
+individual that do not have additional relatives in the dataset, the
+individual with the worse otherCriterionMeasure (if provided) or arbitrarily
+individual 1 of that pair is selected and returned as the individual failing
+the relatedness check. For more complex family structures, the unrelated
+individuals per family are selected (e.g. in a parents-offspring trio, the
+offspring will be marked as fail, while the parents will be kept in the
+analysis)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,15 +146,25 @@ of samples and returns, returns samples" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Remove related samples while keeping maximum number of samples in cohort.</h1>
+    <h1>Remove related individuals while keeping maximum number of individuals</h1>
     <small class="dont-index">Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>relatednessFilter.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>filterRelatedness takes a data.frame with pair-wise relatedness measures
-of samples and returns, returns samples</p>
+    <p><code>filterRelatedness</code> takes a data.frame with pair-wise relatedness
+measures of samples and returns pairs of individual IDs that are related as
+well as a list of suggested individual IDs to remove.
+<code>filterRelatedness</code> finds pairs of samples whose relatedness estimate is
+larger than the specified relatednessTh. Subsequently, for pairs of
+individual that do not have additional relatives in the dataset, the
+individual with the worse otherCriterionMeasure (if provided) or arbitrarily
+individual 1 of that pair is selected and returned as the individual failing
+the relatedness check. For more complex family structures, the unrelated
+individuals per family are selected (e.g. in a parents-offspring trio, the
+offspring will be marked as fail, while the parents will be kept in the
+analysis).</p>
     
     </div>
 
@@ -180,7 +200,7 @@ be present in otherCriterionIID.</p></td>
     <tr>
       <th>relatednessTh</th>
       <td><p>[double] Threshold for filtering related individuals.
-Individuals, whose pair-wise relatedness estimates that are greater than this
+Individuals, whose pair-wise relatedness estimates are greater than this
 threshold are considered related.</p></td>
     </tr>
     <tr>
@@ -192,7 +212,7 @@ automatically be excluded.</p></td>
     <tr>
       <th>otherCriterionThDirection</th>
       <td><p>[character] Used to determine the direction
-for failing the otherCriterionTh. If 'gt', indiviuals whose
+for failing the otherCriterionTh. If 'gt', individuals whose
 otherCriterionMeasure &gt; otherCriterionTh will automatically be excluded.
 For pairs of individuals that have no other related samples in the cohort:
 if both otherCriterionMeasure &lt; otherCriterionTh, the individual with the
@@ -247,18 +267,6 @@ individuals in relatednessIID1 and relatednessIID2, that fail the relatedness
 QC and ii) failIDs, a [data.frame] with the [IID]s (and [FID]s if provided)
 of the individuals that fail the relatednessTh.</p>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>filterRelatedness finds pairs of samples whose relatedness estimate is larger
-than the specified relatednessTh. Subsequently, for pairs of individual that
-do not have additional relatives in the dataset, the individual with the
-worse otherCriterionMeasure (if provided) or arbitrarily individual 1 of that
-pair is selected and returned as the individual failing
-the relatedness check. For more complex family structures, the unrelated
-individuals per family are selected (e.g. in a parents-offspring trio, the
-offspring will be marked as fail, while the parents will be kept in the
-analysis).</p>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -267,8 +275,6 @@ analysis).</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

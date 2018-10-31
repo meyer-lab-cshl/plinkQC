@@ -2,18 +2,21 @@
 % Please edit documentation in R/individualQC.R
 \name{run_check_relatedness}
 \alias{run_check_relatedness}
-\title{Run PLINK IBD estimation.}
+\title{Run PLINK IBD estimation}
 \usage{
-run_check_relatedness(qcdir, alg, path2plink = NULL,
+run_check_relatedness(indir, name, qcdir = indir, path2plink = NULL,
   showPlinkOutput = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{qcdir}{[character] /path/to/directory/with/QC/results containing the
-basic data files alg.bim, alg.bed, alg.fam files. User needs writing
-permission to qcdir.}
+\item{indir}{[character] /path/to/directory containing the basic PLINK data
+files name.bim, name.bed, name.fam files.}
 
-\item{alg}{[character] prefix of QC-ed plink files, i.e. alg.bed, alg.bim,
-alg.fam.}
+\item{name}{[character] Prefix of PLINK files, i.e. name.bed, name.bim,
+name.fam.}
+
+\item{qcdir}{[character] /path/to/directory to save name.genome as returned
+by plink --genome. User needs writing permission to qcdir. Per default
+qcdir=indir.}
 
 \item{path2plink}{[character] Absolute path to directory where external plink
 software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
@@ -40,15 +43,16 @@ PI_HAT.
 \details{
 Both \code{\link{run_check_relatedness}} and its evaluation via
 \code{\link{evaluate_check_relatedness}} can simply be invoked by
-\code{\link{check_relatedness}}).
+\code{\link{check_relatedness}}.
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir,'extdata')
-alg <- 'data'
+indir <- file.path(package.dir,'extdata')
+name <- 'data'
+qcdir <- tempdir()
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
-run <- run_check_relatedness(qcdir, alg)
+run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name)
 }
 }
