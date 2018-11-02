@@ -62,7 +62,7 @@
       <a href="../articles/HapMap.html">HapMap III reference</a>
     </li>
     <li>
-      <a href="../articles/1000Genomes.html">1000 Genomes reference</a>
+      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
     </li>
   </ul>
 </li>
@@ -104,7 +104,7 @@
       <h1>Processing 1000 Genomes reference data for ancestry estimation</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2018-10-31</h4>
+            <h4 class="date">2018-11-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/Genomes1000.Rmd"><code>vignettes/Genomes1000.Rmd</code></a></small>
       <div class="hidden name"><code>Genomes1000.Rmd</code></div>
@@ -154,13 +154,13 @@
 <span class="ex">plink2</span> --zst-decompress all_phase3.pvar.zst <span class="op">&gt;</span> all_phase3.pvar
 
 <span class="fu">wget</span> <span class="va">$sample</span>
-<span class="fu">mv</span> <span class="st">'phase3_corrected.psam\?dl\=1'</span> phase3_corrected.psam</code></pre></div>
+<span class="fu">mv</span> <span class="st">'phase3_corrected.psam\?dl\=1'</span> all_phase3.psam</code></pre></div>
 </div>
 <div id="convert-1000-genomes-phase-3-data-to-plink-1-binary-format" class="section level2">
 <h2 class="hasAnchor">
 <a href="#convert-1000-genomes-phase-3-data-to-plink-1-binary-format" class="anchor"></a>Convert 1000 Genomes phase 3 data to plink 1 binary format</h2>
 <p>We then convert the <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a> to the (at the moment) more standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped">PLINK 1 binary format</a>.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">plink</span> --file <span class="va">$refdir</span>/all_phase3 \
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">plink2</span> --pfile <span class="va">$refdir</span>/all_phase3 \
       --make-bed \
       --out <span class="va">$refdir</span>/all_phase3
 <span class="fu">mv</span> <span class="va">$refdir</span>/all_phase3.log <span class="va">$refdir</span>/log</code></pre></div>
