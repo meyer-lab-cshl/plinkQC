@@ -108,7 +108,7 @@ format.
 
 ```{bash prepare liftover, eval=FALSE}
 awk '{print "chr" $1, $4 -1, $4, $2 }' $refdir/HapMapIII_NCBI36.bim | \
-    { sed 's/chr23/chrX/'; sed 's/chr24/chrY/'} > \
+    sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > \
     $refdir/HapMapIII_NCBI36.tolift
 ```
 
@@ -135,7 +135,7 @@ We can now use PLINK to extract the mappable variants from the old build and
 update their position. After these steps, the HapMap III dataset can be used 
 for infering study ancestry as described in the corresponding [vignette](https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html).
 ```{bash update annotation, eval=FALSE}
-plink --bfile $refdir/HapMapIII_NCBI36
+plink --bfile $refdir/HapMapIII_NCBI36 \
     --extract $refdir/HapMapIII_CGRCh37.snps \
     --update-map $refdir/HapMapIII_CGRCh37.pos \
     --make-bed \

@@ -158,8 +158,8 @@
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">liftOver</span> oldFile liftover.chain newFile unMapped</code></pre></div>
 <p>We first need to download the liftOver tool from <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="uri">https://genome.ucsc.edu/cgi-bin/hgLiftOver</a> and the appropriate liftover chain from <a href="http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/" class="uri">http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/</a>). We then convert the <a href="https://www.cog-genomics.org/plink/1.9/formats#bim">PLINK .bim</a> format, to the zero-based <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">UCSC bed</a> format.</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">awk</span> <span class="st">'{print "chr" $1, $4 -1, $4, $2 }'</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.bim <span class="kw">|</span> <span class="kw">\</span>
-    <span class="kw">{</span> <span class="fu">sed</span> <span class="st">'s/chr23/chrX/'</span><span class="kw">;</span> <span class="fu">sed</span> <span class="st">'s/chr24/chrY/'</span><span class="kw">}</span> <span class="op">&gt;</span> <span class="kw">\</span>
-    <span class="va">$refdir</span><span class="ex">/HapMapIII_NCBI36.tolift</span></code></pre></div>
+    <span class="fu">sed</span> <span class="st">'s/chr23/chrX/'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/chr24/chrY/'</span> <span class="op">&gt;</span> \
+    <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift</code></pre></div>
 <p>We use the liftOver tool and the UCSC bed formated annotation file together with the appropriate chain file to do the lift over.</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">liftOver</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift <span class="va">$refdir</span>/hg18ToHg19.over.chain \
     <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="va">$refdir</span>/HapMapIII_NCBI36.unMapped</code></pre></div>
@@ -173,8 +173,8 @@
 <h2 class="hasAnchor">
 <a href="#update-the-reference-data" class="anchor"></a>Update the reference data</h2>
 <p>We can now use PLINK to extract the mappable variants from the old build and update their position. After these steps, the HapMap III dataset can be used for infering study ancestry as described in the corresponding <a href="https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html">vignette</a>.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">plink</span> --bfile <span class="va">$refdir</span>/HapMapIII_NCBI36
-    <span class="ex">--extract</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps \
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">plink</span> --bfile <span class="va">$refdir</span>/HapMapIII_NCBI36 \
+    --extract <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps \
     --update-map <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos \
     --make-bed \
     --out <span class="va">$refdir</span>/HapMapIII_CGRCh37
