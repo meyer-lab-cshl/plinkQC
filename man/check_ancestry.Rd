@@ -120,9 +120,9 @@ for samples of the reference populations and the study population.
 }
 \examples{
 package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
+indir <- file.path(package.dir, 'extdata')
 name <- "data"
-fail_ancestry <- check_ancestry(indir=qcdir, name=name,
+fail_ancestry <- check_ancestry(indir=indir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE,
