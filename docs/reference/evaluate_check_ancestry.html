@@ -77,7 +77,7 @@ samples of the reference populations and the study population." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -231,15 +231,18 @@ are used.</p></td>
       <td><p>[character] /path/to/File/with/reference samples. Needs
 columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
-corresponding to population IDs [refColorsPop] in refColorsfile/refColors.</p></td>
+corresponding to population IDs [refColorsPop] in refColorsfile/refColors. If
+both refSamplesFile and refSamples are not NULL, refSamplesFile information
+is used.</p></td>
     </tr>
     <tr>
       <th>refColorsFile</th>
       <td><p>[character, optional]
-/path/to/File/with/Population/Colors cotaining population IDs in column
+/path/to/File/with/Population/Colors containing population IDs in column
 [refColorsPop] and corresponding colour-code for PCA plot in column
 [refColorsColor].If not provided and is.null(refColors) default colors for
-are used.</p></td>
+are used. If both refColorsFile and refColors are not NULL, refColorsFile
+information is used.</p></td>
     </tr>
     <tr>
       <th>refSamplesIID</th>
@@ -292,13 +295,14 @@ print(p_ancestry).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
-<span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
 <span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
-<span class='no'>fail_ancestry</span> <span class='kw'>&lt;-</span> <span class='fu'>evaluate_check_ancestry</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
-<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>indir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
-<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>indir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
-<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div></pre>
+<span class='no'>fail_ancestry</span> <span class='kw'>&lt;-</span> <span class='fu'>evaluate_check_ancestry</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
+<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'>paste</span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

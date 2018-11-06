@@ -67,7 +67,7 @@ genetic ancestry." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -189,7 +189,7 @@ Per default, qcdir=indir. If do.evaluate_[analysis] is set to TRUE and
 do.run_[analysis] is FALSE, <code>perIndividualQC</code> expects the
 analysis-specific plink output files in qcdir i.e. do.check_sex expects
 name.sexcheck, do.evaluate_check_het_and_miss expects name.het and name.imiss,
-do.evauluate_check_relatedness expects name.genome and name.imiss and
+do.evaluate_check_relatedness expects name.genome and name.imiss and
 do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
 are not present <code>perIndividualQC</code> will fail with missing file error.
 Setting do.run_[analysis] TRUE will execute the checks and create the
@@ -362,7 +362,7 @@ corresponding to population IDs [refColorsPop] in refColorsfile/refColors.</p></
     <tr>
       <th>refColorsFile</th>
       <td><p>[character, optional]
-/path/to/File/with/Population/Colors cotaining population IDs in column
+/path/to/File/with/Population/Colors containing population IDs in column
 [refColorsPop] and corresponding color-code for PCA plot in column
 [refColorsColor].If not provided and is.null(refColors) default colors for
 are used.</p></td>
@@ -417,7 +417,7 @@ TRUE).</p></td>
       <th>path2plink</th>
       <td><p>[character] Absolute path to directory where external plink
 software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accessible as path2plink/plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").</p></td>
     </tr>
@@ -438,7 +438,7 @@ containing a [vector] with sample IIDs failing the heterozygosity threshold
 hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
 the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
 a vector with sample IIDs failing the ancestry check based on europeanTh and
-ii) p_sampleQC, a ggplot2-object 'containing' a sub-panelled plot with the
+ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of <code><a href='check_sex.html'>check_sex</a></code>,
 <code><a href='check_het_and_miss.html'>check_het_and_miss</a></code>,
 <code><a href='check_relatedness.html'>check_relatedness</a></code> and <code><a href='check_ancestry.html'>check_ancestry</a></code>, which can
@@ -456,8 +456,7 @@ function individually.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
-<span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
+    <pre class="examples"><div class='input'><span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
 <span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>tempdir</span>()
 <span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
 <span class='co'># All quality control checks</span>

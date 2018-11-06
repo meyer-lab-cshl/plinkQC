@@ -80,7 +80,7 @@ the y-axis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -239,7 +239,7 @@ save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
       <th>path2plink</th>
       <td><p>[character] Absolute path to directory where external plink
 software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accessible as path2plink/plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").</p></td>
     </tr>
@@ -272,7 +272,7 @@ which can be shown by print(p_het_imiss).</p>
 <code><a href='run_check_heterozygosity.html'>run_check_heterozygosity</a></code> and
 <code><a href='evaluate_check_het_and_miss.html'>evaluate_check_het_and_miss</a></code>.
 If run.check_het_and_miss is TRUE, <code><a href='run_check_heterozygosity.html'>run_check_heterozygosity</a></code> and
-<code><a href='run_check_missingness.html'>run_check_missingness</a></code> are excuted; otherwise it is assumed
+<code><a href='run_check_missingness.html'>run_check_missingness</a></code> are executed ; otherwise it is assumed
 that plink --missing and plink --het have been run externally and
 qcdir/name.het and qcdir/name.imiss exist.  <code>check_het_and_miss</code>
 will fail with missing file error otherwise.</p>
@@ -283,11 +283,12 @@ original description on the PLINK output format page:
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
-<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>, <span class='st'>'extdata'</span>)
+    <pre class="examples"><div class='input'> </div><span class='co'># NOT RUN {</span>
+<span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
 <span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
-<span class='no'>fail_het_miss</span> <span class='kw'>&lt;-</span> <span class='fu'>check_het_and_miss</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
-<span class='kw'>run.check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div></pre>
+<span class='no'>fail_het_miss</span> <span class='kw'>&lt;-</span> <span class='fu'>check_het_and_miss</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
+<span class='kw'>run.check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

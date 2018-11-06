@@ -79,7 +79,7 @@ stratified by value of PI_HAT." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -235,7 +235,7 @@ other_arguments) or pdf(outfile) print(p_IBD) dev.off().</p></td>
       <th>path2plink</th>
       <td><p>[character] Absolute path to directory where external plink
 software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accessible as path2plink/plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").</p></td>
     </tr>
@@ -270,7 +270,7 @@ shown by print(p_IBD).</p>
     <p><code>check_relatedness</code> wraps around
 <code><a href='run_check_relatedness.html'>run_check_relatedness</a></code> and
 <code><a href='evaluate_check_relatedness.html'>evaluate_check_relatedness</a></code>. If run.check_relatedness is TRUE,
-<code><a href='run_check_relatedness.html'>run_check_relatedness</a></code> is excuted; otherwise it is assumed that
+<code><a href='run_check_relatedness.html'>run_check_relatedness</a></code> is executed ; otherwise it is assumed that
 plink --genome has been run externally and qcdir/name.genome exists.
 <code>check_relatedness</code>  will fail with missing file error otherwise.</p>
 <p>For details on the output data.frame fail_high_IBD, check the original
@@ -279,11 +279,12 @@ description on the PLINK output format page:
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>package.dir</span> <span class='kw'>&lt;-</span> <span class='fu'>find.package</span>(<span class='st'>'plinkQC'</span>)
-<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='no'>package.dir</span>,<span class='st'>'extdata'</span>)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
 <span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>'data'</span>
-<span class='no'>relatednessQC</span> <span class='kw'>&lt;-</span> <span class='fu'>check_relatedness</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>run.check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div></pre>
+<span class='no'>relatednessQC</span> <span class='kw'>&lt;-</span> <span class='fu'>check_relatedness</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>run.check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
