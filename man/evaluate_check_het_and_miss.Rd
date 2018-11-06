@@ -75,9 +75,10 @@ original description on the PLINK output format page:
 \url{https://www.cog-genomics.org/plink/1.9/formats#het}
 }
 \examples{
-package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
+qcdir <- system.file("extdata", package="plinkQC")
 name <- "data"
+\dontrun{
 fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
 interactive=FALSE)
+}
 }

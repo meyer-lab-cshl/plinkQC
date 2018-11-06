@@ -89,8 +89,7 @@ perMarkerQC wraps around the marker QC functions
 these function documentations.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir, 'extdata')
+indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 name <- "data"
 path2plink <- '/path/to/plink'

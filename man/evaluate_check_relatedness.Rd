@@ -76,9 +76,10 @@ description on the PLINK output format page:
 \url{https://www.cog-genomics.org/plink/1.9/formats#genome}.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir,'extdata')
+qcdir <- system.file("extdata", package="plinkQC")
 name <- 'data'
+\dontrun{
 relatednessQC <- evaluate_check_relatedness(qcdir=qcdir, name=name,
 interactive=FALSE)
+}
 }

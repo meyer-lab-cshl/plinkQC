@@ -119,12 +119,13 @@ ancestry check.
 for samples of the reference populations and the study population.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir, 'extdata')
+\dontrun{
+indir <- system.file("extdata", package="plinkQC")
 name <- "data"
 fail_ancestry <- check_ancestry(indir=indir, name=name,
-refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
-refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE,
 run.check_ancestry=FALSE)
+}
 }

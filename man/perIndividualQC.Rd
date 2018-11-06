@@ -225,8 +225,7 @@ detailed output for fail IIDs (instead of simple IID lists), run each
 function individually.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir, 'extdata')
+indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 name <- "data"
 # All quality control checks

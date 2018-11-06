@@ -50,8 +50,7 @@ Both \code{\link{run_check_relatedness}} and its evaluation via
 \code{\link{check_relatedness}}.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir,'extdata')
+indir <- system.file("extdata", package="plinkQC")
 name <- 'data'
 qcdir <- tempdir()
 # the following code is not run on package build, as the path2plink on the

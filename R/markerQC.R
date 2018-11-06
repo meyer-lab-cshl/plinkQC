@@ -59,8 +59,7 @@
 #' these function documentations.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' name <- "data"
 #' path2plink <- '/path/to/plink'
@@ -155,8 +154,7 @@ perMarkerQC <- function(indir, qcdir=indir, name,
 #' passing the QC and entries=1 if failing that particular QC.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' name <- "data"
 #' path2plink <- '/path/to/plink'
@@ -266,8 +264,7 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' SNP missingness histogram which can be shown by (print(p_lmiss)).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' name <- "data"
 #' path2plink <- '/path/to/plink'
@@ -411,8 +408,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' (print(p_hwe)).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' name <- "data"
 #' path2plink <- '/path/to/plink'
@@ -542,8 +538,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' shown by (print(p_maf)).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' name <- "data"
 #' path2plink <- '/path/to/plink'

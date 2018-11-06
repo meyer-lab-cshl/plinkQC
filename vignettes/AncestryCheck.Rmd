@@ -217,10 +217,9 @@ the result of the ancestry analysis in a scatter plot of PC1 versus
 PC2 colour-coded for samples of the reference populations and the study
 population. From within R, run the following command to the ancestry check:
 
-```{r check ancestry, eval=TRUE, fig.height=3, fig.width=5, fig.align='center'}
+```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
 library(plinkQC)
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir,'extdata')
+indir <- system.file("extdata", package="plinkQC")
 name <- 'data'
 refname <- 'HapMapIII'
 prefixMergedDataset <- paste(name, ".", refname, sep="")
@@ -233,6 +232,9 @@ exclude_ancestry <-
                             refColorsFile=paste(indir, "/HapMap_PopColors.txt",
                                                 sep=""),
                             interactive=TRUE)
+```
+```{r load ancestry, echo=FALSE, fig.align='center'}
+knitr::include_graphics("checkAncestry.pdf")
 ```
 
 # References

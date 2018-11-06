@@ -40,8 +40,7 @@ All, \code{\link{run_check_heterozygosity}},
 \code{\link{check_het_and_miss}}.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir,'extdata')
+indir <- system.file("extdata", package="plinkQC")
 name <- 'data'
 qcdir <- tempdir()
 # the following code is not run on package build, as the path2plink on the

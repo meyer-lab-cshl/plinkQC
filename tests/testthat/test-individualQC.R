@@ -199,7 +199,7 @@ test_that('evaluate_check_ancestry throws missing missing ID error',{
     expect_error(evaluate_check_ancestry(qcdir, name,
                                          prefixMergedDataset=prefix,
                                          refSamples=testRefs),
-                 "Not all refSamples populations")
+                 "There are samples in the prefixMergedDataset")
 })
 
 test_that('evaluate_check_ancestry fails with numbers error', {

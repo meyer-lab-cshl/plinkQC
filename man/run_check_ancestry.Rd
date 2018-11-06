@@ -41,8 +41,7 @@ Both, \code{\link{run_check_ancestry}} and its evaluation by
 \code{\link{check_ancestry}}.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir,'extdata')
+indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 prefixMergedDataset <- 'data.HapMapIII'
 # the following code is not run on package build, as the path2plink on the

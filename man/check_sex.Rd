@@ -106,9 +106,10 @@ description on the PLINK output format page:
 \url{https://www.cog-genomics.org/plink/1.9/formats#sexcheck}.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-qcdir <- file.path(package.dir, 'extdata')
+ \dontrun{
+indir <- system.file("extdata", package="plinkQC")
 name <- "data"
-fail_sex <- check_sex(indir=qcdir, name=name, run.check_sex=FALSE,
+fail_sex <- check_sex(indir=indir, name=name, run.check_sex=FALSE,
 interactive=FALSE, verbose=FALSE)
+}
 }

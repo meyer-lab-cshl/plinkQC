@@ -71,8 +71,7 @@ description on the PLINK output format page:
 \url{https://www.cog-genomics.org/plink/1.9/formats#lmiss}.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir, 'extdata')
+indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 name <- "data"
 path2plink <- '/path/to/plink'

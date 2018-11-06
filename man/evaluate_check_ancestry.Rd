@@ -45,13 +45,16 @@ are used.}
 \item{refSamplesFile}{[character] /path/to/File/with/reference samples. Needs
 columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
-corresponding to population IDs [refColorsPop] in refColorsfile/refColors.}
+corresponding to population IDs [refColorsPop] in refColorsfile/refColors. If
+both refSamplesFile and refSamples are not NULL, refSamplesFile information
+is used.}
 
 \item{refColorsFile}{[character, optional]
 /path/to/File/with/Population/Colors cotaining population IDs in column
 [refColorsPop] and corresponding colour-code for PCA plot in column
 [refColorsColor].If not provided and is.null(refColors) default colors for
-are used.}
+are used. If both refColorsFile and refColors are not NULL, refColorsFile
+information is used.}
 
 \item{refSamplesIID}{[character] Column name of reference sample IDs in
 refSamples/refSamplesFile.}
@@ -103,11 +106,12 @@ Both \code{\link{run_check_ancestry}} and
 \code{\link{check_ancestry}}.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir, 'extdata')
+\dontrun{
+qcdir <- system.file("extdata", package="plinkQC")
 name <- "data"
-fail_ancestry <- evaluate_check_ancestry(indir=indir, name=name,
-refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",sep=""),
-refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
+fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
+refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE)
+}
 }

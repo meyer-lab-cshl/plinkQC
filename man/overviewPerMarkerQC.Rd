@@ -35,8 +35,7 @@ an intersection plot (via \code{\link[UpSetR]{upset}}) and returns a
 dataframe indicating which QC checks were failed or passed.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir, 'extdata')
+indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 name <- "data"
 path2plink <- '/path/to/plink'

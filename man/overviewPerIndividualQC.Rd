@@ -45,8 +45,7 @@ Ancestry_fail, with entries=0 if passing and entries=1 if failing that check.
 which QC checks individuals failed or passed.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir, 'extdata')
+indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 name <- "data"
 \dontrun{

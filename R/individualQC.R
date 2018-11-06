@@ -158,8 +158,7 @@
 #' function individually.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' name <- "data"
 #' # All quality control checks
@@ -423,8 +422,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' Ancestry_fail, with entries=0 if passing and entries=1 if failing that check.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' name <- "data"
 #' \dontrun{
@@ -594,11 +592,12 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' (PEDSEX), which can be shown by print(p_sexcheck).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
+#'  \dontrun{
+#' indir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
-#' fail_sex <- check_sex(indir=qcdir, name=name, run.check_sex=FALSE,
+#' fail_sex <- check_sex(indir=indir, name=name, run.check_sex=FALSE,
 #' interactive=FALSE, verbose=FALSE)
+#' }
 check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                       run.check_sex=TRUE,
                       externalSex=NULL,
@@ -709,11 +708,12 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' which can be shown by print(p_het_imiss).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
+#'  \dontrun{
+#' indir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
-#' fail_het_miss <- check_het_and_miss(indir=qcdir, name=name,
+#' fail_het_miss <- check_het_and_miss(indir=indir, name=name,
 #' run.check_het_and_miss=FALSE, interactive=FALSE)
+#' }
 check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                run.check_het_and_miss=TRUE,
                                interactive=FALSE, verbose=FALSE,
@@ -812,11 +812,12 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' shown by print(p_IBD).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir,'extdata')
+#' \dontrun{
+#' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
-#' relatednessQC <- check_relatedness(indir=qcdir, name=name, interactive=FALSE,
+#' relatednessQC <- check_relatedness(indir=indir, name=name, interactive=FALSE,
 #' run.check_relatedness=FALSE)
+#' }
 check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                               imissTh=0.03, run.check_relatedness=TRUE,
                               interactive=FALSE, verbose=FALSE,
@@ -924,14 +925,15 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' print(p_ancestry).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' \dontrun{
+#' indir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
 #' fail_ancestry <- check_ancestry(indir=indir, name=name,
-#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
-#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+#' refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",sep=""),
+#' refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE,
 #' run.check_ancestry=FALSE)
+#' }
 
 check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            europeanTh=1.5,
@@ -950,7 +952,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                                       path2plink=path2plink,
                                       showPlinkOutput=showPlinkOutput)
         }
-        fail <- evaluate_check_ancestry(qcdir=qcdir,indir=indir, name=name,
+        fail <- evaluate_check_ancestry(qcdir=qcdir, indir=indir, name=name,
                                         prefixMergedDataset=prefixMergedDataset,
                                         europeanTh=europeanTh,
                                         refSamples=refSamples,
@@ -993,8 +995,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir,'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
 #' qcdir <- tempdir()
 #' # the following code is not run on package build, as the path2plink on the
@@ -1097,11 +1098,12 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' be shown by print(p_sexcheck).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
+#' qcdir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
+#' \dontrun{
 #' fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
 #' verbose=FALSE)
+#' }
 evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                femaleTh=0.2, externalSex=NULL,
                                fixMixup=FALSE, indir=qcdir,
@@ -1286,8 +1288,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir,'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
 #' qcdir <- tempdir()
 #' # the following code is not run on package build, as the path2plink on the
@@ -1347,8 +1348,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir,'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
 #' qcdir <- tempdir()
 #' # the following code is not run on package build, as the path2plink on the
@@ -1442,11 +1442,12 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' which can be shown by print(p_het_imiss).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir, 'extdata')
+#' qcdir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
+#' \dontrun{
 #' fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
 #' interactive=FALSE)
+#' }
 evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                                   hetTh=3, interactive=FALSE) {
     prefix <- paste(qcdir, "/", name, sep="")
@@ -1560,8 +1561,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir,'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
 #' qcdir <- tempdir()
 #' # the following code is not run on package build, as the path2plink on the
@@ -1583,8 +1583,7 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    package.dir <- find.package('plinkQC')
-    highld <- file.path(package.dir,'extdata', 'high-LD-regions.txt')
+    highld <- system.file("extdata", 'high-LD-regions.txt', package="plinkQC")
     if (!is.null(path2plink)) {
         path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
     }
@@ -1671,11 +1670,12 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
 #' shown by print(p_IBD).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' qcdir <- file.path(package.dir,'extdata')
+#' qcdir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
+#' \dontrun{
 #' relatednessQC <- evaluate_check_relatedness(qcdir=qcdir, name=name,
 #' interactive=FALSE)
+#' }
 evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                                        imissTh=0.03, interactive=FALSE,
                                        verbose=FALSE) {
@@ -1773,8 +1773,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir,'extdata')
+#' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' prefixMergedDataset <- 'data.HapMapIII'
 #' # the following code is not run on package build, as the path2plink on the
@@ -1887,13 +1886,14 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' print(p_ancestry).
 #' @export
 #' @examples
-#' package.dir <- find.package('plinkQC')
-#' indir <- file.path(package.dir, 'extdata')
+#' \dontrun{
+#' qcdir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
-#' fail_ancestry <- evaluate_check_ancestry(indir=indir, name=name,
-#' refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",sep=""),
-#' refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
+#' fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
+#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE)
+#' }
 
 evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     qcdir=indir,

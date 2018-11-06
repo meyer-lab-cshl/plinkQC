@@ -39,8 +39,7 @@ Both \code{\link{run_check_sex}} and its evaluation
 \code{\link{check_sex}}.
 }
 \examples{
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir,'extdata')
+indir <- system.file("extdata", package="plinkQC")
 name <- 'data'
 qcdir <- tempdir()
 # the following code is not run on package build, as the path2plink on the
