@@ -68,7 +68,7 @@ be set.}
 \item{hweTh}{[double] Significance threshold for deviation from HWE.}
 
 \item{filterMAF}{[logical] Set to exclude markers that fail minor allele
-freuqency or minor allele count threshold (via \code{\link{check_maf}} or
+frequency or minor allele count threshold (via \code{\link{check_maf}} or
 \code{\link{perMarkerQC}}). Requires mafTh or macTh to be set.}
 
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh

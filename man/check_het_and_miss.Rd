@@ -47,7 +47,7 @@ save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
 
 \item{path2plink}{[character] Absolute path to directory where external plink
 software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accessible as path2plink/plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").}
 
@@ -91,7 +91,7 @@ the y-axis.
 \code{\link{run_check_heterozygosity}} and
 \code{\link{evaluate_check_het_and_miss}}.
 If run.check_het_and_miss is TRUE, \code{\link{run_check_heterozygosity}} and
-\code{\link{run_check_missingness}} are excuted; otherwise it is assumed
+\code{\link{run_check_missingness}} are executed ; otherwise it is assumed
 that plink --missing and plink --het have been run externally and
 qcdir/name.het and qcdir/name.imiss exist.  \code{\link{check_het_and_miss}}
 will fail with missing file error otherwise.

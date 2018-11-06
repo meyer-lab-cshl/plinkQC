@@ -33,7 +33,7 @@ Per default, qcdir=indir. If do.evaluate_[analysis] is set to TRUE and
 do.run_[analysis] is FALSE, \code{perIndividualQC} expects the
 analysis-specific plink output files in qcdir i.e. do.check_sex expects
 name.sexcheck, do.evaluate_check_het_and_miss expects name.het and name.imiss,
-do.evauluate_check_relatedness expects name.genome and name.imiss and
+do.evaluate_check_relatedness expects name.genome and name.imiss and
 do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
 are not present \code{perIndividualQC} will fail with missing file error.
 Setting do.run_[analysis] TRUE will execute the checks and create the
@@ -148,7 +148,7 @@ prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 corresponding to population IDs [refColorsPop] in refColorsfile/refColors.}
 
 \item{refColorsFile}{[character, optional]
-/path/to/File/with/Population/Colors cotaining population IDs in column
+/path/to/File/with/Population/Colors containing population IDs in column
 [refColorsPop] and corresponding color-code for PCA plot in column
 [refColorsColor].If not provided and is.null(refColors) default colors for
 are used.}
@@ -187,7 +187,7 @@ TRUE).}
 
 \item{path2plink}{[character] Absolute path to directory where external plink
 software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accessible as path2plink/plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").}
 
@@ -203,7 +203,7 @@ containing a [vector] with sample IIDs failing the heterozygosity threshold
 hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
 the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
 a vector with sample IIDs failing the ancestry check based on europeanTh and
-ii) p_sampleQC, a ggplot2-object 'containing' a sub-panelled plot with the
+ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of \code{\link{check_sex}},
 \code{\link{check_het_and_miss}},
 \code{\link{check_relatedness}} and \code{\link{check_ancestry}}, which can

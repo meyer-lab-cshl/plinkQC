@@ -12,7 +12,7 @@
 #' do.run_[analysis] is FALSE, \code{perIndividualQC} expects the
 #' analysis-specific plink output files in qcdir i.e. do.check_sex expects
 #' name.sexcheck, do.evaluate_check_het_and_miss expects name.het and name.imiss,
-#' do.evauluate_check_relatedness expects name.genome and name.imiss and
+#' do.evaluate_check_relatedness expects name.genome and name.imiss and
 #' do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
 #' are not present \code{perIndividualQC} will fail with missing file error.
 #' Setting do.run_[analysis] TRUE will execute the checks and create the
@@ -100,7 +100,7 @@
 #' prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 #' corresponding to population IDs [refColorsPop] in refColorsfile/refColors.
 #' @param refColorsFile [character, optional]
-#' /path/to/File/with/Population/Colors cotaining population IDs in column
+#' /path/to/File/with/Population/Colors containing population IDs in column
 #' [refColorsPop] and corresponding color-code for PCA plot in column
 #' [refColorsColor].If not provided and is.null(refColors) default colors for
 #' are used.
@@ -115,7 +115,7 @@
 #' @param studyColor [character] Color to be used for study population.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -144,7 +144,7 @@
 #' hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
 #' the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
 #' a vector with sample IIDs failing the ancestry check based on europeanTh and
-#' ii) p_sampleQC, a ggplot2-object 'containing' a sub-panelled plot with the
+#' ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 #' QC-plots of \code{\link{check_sex}},
 #' \code{\link{check_het_and_miss}},
 #' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}, which can
@@ -533,7 +533,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #'
 #' \code{\link{check_sex}} wraps around \code{\link{run_check_sex}}  and
 #' \code{\link{evaluate_check_sex}} . If run.check_sex is TRUE,
-#' \code{\link{run_check_sex} } is excuted; otherwise it is assumed that plink
+#' \code{\link{run_check_sex} } is executed ; otherwise it is assumed that plink
 #' --check-sex has been run externally and qcdir/name.sexcheck exists.
 #' \code{\link{check_sex}}  will fail with missing file error otherwise.
 #'
@@ -577,7 +577,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -650,7 +650,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' \code{\link{run_check_heterozygosity}} and
 #' \code{\link{evaluate_check_het_and_miss}}.
 #' If run.check_het_and_miss is TRUE, \code{\link{run_check_heterozygosity}} and
-#' \code{\link{run_check_missingness}} are excuted; otherwise it is assumed
+#' \code{\link{run_check_missingness}} are executed ; otherwise it is assumed
 #' that plink --missing and plink --het have been run externally and
 #' qcdir/name.het and qcdir/name.imiss exist.  \code{\link{check_het_and_miss}}
 #' will fail with missing file error otherwise.
@@ -683,7 +683,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' larger than 0.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -755,7 +755,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' \code{\link{check_relatedness}} wraps around
 #' \code{\link{run_check_relatedness}} and
 #' \code{\link{evaluate_check_relatedness}}. If run.check_relatedness is TRUE,
-#' \code{\link{run_check_relatedness}} is excuted; otherwise it is assumed that
+#' \code{\link{run_check_relatedness}} is executed ; otherwise it is assumed that
 #' plink --genome has been run externally and qcdir/name.genome exists.
 #' \code{\link{check_relatedness}}  will fail with missing file error otherwise.
 #'
@@ -783,7 +783,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' individual; has to be proportion between (0,1)
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -887,7 +887,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 #' corresponding to population IDs [refColorsPop] in refColorsfile/refColors.
 #' @param refColorsFile [character, optional]
-#' /path/to/File/with/Population/Colors cotaining population IDs in column
+#' /path/to/File/with/Population/Colors containing population IDs in column
 #' [refColorsPop] and corresponding colour-code for PCA plot in column
 #' [refColorsColor].If not provided and is.null(refColors) default colors for
 #' are used.
@@ -902,7 +902,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' @param studyColor [character] Colour to be used for study population.
 #' @param run.check_ancestry [logical] Should plink --pca be run to
 #' determine principal components of merged dataset; if FALSE, it is assumed
-#' that plink --pca has been run successfuly and
+#' that plink --pca has been run successfully and
 #' qcdir/prefixMergedDataset.eigenvec is present;
 #' \code{\link{check_ancestry}} will fail with missing file error otherwise.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -912,7 +912,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -987,7 +987,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 #' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -1083,7 +1083,7 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -1280,7 +1280,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 #' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -1340,7 +1340,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -1553,7 +1553,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' threshold will be recorded.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -1765,7 +1765,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
 #' prefixMergedDataset.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accessible as path2plink/plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -1859,7 +1859,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' both refSamplesFile and refSamples are not NULL, refSamplesFile information
 #' is used.
 #' @param refColorsFile [character, optional]
-#' /path/to/File/with/Population/Colors cotaining population IDs in column
+#' /path/to/File/with/Population/Colors containing population IDs in column
 #' [refColorsPop] and corresponding colour-code for PCA plot in column
 #' [refColorsColor].If not provided and is.null(refColors) default colors for
 #' are used. If both refColorsFile and refColors are not NULL, refColorsFile

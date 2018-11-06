@@ -24,7 +24,7 @@ permission to qcdir. Per default, qcdir=indir.}
 \item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
 
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
-and macTh are specied, macTh is used (macTh = mafTh\*2\*NrSamples).}
+and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out
 and specifically, if TRUE, plink log will be displayed.}

@@ -515,7 +515,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' name.fam.
 #' @param mafTh [double] Threshold for minor allele frequency cut-off.
 #' @param macTh [double] Threshold for minor allele cut cut-off, if both mafTh
-#' and macTh are specied, macTh is used (macTh = mafTh\*2\*NrSamples).
+#' and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and

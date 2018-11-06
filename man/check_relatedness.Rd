@@ -43,7 +43,7 @@ other_arguments) or pdf(outfile) print(p_IBD) dev.off().}
 
 \item{path2plink}{[character] Absolute path to directory where external plink
 software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accessible as path2plink/plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").}
 
@@ -90,7 +90,7 @@ stratified by value of PI_HAT.
 \code{\link{check_relatedness}} wraps around
 \code{\link{run_check_relatedness}} and
 \code{\link{evaluate_check_relatedness}}. If run.check_relatedness is TRUE,
-\code{\link{run_check_relatedness}} is excuted; otherwise it is assumed that
+\code{\link{run_check_relatedness}} is executed ; otherwise it is assumed that
 plink --genome has been run externally and qcdir/name.genome exists.
 \code{\link{check_relatedness}}  will fail with missing file error otherwise.
 

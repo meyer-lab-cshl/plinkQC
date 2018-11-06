@@ -54,7 +54,7 @@ prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 corresponding to population IDs [refColorsPop] in refColorsfile/refColors.}
 
 \item{refColorsFile}{[character, optional]
-/path/to/File/with/Population/Colors cotaining population IDs in column
+/path/to/File/with/Population/Colors containing population IDs in column
 [refColorsPop] and corresponding colour-code for PCA plot in column
 [refColorsColor].If not provided and is.null(refColors) default colors for
 are used.}
@@ -75,7 +75,7 @@ IDs in refColors/refColorsFile.}
 
 \item{run.check_ancestry}{[logical] Should plink --pca be run to
 determine principal components of merged dataset; if FALSE, it is assumed
-that plink --pca has been run successfuly and
+that plink --pca has been run successfully and
 qcdir/prefixMergedDataset.eigenvec is present;
 \code{\link{check_ancestry}} will fail with missing file error otherwise.}
 
@@ -89,7 +89,7 @@ other_arguments) or pdf(outfile) print(p_ancestry) dev.off().}
 
 \item{path2plink}{[character] Absolute path to directory where external plink
 software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accessible as path2plink/plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").}
 

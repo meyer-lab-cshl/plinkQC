@@ -50,7 +50,7 @@ both refSamplesFile and refSamples are not NULL, refSamplesFile information
 is used.}
 
 \item{refColorsFile}{[character, optional]
-/path/to/File/with/Population/Colors cotaining population IDs in column
+/path/to/File/with/Population/Colors containing population IDs in column
 [refColorsPop] and corresponding colour-code for PCA plot in column
 [refColorsColor].If not provided and is.null(refColors) default colors for
 are used. If both refColorsFile and refColors are not NULL, refColorsFile

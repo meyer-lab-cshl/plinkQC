@@ -62,7 +62,7 @@ other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().}
 
 \item{path2plink}{[character] Absolute path to directory where external plink
 software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accessible as path2plink/plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").}
 
@@ -97,7 +97,7 @@ the individuals split by their (PEDSEX).
 \details{
 \code{\link{check_sex}} wraps around \code{\link{run_check_sex}}  and
 \code{\link{evaluate_check_sex}} . If run.check_sex is TRUE,
-\code{\link{run_check_sex} } is excuted; otherwise it is assumed that plink
+\code{\link{run_check_sex} } is executed ; otherwise it is assumed that plink
 --check-sex has been run externally and qcdir/name.sexcheck exists.
 \code{\link{check_sex}}  will fail with missing file error otherwise.
 
