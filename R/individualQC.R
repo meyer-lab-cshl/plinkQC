@@ -1023,7 +1023,7 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --check-sex",
                  " --out ", out, sep=""),
-           ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
 }
 
 #' Evaluate results from PLINK sex check.
@@ -1201,7 +1201,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                  " --update-sex ", file_mixup,
                                  " --make-bed ",
                                  " --out ", prefix, sep=""),
-                           ignore.stdout=showPlinkOutput,
+                           ignore.stdout=!showPlinkOutput,
                            ignore.stderr=!showPlinkOutput)
                 } else {
                     if (verbose) {
@@ -1317,7 +1317,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --het",
                  " --out ", out, sep=""),
-           ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
 }
 
 #' Run PLINK missingness rate calculation
@@ -1378,7 +1378,7 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --missing",
                  " --out ", out, sep=""),
-           ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
 }
 
 #' Evaluate results from PLINK missing genotype and heterozygosity rate check.
@@ -1594,19 +1594,19 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                  " --exclude range ", highld,
                  " --indep-pairwise 50 5 0.2",
                  " --out ", out, sep=""),
-           ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     if (verbose) message("Run check_relatedness via plink --genome")
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --extract ", out, ".prune.in",
                  " --maf 0.1 --genome",
                  " --min ", highIBDTh,
                  " --out ", out, sep=""),
-           ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     if (! file.exists(paste(prefix, ".imiss", sep=""))) {
         system(paste(path2plink, "plink --bfile ", prefix,
                      " --missing",
                      " --out ", out, sep=""),
-           ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     }
 }
 
@@ -1805,7 +1805,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
     system(paste(path2plink, "plink --bfile ", prefix,
                  " --pca",
                  " --out ", out, sep=""),
-           ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
 }
 
 #' Evaluate results from PLINK PCA on combined study and reference data
