@@ -1,5 +1,5 @@
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=red)](http://cran.rstudio.com/web/packages/plinkQC/index.html)
 
 <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 ----------------------------------------------------
