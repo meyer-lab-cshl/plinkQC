@@ -1850,12 +1850,15 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' @param refSamplesFile [character] /path/to/File/with/reference samples. Needs
 #' columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 #' prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
-#' corresponding to population IDs [refColorsPop] in refColorsfile/refColors.
+#' corresponding to population IDs [refColorsPop] in refColorsfile/refColors. If
+#' both refSamplesFile and refSamples are not NULL, refSamplesFile information
+#' is used.
 #' @param refColorsFile [character, optional]
 #' /path/to/File/with/Population/Colors cotaining population IDs in column
 #' [refColorsPop] and corresponding colour-code for PCA plot in column
 #' [refColorsColor].If not provided and is.null(refColors) default colors for
-#' are used.
+#' are used. If both refColorsFile and refColors are not NULL, refColorsFile
+#' information is used.
 #' @param refSamplesIID [character] Column name of reference sample IDs in
 #' refSamples/refSamplesFile.
 #' @param refSamplesPop [character] Column name of reference sample population
@@ -1913,9 +1916,11 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     colnames(pca_data) <- c("FID", "IID", paste("PC",1:(ncol(pca_data)-2),
                                                 sep=""))
 
-    if (is.null(refSamples) && !file.exists(refSamplesFile)) {
-        stop("refSamples are not specified and refSamplesFile file",
-             refSamplesFile, "does not exist.")
+    if (is.null(refSamples) && is.null(refSamplesFile)) {
+        stop("Neither refSamples nor refSamplesFile are specified")
+    }
+    if (!is.null(refSamplesFile) && !file.exists(refSamplesFile)) {
+        stop("refSamplesFile file", refSamplesFile, "does not exist.")
     }
     if (!is.null(refSamplesFile)) {
         refSamples <- read.table(refSamplesFile, header=TRUE,
@@ -1930,6 +1935,8 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     names(refSamples)[names(refSamples) == refSamplesIID] <- "IID"
     names(refSamples)[names(refSamples) == refSamplesPop] <- "Pop"
     refSamples <- dplyr::select_(refSamples, ~IID, ~Pop)
+    refSamples$IID <- as.character(refSamples$IID)
+    refSamples$Pop <- as.character(refSamples$Pop)
 
     if (!is.null(refColorsFile) && !file.exists(refColorsFile)) {
         stop("refColorsFile file", refColorsFile, "does not exist.")
@@ -1948,16 +1955,29 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         names(refColors)[names(refColors) == refColorsColor] <- "Color"
         names(refColors)[names(refColors) == refColorsPop] <- "Pop"
         refColors <- dplyr::select_(refColors, ~Pop, ~Color)
+        refColors$Color <- as.character(refColors$Color)
+        refColors$Pop <- as.character(refColors$Pop)
     } else {
-        refColors <- data.frame(Pop=unique(as.character(refSamples$Pop)))
+        refColors <- data.frame(Pop=unique(as.character(refSamples$Pop)),
+                                stringsAsFactors=FALSE)
         refColors$Color <- 1:nrow(refColors)
+    }
+    if (!all(refSamples$Pop %in% refColors$Pop)) {
+        missing <- refSamples$Pop[!refSamples$Pop %in% refColors$Pop]
+        stop("Not all refSamples populations found in population code of
+             refColors; missing population codes: ", paste(missing,
+                                                           collapse=","))
     }
     refSamples <- merge(refSamples, refColors, by="Pop", all.X=TRUE)
 
     ## Combine pca data and population information ####
     data_all <- merge(pca_data, refSamples, by="IID", all.x=TRUE)
-    data_all$Pop[is.na(data_all$Pop)] <- name
-    data_all$Color[is.na(data_all$Color)] <- studyColor
+    data_all$Pop[data_all$IID %in% samples$IID] <- name
+    data_all$Color[data_all$IID %in% samples$IID] <- studyColor
+    if (any(is.na(data_all))) {
+        stop("There are samples in the prefixMergedDataset that cannot be found
+             in refSamples or ", prefix, ".fam")
+    }
     data_all <- data_all[order(data_all$Pop, decreasing=FALSE),]
 
     refColors <- rbind(refColors, c(name, studyColor))
