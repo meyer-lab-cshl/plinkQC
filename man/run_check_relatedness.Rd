@@ -4,8 +4,8 @@
 \alias{run_check_relatedness}
 \title{Run PLINK IBD estimation}
 \usage{
-run_check_relatedness(indir, name, qcdir = indir, path2plink = NULL,
-  showPlinkOutput = TRUE, verbose = FALSE)
+run_check_relatedness(indir, name, qcdir = indir, highIBDTh = 0.185,
+  path2plink = NULL, showPlinkOutput = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -17,6 +17,10 @@ name.fam.}
 \item{qcdir}{[character] /path/to/directory to save name.genome as returned
 by plink --genome. User needs writing permission to qcdir. Per default
 qcdir=indir.}
+
+\item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
+pair of individuals; only pairwise relationship estimates larger than this
+threshold will be recorded.}
 
 \item{path2plink}{[character] Absolute path to directory where external plink
 software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.

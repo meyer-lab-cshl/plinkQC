@@ -18,13 +18,17 @@ Removal of individuals based on relationship status via **plinkQC** is optimised
 <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 ------------------------------------------------------------
 
-The current github version of **plinkQC** is: 0.1.0 and can be installed via
+The current github version of **plinkQC** is: 0.1.1 and can be installed via
 
 ``` r
 library(devtools)
 install_github("HannahVMeyer/plinkQC")
 ```
 
-**plinkQC** will soon be available on CRAN!
+The current CRAN version of **plinkQC** is: 0.1.0 and can be installed via
+
+``` r
+install.packages("plinkQC")
+```
 
 A log of version changes can be found [here](https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.md).
