@@ -5,6 +5,8 @@ solve platform dependent issues, mainly comptatibility with windows.
 * path2plink now requires full path to plink executable, no tilde expansion or
 simple pointer to directory supported.
 * fix bug in return of cleanData function: list now contains keep and fail IDs.
+* fix bug in return of maf computation: if fail.IDs does not exist, set
+  fail_samples to zero.
 
 ## minor changes
 * IBD-fail.IDs now saved without column names to  be consistent with other
