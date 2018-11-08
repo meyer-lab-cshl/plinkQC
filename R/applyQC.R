@@ -206,12 +206,14 @@ cleanData <- function(indir, name, qcdir=indir,
                                      header=FALSE)
         keepIDs <- keepIDs[!keepIDs[,2] %in% removeIDs[,2],1:2]
         remove <- c("--remove", paste(out, ".remove.IDs", sep=""))
+        fail_samples <- nrow(removeIDs)
     } else {
         keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
                                      data.table=FALSE, stringsAsFactors=FALSE,
                                      header=FALSE)
         removeIDs <- NULL
         remove <- NULL
+        fail_samples <- 0
     }
 
     hwe <- NULL
@@ -232,7 +234,7 @@ cleanData <- function(indir, name, qcdir=indir,
         if(!is.null(macTh)) {
             all_samples <-  R.utils::countLines(paste(prefix, ".fam",
                                                       sep=""))
-            keep_samples <- as.numeric(all_samples) - nrow(removeIDs)
+            keep_samples <- as.numeric(all_samples) - fail_samples
             mafTh <- macTh/(2*keep_samples)
         }
         if (verbose) {

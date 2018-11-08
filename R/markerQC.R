@@ -580,6 +580,7 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                        args=c("--bfile", prefix, "--freq", "--out",
                               paste(out, suffix, sep="")),
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
+        fail_samples <- 0
     } else {
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
@@ -587,13 +588,13 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                               paste(out, ".fail.IDs", sep=""),
                               "--freq", "--out", paste(out, suffix, sep="")),
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
+        fail_samples <-  R.utils::countLines(paste(out, ".fail.IDs",
+                                               sep=""))
     }
     maf <- read.table(paste(out, suffix, ".frq",sep=""),
                        header=TRUE, as.is=TRUE)
 
     all_samples <-  R.utils::countLines(paste(prefix, ".fam",sep=""))
-    fail_samples <-  R.utils::countLines(paste(out, ".fail.IDs",
-                                               sep=""))
     keep_samples <- as.numeric(all_samples - fail_samples)
 
     if (is.null(mafTh) && is.null(macTh)) {
