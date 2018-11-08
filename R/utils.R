@@ -10,7 +10,7 @@
 #' that PATH set-up works and plink will be found by system("plink").
 #' @export
 
-checkPlink <- function(path2plink) {
+checkPlink <- function(path2plink=NULL) {
     if (is.null(path2plink)) {
         findPlink <- tryCatch(system("plink -h", ignore.stdout=TRUE,
                                      ignore.stderr=TRUE),
