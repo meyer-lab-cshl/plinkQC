@@ -24,7 +24,7 @@ qcdir=indir.}
 executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 plink should be accessible as path2plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
-system("plink").}
+ \code{\link[sys]{exec_wait}('plink')}.}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}

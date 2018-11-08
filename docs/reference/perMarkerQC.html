@@ -75,7 +75,7 @@ distribution as a histogram." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -171,7 +171,7 @@ distribution as a histogram.</p>
     <pre class="usage"><span class='fu'>perMarkerQC</span>(<span class='no'>indir</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='no'>name</span>,
   <span class='kw'>do.check_snp_missingness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lmissTh</span> <span class='kw'>=</span> <span class='fl'>0.01</span>,
   <span class='kw'>do.check_hwe</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>hweTh</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>, <span class='kw'>do.check_maf</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>mafTh</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>macTh</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>macTh</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>mafTh</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -218,13 +218,13 @@ samples.</p></td>
       <td><p>[logical] If TRUE, run <code><a href='check_maf.html'>check_maf</a></code>.</p></td>
     </tr>
     <tr>
-      <th>mafTh</th>
-      <td><p>[double] Threshold for minor allele frequency cut-off.</p></td>
-    </tr>
-    <tr>
       <th>macTh</th>
       <td><p>[double] Threshold for minor allele cut cut-off, if both mafTh
 and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).</p></td>
+    </tr>
+    <tr>
+      <th>mafTh</th>
+      <td><p>[double] Threshold for minor allele frequency cut-off.</p></td>
     </tr>
     <tr>
       <th>interactive</th>
@@ -241,10 +241,10 @@ other_arguments) or pdf(outfile) print(p_marker) dev.off().</p></td>
     <tr>
       <th>path2plink</th>
       <td><p>[character] Absolute path to directory where external plink
-software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
+executable  <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
 plink should be accesible as path2plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
-system("plink").</p></td>
+ <code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a>('plink')</code>.</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>

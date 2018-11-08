@@ -57,7 +57,7 @@
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -127,15 +127,19 @@ cleanData <- function(indir, name, qcdir=indir,
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     # Remove remove.IDs file if already existing
-    system(paste("rm -f ", out, ".remove.IDs", sep="" ))
+    removeIDs <- NULL
     if (any(sampleFilter)) {
         if (filterRelated) {
             if (!file.exists(paste(out, ".fail-IBD.IDs", sep=""))){
                 stop("filterRelated is TRUE but file ", out,
                      ".fail-IBD.IDs does not exist")
             } else {
-                system(paste("cat ", out, ".fail-IBD.IDs >> ",
-                             out, ".remove.IDs", sep=""))
+                removeIDs <- rbind(removeIDs,
+                                   data.table::fread(paste(out, ".fail-IBD.IDs",
+                                                     sep=""),
+                                                     data.table=FALSE,
+                                                     stringsAsFactors=FALSE,
+                                                     header=FALSE))
             }
         }
         if (filterAncestry) {
@@ -143,8 +147,13 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterAncestry is TRUE but file ", out,
                      ".fail-ancestry.IDs does not exist")
             } else {
-                system(paste("cat ", out, ".fail-ancestry.IDs >> ",
-                             out, ".remove.IDs", sep=""))
+                removeIDs <- rbind(removeIDs,
+                                   data.table::fread(paste(out,
+                                                           ".fail-ancestry.IDs",
+                                                           sep=""),
+                                                     data.table=FALSE,
+                                                     stringsAsFactors=FALSE,
+                                                     header=FALSE))
             }
         }
         if (filterHeterozygosity) {
@@ -152,8 +161,12 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterHeterozygosity is TRUE but file ", out,
                      ".fail-het.IDs does not exist")
             } else {
-                system(paste("cat ", out, ".fail-het.IDs >> ",
-                             out, ".remove.IDs", sep=""))
+                removeIDs <- rbind(removeIDs,
+                                   data.table::fread(paste(out, ".fail-het.IDs",
+                                                           sep=""),
+                                                     data.table=FALSE,
+                                                     stringsAsFactors=FALSE,
+                                                     header=FALSE))
             }
         }
         if (filterSampleMissingness) {
@@ -161,8 +174,13 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterSampleMissingness is TRUE but file ", out,
                      ".fail-imiss.IDs does not exist")
             } else {
-                system(paste("cat ", out, ".fail-imiss.IDs >> ",
-                             out, ".remove.IDs", sep=""))
+                removeIDs <- rbind(removeIDs,
+                                   data.table::fread(paste(out,
+                                                           ".fail-imiss.IDs",
+                                                           sep=""),
+                                                     data.table=FALSE,
+                                                     stringsAsFactors=FALSE,
+                                                     header=FALSE))
             }
         }
         if (filterSex) {
@@ -170,29 +188,30 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterSex is TRUE but file ", out,
                      ".fail-sexcheck.IDs does not exist")
             } else {
-                system(paste("cat ", out, ".fail-sexcheck.IDs >> ",
-                             out, ".remove.IDs", sep=""))
+                removeIDs <- rbind(removeIDs,
+                                   data.table::fread(paste(out,
+                                                           ".fail-sexcheck.IDs",
+                                                           sep=""),
+                                                     data.table=FALSE,
+                                                     stringsAsFactors=FALSE,
+                                                     header=FALSE))
             }
         }
         # ensure unique IDs in remove.IDs
-        removeIDs <- data.table::fread(paste(out, ".remove.IDs",
-                                             sep=""),
-                                       header=FALSE,
-                                       data.table=FALSE, stringsAsFactors=FALSE)
         removeIDs <- removeIDs[!duplicated(removeIDs),]
         write.table(removeIDs, paste(out, ".remove.IDs", sep=""),
                     col.names=FALSE, row.names=FALSE, quote=FALSE)
         keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
                                      data.table=FALSE, stringsAsFactors=FALSE,
                                      header=FALSE)
-        keepIDs <- keepIDs[keepIDs[,2] %in% removeIDs[,2],1:2]
-        removeString <- paste(" --remove ", out, ".remove.IDs", sep="")
+        keepIDs <- keepIDs[!keepIDs[,2] %in% removeIDs[,2],1:2]
+        remove <- c("--remove", paste(out, ".remove.IDs", sep=""))
     } else {
         keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
                                      data.table=FALSE, stringsAsFactors=FALSE,
                                      header=FALSE)
         removeIDs <- NULL
-        removeString <- ""
+        remove <- NULL
     }
 
     hwe <- NULL
@@ -203,7 +222,7 @@ cleanData <- function(indir, name, qcdir=indir,
         if (is.null(hweTh)) {
             stop("filterHWE is TRUE but hweTh not specified")
         } else {
-           hwe <- paste(" --hwe", hweTh)
+           hwe <- c("--hwe", hweTh)
         }
     }
     if (filterMAF) {
@@ -228,25 +247,23 @@ cleanData <- function(indir, name, qcdir=indir,
                         round(mafTh, 6), ")")
             }
         }
-        maf <- paste(" --maf", mafTh)
+        maf <- c("--maf", mafTh)
     }
     if (filterSNPMissingness) {
         if (is.null(lmissTh)) {
             stop("filterSNPMissingness is TRUE but lmissTh not specified")
         } else {
-            missing <- paste(" --geno", lmissTh)
+            missing <- c("--geno", lmissTh)
         }
     }
 
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
-    system(paste(path2plink, " --bfile ", prefix,
-                 removeString,
-                 maf, hwe, missing,
-                 " --make-bed --out ", out, ".clean",
-                 sep=""),
-           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix, remove, maf, hwe, missing,
+                          "--make-bed", "--out", paste(out, ".clean", sep="")),
+           std_out=showPlinkOutput, std_err=showPlinkOutput)
     return(list(passIDs=keepIDs, failIDs=removeIDs))
 }

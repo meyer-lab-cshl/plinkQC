@@ -80,7 +80,7 @@ and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).}
 executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 plink should be accesible as path2plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
-system("plink").}
+ \code{\link[sys]{exec_wait}('plink')}.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 

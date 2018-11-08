@@ -66,7 +66,7 @@ can be found from system call." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -150,7 +150,7 @@ can be found from system call.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>checkPlink</span>(<span class='no'>path2plink</span>)</pre>
+    <pre class="usage"><span class='fu'>checkPlink</span>(<span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -160,7 +160,8 @@ can be found from system call.</p>
       <td><p>[character] Absolute path to directory where external plink
 software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
 plink should be accesible as path2plink -h. If not provided, assumed
-that PATH set-up works and plink will be found by system("plink").</p></td>
+that PATH set-up works and plink will be found by
+<code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a>('plink')</code>.</p></td>
     </tr>
     </table>
     

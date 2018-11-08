@@ -7,7 +7,7 @@
 perMarkerQC(indir, qcdir = indir, name,
   do.check_snp_missingness = TRUE, lmissTh = 0.01,
   do.check_hwe = TRUE, hweTh = 1e-05, do.check_maf = TRUE,
-  mafTh = 0.01, macTh = 20, interactive = FALSE, verbose = TRUE,
+  macTh = 20, mafTh = NULL, interactive = FALSE, verbose = TRUE,
   path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
@@ -35,10 +35,10 @@ samples.}
 
 \item{do.check_maf}{[logical] If TRUE, run \code{\link{check_maf}}.}
 
-\item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
-
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
 and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).}
+
+\item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -52,7 +52,7 @@ other_arguments) or pdf(outfile) print(p_marker) dev.off().}
 executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 plink should be accesible as path2plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
-system("plink").}
+ \code{\link[sys]{exec_wait}('plink')}.}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}

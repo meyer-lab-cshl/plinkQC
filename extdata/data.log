@@ -1,0 +1,34 @@
+PLINK v1.90b6.5 64-bit (13 Sep 2018)
+Options in effect:
+  --bfile /Users/hannah/RPackagesDevel/plinkQC/extdata/data
+  --extract /Users/hannah/RPackagesDevel/plinkQC/extdata/data.prune.in
+  --genome
+  --maf 0.1
+  --min 0.185
+  --out /Users/hannah/RPackagesDevel/plinkQC/extdata/data
+
+Hostname: hannahmbpr
+Working directory: /Users/hannah/RPackagesDevel/plinkQC/vignettes
+Start time: Thu Nov  8 16:06:56 2018
+
+Random number seed: 1541693216
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+10000 variants loaded from .bim file.
+200 people (89 males, 111 females) loaded from .fam.
+--extract: 8460 variants remaining.
+Using up to 8 threads (change this with --threads).
+Before main variant filters, 200 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: 308 het. haploid genotypes present (see
+/Users/hannah/RPackagesDevel/plinkQC/extdata/data.hh ); many commands treat
+these as missing.
+Total genotyping rate is 0.990648.
+1703 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+6757 variants and 200 people pass filters and QC.
+Note: No phenotypes present.
+Excluding 131 variants on non-autosomes from IBD calculation.
+IBD calculations complete.
+Finished writing /Users/hannah/RPackagesDevel/plinkQC/extdata/data.genome .
+
+End time: Thu Nov  8 16:06:56 2018

@@ -21,5 +21,5 @@ knitr::opts_chunk$set(
 #                              interactive=TRUE)
 
 ## ----load ancestry, echo=FALSE, fig.align='center'-----------------------
-knitr::include_graphics("checkAncestry.pdf")
+knitr::include_graphics("checkAncestry.png")
 

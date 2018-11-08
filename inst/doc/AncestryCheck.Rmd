@@ -234,7 +234,7 @@ exclude_ancestry <-
                             interactive=TRUE)
 ```
 ```{r load ancestry, echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkAncestry.pdf")
+knitr::include_graphics("checkAncestry.png")
 ```
 
 # References

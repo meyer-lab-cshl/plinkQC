@@ -40,7 +40,7 @@
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -73,14 +73,15 @@
 perMarkerQC <- function(indir, qcdir=indir, name,
                         do.check_snp_missingness=TRUE, lmissTh=0.01,
                         do.check_hwe=TRUE, hweTh=1e-5,
-                        do.check_maf=TRUE, mafTh=0.01, macTh=20,
+                        do.check_maf=TRUE, macTh=20, mafTh=NULL,
                         interactive=FALSE, verbose=TRUE,
                         path2plink=NULL, showPlinkOutput=TRUE
                         ) {
     if (do.check_snp_missingness) {
         if (verbose) message("Identification of SNPs with high missingness",
                              " rate")
-        fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, name=name,
+        fail_snp_missingness <- check_snp_missingness(indir=indir, qcdir=qcdir,
+                                                      name=name,
                                                       lmissTh=lmissTh,
                                                       path2plink=path2plink,
                                                       verbose=verbose,
@@ -93,7 +94,7 @@ perMarkerQC <- function(indir, qcdir=indir, name,
     }
     if (do.check_hwe) {
         if (verbose) message("Identification of SNPs with deviation from HWE")
-        fail_hwe <- check_hwe(qcdir=qcdir, name=name, hweTh=hweTh,
+        fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, hweTh=hweTh,
                               path2plink=path2plink, verbose=verbose,
                               showPlinkOutput=showPlinkOutput)
         p_hwe <- fail_hwe$p_hwe
@@ -103,7 +104,8 @@ perMarkerQC <- function(indir, qcdir=indir, name,
     }
     if (do.check_maf) {
         if (verbose) message("Remove markers with a low minor allele frequency")
-        fail_maf <- check_maf(qcdir=qcdir, name=name, mafTh=mafTh, macTh=macTh,
+        fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, mafTh=mafTh,
+                              macTh=macTh,
                               path2plink=path2plink, verbose=verbose,
                               showPlinkOutput=showPlinkOutput)
         p_maf <- fail_maf$p_maf
@@ -249,7 +251,7 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -288,7 +290,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
     if (!file.exists(paste(prefix, ".bed",sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
@@ -298,18 +300,19 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                 "check_SNP_missingness for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, " --bfile ", prefix,
-                     " --missing ",
-                     "--freq ",
-                     "--out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--missing", "--freq",
+                              "--out",
+                              paste(out, suffix, sep="")),
+                    std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, " --bfile ", prefix,
-                     " --remove ", out, ".fail.IDs --missing ",
-                     "--freq ",
-                     "--out ", out, suffix, sep=""),
-               ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--remove",
+                              paste(out, ".fail.IDs", sep=""),
+                              "--missing", "--freq", "--out",
+                              paste(out, suffix, sep="")),
+                    std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
 
     lmiss <- read.table(paste(out, suffix, ".lmiss",sep=""), as.is=TRUE,
@@ -392,7 +395,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -431,7 +434,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
     if (!file.exists(paste(prefix, ".bed",sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
@@ -441,16 +444,17 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                 "check_HWE for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, " --bfile ", prefix,
-                     " --hardy",
-                     " --out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--hardy", "--out",
+                              paste(out, suffix, sep="")),
+                    std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, " --bfile ", prefix,
-                     " --remove ", out, ".fail.IDs --hardy",
-                     " --out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--remove",
+                              paste(out, ".fail.IDs", sep=""),
+                              "--hardy", "--out", paste(out, suffix, sep="")),
+                    std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
     hwe <- read.table(paste(out, suffix, ".hwe", sep=""), header=TRUE,
                       as.is=TRUE)
@@ -525,7 +529,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -548,7 +552,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, macTh=15,
 #' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 #' }
-check_maf <- function(indir, name, qcdir=indir, mafTh=0.01, macTh=20,
+check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                       verbose=FALSE, interactive=FALSE, path2plink=NULL,
                       showPlinkOutput=TRUE) {
     prefix <- paste(indir, "/", name, sep="")
@@ -562,7 +566,7 @@ check_maf <- function(indir, name, qcdir=indir, mafTh=0.01, macTh=20,
     if (!file.exists(paste(prefix, ".bed",sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
@@ -572,16 +576,17 @@ check_maf <- function(indir, name, qcdir=indir, mafTh=0.01, macTh=20,
                 "check_maf for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, " --bfile ", prefix,
-                     " --freq ",
-                     " --out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--freq", "--out",
+                              paste(out, suffix, sep="")),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, " --bfile ", prefix,
-                     " --remove ", out, ".fail.IDs --freq",
-                     " --out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--remove",
+                              paste(out, ".fail.IDs", sep=""),
+                              "--freq", "--out", paste(out, suffix, sep="")),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
     maf <- read.table(paste(out, suffix, ".frq",sep=""),
                        header=TRUE, as.is=TRUE)

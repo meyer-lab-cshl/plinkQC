@@ -4,7 +4,7 @@
 \alias{check_maf}
 \title{Identification of SNPs with low minor allele frequency}
 \usage{
-check_maf(indir, name, qcdir = indir, mafTh = 0.01, macTh = 20,
+check_maf(indir, name, qcdir = indir, macTh = 20, mafTh = NULL,
   verbose = FALSE, interactive = FALSE, path2plink = NULL,
   showPlinkOutput = TRUE)
 }
@@ -21,10 +21,10 @@ same as qcdir specified in \code{\link{perIndividualQC}}, i.e. it contains
 name.fail.IDs with IIDs of individuals that failed QC. User needs writing
 permission to qcdir. Per default, qcdir=indir.}
 
-\item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
-
 \item{macTh}{[double] Threshold for minor allele cut cut-off, if both mafTh
 and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).}
+
+\item{mafTh}{[double] Threshold for minor allele frequency cut-off.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out
 and specifically, if TRUE, plink log will be displayed.}
@@ -39,7 +39,7 @@ other_arguments) or pdf(outfile) print(p_maf) dev.off().}
 executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 plink should be accesible as path2plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
-system("plink").}
+ \code{\link[sys]{exec_wait}('plink')}.}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}

@@ -7,23 +7,30 @@
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not provided, assumed
-#' that PATH set-up works and plink will be found by system("plink").
+#' that PATH set-up works and plink will be found by
+#' \code{\link[sys]{exec_wait}('plink')}.
 #' @export
 
 checkPlink <- function(path2plink=NULL) {
+    if (grepl("~", path2plink)) {
+        stop("Path to plink contains ~: please supply full path, not relying",
+             " on tilde extension")
+    }
     if (is.null(path2plink)) {
-        findPlink <- tryCatch(system("plink -h", ignore.stdout=TRUE,
-                                     ignore.stderr=TRUE),
-                              warning=function(w) w)
-        if("simpleWarning" %in% is(findPlink)) {
+        findPlink <- tryCatch(sys::exec_wait("plink", args="-h",
+                                        std_out=FALSE,
+                                        std_err=TRUE),
+                              warning=function(w) w,  error = function(e) e)
+        if("simpleError" %in% is(findPlink)) {
             stop("PLINK software required for running this function cannot be ",
                  "found in current PATH setting. Try to set path2plink.")
         }
     } else {
-        findPlink <- tryCatch(system(paste(path2plink, " -h", sep=""),
-                                     ignore.stdout=TRUE, ignore.stderr=TRUE),
-                              warning=function(w) w)
-        if("simpleWarning" %in% is(findPlink)) {
+        findPlink <- tryCatch(sys::exec_wait(path2plink, args="-h",
+                                        std_out=FALSE,
+                                        std_err=TRUE),
+                              warning=function(w) w,  error = function(e) e)
+        if("simpleError" %in% is(findPlink)) {
             stop("PLINK software required for running this function cannot be ",
                  "found in path2plink.")
         }

@@ -1,0 +1,40 @@
+PLINK v1.90b6.5 64-bit (13 Sep 2018)
+Options in effect:
+  --bfile /Users/hannah/RPackagesDevel/plinkQC/extdata/data
+  --geno 0.01
+  --hwe 1e-05
+  --maf 0.0675675675675676
+  --make-bed
+  --out /Users/hannah/RPackagesDevel/plinkQC/extdata/data.clean
+  --remove /Users/hannah/RPackagesDevel/plinkQC/extdata/data.remove.IDs
+
+Hostname: hannahmbpr
+Working directory: /Users/hannah/RPackagesDevel/plinkQC/vignettes
+Start time: Thu Nov  8 16:09:31 2018
+
+Random number seed: 1541693371
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+10000 variants loaded from .bim file.
+200 people (89 males, 111 females) loaded from .fam.
+--remove: 148 people remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 148 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: 65 het. haploid genotypes present (see
+/Users/hannah/RPackagesDevel/plinkQC/extdata/data.clean.hh ); many commands
+treat these as missing.
+Total genotyping rate in remaining samples is 0.997125.
+636 variants removed due to missing genotype data (--geno).
+Warning: --hwe observation counts vary by more than 10%, due to the X
+chromosome.  You may want to use a less stringent --hwe p-value threshold for X
+chromosome variants.
+--hwe: 2 variants removed due to Hardy-Weinberg exact test.
+1679 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+7683 variants and 148 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to /Users/hannah/RPackagesDevel/plinkQC/extdata/data.clean.bed +
+/Users/hannah/RPackagesDevel/plinkQC/extdata/data.clean.bim +
+/Users/hannah/RPackagesDevel/plinkQC/extdata/data.clean.fam ... done.
+
+End time: Thu Nov  8 16:09:31 2018

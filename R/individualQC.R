@@ -117,7 +117,7 @@
 #' executable \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -306,7 +306,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
             if (!is.null(fail_relatedness$failIDs)) {
                write.table(fail_relatedness$failIDs,
                            file=paste(prefix, ".fail-IBD.IDs", sep=""),
-                           row.names=FALSE, quote=FALSE, col.names=TRUE,
+                           row.names=FALSE, quote=FALSE, col.names=FALSE,
                            sep="\t")
             }
             p_relatedness <- fail_relatedness$p_IBD
@@ -579,7 +579,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -685,7 +685,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -785,7 +785,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -914,7 +914,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -989,7 +989,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1016,15 +1016,14 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
     if (verbose) message("Run check_sex via plink --check-sex")
-    system(paste(path2plink, " --bfile ", prefix,
-                 " --check-sex",
-                 " --out ", out, sep=""),
-           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix, "--check-sex", "--out", out),
+                std_out=showPlinkOutput, std_err=showPlinkOutput)
 }
 
 #' Evaluate results from PLINK sex check.
@@ -1085,7 +1084,7 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1176,7 +1175,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                ~SNPSEX, ~F)[which(!sex_mismatch),]
             # Fix mismatch between PEDSEX and sex
             if (fixMixup) {
-                if (!is.null(path2plink)) {
+                if (is.null(path2plink)) {
                     path2plink <- 'plink'
                 }
                 checkPlink(path2plink)
@@ -1199,12 +1198,11 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                         stop("plink binary file: ", prefix,
                              ".bed does not exist.")
                     }
-                    system(paste(path2plink, " --bfile ", prefix,
-                                 " --update-sex ", file_mixup,
-                                 " --make-bed ",
-                                 " --out ", prefix, sep=""),
-                           ignore.stdout=!showPlinkOutput,
-                           ignore.stderr=!showPlinkOutput)
+                    sys::exec_wait(path2plink, args=c("--bfile", prefix,
+                                 "--update-sex", file_mixup,
+                                 "--make-bed",
+                                 "--out", prefix),
+                            std_out=showPlinkOutput, std_err=showPlinkOutput)
                 } else {
                     if (verbose) {
                         message("All assigned genotype sexes (PEDSEX) match",
@@ -1282,7 +1280,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1310,15 +1308,14 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
     if (verbose) message("Run check_heterozygosity via plink --het")
-    system(paste(path2plink, " --bfile ", prefix,
-                 " --het",
-                 " --out ", out, sep=""),
-           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix, "--het", "--out", out),
+                std_out=showPlinkOutput, std_err=showPlinkOutput)
 }
 
 #' Run PLINK missingness rate calculation
@@ -1342,7 +1339,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1370,15 +1367,14 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
     if (verbose) message("Run check_missingness via plink --missing")
-    system(paste(path2plink, " --bfile ", prefix,
-                 " --missing",
-                 " --out ", out, sep=""),
-           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix, "--missing", "--out", out),
+                std_out=showPlinkOutput, std_err=showPlinkOutput)
 }
 
 #' Evaluate results from PLINK missing genotype and heterozygosity rate check.
@@ -1555,7 +1551,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1584,28 +1580,26 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     highld <- system.file("extdata", 'high-LD-regions.txt', package="plinkQC")
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
     if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
-    system(paste(path2plink, " --bfile ", prefix,
-                 " --exclude range ", highld,
-                 " --indep-pairwise 50 5 0.2",
-                 " --out ", out, sep=""),
-           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix, "--exclude", "range", highld,
+                          "--indep-pairwise", 50, 5, 0.2, "--out", out),
+                std_out=showPlinkOutput, std_err=showPlinkOutput)
     if (verbose) message("Run check_relatedness via plink --genome")
-    system(paste(path2plink, " --bfile ", prefix,
-                 " --extract ", out, ".prune.in",
-                 " --maf 0.1 --genome",
-                 " --min ", highIBDTh,
-                 " --out ", out, sep=""),
-           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix, "--extract",
+                          paste(out, ".prune.in", sep=""),
+                          "--maf", 0.1, "--genome", "--min", highIBDTh,
+                          "--out", out),
+                 std_out=showPlinkOutput, std_err=showPlinkOutput)
     if (! file.exists(paste(prefix, ".imiss", sep=""))) {
-        system(paste(path2plink, " --bfile ", prefix,
-                     " --missing",
-                     " --out ", out, sep=""),
-           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--missing", "--out", out),
+        std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
 }
 
@@ -1767,7 +1761,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
 #' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1796,15 +1790,14 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (!is.null(path2plink)) {
+    if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
     checkPlink(path2plink)
     if (verbose) message("Run check_ancestry via plink --pca")
-    system(paste(path2plink, " --bfile ", prefix,
-                 " --pca",
-                 " --out ", out, sep=""),
-           ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix, "--pca", "--out", out),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
 }
 
 #' Evaluate results from PLINK PCA on combined study and reference data
