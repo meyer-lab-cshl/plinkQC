@@ -97,7 +97,7 @@ package.dir <- find.package('plinkQC')
 indir <- file.path(package.dir, 'extdata')
 qcdir <- tempdir()
 name <- 'data'
-path2plink <- "~/bin"
+path2plink <- "~/bin/plink"
 ```
 
 ## Per-individual quality control

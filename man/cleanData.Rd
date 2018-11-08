@@ -78,7 +78,7 @@ and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).}
 
 \item{path2plink}{[character] Absolute path to directory where external plink
 software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
+plink should be accesible as path2plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").}
 

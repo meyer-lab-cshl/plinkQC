@@ -38,7 +38,7 @@
 #' other_arguments) or pdf(outfile) print(p_marker) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -247,7 +247,7 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' other_arguments) or pdf(outfile) print(p_lmiss) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -289,7 +289,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     if (!is.null(path2plink)) {
-        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- 'plink'
     }
     checkPlink(path2plink)
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
@@ -298,14 +298,14 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                 "check_SNP_missingness for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", prefix,
+        system(paste(path2plink, " --bfile ", prefix,
                      " --missing ",
                      "--freq ",
                      "--out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", prefix,
+        system(paste(path2plink, " --bfile ", prefix,
                      " --remove ", out, ".fail.IDs --missing ",
                      "--freq ",
                      "--out ", out, suffix, sep=""),
@@ -390,7 +390,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' other_arguments) or pdf(outfile) print(p_hwe) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -432,7 +432,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     if (!is.null(path2plink)) {
-        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- 'plink'
     }
     checkPlink(path2plink)
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
@@ -441,13 +441,13 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                 "check_HWE for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", prefix,
+        system(paste(path2plink, " --bfile ", prefix,
                      " --hardy",
                      " --out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", prefix,
+        system(paste(path2plink, " --bfile ", prefix,
                      " --remove ", out, ".fail.IDs --hardy",
                      " --out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
@@ -523,7 +523,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' other_arguments) or pdf(outfile) print(p_maf) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -563,7 +563,7 @@ check_maf <- function(indir, name, qcdir=indir, mafTh=0.01, macTh=20,
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     if (!is.null(path2plink)) {
-        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- 'plink'
     }
     checkPlink(path2plink)
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
@@ -572,13 +572,13 @@ check_maf <- function(indir, name, qcdir=indir, mafTh=0.01, macTh=20,
                 "check_maf for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", prefix,
+        system(paste(path2plink, " --bfile ", prefix,
                      " --freq ",
                      " --out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", prefix,
+        system(paste(path2plink, " --bfile ", prefix,
                      " --remove ", out, ".fail.IDs --freq",
                      " --out ", out, suffix, sep=""),
                ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)

@@ -6,8 +6,9 @@
 #'
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not provided, assumed
+#' plink should be accesible as path2plink -h. If not provided, assumed
 #' that PATH set-up works and plink will be found by system("plink").
+#' @export
 
 checkPlink <- function(path2plink) {
     if (is.null(path2plink)) {
@@ -19,7 +20,7 @@ checkPlink <- function(path2plink) {
                  "found in current PATH setting. Try to set path2plink.")
         }
     } else {
-        findPlink <- tryCatch(system(paste(path2plink, "/plink -h", sep=""),
+        findPlink <- tryCatch(system(paste(path2plink, " -h", sep=""),
                                      ignore.stdout=TRUE, ignore.stderr=TRUE),
                               warning=function(w) w)
         if("simpleWarning" %in% is(findPlink)) {
@@ -40,6 +41,7 @@ checkPlink <- function(path2plink) {
 #' @param proportions [list] whose elements are tested for being proportions.
 #' between 0 and 1.
 #' @return NULL
+#' @export
 testNumerics <- function(numbers, positives=NULL, integers=NULL,
                          proportions=NULL) {
     notNullnotNumeric <- function(x) !is.null(x) && !is.numeric(x)
@@ -143,6 +145,7 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' individuals in relatednessIID1 and relatednessIID2, that fail the relatedness
 #' QC and ii) failIDs, a [data.frame] with the [IID]s (and [FID]s if provided)
 #' of the individuals that fail the relatednessTh.
+#' @export
 
 relatednessFilter <- function(relatedness, otherCriterion=NULL,
                               relatednessTh, otherCriterionTh=NULL,

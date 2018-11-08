@@ -55,7 +55,7 @@
 #' samples.
 #' @param path2plink [character] Absolute path to directory where external plink
 #' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
+#' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -103,8 +103,8 @@ cleanData <- function(indir, name, qcdir=indir,
                       filterHeterozygosity, filterSampleMissingness)
     markerFilter <- c(filterHWE, filterMAF, filterSNPMissingness)
 
-    prefix <- paste(indir,"/", name, sep="")
-    out <- paste(qcdir,"/", name, sep="")
+    prefix <- paste(indir, "/", name, sep="")
+    out <- paste(qcdir, "/", name, sep="")
 
     if (!any(c(sampleFilter, markerFilter))) {
         stop("No per-sample and per-marker filters chosen")
@@ -239,10 +239,10 @@ cleanData <- function(indir, name, qcdir=indir,
     }
 
     if (!is.null(path2plink)) {
-        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
+        path2plink <- 'plink'
     }
     checkPlink(path2plink)
-    system(paste(path2plink, "plink --bfile ", prefix,
+    system(paste(path2plink, " --bfile ", prefix,
                  removeString,
                  maf, hwe, missing,
                  " --make-bed --out ", out, ".clean",
