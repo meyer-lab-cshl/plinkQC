@@ -46,7 +46,7 @@ save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
 \item{path2plink}{[character] Absolute path to directory where external plink
-software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 plink should be accessible as path2plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
 system("plink").}

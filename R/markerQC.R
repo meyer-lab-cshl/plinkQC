@@ -37,7 +37,7 @@
 #' save the returned plot object (p_marker) via ggplot2::ggsave(p=p_marker,
 #' other_arguments) or pdf(outfile) print(p_marker) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -246,7 +246,7 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' save the returned plot object (p_lmiss) via ggplot2::ggsave(p=p_lmiss,
 #' other_arguments) or pdf(outfile) print(p_lmiss) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -389,7 +389,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_hwe,
 #' other_arguments) or pdf(outfile) print(p_hwe) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -522,7 +522,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_maf,
 #' other_arguments) or pdf(outfile) print(p_maf) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accesible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").

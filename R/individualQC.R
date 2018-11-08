@@ -114,7 +114,7 @@
 #' IDs in refColors/refColorsFile.
 #' @param studyColor [character] Color to be used for study population.
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -576,7 +576,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -682,7 +682,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 #' larger than 0.
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -782,7 +782,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' @param imissTh [double] Threshold for acceptable missing genotype rate in any
 #' individual; has to be proportion between (0,1)
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -911,7 +911,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 #' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -986,7 +986,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -1082,7 +1082,7 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -1279,7 +1279,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -1339,7 +1339,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -1552,7 +1552,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' pair of individuals; only pairwise relationship estimates larger than this
 #' threshold will be recorded.
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
@@ -1764,7 +1764,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
 #' reference data files, i.e. prefixMergedDataset.bed, prefixMergedDataset.bim,
 #' prefixMergedDataset.fam.
 #' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
+#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
 #' plink should be accessible as path2plink -h. If not
 #' provided, assumed that PATH set-up works and plink will be found by
 #' system("plink").
