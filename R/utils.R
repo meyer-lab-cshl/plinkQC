@@ -45,18 +45,6 @@ checkPlink <- function(path2plink=NULL) {
     return(path2plink)
 }
 
-checkFormat <- function(prefix) {
-    if (!file.exists(paste(prefix, ".fam", sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim", sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed", sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-}
-
 #' Test lists for different properties of numerics
 #'
 #' Test all elements of a list if they are numeric, positive numbers, integers
@@ -367,4 +355,16 @@ makepath <- function(directory, name) {
     path <- file.path(directory, name)
     path <- gsub('\\\\', '/', path)
     return(path)
+}
+
+checkFormat <- function(prefix) {
+    if (!file.exists(paste(prefix, ".fam", sep=""))){
+        stop("plink family file: ", prefix, ".fam does not exist.")
+    }
+    if (!file.exists(paste(prefix, ".bim", sep=""))){
+        stop("plink snp file: ", prefix, ".bim does not exist.")
+    }
+    if (!file.exists(paste(prefix, ".bed", sep=""))){
+        stop("plink binary file: ", prefix, ".bed does not exist.")
+    }
 }
