@@ -40,24 +40,17 @@
 #' @param filterHWE [logical] Set to exclude markers that fail HWE exact test
 #' (via \code{\link{check_hwe}} or \code{\link{perMarkerQC}}). Requires hweTh to
 #' be set.
-#' @param hweTh [double] Significance threshold for deviation from HWE.
 #' @param filterMAF [logical] Set to exclude markers that fail minor allele
 #' frequency or minor allele count threshold (via \code{\link{check_maf}} or
 #' \code{\link{perMarkerQC}}). Requires mafTh or macTh to be set.
-#' @param mafTh [double] Threshold for minor allele frequency cut-off.
-#' @param macTh [double] Threshold for minor allele cut cut-off, if both mafTh
-#' and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).
 #' @param filterSNPMissingness [logical] Set to exclude markers that have
 #' excessive missing rates across samples (via
 #' \code{\link{check_snp_missingness}} or \code{\link{perMarkerQC}}). Requires
 #' lmissTh to be set.
-#' @param lmissTh [double] Threshold for acceptable variant missing rate across
-#' samples.
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
+#' @inheritParams check_maf
+#' @inheritParams check_hwe
+#' @inheritParams check_snp_missingness
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -117,15 +110,9 @@ cleanData <- function(indir, name, qcdir=indir,
         message("No per-marker filter chosen, carry on with removing samples ",
                 "that fail per-samples QCs")
     }
-    if (!file.exists(paste(prefix, ".fam",sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim",sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed",sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
+
     # Remove remove.IDs file if already existing
     removeIDs <- NULL
     if (any(sampleFilter)) {
@@ -134,7 +121,9 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterRelated is TRUE but file ", out,
                      ".fail-IBD.IDs does not exist")
             } else {
-                message("Read individual IDs that failed relatedness check")
+                if (verbose) {
+                    message("Read individual IDs that failed relatedness check")
+                }
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out, ".fail-IBD.IDs",
                                                      sep=""),
@@ -148,7 +137,9 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterAncestry is TRUE but file ", out,
                      ".fail-ancestry.IDs does not exist")
             } else {
-                message("Read individual IDs that failed ancestry check")
+                if (verbose) {
+                    message("Read individual IDs that failed ancestry check")
+                }
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out,
                                                            ".fail-ancestry.IDs",
@@ -163,7 +154,10 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterHeterozygosity is TRUE but file ", out,
                      ".fail-het.IDs does not exist")
             } else {
-                message("Read individual IDs that failed heterozygosity check")
+                if (verbose) {
+                    message("Read individual IDs that failed heterozygosity ",
+                            "check")
+                }
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out, ".fail-het.IDs",
                                                            sep=""),
@@ -177,7 +171,9 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterSampleMissingness is TRUE but file ", out,
                      ".fail-imiss.IDs does not exist")
             } else {
-                message("Read individual IDs that failed missingness check")
+                if (verbose) {
+                    message("Read individual IDs that failed missingness check")
+                }
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out,
                                                            ".fail-imiss.IDs",
@@ -192,7 +188,9 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterSex is TRUE but file ", out,
                      ".fail-sexcheck.IDs does not exist")
             } else {
-                message("Read individual IDs that failed sex check")
+                if (verbose) {
+                    message("Read individual IDs that failed sex check")
+                }
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out,
                                                            ".fail-sexcheck.IDs",
@@ -204,7 +202,7 @@ cleanData <- function(indir, name, qcdir=indir,
         }
         # ensure unique IDs in remove.IDs
         removeIDs <- removeIDs[!duplicated(removeIDs),]
-        message("Write file with remove IDs")
+        if (verbose) message("Write file with remove IDs")
         write.table(removeIDs, paste(out, ".remove.IDs", sep=""),
                     col.names=FALSE, row.names=FALSE, quote=FALSE)
         keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
@@ -237,18 +235,24 @@ cleanData <- function(indir, name, qcdir=indir,
         if (is.null(mafTh) && is.null(macTh)) {
             stop("filterMAF is TRUE but neither mafTh or macTh are provided")
         }
+
         all_samples <-  R.utils::countLines(paste(prefix, ".fam", sep=""))
         keep_samples <- as.numeric(all_samples) - fail_samples
-        if (verbose) {
-            if (!is.null(mafTh) && !is.null(macTh)) {
+
+        if (!is.null(mafTh) && !is.null(macTh)) {
+            if (verbose) {
                 message("Both mafTh and macTh provided, macTh=", macTh,
-                        " is used (corresponds to mafTh=", mafTh, ")")
-            } else if (!is.null(mafTh)) {
-                if(is.null(macTh)) macTh <- mafTh*(2*keep_samples)
+                        " is used (corresponds to mafTh=", round(mafTh, 6), ")")
+            }
+        } else if (!is.null(mafTh)) {
+            if(is.null(macTh)) macTh <- mafTh*(2*keep_samples)
+            if (verbose) {
                 message("The mafTh is ", mafTh, " which corresponds to a mcfTh=",
                         macTh)
-            } else {
-                if(is.null(mafTh)) mafTh <- macTh/(2*keep_samples)
+            }
+        } else {
+            if(is.null(mafTh)) mafTh <- macTh/(2*keep_samples)
+            if (verbose) {
                 message("The macTh is ", macTh," which corresponds to a mafTh=",
                         round(mafTh, 6))
             }
@@ -262,10 +266,7 @@ cleanData <- function(indir, name, qcdir=indir,
             missing <- c("--geno", lmissTh)
         }
     }
-
-    if (is.null(path2plink)) path2plink <- 'plink'
-    findPlink <- checkPlink(path2plink)
-    message("Remove individual IDs and markers IDs that failed QC")
+    if (verbose) message("Remove individual IDs and markers IDs that failed QC")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, remove, maf, hwe, missing,
                           "--make-bed", "--out", paste(out, ".clean", sep="")),

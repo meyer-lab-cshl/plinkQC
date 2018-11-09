@@ -52,72 +52,6 @@
 #' \code{\link{evaluate_check_relatedness}}.
 #' @param do.evaluate_check_ancestry [logical] If TRUE, run
 #' \code{\link{evaluate_check_ancestry}}.
-#' @param maleTh [double] Threshold of X-chromosomal heterozygosity rate for
-#' males.
-#' @param femaleTh [double] Threshold of X-chromosomal heterozygosity rate for
-#' females.
-#' @param externalSex [data.frame, optional] Dataframe with sample IDs
-#' [externalSexID] and sex [externalSexSex] to double check if external and
-#' PEDSEX data (often processed at different centers) match.
-#' @param externalFemale [integer/character] Identifier for 'female' in
-#' externalSex.
-#' @param externalMale [integer/character] Identifier for 'male' in externalSex.
-#' @param externalSexSex [character] Column identifier for column containing sex
-#' information in externalSex.
-#' @param externalSexID [character] Column identifier for column containing ID
-#' information in externalSex.
-#' @param fixMixup [logical] Should PEDSEX of individuals with mismatch between
-#' PEDSEX and Sex while Sex==SNPSEX automatically corrected: this will directly
-#' change the name.bim/.bed/.fam files!
-#' @param imissTh [double] Threshold for acceptable missing genotype rate per
-#' individual.
-#' @param hetTh [double] Threshold for acceptable deviation from mean
-#' heterozygosity per individual. Expressed as multiples of standard
-#' deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
-#' hetTh*sd(het) will be returned as failing heterozygosity check.
-#' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
-#' pair of individuals.
-#' @param prefixMergedDataset [character] Prefix of merged dataset (study and
-#' reference samples) with prefixMergedDataset.bed, prefixMergedDataset.bim
-#' and prefixMergedDataset.fam, which was used in plink --pca, resulting in
-#' prefixMergedDataset.eigenvec
-#' @param europeanTh [double] Scaling factor of radius to be drawn around center
-#' of reference European samples, with study samples inside this radius
-#' considered to be of European descent and samples outside this radius of
-#' non-European descent. The radius is computed as the maximum Euclidean distance
-#' of reference Europeans to the centre of reference European samples.
-#' @param refSamples [data.frame] Dataframe with sample identifiers
-#' [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
-#' population identifier [refSamplesPop] corresponding to population IDs
-#' [refColorsPop] in refColorsfile/refColors. Either refSamples or
-#' refSamplesFile have to be specified.
-#' @param refColors [data.frame, optional] Dataframe with population IDs in
-#' column [refColorsPop] and corresponding color-code for PCA plot in column
-#' [refColorsColor]. If not provided and is.null(refColorsFile) default colors
-#' are used.
-#' @param refSamplesFile [character] /path/to/File/with/reference samples. Needs
-#' columns with sample identifiers [refSamplesIID] corresponding to IIDs in
-#' prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
-#' corresponding to population IDs [refColorsPop] in refColorsfile/refColors.
-#' @param refColorsFile [character, optional]
-#' /path/to/File/with/Population/Colors containing population IDs in column
-#' [refColorsPop] and corresponding color-code for PCA plot in column
-#' [refColorsColor].If not provided and is.null(refColors) default colors for
-#' are used.
-#' @param refSamplesIID [character] Column name of reference sample IDs in
-#' refSamples/refSamplesFile.
-#' @param refSamplesPop [character] Column name of reference sample population
-#' IDs in refSamples/refSamplesFile.
-#' @param refColorsColor [character] Column name of population colors in
-#' refColors/refColorsFile
-#' @param refColorsPop [character] Column name of reference sample population
-#' IDs in refColors/refColorsFile.
-#' @param studyColor [character] Color to be used for study population.
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -136,6 +70,11 @@
 #' reference populations and study population (if do.check_ancestry is set to
 #' TRUE).
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @inheritParams checkPlink
+#' @inheritParams check_sex
+#' @inheritParams check_ancestry
+#' @inheritParams check_relatedness
+#' @inheritParams check_het_and_miss
 #' @return Named [list] with i) fail_list, a named [list] with 1.
 #' sample_missingness containing a [vector] with sample IIDs failing the
 #' missingness threshold imissTh, 2. highIBD containing a [vector] with sample
@@ -579,11 +518,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -685,11 +620,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 #' hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 #' larger than 0.
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -785,11 +716,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' pair of individuals.
 #' @param imissTh [double] Threshold for acceptable missing genotype rate in any
 #' individual; has to be proportion between (0,1)
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -914,11 +841,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 #' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -989,11 +912,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 #' qcdir=indir.
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1086,11 +1005,7 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1280,11 +1195,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 #' qcdir=indir.
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1341,11 +1252,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' qcdir=indir.
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1555,11 +1462,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
 #' pair of individuals; only pairwise relationship estimates larger than this
 #' threshold will be recorded.
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1768,11 +1671,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
 #' @param prefixMergedDataset [character] Prefix of merged study and
 #' reference data files, i.e. prefixMergedDataset.bed, prefixMergedDataset.bim,
 #' prefixMergedDataset.fam.
-#' @param path2plink [character] Absolute path to directory where external plink
-#' executable  \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accessible as path2plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#'  \code{\link[sys]{exec_wait}('plink')}.
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1805,6 +1704,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
     }
     if (is.null(path2plink)) path2plink <- 'plink'
     findPlink <- checkPlink(path2plink)
+                message("Read samples that failed relatedness check")
     if (verbose) message("Run check_ancestry via plink --pca")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--pca", "--out", out),
