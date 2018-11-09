@@ -7,4 +7,4 @@
 0 errors | 0 warnings | 0 notes
 
 ## Comment
-Re-submission, fixing vignette typos and plink path dependencies.
+Re-submission: fixing windows dependencies
