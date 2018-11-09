@@ -178,11 +178,12 @@ permission to qcdir. Per default qcdir=indir.</p></td>
     </tr>
     <tr>
       <th>path2plink</th>
-      <td><p>[character] Absolute path to directory where external plink
-executable  <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
-plink should be accessible as path2plink -h. If not
-provided, assumed that PATH set-up works and plink will be found by
- <code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a>('plink')</code>.</p></td>
+      <td><p>[character] Absolute path to PLINK executable
+(<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a>) i.e.
+plink should be accesible as path2plink -h. The full name of the executable
+should be specified: for windows OS, this means path/plink.exe, for unix
+platforms this is path/plink. If not provided, assumed that PATH set-up works
+and PLINK will be found by <code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a></code>('plink').</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>

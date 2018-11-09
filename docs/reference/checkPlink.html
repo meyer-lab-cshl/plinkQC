@@ -157,13 +157,18 @@ can be found from system call.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>path2plink</th>
-      <td><p>[character] Absolute path to directory where external plink
-software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
-plink should be accesible as path2plink -h. If not provided, assumed
-that PATH set-up works and plink will be found by
-<code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a>('plink')</code>.</p></td>
+      <td><p>[character] Absolute path to PLINK executable
+(<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a>) i.e.
+plink should be accesible as path2plink -h. The full name of the executable
+should be specified: for windows OS, this means path/plink.exe, for unix
+platforms this is path/plink. If not provided, assumed that PATH set-up works
+and PLINK will be found by <code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a></code>('plink').</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Path to PLINK executable.</p>
     
 
   </div>
@@ -171,7 +176,9 @@ that PATH set-up works and plink will be found by
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

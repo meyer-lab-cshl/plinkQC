@@ -260,11 +260,12 @@ other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().</p></td>
     </tr>
     <tr>
       <th>path2plink</th>
-      <td><p>[character] Absolute path to directory where external plink
-executable  <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
-plink should be accessible as path2plink -h. If not
-provided, assumed that PATH set-up works and plink will be found by
- <code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a>('plink')</code>.</p></td>
+      <td><p>[character] Absolute path to PLINK executable
+(<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a>) i.e.
+plink should be accesible as path2plink -h. The full name of the executable
+should be specified: for windows OS, this means path/plink.exe, for unix
+platforms this is path/plink. If not provided, assumed that PATH set-up works
+and PLINK will be found by <code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a></code>('plink').</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>
@@ -286,8 +287,8 @@ the X-chromosomal heterozygosity (SNPSEX) of the sample split by their
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>check_sex</code> wraps around <code><a href='run_check_sex.html'>run_check_sex</a></code>  and
-<code><a href='evaluate_check_sex.html'>evaluate_check_sex</a></code> . If run.check_sex is TRUE,
-<code><a href='run_check_sex.html'>run_check_sex</a> </code> is executed ; otherwise it is assumed that plink
+<code><a href='evaluate_check_sex.html'>evaluate_check_sex</a></code>. If run.check_sex is TRUE,
+<code><a href='run_check_sex.html'>run_check_sex</a></code> is executed ; otherwise it is assumed that plink
 --check-sex has been run externally and qcdir/name.sexcheck exists.
 <code>check_sex</code>  will fail with missing file error otherwise.</p>
 <p>For details on the output data.frame fail_sex, check the original
