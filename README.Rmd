@@ -23,7 +23,8 @@ of the results.
 Full documentation is available at http://HannahVMeyer.github.io/plinkQC/.
 
 **plinkQC** generates a per-individual and per-marker quality control report.
-A step-by-step guide on how to run these analyses can be found [here](https://hannahvmeyer.github.io/plinkQC/articles/plinkQC.html).
+A step-by-step guide on how to run these analyses can be found
+[here](https://hannahvmeyer.github.io/plinkQC/articles/plinkQC.html).
 
 Individuals and markers that fail the quality control can subsequently be
 removed with **plinkQC** to generate a new, clean dataset.
@@ -38,7 +39,7 @@ to retain as many individuals as possible in the study.
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC**  is: 0.1.1 and can be
+The current github version of **plinkQC**  is: 0.2.0 and can be
 installed via
 ```{r github install, eval=FALSE}
 library(devtools)
@@ -50,4 +51,5 @@ installed via
 install.packages("plinkQC")
 ```
 
-A log of version changes can be found [here](https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.md).
+A log of version changes can be found
+[here](https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.md).
