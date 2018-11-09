@@ -280,8 +280,8 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                                   interactive=FALSE, path2plink=NULL,
                                   verbose=FALSE, showPlinkOutput=TRUE) {
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, name)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".fam",sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -295,7 +295,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
     if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
-    checkPlink(path2plink)
+    findPlink <- checkPlink(path2plink)
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividual QC: ",
                 out, ".fail.IDs does not exist. Continue ",
@@ -426,8 +426,8 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                       path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE) {
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, name)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".fam",sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -441,7 +441,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
     if (is.null(path2plink)) {
         path2plink <- 'plink'
     }
-    checkPlink(path2plink)
+    findPlink <- checkPlink(path2plink)
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividualQC: ",
                 out, ".fail.IDs does not exist. Continue ",
@@ -560,10 +560,8 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                       verbose=FALSE, interactive=FALSE, path2plink=NULL,
                       showPlinkOutput=TRUE) {
 
-    prefix <- file.path(indir, name)
-    prefix <- gsub('\\\\', '/', prefix)
-    out <- file.path(qcdir, name)
-    out <- gsub('\\\\', '/', out)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".fam",sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -574,10 +572,10 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
     if (!file.exists(paste(prefix, ".bed",sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (is.null(path2plink)) {
-        path2plink <- 'plink'
-    }
-    checkPlink(path2plink)
+
+    if (is.null(path2plink)) path2plink <- 'plink'
+    findPlink <- checkPlink(path2plink)
+
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividualQC: ",
                 out, ".fail.IDs does not exist. Continue ",
@@ -608,18 +606,18 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
     if (is.null(mafTh) && is.null(macTh)) {
         stop("Either mafTh or macTh need to be provided")
     }
-    if(!is.null(macTh)) {
-        mafTh <- macTh/(2*keep_samples)
-    }
     if (verbose) {
         if (!is.null(mafTh) && !is.null(macTh)) {
             message("Both mafTh and macTh provided, macTh=", macTh,
                     " is used (corresponds to mafTh=", round(mafTh, 6), ")")
         } else if (!is.null(mafTh)) {
-            message("The mafTh is ", round(mafTh, 6))
+            if(is.null(macTh)) macTh <- mafTh*(2*keep_samples)
+            message("The mafTh is ", mafTh, " which corresponds to a mcfTh=",
+                    macTh)
         } else {
+            if(is.null(mafTh)) mafTh <- macTh/(2*keep_samples)
             message("The macTh is ", macTh," which corresponds to a mafTh=",
-                    round(mafTh, 6), ")")
+                    round(mafTh, 6))
         }
     }
     p_maf <- ggplot(maf, aes_string('MAF'))

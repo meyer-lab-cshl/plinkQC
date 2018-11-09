@@ -214,7 +214,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     p_relatedness <- NULL
     p_ancestry <- NULL
 
-    out <- file.path(qcdir, name)
+    out <- makepath(qcdir, name)
 
     if (!dont.check_sex) {
         if (do.run_check_sex) {
@@ -1010,8 +1010,8 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
                           path2plink=NULL, showPlinkOutput=TRUE) {
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, name)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -1024,7 +1024,7 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
     }
 
     if (is.null(path2plink)) path2plink <- 'plink'
-    checkPlink(path2plink)
+    findPlink <- checkPlink(path2plink)
 
     if (verbose) message("Run check_sex via plink --check-sex")
     sys::exec_wait(path2plink,
@@ -1119,8 +1119,8 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                showPlinkOutput=TRUE,
                                interactive=FALSE) {
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, name)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!file.exists(paste(out, ".sexcheck", sep=""))){
         stop("plink --check-sex results file: ", out,
@@ -1183,10 +1183,8 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                ~SNPSEX, ~F)[which(!sex_mismatch),]
             # Fix mismatch between PEDSEX and sex
             if (fixMixup) {
-                if (is.null(path2plink)) {
-                    path2plink <- 'plink'
-                }
-                checkPlink(path2plink)
+                if (is.null(path2plink)) path2plink <- 'plink'
+                findPlink <- checkPlink(path2plink)
                 if (nrow(mixup_geno_pheno) != 0) {
                     file_mixup <- paste(out, ".mismatched_sex_geno_pheno",
                                         sep="")
@@ -1304,8 +1302,8 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
                                      path2plink=NULL,
                                      showPlinkOutput=TRUE) {
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, name)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -1318,7 +1316,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
     }
 
     if (is.null(path2plink)) path2plink <- 'plink'
-    checkPlink(path2plink)
+    findPlink <- checkPlink(path2plink)
 
     if (verbose) message("Run check_heterozygosity via plink --het")
     sys::exec_wait(path2plink,
@@ -1365,8 +1363,8 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
                                   path2plink=NULL,
                                   showPlinkOutput=TRUE) {
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, name)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -1379,7 +1377,7 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
     }
 
     if (is.null(path2plink)) path2plink <- 'plink'
-    checkPlink(path2plink)
+    findPlink <- checkPlink(path2plink)
 
     if (verbose) message("Run check_missingness via plink --missing")
     sys::exec_wait(path2plink,
@@ -1457,7 +1455,7 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                                   hetTh=3, interactive=FALSE) {
 
-    prefix <- file.path(qcdir, name)
+    prefix <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".imiss",sep=""))){
         stop("plink --missing output file: ", prefix,
@@ -1579,8 +1577,8 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                                   path2plink=NULL,
                                   showPlinkOutput=TRUE, verbose=FALSE) {
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, name)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -1594,7 +1592,7 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
     highld <- system.file("extdata", 'high-LD-regions.txt', package="plinkQC")
 
     if (is.null(path2plink)) path2plink <- 'plink'
-    checkPlink(path2plink)
+    findPlink <- checkPlink(path2plink)
 
     if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
     sys::exec_wait(path2plink,
@@ -1687,7 +1685,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                                        imissTh=0.03, interactive=FALSE,
                                        verbose=FALSE) {
 
-    prefix <- file.path(qcdir, name)
+    prefix <- makepath(qcdir, name)
 
     if (!file.exists(paste(prefix, ".imiss", sep=""))){
         stop("plink --missing output file: ", prefix,
@@ -1793,8 +1791,8 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
                                verbose=FALSE, path2plink=NULL,
                                showPlinkOutput=TRUE) {
 
-    prefix <- file.path(indir, prefixMergedDataset)
-    out <- file.path(qcdir, prefixMergedDataset)
+    prefix <- makepath(indir, prefixMergedDataset)
+    out <- makepath(qcdir, prefixMergedDataset)
 
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
@@ -1806,7 +1804,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     if (is.null(path2plink)) path2plink <- 'plink'
-    checkPlink(path2plink)
+    findPlink <- checkPlink(path2plink)
     if (verbose) message("Run check_ancestry via plink --pca")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--pca", "--out", out),
@@ -1911,8 +1909,8 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     studyColor="#2c7bb6",
                                     interactive=FALSE) {
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, prefixMergedDataset)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, prefixMergedDataset)
 
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")

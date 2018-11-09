@@ -103,8 +103,8 @@ cleanData <- function(indir, name, qcdir=indir,
                       filterHeterozygosity, filterSampleMissingness)
     markerFilter <- c(filterHWE, filterMAF, filterSNPMissingness)
 
-    prefix <- file.path(indir, name)
-    out <- file.path(qcdir, name)
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
 
     if (!any(c(sampleFilter, markerFilter))) {
         stop("No per-sample and per-marker filters chosen")
@@ -134,6 +134,7 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterRelated is TRUE but file ", out,
                      ".fail-IBD.IDs does not exist")
             } else {
+                message("Read individual IDs that failed relatedness check")
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out, ".fail-IBD.IDs",
                                                      sep=""),
@@ -147,6 +148,7 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterAncestry is TRUE but file ", out,
                      ".fail-ancestry.IDs does not exist")
             } else {
+                message("Read individual IDs that failed ancestry check")
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out,
                                                            ".fail-ancestry.IDs",
@@ -161,6 +163,7 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterHeterozygosity is TRUE but file ", out,
                      ".fail-het.IDs does not exist")
             } else {
+                message("Read individual IDs that failed heterozygosity check")
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out, ".fail-het.IDs",
                                                            sep=""),
@@ -174,6 +177,7 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterSampleMissingness is TRUE but file ", out,
                      ".fail-imiss.IDs does not exist")
             } else {
+                message("Read individual IDs that failed missingness check")
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out,
                                                            ".fail-imiss.IDs",
@@ -188,6 +192,7 @@ cleanData <- function(indir, name, qcdir=indir,
                 stop("filterSex is TRUE but file ", out,
                      ".fail-sexcheck.IDs does not exist")
             } else {
+                message("Read individual IDs that failed sex check")
                 removeIDs <- rbind(removeIDs,
                                    data.table::fread(paste(out,
                                                            ".fail-sexcheck.IDs",
@@ -199,6 +204,7 @@ cleanData <- function(indir, name, qcdir=indir,
         }
         # ensure unique IDs in remove.IDs
         removeIDs <- removeIDs[!duplicated(removeIDs),]
+        message("Write file with remove IDs")
         write.table(removeIDs, paste(out, ".remove.IDs", sep=""),
                     col.names=FALSE, row.names=FALSE, quote=FALSE)
         keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
@@ -231,22 +237,20 @@ cleanData <- function(indir, name, qcdir=indir,
         if (is.null(mafTh) && is.null(macTh)) {
             stop("filterMAF is TRUE but neither mafTh or macTh are provided")
         }
-        if(!is.null(macTh)) {
-            all_samples <-  R.utils::countLines(paste(prefix, ".fam",
-                                                      sep=""))
-            keep_samples <- as.numeric(all_samples) - fail_samples
-            mafTh <- macTh/(2*keep_samples)
-        }
+        all_samples <-  R.utils::countLines(paste(prefix, ".fam", sep=""))
+        keep_samples <- as.numeric(all_samples) - fail_samples
         if (verbose) {
             if (!is.null(mafTh) && !is.null(macTh)) {
                 message("Both mafTh and macTh provided, macTh=", macTh,
-                        " is used (which corresponds to a mafTh=",
-                        round(mafTh, 6), ")")
+                        " is used (corresponds to mafTh=", mafTh, ")")
             } else if (!is.null(mafTh)) {
-                message("The mafTh is ", mafTh)
+                if(is.null(macTh)) macTh <- mafTh*(2*keep_samples)
+                message("The mafTh is ", mafTh, " which corresponds to a mcfTh=",
+                        macTh)
             } else {
+                if(is.null(mafTh)) mafTh <- macTh/(2*keep_samples)
                 message("The macTh is ", macTh," which corresponds to a mafTh=",
-                        round(mafTh, 6), ")")
+                        round(mafTh, 6))
             }
         }
         maf <- c("--maf", mafTh)
@@ -259,10 +263,9 @@ cleanData <- function(indir, name, qcdir=indir,
         }
     }
 
-    if (is.null(path2plink)) {
-        path2plink <- 'plink'
-    }
-    checkPlink(path2plink)
+    if (is.null(path2plink)) path2plink <- 'plink'
+    findPlink <- checkPlink(path2plink)
+    message("Remove individual IDs and markers IDs that failed QC")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, remove, maf, hwe, missing,
                           "--make-bed", "--out", paste(out, ".clean", sep="")),
