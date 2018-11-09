@@ -1,16 +1,21 @@
 # plinkQC 0.2.0
 ## major changes
-* all system calls to plink are conducted with sys::exec_wait - this should
+* All system calls to plink are conducted with sys::exec_wait - this should
 solve platform dependent issues, mainly comptatibility with windows.
-* path2plink now requires full path to plink executable, no tilde expansion or
+* Make path construction compatible with windows.
+* ath2plink now requires full path to plink executable, no tilde expansion or
 simple pointer to directory supported.
-* fix bug in return of cleanData function: list now contains keep and fail IDs.
-* fix bug in return of maf computation: if fail.IDs does not exist, set
+* Fix bug in return of cleanData function: list now contains keep and fail IDs.
+* Fix bug in return of maf computation: if fail.IDs does not exist, set
   fail_samples to zero.
 
 ## minor changes
-* IBD-fail.IDs now saved without column names to  be consistent with other
-*-fail.IDs files.
+* IBD-fail.IDs now saved without column names to be consistent with other
+xxx-fail.IDs files.
+* Include additional progress messages in cleanData()
+* Remove default double-specification of mafTh and macTh
+* export checkPlink
+
 
 # plinkQC 0.1.1
 ## major changes
