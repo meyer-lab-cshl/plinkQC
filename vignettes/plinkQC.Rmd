@@ -7,6 +7,8 @@ output:
         fig_caption: yes
         toc: true
         toc_depth: 2
+resource_files:
+    
 bibliography: references.bib
 csl: plos-genetics.csl
 vignette: >
@@ -95,9 +97,10 @@ new dataset. In addition, the functionality of each of the functions underlying
 ```{r set parameters}
 package.dir <- find.package('plinkQC')
 indir <- file.path(package.dir, 'extdata')
-qcdir <- tempdir()
+#qcdir <- tempdir()
+qcdir <- indir
 name <- 'data'
-path2plink <- "~/bin"
+path2plink <- "/Users/hannah/bin/plink"
 ```
 
 ## Per-individual quality control
@@ -131,7 +134,7 @@ fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 ```
 ```{r load individualQC, echo=FALSE, fig.height=12, fig.width=9, fig.align='center'}
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("individualQC.pdf")
+knitr::include_graphics("individualQC.png")
 ```
 
 
@@ -143,8 +146,8 @@ overview_individuals <- overviewPerIndividualQC(fail_individuals,
 ```
 ```{r load overviewIndividualQC, echo=FALSE}
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("overviewQC.pdf")
-knitr::include_graphics("overviewAncestryQC.pdf")
+knitr::include_graphics("overviewQC.png")
+knitr::include_graphics("overviewAncestryQC.png")
 ```
 
 
@@ -165,7 +168,7 @@ fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
 
 ```{r load markerQC, echo=FALSE, fig.height=9, fig.width=6, fig.align='center'}
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("markerQC.pdf")
+knitr::include_graphics("markerQC.png")
 ```
 
 `overviewPerMarkerQC` depicts an overview of the marker quality control
@@ -176,7 +179,7 @@ overview_marker <- overviewPerMarkerQC(fail_markers, interactive=TRUE)
 
 ```{r load overviewMarkerQC, echo=FALSE}
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("overviewMarkerQC.pdf")
+knitr::include_graphics("overviewMarkerQC.png")
 ```
 
 \newpage
@@ -216,7 +219,7 @@ fail_sex <- check_sex(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       verbose=TRUE, path2plink=path2plink)
 ```
 ```{r load checkSex, echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkSex.pdf")
+knitr::include_graphics("checkSex.png")
 ```
 
 
@@ -242,7 +245,7 @@ fail_het_imiss <- check_het_and_miss(indir=indir, qcdir=qcdir, name=name,
                                      interactive=TRUE, path2plink=path2plink)
 ```
 ```{r load checkHetImiss, echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkHetImiss.pdf")
+knitr::include_graphics("checkHetImiss.png")
 ```
 
 
@@ -267,7 +270,7 @@ exclude_relatedness <- check_relatedness(indir=indir, qcdir=qcdir, name=name,
                                          path2plink=path2plink)
 ```
 ```{r load checkRelatedness, echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkRelatedness.pdf")
+knitr::include_graphics("checkRelatedness.png")
 ```
 
 
@@ -300,7 +303,7 @@ exclude_ancestry <- check_ancestry(indir=indir, qcdir=qcdir, name=name,
                             interactive=TRUE)
 ```
 ```{r load ancestry, echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkAncestry.pdf")
+knitr::include_graphics("checkAncestry.png")
 ```
 
 ## Markers with excessive missingness rate
@@ -319,7 +322,7 @@ fail_snpmissing <- check_snp_missingness(indir=indir, qcdir=qcdir, name=name,
 ```
 
 ```{r load snp missing, echo=FALSE, fig.align='center'}
-knitr::include_graphics("snpmissingness.pdf")
+knitr::include_graphics("snpmissingness.png")
 ```
 ## Markers with deviation from HWE
 Markers with strong deviation from HWE might be indicative of genotyping or
@@ -337,7 +340,7 @@ fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       path2plink=path2plink, showPlinkOutput=FALSE)
 ```
 ```{r load hwe, echo=FALSE, fig.align='center'}
-knitr::include_graphics("hwe.pdf")
+knitr::include_graphics("hwe.png")
 ```
 
 
@@ -354,7 +357,7 @@ fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       path2plink=path2plink, showPlinkOutput=FALSE)
 ```
 ```{r load  maf, echo=FALSE, fig.align='center'}
-knitr::include_graphics("maf.pdf")
+knitr::include_graphics("maf.png")
 ```
 
 # References 
