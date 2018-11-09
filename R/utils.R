@@ -9,6 +9,8 @@
 #' plink should be accesible as path2plink -h. If not provided, assumed
 #' that PATH set-up works and plink will be found by
 #' \code{\link[sys]{exec_wait}('plink')}.
+#' @return if PLINK can be found and excuted, returns
+#' 'PLINK can be found and executed.' else fails with appropriate error message.
 #' @export
 
 checkPlink <- function(path2plink=NULL) {
@@ -23,7 +25,8 @@ checkPlink <- function(path2plink=NULL) {
                               warning=function(w) w,  error = function(e) e)
         if("simpleError" %in% is(findPlink)) {
             stop("PLINK software required for running this function cannot be ",
-                 "found in current PATH setting. Try to set path2plink.")
+                 "found in current PATH setting. Error message:", findPlink,
+                 ". Try to set path2plink.")
         }
     } else {
         findPlink <- tryCatch(sys::exec_wait(path2plink, args="-h",
@@ -32,9 +35,10 @@ checkPlink <- function(path2plink=NULL) {
                               warning=function(w) w,  error = function(e) e)
         if("simpleError" %in% is(findPlink)) {
             stop("PLINK software required for running this function cannot be ",
-                 "found in path2plink.")
+                 "found in path2plink. Error message:", findPlink, ".")
         }
     }
+    return("PLINK can be found and executed.")
 }
 
 #' Test lists for different properties of numerics
@@ -343,3 +347,8 @@ evaluateDirection <- function(x, y, direction) {
     else stop(direction, " as direction in evaluateDirection not known.")
 }
 
+makepath <- function(directory, name) {
+    path <- file.path(directory, name)
+    path <- gsub('\\\\', '/', path)
+    return(path)
+}
