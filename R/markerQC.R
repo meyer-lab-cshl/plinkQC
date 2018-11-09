@@ -561,7 +561,9 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                       showPlinkOutput=TRUE) {
 
     prefix <- file.path(indir, name)
+    prefix <- gsub('\\\\', '/', prefix)
     out <- file.path(qcdir, name)
+    out <- gsub('\\\\', '/', out)
 
     if (!file.exists(paste(prefix, ".fam",sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
