@@ -21,20 +21,20 @@
 #' name.fam.
 #' @param dont.check_sex [logical] If TRUE, no sex check will be conducted;
 #' short for do.run_check_sex=FALSE and do.evaluate_check_sex=FALSE.
-#' Takes precendence over do.run_check_sex and do.evaluate_check_sex.
+#' Takes precedence over do.run_check_sex and do.evaluate_check_sex.
 #' @param dont.check_het_and_miss [logical] If TRUE, no heterozygosity and
 #' missingness check will be conducted; short for
 #' do.run_check_heterozygosity=FALSE, do.run_check_missingness=FALSE and
-#' do.evaluate_check_het_and_miss=FALSE. Takes precendence over
+#' do.evaluate_check_het_and_miss=FALSE. Takes precedence over
 #' do.run_check_heterozygosity, do.run_check_missingness and
 #' do.evaluate_check_het_and_miss.
 #' @param dont.check_relatedness [logical] If TRUE, no relatedness check will be
 #' conducted; short for do.run_check_relatedness=FALSE and
-#' do.evaluate_check_relatedness=FALSE. Takes precendence over
+#' do.evaluate_check_relatedness=FALSE. Takes precedence over
 #' do.run_check_relatedness and do.evaluate_check_relatedness.
 #' @param dont.check_ancestry [logical] If TRUE, no ancestry check will be
 #' conducted; short for do.run_check_ancestry=FALSE and
-#' do.evaluate_check_ancestry=FALSE. Takes precendence over
+#' do.evaluate_check_ancestry=FALSE. Takes precedence over
 #' do.run_check_ancestry and do.evaluate_check_ancestry.
 #' @param do.run_check_sex [logical] If TRUE, run \code{\link{run_check_sex}}
 #' @param do.run_check_het_and_miss [logical] If TRUE, run
@@ -1259,7 +1259,7 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' Non-systematic failures in genotyping and outlying heterozygosity (hz) rates
 #' per individual are often proxies for DNA sample quality. Larger than expected
 #' heterozygosity can indicate possible DNA contamination.
-#' The mean heterozygosity in Plink is computed as hz_mean = (N-O)/N, where
+#' The mean heterozygosity in PLINK is computed as hz_mean = (N-O)/N, where
 #' N: number of non-missing genotypes and O:observed number of homozygous
 #' genotypes for a given individual.
 #' Mean heterozygosity can differ between populations and SNP genotyping panels.
