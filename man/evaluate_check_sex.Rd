@@ -32,8 +32,8 @@ PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
 change the name.bim/.bed/.fam files!}
 
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
-files name.bim, name.bed, name.fam files; only required of fixMixup==TRUE. User
-needs writing permission to indir.}
+files name.bim, name.bed, name.fam files; only required of fixMixup==TRUE.
+User needs writing permission to indir.}
 
 \item{externalFemale}{[integer/character] Identifier for 'female' in
 externalSex.}

@@ -13,6 +13,10 @@ plink should be accesible as path2plink -h. If not provided, assumed
 that PATH set-up works and plink will be found by
 \code{\link[sys]{exec_wait}('plink')}.}
 }
+\value{
+if PLINK can be found and excuted, returns
+'PLINK can be found and executed.' else fails with appropriate error message.
+}
 \description{
 checkPlink checks that the PLINK software
 (\url{https://www.cog-genomics.org/plink/1.9/})

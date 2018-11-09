@@ -96,8 +96,8 @@ the individuals split by their (PEDSEX).
 }
 \details{
 \code{\link{check_sex}} wraps around \code{\link{run_check_sex}}  and
-\code{\link{evaluate_check_sex}} . If run.check_sex is TRUE,
-\code{\link{run_check_sex} } is executed ; otherwise it is assumed that plink
+\code{\link{evaluate_check_sex}}. If run.check_sex is TRUE,
+\code{\link{run_check_sex}} is executed ; otherwise it is assumed that plink
 --check-sex has been run externally and qcdir/name.sexcheck exists.
 \code{\link{check_sex}}  will fail with missing file error otherwise.
 
