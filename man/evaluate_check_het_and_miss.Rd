@@ -52,7 +52,7 @@ per individual) and plink --het (heterozygosity rates per individual) via
 Non-systematic failures in genotyping and outlying heterozygosity (hz) rates
 per individual are often proxies for DNA sample quality. Larger than expected
 heterozygosity can indicate possible DNA contamination.
-The mean heterozygosity in Plink is computed as hz_mean = (N-O)/N, where
+The mean heterozygosity in PLINK is computed as hz_mean = (N-O)/N, where
 N: number of non-missing genotypes and O:observed number of homozygous
 genotypes for a given individual.
 Mean heterozygosity can differ between populations and SNP genotyping panels.

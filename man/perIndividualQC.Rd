@@ -41,7 +41,7 @@ required files. User needs writing permission to qcdir.}
 
 \item{dont.check_sex}{[logical] If TRUE, no sex check will be conducted;
 short for do.run_check_sex=FALSE and do.evaluate_check_sex=FALSE.
-Takes precendence over do.run_check_sex and do.evaluate_check_sex.}
+Takes precedence over do.run_check_sex and do.evaluate_check_sex.}
 
 \item{do.run_check_sex}{[logical] If TRUE, run \code{\link{run_check_sex}}}
 
@@ -76,7 +76,7 @@ change the name.bim/.bed/.fam files!}
 \item{dont.check_het_and_miss}{[logical] If TRUE, no heterozygosity and
 missingness check will be conducted; short for
 do.run_check_heterozygosity=FALSE, do.run_check_missingness=FALSE and
-do.evaluate_check_het_and_miss=FALSE. Takes precendence over
+do.evaluate_check_het_and_miss=FALSE. Takes precedence over
 do.run_check_heterozygosity, do.run_check_missingness and
 do.evaluate_check_het_and_miss.}
 
@@ -98,7 +98,7 @@ larger than 0.}
 
 \item{dont.check_relatedness}{[logical] If TRUE, no relatedness check will be
 conducted; short for do.run_check_relatedness=FALSE and
-do.evaluate_check_relatedness=FALSE. Takes precendence over
+do.evaluate_check_relatedness=FALSE. Takes precedence over
 do.run_check_relatedness and do.evaluate_check_relatedness.}
 
 \item{do.run_check_relatedness}{[logical] If TRUE, run
@@ -112,7 +112,7 @@ pair of individuals.}
 
 \item{dont.check_ancestry}{[logical] If TRUE, no ancestry check will be
 conducted; short for do.run_check_ancestry=FALSE and
-do.evaluate_check_ancestry=FALSE. Takes precendence over
+do.evaluate_check_ancestry=FALSE. Takes precedence over
 do.run_check_ancestry and do.evaluate_check_ancestry.}
 
 \item{do.run_check_ancestry}{[logical] If TRUE, run
