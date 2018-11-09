@@ -96,15 +96,15 @@ cleanData <- function(indir, name, qcdir=indir,
                       filterAncestry=TRUE, filterRelated=TRUE,
                       filterSNPMissingness=TRUE, lmissTh=0.01,
                       filterHWE=TRUE, hweTh=1e-5,
-                      filterMAF=TRUE, macTh=20, mafTh=0.01,
+                      filterMAF=TRUE, macTh=20, mafTh=NULL,
                       path2plink=NULL, verbose=FALSE,
                       showPlinkOutput=TRUE) {
     sampleFilter <- c(filterAncestry, filterRelated, filterSex,
                       filterHeterozygosity, filterSampleMissingness)
     markerFilter <- c(filterHWE, filterMAF, filterSNPMissingness)
 
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
 
     if (!any(c(sampleFilter, markerFilter))) {
         stop("No per-sample and per-marker filters chosen")

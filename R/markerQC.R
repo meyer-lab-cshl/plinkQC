@@ -279,8 +279,10 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                                   interactive=FALSE, path2plink=NULL,
                                   verbose=FALSE, showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".fam",sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -423,8 +425,10 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' }
 check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                       path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".fam",sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -555,8 +559,10 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                       verbose=FALSE, interactive=FALSE, path2plink=NULL,
                       showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".fam",sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }

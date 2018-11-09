@@ -214,7 +214,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     p_relatedness <- NULL
     p_ancestry <- NULL
 
-    prefix <- paste(qcdir, "/", name, sep="")
+    out <- file.path(qcdir, name)
+
     if (!dont.check_sex) {
         if (do.run_check_sex) {
             run <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
@@ -240,13 +241,13 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                            fixMixup=fixMixup, interactive=FALSE)
             if (!is.null(fail_sex$fail_sex)) {
                 write.table(fail_sex$fail_sex[,1:2],
-                            file=paste(prefix, ".fail-sexcheck.IDs",
+                            file=paste(out, ".fail-sexcheck.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
             if (!is.null(fail_sex$mixup)) {
                 write.table(fail_sex$mixup[,1:2],
-                            file=paste(prefix, ".sexcheck_mixup.IDs",
+                            file=paste(out, ".sexcheck_mixup.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
@@ -255,7 +256,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     }
     if (!dont.check_het_and_miss) {
         if (do.run_check_het_and_miss) {
-            run_miss <- run_check_missingness(qcdir=qcdir, indir=indir, name=name,
+            run_miss <- run_check_missingness(qcdir=qcdir, indir=indir,
+                                              name=name,
                                               path2plink=path2plink,
                                               showPlinkOutput=showPlinkOutput,
                                               verbose=verbose)
@@ -277,13 +279,13 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                             interactive=FALSE)
             if (!is.null(fail_het_imiss$fail_imiss)) {
                 write.table(fail_het_imiss$fail_imiss[,1:2],
-                            file=paste(prefix, ".fail-imiss.IDs",
+                            file=paste(out, ".fail-imiss.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
             if (!is.null(fail_het_imiss$fail_het)) {
                 write.table(fail_het_imiss$fail_het[,1:2],
-                            file=paste(prefix, ".fail-het.IDs",
+                            file=paste(out, ".fail-het.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
@@ -293,19 +295,20 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     if (!dont.check_relatedness) {
         if (do.run_check_relatedness) {
             run <- run_check_relatedness(qcdir=qcdir, indir=indir, name=name,
-                                          path2plink=path2plink,
-                                          showPlinkOutput=showPlinkOutput,
-                                          verbose=verbose)
+                                         path2plink=path2plink,
+                                         showPlinkOutput=showPlinkOutput,
+                                         verbose=verbose)
         }
         if (do.evaluate_check_relatedness) {
             if (verbose) message("Identification of related individuals")
-            fail_relatedness <- evaluate_check_relatedness(qcdir=qcdir, name=name,
-                                                  imissTh=imissTh,
-                                                  highIBDTh=highIBDTh,
-                                                  interactive=FALSE)
+            fail_relatedness <- evaluate_check_relatedness(qcdir=qcdir,
+                                                           name=name,
+                                                           imissTh=imissTh,
+                                                           highIBDTh=highIBDTh,
+                                                           interactive=FALSE)
             if (!is.null(fail_relatedness$failIDs)) {
                write.table(fail_relatedness$failIDs,
-                           file=paste(prefix, ".fail-IBD.IDs", sep=""),
+                           file=paste(out, ".fail-IBD.IDs", sep=""),
                            row.names=FALSE, quote=FALSE, col.names=FALSE,
                            sep="\t")
             }
@@ -347,7 +350,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                      interactive=FALSE)
             if (!is.null(fail_ancestry$fail_ancestry)) {
                 write.table(fail_ancestry$fail_ancestry,
-                            file=paste(prefix, ".fail-ancestry.IDs",
+                            file=paste(out, ".fail-ancestry.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
             }
@@ -362,11 +365,11 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                       mismatched_sex=as.vector(fail_sex$fail_sex$IID),
                       ancestry=as.vector(fail_ancestry$fail_ancestry$IID))
 
-    if(verbose) message(paste("Combine fail IDs into ", prefix,
-                               ".fail.IDs", sep=""))
+    if(verbose) message(paste("Combine fail IDs into ", out, ".fail.IDs",
+                              sep=""))
     uniqueFails <- unique(unlist(fail_list))
     write.table(cbind(uniqueFails, uniqueFails),
-                        file=paste(prefix, ".fail.IDs",sep=""),
+                        file=paste(out, ".fail.IDs",sep=""),
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
 
     plots_sampleQC <- list(p_sexcheck, p_het_imiss, p_relatedness, p_ancestry)
@@ -415,8 +418,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' @return Named [list] with i) nr_fail_samples: total number of samples
 #' [integer] failing perIndividualQC, ii) fail_QC containing a [data.frame] with
 #' samples that failed QC steps (excluding ancestry): samples IIDs in rows,
-#' columns are all QC steps applied by perIndividualQC (max=4), with entries=0 if
-#' passing the QC and entries=1 if failing that particular QC and iii)
+#' columns are all QC steps applied by perIndividualQC (max=4), with entries=0
+#' if passing the QC and entries=1 if failing that particular QC and iii)
 #' fail_QC_and_ancestry containing a [data.frame] with samples that failed
 #' ancestry and QC checks: samples IIDs in rows, columns are QC_fail and
 #' Ancestry_fail, with entries=0 if passing and entries=1 if failing that check.
@@ -436,7 +439,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' overview <- overviewPerIndividualQC(fail_individuals)
 #' }
 
-overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) {
+overviewPerIndividualQC <- function(results_perIndividualQC,
+                                    interactive=FALSE) {
     list2counts <- function(element, all_names) {
         all_names[!(all_names %in% element)] <- 0
         all_names[all_names %in% element] <- 1
@@ -532,8 +536,8 @@ overviewPerIndividualQC <- function(results_perIndividualQC, interactive=FALSE) 
 #' the individuals split by their (PEDSEX).
 #'
 #' \code{\link{check_sex}} wraps around \code{\link{run_check_sex}}  and
-#' \code{\link{evaluate_check_sex}} . If run.check_sex is TRUE,
-#' \code{\link{run_check_sex} } is executed ; otherwise it is assumed that plink
+#' \code{\link{evaluate_check_sex}}. If run.check_sex is TRUE,
+#' \code{\link{run_check_sex}} is executed ; otherwise it is assumed that plink
 #' --check-sex has been run externally and qcdir/name.sexcheck exists.
 #' \code{\link{check_sex}}  will fail with missing file error otherwise.
 #'
@@ -1005,8 +1009,10 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 #' }
 run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
                           path2plink=NULL, showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1016,10 +1022,10 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (is.null(path2plink)) {
-        path2plink <- 'plink'
-    }
+
+    if (is.null(path2plink)) path2plink <- 'plink'
     checkPlink(path2plink)
+
     if (verbose) message("Run check_sex via plink --check-sex")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--check-sex", "--out", out),
@@ -1063,8 +1069,8 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' PEDSEX and Sex, with Sex==SNPSEX automatically corrected: this will directly
 #' change the name.bim/.bed/.fam files!
 #' @param indir [character] /path/to/directory containing the basic PLINK data
-#' files name.bim, name.bed, name.fam files; only required of fixMixup==TRUE. User
-#' needs writing permission to indir.
+#' files name.bim, name.bed, name.fam files; only required of fixMixup==TRUE.
+#' User needs writing permission to indir.
 #' @param externalSex [data.frame, optional] with sample IDs [externalSexID] and
 #' sex [externalSexSex] to double check if external and PEDSEX data (often
 #' processed at different centers) match.
@@ -1112,8 +1118,10 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                path2plink=NULL,
                                showPlinkOutput=TRUE,
                                interactive=FALSE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
+
     if (!file.exists(paste(out, ".sexcheck", sep=""))){
         stop("plink --check-sex results file: ", out,
              ".sexcheck does not exist.")
@@ -1253,9 +1261,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                guide=FALSE) +
             scale_x_discrete(labels=c("Unassigned", "Male", "Female"))
     }
-    if (interactive) {
-        print(p_sexcheck)
-    }
+    if (interactive) print(p_sexcheck)
     return(list(fail_sex=fail_sex, mixup=mixup_geno_pheno,
                 p_sexcheck=p_sexcheck))
 }
@@ -1297,8 +1303,10 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
                                      path2plink=NULL,
                                      showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1308,10 +1316,10 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (is.null(path2plink)) {
-        path2plink <- 'plink'
-    }
+
+    if (is.null(path2plink)) path2plink <- 'plink'
     checkPlink(path2plink)
+
     if (verbose) message("Run check_heterozygosity via plink --het")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--het", "--out", out),
@@ -1356,8 +1364,10 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
                                   path2plink=NULL,
                                   showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1367,10 +1377,10 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (is.null(path2plink)) {
-        path2plink <- 'plink'
-    }
+
+    if (is.null(path2plink)) path2plink <- 'plink'
     checkPlink(path2plink)
+
     if (verbose) message("Run check_missingness via plink --missing")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--missing", "--out", out),
@@ -1446,7 +1456,9 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' }
 evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                                   hetTh=3, interactive=FALSE) {
-    prefix <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".imiss",sep=""))){
         stop("plink --missing output file: ", prefix,
              ".imiss does not exist.")
@@ -1514,9 +1526,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                                   aes_string(x='x',y='y', label='label'),
                                   size=2) +
         theme_bw()
-    if (interactive) {
-        print(p_het_imiss)
-    }
+    if (interactive) print(p_het_imiss)
     return(list(fail_imiss=fail_imiss, fail_het=fail_het,
                 p_het_imiss=p_het_imiss))
 }
@@ -1568,8 +1578,10 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                                   path2plink=NULL,
                                   showPlinkOutput=TRUE, verbose=FALSE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1580,15 +1592,16 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
     highld <- system.file("extdata", 'high-LD-regions.txt', package="plinkQC")
-    if (is.null(path2plink)) {
-        path2plink <- 'plink'
-    }
+
+    if (is.null(path2plink)) path2plink <- 'plink'
     checkPlink(path2plink)
+
     if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--exclude", "range", highld,
                           "--indep-pairwise", 50, 5, 0.2, "--out", out),
                 std_out=showPlinkOutput, std_err=showPlinkOutput)
+
     if (verbose) message("Run check_relatedness via plink --genome")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--extract",
@@ -1596,7 +1609,7 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                           "--maf", 0.1, "--genome", "--min", highIBDTh,
                           "--out", out),
                  std_out=showPlinkOutput, std_err=showPlinkOutput)
-    if (! file.exists(paste(prefix, ".imiss", sep=""))) {
+    if (!file.exists(paste(prefix, ".imiss", sep=""))) {
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--missing", "--out", out),
         std_out=showPlinkOutput, std_err=showPlinkOutput)
@@ -1673,7 +1686,9 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
 evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                                        imissTh=0.03, interactive=FALSE,
                                        verbose=FALSE) {
-    prefix <- paste(qcdir, "/", name, sep="")
+
+    prefix <- file.path(qcdir, name)
+
     if (!file.exists(paste(prefix, ".imiss", sep=""))){
         stop("plink --missing output file: ", prefix,
              ".imiss does not exist.")
@@ -1732,9 +1747,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
         cowplot::draw_label("Relatedness estimated as pairwise IBD (PI_HAT)")
     p_IBD <- cowplot::plot_grid(title, p_histo, ncol = 1,
                                 rel_heights = c(0.1, 1))
-    if (interactive) {
-        print(p_IBD)
-    }
+    if (interactive) print(p_IBD)
     return(list(fail_highIBD=fail_highIBD$relatednessFails,
                 failIDs=fail_highIBD$failIDs, p_IBD=p_IBD))
 }
@@ -1779,8 +1792,10 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
                                qcdir=indir,
                                verbose=FALSE, path2plink=NULL,
                                showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", prefixMergedDataset, sep="")
-    out <- paste(qcdir, "/", prefixMergedDataset, sep="")
+
+    prefix <- file.path(indir, prefixMergedDataset)
+    out <- file.path(qcdir, prefixMergedDataset)
+
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -1790,9 +1805,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
     if (!file.exists(paste(prefix, ".bed", sep=""))){
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
-    if (is.null(path2plink)) {
-        path2plink <- 'plink'
-    }
+    if (is.null(path2plink)) path2plink <- 'plink'
     checkPlink(path2plink)
     if (verbose) message("Run check_ancestry via plink --pca")
     sys::exec_wait(path2plink,
@@ -1897,8 +1910,10 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     refColorsColor="Color", refColorsPop="Pop",
                                     studyColor="#2c7bb6",
                                     interactive=FALSE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", prefixMergedDataset, sep="")
+
+    prefix <- file.path(indir, name)
+    out <- file.path(qcdir, prefixMergedDataset)
+
     if (!file.exists(paste(prefix, ".fam", sep=""))){
         stop("plink family file: ", prefix, ".fam does not exist.")
     }
@@ -2016,9 +2031,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         ggtitle("PCA on combined reference and study genotypes") +
         theme_bw() +
         theme(legend.position='bottom')
-    if (interactive) {
-        print(p_ancestry)
-    }
+    if (interactive) print(p_ancestry)
     return(list(fail_ancestry=fail_ancestry, p_ancestry=p_ancestry))
 }
 
