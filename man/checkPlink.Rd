@@ -10,13 +10,12 @@ checkPlink(path2plink = NULL)
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
 plink should be accesible as path2plink -h. The full name of the executable
-has to be specified: for windows OS, this means path/plink.exe, for unix
+should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
-and PLINK will be found by \code{\link[sys]{exec_wait}('plink')}.}
+and PLINK will be found by \code{\link[sys]{exec_wait}}('plink').}
 }
 \value{
-if PLINK can be found and excuted, returns
-'PLINK can be found and executed.' else fails with appropriate error message.
+Path to PLINK executable.
 }
 \description{
 checkPlink checks that the PLINK software
