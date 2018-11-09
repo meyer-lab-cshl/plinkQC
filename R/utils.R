@@ -7,39 +7,54 @@
 #' @param path2plink [character] Absolute path to PLINK executable
 #' (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
 #' plink should be accesible as path2plink -h. The full name of the executable
-#' has to be specified: for windows OS, this means path/plink.exe, for unix
+#' should be specified: for windows OS, this means path/plink.exe, for unix
 #' platforms this is path/plink. If not provided, assumed that PATH set-up works
-#' and PLINK will be found by \code{\link[sys]{exec_wait}('plink')}.
-#' @return if PLINK can be found and excuted, returns
-#' 'PLINK can be found and executed.' else fails with appropriate error message.
+#' and PLINK will be found by \code{\link[sys]{exec_wait}}('plink').
+#' @return Path to PLINK executable.
 #' @export
 
 checkPlink <- function(path2plink=NULL) {
     if (grepl("~", path2plink)) {
-        stop("Path to plink contains ~: please supply full path, not relying",
-             " on tilde extension")
+        stop("Path to plink (", path2plink,
+             ") contains ~: please supply full path, not relying",
+             " on tilde extension.")
     }
     if (is.null(path2plink)) {
-        findPlink <- tryCatch(sys::exec_wait("plink", args="-h",
-                                        std_out=FALSE,
+        path2plink <- 'plink'
+        preset <- FALSE
+    } else {
+        preset <- TRUE
+    }
+    if (.Platform$OS.type == 'windows') {
+        path2plink <- paste(gsub('\\.exe', '', path2plink), '.exe', sep="")
+    }
+    findPlink <- tryCatch(sys::exec_wait(path2plink, args="-h", std_out=FALSE,
                                         std_err=TRUE),
-                              warning=function(w) w,  error = function(e) e)
-        if("simpleError" %in% is(findPlink)) {
+                          warning=function(w) w,  error = function(e) e)
+    if("simpleError" %in% is(findPlink)) {
+        if (!preset) {
             stop("PLINK software required for running this function cannot be ",
                  "found in current PATH setting. Error message:", findPlink,
                  ". Try to set path2plink.")
-        }
-    } else {
-        findPlink <- tryCatch(sys::exec_wait(path2plink, args="-h",
-                                        std_out=FALSE,
-                                        std_err=TRUE),
-                              warning=function(w) w,  error = function(e) e)
-        if("simpleError" %in% is(findPlink)) {
+        } else {
             stop("PLINK software required for running this function cannot be ",
-                 "found in path2plink. Error message:", findPlink, ".")
+                 "found in path2plink (", path2plink, ") . Error message: ",
+                 findPlink, ".")
         }
     }
-    return("PLINK can be found and executed.")
+    return(path2plink)
+}
+
+checkFormat <- function(prefix) {
+    if (!file.exists(paste(prefix, ".fam", sep=""))){
+        stop("plink family file: ", prefix, ".fam does not exist.")
+    }
+    if (!file.exists(paste(prefix, ".bim", sep=""))){
+        stop("plink snp file: ", prefix, ".bim does not exist.")
+    }
+    if (!file.exists(paste(prefix, ".bed", sep=""))){
+        stop("plink binary file: ", prefix, ".bed does not exist.")
+    }
 }
 
 #' Test lists for different properties of numerics

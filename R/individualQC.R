@@ -932,18 +932,8 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
-    if (!file.exists(paste(prefix, ".fam", sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim", sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed", sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-
-    if (is.null(path2plink)) path2plink <- 'plink'
-    findPlink <- checkPlink(path2plink)
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
 
     if (verbose) message("Run check_sex via plink --check-sex")
     sys::exec_wait(path2plink,
@@ -1098,8 +1088,8 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                ~SNPSEX, ~F)[which(!sex_mismatch),]
             # Fix mismatch between PEDSEX and sex
             if (fixMixup) {
-                if (is.null(path2plink)) path2plink <- 'plink'
-                findPlink <- checkPlink(path2plink)
+                checkFormat(prefix)
+                path2plink <- checkPlink(path2plink)
                 if (nrow(mixup_geno_pheno) != 0) {
                     file_mixup <- paste(out, ".mismatched_sex_geno_pheno",
                                         sep="")
@@ -1107,18 +1097,6 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                                ~SNPSEX),
                                 file=file_mixup,
                                 row.names=FALSE, quote=FALSE, col.names=FALSE)
-                    if (!file.exists(paste(prefix, ".fam", sep=""))){
-                        stop("plink family file: ", prefix,
-                             ".fam does not exist.")
-                    }
-                    if (!file.exists(paste(prefix, ".bim", sep=""))){
-                        stop("plink snp file: ", prefix,
-                             ".bim does not exist.")
-                    }
-                    if (!file.exists(paste(prefix, ".bed", sep=""))){
-                        stop("plink binary file: ", prefix,
-                             ".bed does not exist.")
-                    }
                     sys::exec_wait(path2plink, args=c("--bfile", prefix,
                                  "--update-sex", file_mixup,
                                  "--make-bed",
@@ -1216,18 +1194,8 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
-    if (!file.exists(paste(prefix, ".fam", sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim", sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed", sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-
-    if (is.null(path2plink)) path2plink <- 'plink'
-    findPlink <- checkPlink(path2plink)
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
 
     if (verbose) message("Run check_heterozygosity via plink --het")
     sys::exec_wait(path2plink,
@@ -1273,18 +1241,8 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
-    if (!file.exists(paste(prefix, ".fam", sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim", sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed", sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-
-    if (is.null(path2plink)) path2plink <- 'plink'
-    findPlink <- checkPlink(path2plink)
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
 
     if (verbose) message("Run check_missingness via plink --missing")
     sys::exec_wait(path2plink,
@@ -1483,19 +1441,10 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
-    if (!file.exists(paste(prefix, ".fam", sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim", sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed", sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-    highld <- system.file("extdata", 'high-LD-regions.txt', package="plinkQC")
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
 
-    if (is.null(path2plink)) path2plink <- 'plink'
-    findPlink <- checkPlink(path2plink)
+    highld <- system.file("extdata", 'high-LD-regions.txt', package="plinkQC")
 
     if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
     sys::exec_wait(path2plink,
@@ -1693,18 +1642,9 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
     prefix <- makepath(indir, prefixMergedDataset)
     out <- makepath(qcdir, prefixMergedDataset)
 
-    if (!file.exists(paste(prefix, ".fam", sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim", sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed", sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-    if (is.null(path2plink)) path2plink <- 'plink'
-    findPlink <- checkPlink(path2plink)
-                message("Read samples that failed relatedness check")
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
+
     if (verbose) message("Run check_ancestry via plink --pca")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--pca", "--out", out),
