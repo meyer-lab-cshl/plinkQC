@@ -14,7 +14,8 @@ simple pointer to directory supported.
 xxx-fail.IDs files.
 * Include additional progress messages in cleanData()
 * Remove default double-specification of mafTh and macTh
-* export checkPlink
+* use checkPlink to return correct path2plink and export to make checkPlink
+directly accesible to user.
 
 
 # plinkQC 0.1.1
