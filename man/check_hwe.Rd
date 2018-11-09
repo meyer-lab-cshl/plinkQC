@@ -30,11 +30,12 @@ available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_hwe,
 other_arguments) or pdf(outfile) print(p_hwe) dev.off().}
 
-\item{path2plink}{[character] Absolute path to directory where external plink
-software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-plink should be accesible as path2plink/plink -h. If not
-provided, assumed that PATH set-up works and plink will be found by
-system("plink").}
+\item{path2plink}{[character] Absolute path to PLINK executable
+(\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
+plink should be accesible as path2plink -h. The full name of the executable
+should be specified: for windows OS, this means path/plink.exe, for unix
+platforms this is path/plink. If not provided, assumed that PATH set-up works
+and PLINK will be found by \code{\link[sys]{exec_wait}}('plink').}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out
 and specifically, if TRUE, plink log will be displayed.}

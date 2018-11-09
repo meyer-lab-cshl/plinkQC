@@ -25,22 +25,15 @@
 #' @param do.check_maf [logical] If TRUE, run \code{\link{check_maf}}.
 #' @param do.check_snp_missingness [logical] If TRUE, run
 #' \code{\link{check_snp_missingness}}.
-#' @param lmissTh [double] Threshold for acceptable variant missing rate across
-#' samples.
-#' @param hweTh [double] Significance threshold for deviation from HWE.
-#' @param mafTh [double] Threshold for minor allele frequency cut-off.
-#' @param macTh [double] Threshold for minor allele cut cut-off, if both mafTh
-#' and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).
+#' @inheritParams checkPlink
+#' @inheritParams check_maf
+#' @inheritParams check_hwe
+#' @inheritParams check_snp_missingness
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_marker) via ggplot2::ggsave(p=p_marker,
 #' other_arguments) or pdf(outfile) print(p_marker) dev.off().
-#' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -73,14 +66,15 @@
 perMarkerQC <- function(indir, qcdir=indir, name,
                         do.check_snp_missingness=TRUE, lmissTh=0.01,
                         do.check_hwe=TRUE, hweTh=1e-5,
-                        do.check_maf=TRUE, mafTh=0.01, macTh=20,
+                        do.check_maf=TRUE, macTh=20, mafTh=NULL,
                         interactive=FALSE, verbose=TRUE,
                         path2plink=NULL, showPlinkOutput=TRUE
                         ) {
     if (do.check_snp_missingness) {
         if (verbose) message("Identification of SNPs with high missingness",
                              " rate")
-        fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, name=name,
+        fail_snp_missingness <- check_snp_missingness(indir=indir, qcdir=qcdir,
+                                                      name=name,
                                                       lmissTh=lmissTh,
                                                       path2plink=path2plink,
                                                       verbose=verbose,
@@ -93,7 +87,7 @@ perMarkerQC <- function(indir, qcdir=indir, name,
     }
     if (do.check_hwe) {
         if (verbose) message("Identification of SNPs with deviation from HWE")
-        fail_hwe <- check_hwe(qcdir=qcdir, name=name, hweTh=hweTh,
+        fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, hweTh=hweTh,
                               path2plink=path2plink, verbose=verbose,
                               showPlinkOutput=showPlinkOutput)
         p_hwe <- fail_hwe$p_hwe
@@ -103,7 +97,8 @@ perMarkerQC <- function(indir, qcdir=indir, name,
     }
     if (do.check_maf) {
         if (verbose) message("Remove markers with a low minor allele frequency")
-        fail_maf <- check_maf(qcdir=qcdir, name=name, mafTh=mafTh, macTh=macTh,
+        fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, mafTh=mafTh,
+                              macTh=macTh,
                               path2plink=path2plink, verbose=verbose,
                               showPlinkOutput=showPlinkOutput)
         p_maf <- fail_maf$p_maf
@@ -245,11 +240,7 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_lmiss) via ggplot2::ggsave(p=p_lmiss,
 #' other_arguments) or pdf(outfile) print(p_lmiss) dev.off().
-#' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -277,39 +268,32 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                                   interactive=FALSE, path2plink=NULL,
                                   verbose=FALSE, showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
-    if (!file.exists(paste(prefix, ".fam",sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim",sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed",sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-    if (!is.null(path2plink)) {
-        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
-    }
-    checkPlink(path2plink)
+
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
+
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
+
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividual QC: ",
                 out, ".fail.IDs does not exist. Continue ",
                 "check_SNP_missingness for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", prefix,
-                     " --missing ",
-                     "--freq ",
-                     "--out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--missing", "--freq",
+                              "--out",
+                              paste(out, suffix, sep="")),
+                    std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", prefix,
-                     " --remove ", out, ".fail.IDs --missing ",
-                     "--freq ",
-                     "--out ", out, suffix, sep=""),
-               ignore.stdout=showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--remove",
+                              paste(out, ".fail.IDs", sep=""),
+                              "--missing", "--freq", "--out",
+                              paste(out, suffix, sep="")),
+                    std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
 
     lmiss <- read.table(paste(out, suffix, ".lmiss",sep=""), as.is=TRUE,
@@ -388,11 +372,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_hwe,
 #' other_arguments) or pdf(outfile) print(p_hwe) dev.off().
-#' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -420,37 +400,30 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' }
 check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                       path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
-    if (!file.exists(paste(prefix, ".fam",sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim",sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed",sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-    if (!is.null(path2plink)) {
-        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
-    }
-    checkPlink(path2plink)
+
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
+
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
+
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividualQC: ",
                 out, ".fail.IDs does not exist. Continue ",
                 "check_HWE for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", prefix,
-                     " --hardy",
-                     " --out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--hardy", "--out",
+                              paste(out, suffix, sep="")),
+                    std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", prefix,
-                     " --remove ", out, ".fail.IDs --hardy",
-                     " --out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--remove",
+                              paste(out, ".fail.IDs", sep=""),
+                              "--hardy", "--out", paste(out, suffix, sep="")),
+                    std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
     hwe <- read.table(paste(out, suffix, ".hwe", sep=""), header=TRUE,
                       as.is=TRUE)
@@ -521,11 +494,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_maf,
 #' other_arguments) or pdf(outfile) print(p_maf) dev.off().
-#' @param path2plink [character] Absolute path to directory where external plink
-#' software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-#' plink should be accesible as path2plink/plink -h. If not
-#' provided, assumed that PATH set-up works and plink will be found by
-#' system("plink").
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -548,64 +517,63 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, macTh=15,
 #' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
 #' }
-check_maf <- function(indir, name, qcdir=indir, mafTh=0.01, macTh=20,
+check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                       verbose=FALSE, interactive=FALSE, path2plink=NULL,
                       showPlinkOutput=TRUE) {
-    prefix <- paste(indir, "/", name, sep="")
-    out <- paste(qcdir, "/", name, sep="")
-    if (!file.exists(paste(prefix, ".fam",sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bim",sep=""))){
-        stop("plink snp file: ", prefix, ".bim does not exist.")
-    }
-    if (!file.exists(paste(prefix, ".bed",sep=""))){
-        stop("plink binary file: ", prefix, ".bed does not exist.")
-    }
-    if (!is.null(path2plink)) {
-        path2plink <- paste(gsub("/$", "", path2plink), "/", sep="")
-    }
-    checkPlink(path2plink)
+
+    prefix <- makepath(indir, name)
+    out <- makepath(qcdir, name)
+
+    checkFormat(prefix)
+    path2plink <- checkPlink(path2plink)
+
     if (!file.exists(paste(out, ".fail.IDs",sep=""))){
         message("File with individuals that failed perIndividualQC: ",
                 out, ".fail.IDs does not exist. Continue ",
                 "check_maf for all samples in ", prefix,
                 ".fam")
         suffix <- ""
-        system(paste(path2plink, "plink --bfile ", prefix,
-                     " --freq ",
-                     " --out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--freq", "--out",
+                              paste(out, suffix, sep="")),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
+        fail_samples <- 0
     } else {
         suffix <- ".no_failIDs"
-        system(paste(path2plink, "plink --bfile ", prefix,
-                     " --remove ", out, ".fail.IDs --freq",
-                     " --out ", out, suffix, sep=""),
-               ignore.stdout=!showPlinkOutput, ignore.stderr=!showPlinkOutput)
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix, "--remove",
+                              paste(out, ".fail.IDs", sep=""),
+                              "--freq", "--out", paste(out, suffix, sep="")),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
+        fail_samples <-  R.utils::countLines(paste(out, ".fail.IDs",
+                                               sep=""))
     }
     maf <- read.table(paste(out, suffix, ".frq",sep=""),
                        header=TRUE, as.is=TRUE)
 
     all_samples <-  R.utils::countLines(paste(prefix, ".fam",sep=""))
-    fail_samples <-  R.utils::countLines(paste(out, ".fail.IDs",
-                                               sep=""))
     keep_samples <- as.numeric(all_samples - fail_samples)
 
     if (is.null(mafTh) && is.null(macTh)) {
         stop("Either mafTh or macTh need to be provided")
     }
-    if(!is.null(macTh)) {
-        mafTh <- macTh/(2*keep_samples)
-    }
-    if (verbose) {
-        if (!is.null(mafTh) && !is.null(macTh)) {
+
+    if (!is.null(mafTh) && !is.null(macTh)) {
+        if (verbose) {
             message("Both mafTh and macTh provided, macTh=", macTh,
                     " is used (corresponds to mafTh=", round(mafTh, 6), ")")
-        } else if (!is.null(mafTh)) {
-            message("The mafTh is ", round(mafTh, 6))
-        } else {
+        }
+    } else if (!is.null(mafTh)) {
+        if(is.null(macTh)) macTh <- mafTh*(2*keep_samples)
+        if (verbose) {
+            message("The mafTh is ", mafTh, " which corresponds to a mcfTh=",
+                    macTh)
+        }
+    } else {
+        if(is.null(mafTh)) mafTh <- macTh/(2*keep_samples)
+        if (verbose) {
             message("The macTh is ", macTh," which corresponds to a mafTh=",
-                    round(mafTh, 6), ")")
+                    round(mafTh, 6))
         }
     }
     p_maf <- ggplot(maf, aes_string('MAF'))

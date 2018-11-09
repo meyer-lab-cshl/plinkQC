@@ -78,7 +78,7 @@ of the samples split by their (PEDSEX)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -247,10 +247,10 @@ information in externalSex.</p></td>
     <tr>
       <th>path2plink</th>
       <td><p>[character] Absolute path to directory where external plink
-software <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
-plink should be accessible as path2plink/plink -h. If not
+executable  <a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a> can be found, i.e.
+plink should be accessible as path2plink -h. If not
 provided, assumed that PATH set-up works and plink will be found by
-system("plink").</p></td>
+ <code><a href='http://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a>('plink')</code>.</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>

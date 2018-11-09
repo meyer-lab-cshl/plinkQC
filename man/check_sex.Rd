@@ -60,11 +60,12 @@ other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
-\item{path2plink}{[character] Absolute path to directory where external plink
-software \url{https://www.cog-genomics.org/plink/1.9/} can be found, i.e.
-plink should be accessible as path2plink/plink -h. If not
-provided, assumed that PATH set-up works and plink will be found by
-system("plink").}
+\item{path2plink}{[character] Absolute path to PLINK executable
+(\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
+plink should be accesible as path2plink -h. The full name of the executable
+should be specified: for windows OS, this means path/plink.exe, for unix
+platforms this is path/plink. If not provided, assumed that PATH set-up works
+and PLINK will be found by \code{\link[sys]{exec_wait}}('plink').}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
@@ -96,8 +97,8 @@ the individuals split by their (PEDSEX).
 }
 \details{
 \code{\link{check_sex}} wraps around \code{\link{run_check_sex}}  and
-\code{\link{evaluate_check_sex}} . If run.check_sex is TRUE,
-\code{\link{run_check_sex} } is executed ; otherwise it is assumed that plink
+\code{\link{evaluate_check_sex}}. If run.check_sex is TRUE,
+\code{\link{run_check_sex}} is executed ; otherwise it is assumed that plink
 --check-sex has been run externally and qcdir/name.sexcheck exists.
 \code{\link{check_sex}}  will fail with missing file error otherwise.
 

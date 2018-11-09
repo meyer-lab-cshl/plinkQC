@@ -32,8 +32,8 @@ other_arguments) or pdf(outfile) print(p_overview) dev.off().}
 Named [list] with i) nr_fail_samples: total number of samples
 [integer] failing perIndividualQC, ii) fail_QC containing a [data.frame] with
 samples that failed QC steps (excluding ancestry): samples IIDs in rows,
-columns are all QC steps applied by perIndividualQC (max=4), with entries=0 if
-passing the QC and entries=1 if failing that particular QC and iii)
+columns are all QC steps applied by perIndividualQC (max=4), with entries=0
+if passing the QC and entries=1 if failing that particular QC and iii)
 fail_QC_and_ancestry containing a [data.frame] with samples that failed
 ancestry and QC checks: samples IIDs in rows, columns are QC_fail and
 Ancestry_fail, with entries=0 if passing and entries=1 if failing that check.

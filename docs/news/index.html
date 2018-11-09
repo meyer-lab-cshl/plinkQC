@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -136,20 +136,41 @@
       <small>Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="plinkqc-0-1-1" class="section level1">
+    <div id="plinkqc-0-2-0" class="section level1">
 <h1 class="page-header">
-<a href="#plinkqc-0-1-1" class="anchor"></a>plinkQC 0.1.1<small> 2018-11-06 </small>
+<a href="#plinkqc-0-2-0" class="anchor"></a>plinkQC 0.2.0<small> Unreleased </small>
 </h1>
 <div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>major changes</h2>
 <ul>
-<li>run_check_relatedness will only save IBD estimates of individuals whose estimates are higher than the threshold.</li>
+<li>all system calls to plink are conducted with sys::exec_wait - this should solve platform dependent issues, mainly comptatibility with windows.</li>
+<li>path2plink now requires full path to plink executable, no tilde expansion or simple pointer to directory supported.</li>
+<li>fix bug in return of cleanData function: list now contains keep and fail IDs.</li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>minor changes</h2>
+<ul>
+<li>IBD-fail.IDs now saved without column names to be consistent with other *-fail.IDs files.</li>
+</ul>
+</div>
+</div>
+    <div id="plinkqc-0-1-1" class="section level1">
+<h1 class="page-header">
+<a href="#plinkqc-0-1-1" class="anchor"></a>plinkQC 0.1.1<small> 2018-11-06 </small>
+</h1>
+<div id="major-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes-1" class="anchor"></a>major changes</h2>
+<ul>
+<li>run_check_relatedness will only save IBD estimates of individuals whose estimates are higher than the threshold.</li>
+</ul>
+</div>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>minor changes</h2>
 <ul>
 <li>Fix examples in vignettes 1000 Genomes and HapMap III reference.</li>
 <li>Change file access in function examples</li>
@@ -171,6 +192,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#plinkqc-0-2-0">0.2.0</a></li>
         <li><a href="#plinkqc-0-1-1">0.1.1</a></li>
         <li><a href="#plinkqc-0-1-0">0.1.0</a></li>
       </ul>
