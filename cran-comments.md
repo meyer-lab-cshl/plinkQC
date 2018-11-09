@@ -7,4 +7,6 @@
 0 errors | 0 warnings | 0 notes
 
 ## Comment
-Re-submission: fixing windows dependencies
+Re-submission: fixing windows dependencies,
+exporting additional functions,
+fixing minor bugs
