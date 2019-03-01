@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@
       <h1>Genotype quality control with plinkQC</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2018-11-09</h4>
+            <h4 class="date">2019-03-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/plinkQC.Rmd"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="hidden name"><code>plinkQC.Rmd</code></div>
@@ -144,8 +144,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <p>In the following, genotype quality control with <em>plinkQC</em> is applied on a small example dataset with 200 individuals and 10,000 markers (provided with this package). The quality control is demonstrated in three easy steps, per-individual and per-marker quality control followed by the generation of the new dataset. In addition, the functionality of each of the functions underlying <code>perMarkerQC</code> and <code>perIndividualQC</code> is demonstrated at the end of this vignette.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">package.dir &lt;-<span class="st"> </span><span class="kw">find.package</span>(<span class="st">'plinkQC'</span>)
 indir &lt;-<span class="st"> </span><span class="kw">file.path</span>(package.dir, <span class="st">'extdata'</span>)
-<span class="co">#qcdir &lt;- tempdir()</span>
-qcdir &lt;-<span class="st"> </span>indir
+qcdir &lt;-<span class="st"> </span><span class="kw">tempdir</span>()
 name &lt;-<span class="st"> 'data'</span>
 path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre></div>
 <div id="per-individual-quality-control-1" class="section level2">
@@ -162,11 +161,11 @@ path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre><
                             <span class="dt">prefixMergedDataset=</span><span class="st">"data.HapMapIII"</span>,
                             <span class="dt">path2plink=</span>path2plink, <span class="dt">do.run_check_ancestry =</span> <span class="ot">FALSE</span>,
                             <span class="dt">interactive=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="individualQC.png" style="display: block; margin: auto;"></p>
+<p><img src="individualQC.png" width="675" style="display: block; margin: auto;"></p>
 <p><code>overviewperIndividualQC</code> depicts overview plots of quality control failures and the intersection of quality control failures with ancestry exclusion.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">overview_individuals &lt;-<span class="st"> </span><span class="kw"><a href="../reference/overviewPerIndividualQC.html">overviewPerIndividualQC</a></span>(fail_individuals,
                                                 <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="overviewQC.png"><!-- --><img src="overviewAncestryQC.png"><!-- --></p>
+<p><img src="overviewQC.png" width="638"><img src="overviewAncestryQC.png" width="638"></p>
 </div>
 <div id="per-marker-quality-control-1" class="section level2">
 <h2 class="hasAnchor">
@@ -176,10 +175,10 @@ path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre><
                             <span class="dt">path2plink=</span>path2plink,
                             <span class="dt">verbose=</span><span class="ot">TRUE</span>, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                             <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="markerQC.png" style="display: block; margin: auto;"></p>
+<p><img src="markerQC.png" width="675" style="display: block; margin: auto;"></p>
 <p><code>overviewPerMarkerQC</code> depicts an overview of the marker quality control failures and their overlaps.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">overview_marker &lt;-<span class="st"> </span><span class="kw"><a href="../reference/overviewPerMarkerQC.html">overviewPerMarkerQC</a></span>(fail_markers, <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="overviewMarkerQC.png"><!-- --></p>
+<p><img src="overviewMarkerQC.png" width="638"></p>
 
 </div>
 <div id="create-qc-ed-dataset" class="section level2">
@@ -199,7 +198,7 @@ path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre><
 <p>The identification of individuals with discordant sex information helps to detect sample mix-ups and samples with very poor genotyping rates. For each sample, the homozygosity rates across all X-chromosomal genetic markers are computed and compared with the expected rates (typically $&lt;$0.2 for females and $&gt;$0.8 for males). For samples where the assigned sex (PEDSEX in the .fam file) contradicts the sex inferred from the homozygosity rates (SNPSEX), it should be checked that the sex was correctly recorded (genotyping often occurs at different locations as phenotyping and misrecording might occur). Samples with discordant sex information that is not accounted for should be removed from the study. Identifying individuals with discordant sex information is implemented in <code>check_sex</code>. It finds individuals whose SNPSEX != PEDSEX. Optionally, an extra data.frame with sample IDs and sex can be provided to double check if external and PEDSEX data (often processed at different centers) match. If a mismatch between PEDSEX and SNPSEX was detected, by SNPSEX == Sex, PEDSEX of these individuals can optionally be updated. <code>check_sex</code> depicts the X-chromosomal heterozygosity (SNPSEX) of the samples split by their (PEDSEX).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_sex &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_sex.html">check_sex</a></span>(<span class="dt">indir=</span>indir, <span class="dt">qcdir=</span>qcdir, <span class="dt">name=</span>name, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                       <span class="dt">verbose=</span><span class="ot">TRUE</span>, <span class="dt">path2plink=</span>path2plink)</code></pre></div>
-<p><img src="checkSex.png" style="display: block; margin: auto;"></p>
+<p><img src="checkSex.png" width="375" style="display: block; margin: auto;"></p>
 </div>
 <div id="individuals-with-outlying-missing-genotype-andor-heterozygosity-rates" class="section level2">
 <h2 class="hasAnchor">
@@ -207,7 +206,7 @@ path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre><
 <p>The identification of individuals with outlying missing genotype and/or heterozygosity rates helps to detect samples with poor DNA quality and/or concentration that should be excluded from the study. Typically, individuals with more than 3-7% of their genotype calles missing are removed. Outlying heterozygosity rates are judged relative to the overall heterozygosity rates in the study, and individuals whose rates are more than a few standard deviations (sd) from the mean heterozygosity rate are removed. A typical quality control for outlying heterozygoisty rates would remove individuals who are three sd away from the mean rate. Identifying related individuals with outlying missing genotype and/or heterozygosity rates is implemented in <code>check_het_and_miss</code>. It finds individuals that have genotyping and heterozygosity rates that fail the set thresholds and depicts the results as a scatter plot with the samples’ missingness rates on x-axis and their heterozygosity rates on the y-axis.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_het_imiss &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_het_and_miss.html">check_het_and_miss</a></span>(<span class="dt">indir=</span>indir, <span class="dt">qcdir=</span>qcdir, <span class="dt">name=</span>name,
                                      <span class="dt">interactive=</span><span class="ot">TRUE</span>, <span class="dt">path2plink=</span>path2plink)</code></pre></div>
-<p><img src="checkHetImiss.png" style="display: block; margin: auto;"></p>
+<p><img src="checkHetImiss.png" width="375" style="display: block; margin: auto;"></p>
 </div>
 <div id="related-individuals" class="section level2">
 <h2 class="hasAnchor">
@@ -216,7 +215,7 @@ path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre><
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">exclude_relatedness &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_relatedness.html">check_relatedness</a></span>(<span class="dt">indir=</span>indir, <span class="dt">qcdir=</span>qcdir, <span class="dt">name=</span>name,
                                          <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                                          <span class="dt">path2plink=</span>path2plink)</code></pre></div>
-<p><img src="checkRelatedness.png" style="display: block; margin: auto;"></p>
+<p><img src="checkRelatedness.png" width="375" style="display: block; margin: auto;"></p>
 </div>
 <div id="individuals-of-divergent-ancestry" class="section level2">
 <h2 class="hasAnchor">
@@ -230,7 +229,7 @@ path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre><
                             <span class="dt">prefixMergedDataset=</span><span class="st">"data.HapMapIII"</span>,
                             <span class="dt">path2plink=</span>path2plink, <span class="dt">run.check_ancestry =</span> <span class="ot">FALSE</span>,
                             <span class="dt">interactive=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="checkAncestry.png" style="display: block; margin: auto;"></p>
+<p><img src="checkAncestry.png" width="638" style="display: block; margin: auto;"></p>
 </div>
 <div id="markers-with-excessive-missingness-rate" class="section level2">
 <h2 class="hasAnchor">
@@ -240,10 +239,10 @@ path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre><
                                          <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                                          <span class="dt">path2plink=</span>path2plink, 
                                          <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="snpmissingness.png" style="display: block; margin: auto;"> ## Markers with deviation from HWE Markers with strong deviation from HWE might be indicative of genotyping or genotype-calling errors. As serious genotyping errors often yield very low p-values (in the order of <span class="math inline">\(10^-50\)</span>), it is recommended to choose a reasonably low threshold to avoid filtering too many variants (that might have slight, non-critical deviations). Identifying markers with deviation from HWE is implemented in <code>check_hwe</code>. It calculates the observed and expected heterozygote frequencies per SNP in the individuals that passed the <code>perIndividualQC</code> and computes the deviation of the frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test.</p>
+<p><img src="snpmissingness.png" width="375" style="display: block; margin: auto;"> ## Markers with deviation from HWE Markers with strong deviation from HWE might be indicative of genotyping or genotype-calling errors. As serious genotyping errors often yield very low p-values (in the order of <span class="math inline">\(10^-50\)</span>), it is recommended to choose a reasonably low threshold to avoid filtering too many variants (that might have slight, non-critical deviations). Identifying markers with deviation from HWE is implemented in <code>check_hwe</code>. It calculates the observed and expected heterozygote frequencies per SNP in the individuals that passed the <code>perIndividualQC</code> and computes the deviation of the frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_hwe &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_hwe.html">check_hwe</a></span>(<span class="dt">indir=</span>indir, <span class="dt">qcdir=</span>qcdir, <span class="dt">name=</span>name, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                       <span class="dt">path2plink=</span>path2plink, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="hwe.png" style="display: block; margin: auto;"></p>
+<p><img src="hwe.png" width="375" style="display: block; margin: auto;"></p>
 </div>
 <div id="markers-with-low-minor-allele-frequency" class="section level2">
 <h2 class="hasAnchor">
@@ -251,7 +250,7 @@ path2plink &lt;-<span class="st"> "/Users/hannah/bin/plink"</span></code></pre><
 <p>Markers with low minor allele count are often removed as the actual genotype calling (via the calling algorithm) is very difficult due to the small sizes of the heterozygote and rare-homozygote clusters. Identifying markers with low minor allele count is implemented in <code>check_maf</code>. It calculates the minor allele frequencies for all variants in the individuals that passed the <code>perIndividualQC</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fail_maf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_maf.html">check_maf</a></span>(<span class="dt">indir=</span>indir, <span class="dt">qcdir=</span>qcdir, <span class="dt">name=</span>name, <span class="dt">interactive=</span><span class="ot">TRUE</span>,
                       <span class="dt">path2plink=</span>path2plink, <span class="dt">showPlinkOutput=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="maf.png" style="display: block; margin: auto;"></p>
+<p><img src="maf.png" width="375" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

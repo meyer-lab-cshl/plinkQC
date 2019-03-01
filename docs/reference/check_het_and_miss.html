@@ -80,7 +80,7 @@ the y-axis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -178,8 +178,9 @@ the y-axis.</p>
     </div>
 
     <pre class="usage"><span class='fu'>check_het_and_miss</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
-  <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>run.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>run.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -222,6 +223,11 @@ larger than 0.</p></td>
 FALSE, it is assumed that plink --missing and plink --het have been run and
 qcdir/name.imiss and qcdir/name.het are present;
 <code>check_het_and_miss</code> will fail with missing file error otherwise.</p></td>
+    </tr>
+    <tr>
+      <th>label</th>
+      <td><p>[logical] Set TRUE, to add fail IDs as text labels in scatter
+plot.</p></td>
     </tr>
     <tr>
       <th>interactive</th>

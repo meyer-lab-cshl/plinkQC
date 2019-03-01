@@ -80,7 +80,7 @@ the y-axis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -179,7 +179,7 @@ the y-axis.</p>
     </div>
 
     <pre class="usage"><span class='fu'>evaluate_check_het_and_miss</span>(<span class='no'>qcdir</span>, <span class='no'>name</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -207,6 +207,11 @@ heterozygosity in any individual. Expressed as multiples of standard
 deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 larger than 0.</p></td>
+    </tr>
+    <tr>
+      <th>label</th>
+      <td><p>[logical] Set TRUE, to add fail IDs as text labels in scatter
+plot.</p></td>
     </tr>
     <tr>
       <th>interactive</th>

@@ -67,7 +67,7 @@ genetic ancestry." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -166,8 +166,9 @@ genetic ancestry.</p>
   <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
   <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
-  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -391,6 +392,11 @@ IDs in refColors/refColorsFile.</p></td>
     <tr>
       <th>studyColor</th>
       <td><p>[character] Colour to be used for study population.</p></td>
+    </tr>
+    <tr>
+      <th>label</th>
+      <td><p>[logical] Set TRUE, to add fail IDs as text labels in scatter
+plot.</p></td>
     </tr>
     <tr>
       <th>interactive</th>
