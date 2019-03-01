@@ -6,8 +6,9 @@
 heterozygosity rates}
 \usage{
 check_het_and_miss(indir, name, qcdir = indir, imissTh = 0.03,
-  hetTh = 3, run.check_het_and_miss = TRUE, interactive = FALSE,
-  verbose = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
+  hetTh = 3, run.check_het_and_miss = TRUE, label = TRUE,
+  interactive = FALSE, verbose = FALSE, path2plink = NULL,
+  showPlinkOutput = TRUE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -36,6 +37,9 @@ larger than 0.}
 FALSE, it is assumed that plink --missing and plink --het have been run and
 qcdir/name.imiss and qcdir/name.het are present;
 \code{\link{check_het_and_miss}} will fail with missing file error otherwise.}
+
+\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
+plot.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface

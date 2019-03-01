@@ -18,8 +18,9 @@ perIndividualQC(indir, name, qcdir = indir, dont.check_sex = FALSE,
   europeanTh = 1.5, refSamples = NULL, refColors = NULL,
   refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
   refSamplesPop = "Pop", refColorsColor = "Color",
-  refColorsPop = "Pop", studyColor = "#2c7bb6", interactive = FALSE,
-  verbose = TRUE, path2plink = NULL, showPlinkOutput = TRUE)
+  refColorsPop = "Pop", studyColor = "#2c7bb6", label = TRUE,
+  interactive = FALSE, verbose = TRUE, path2plink = NULL,
+  showPlinkOutput = TRUE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -167,6 +168,9 @@ refColors/refColorsFile}
 IDs in refColors/refColorsFile.}
 
 \item{studyColor}{[character] Colour to be used for study population.}
+
+\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
+plot.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface

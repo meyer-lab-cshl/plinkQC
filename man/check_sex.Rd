@@ -8,7 +8,7 @@ check_sex(indir, name, qcdir = indir, maleTh = 0.8, femaleTh = 0.2,
   run.check_sex = TRUE, externalSex = NULL, externalFemale = "F",
   externalMale = "M", externalSexSex = "Sex", externalSexID = "IID",
   fixMixup = FALSE, interactive = FALSE, verbose = FALSE,
-  path2plink = NULL, showPlinkOutput = TRUE)
+  label = TRUE, path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -59,6 +59,9 @@ save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+
+\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
+plot.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.

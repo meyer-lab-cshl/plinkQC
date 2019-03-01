@@ -7,8 +7,8 @@
 evaluate_check_sex(qcdir, name, maleTh = 0.8, femaleTh = 0.2,
   externalSex = NULL, fixMixup = FALSE, indir = qcdir,
   externalFemale = "F", externalMale = "M", externalSexSex = "Sex",
-  externalSexID = "IID", verbose = FALSE, path2plink = NULL,
-  showPlinkOutput = TRUE, interactive = FALSE)
+  externalSexID = "IID", verbose = FALSE, label = TRUE,
+  path2plink = NULL, showPlinkOutput = TRUE, interactive = FALSE)
 }
 \arguments{
 \item{qcdir}{[character] /path/to/directory containing name.sexcheck as
@@ -47,6 +47,9 @@ information in externalSex.}
 information in externalSex.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+
+\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
+plot.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.

@@ -5,7 +5,7 @@
 \title{Evaluate results from PLINK missing genotype and heterozygosity rate check.}
 \usage{
 evaluate_check_het_and_miss(qcdir, name, imissTh = 0.03, hetTh = 3,
-  interactive = FALSE)
+  label = TRUE, interactive = FALSE)
 }
 \arguments{
 \item{qcdir}{[character] path/to/directory/with/QC/results containing
@@ -23,6 +23,9 @@ heterozygosity in any individual. Expressed as multiples of standard
 deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 larger than 0.}
+
+\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
+plot.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
