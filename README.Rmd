@@ -39,7 +39,7 @@ to retain as many individuals as possible in the study.
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC**  is: 0.2.0 and can be
+The current github version of **plinkQC**  is: 0.2.1 and can be
 installed via
 ```{r github install, eval=FALSE}
 library(devtools)
