@@ -30,26 +30,6 @@ test_that('cleanData fails with missing check error', {
                  "No per-sample and per-marker filters chosen")
           })
 
-test_that('cleanData fails with missing hweTh error', {
-    expect_error(cleanData(qcdir=qcdir, indir=indir, name=name,
-                           filterHWE=TRUE,
-                           hweTh=NULL),
-                 "filterHWE is TRUE but hweTh not specified")
-})
-
-test_that('cleanData fails with missing mafTh and macTh error', {
-    expect_error(cleanData(qcdir=qcdir, indir=indir, name=name,
-                           filterMAF=TRUE,
-                           mafTh=NULL, macTh=NULL),
-                 "filterMAF is TRUE but neither mafTh or macTh")
-})
-
-test_that('cleanData fails with missing lmissTh error', {
-    expect_error(cleanData(qcdir=qcdir, indir=indir, name=name,
-                           filterSNPMissingness=TRUE,
-                           lmissTh=NULL),
-                 "filterSNPMissingness is TRUE but lmissTh not specified")
-})
 
 test_that('cleanData returns message with missing sample check', {
     expect_error(cleanData(qcdir=qcdir, indir=indir, name=name,
