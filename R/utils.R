@@ -14,16 +14,16 @@
 #' @export
 
 checkPlink <- function(path2plink=NULL) {
-    if (grepl("~", path2plink)) {
-        stop("Path to plink (", path2plink,
-             ") contains ~: please supply full path, not relying",
-             " on tilde extension.")
-    }
     if (is.null(path2plink)) {
         path2plink <- 'plink'
         preset <- FALSE
     } else {
         preset <- TRUE
+    }
+    if (grepl("~", path2plink)) {
+        stop("Path to plink (", path2plink,
+             ") contains ~: please supply full path, not relying",
+             " on tilde extension.")
     }
     if (.Platform$OS.type == 'windows') {
         path2plink <- paste(gsub('\\.exe', '', path2plink), '.exe', sep="")
