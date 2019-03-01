@@ -1,6 +1,6 @@
 # plinkQC 0.2.1
 ## minor changes
-* Fix pathcheck bug in checkPlink
+* Fix path check bug in checkPlink
 * Include test data in build!
 
 # plinkQC 0.2.0
