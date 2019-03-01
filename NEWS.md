@@ -1,3 +1,8 @@
+# plinkQC 0.2.1
+## minor changes
+* Fix pathcheck bug in checkPlink
+* Include test data in build!
+
 # plinkQC 0.2.0
 ## major changes
 * All system calls to plink are conducted with sys::exec_wait - this should
