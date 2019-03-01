@@ -3,7 +3,7 @@ Type: Package
 Title: Genotype Quality Control with 'PLINK'
 Version: 0.2.1
 Authors@R:
-    person("Hannah", "Meyer", email = "hannah@ebi.ac.uk",
+    person("Hannah", "Meyer", email = "hannah.v.meyer@gmail.com",
     role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4564-0899"))
 URL: https://github.com/HannahVMeyer/plinkQC
 BugReports: https://github.com/HannahVMeyer/plinkQC/issues
