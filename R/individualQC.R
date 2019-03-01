@@ -140,7 +140,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             refSamplesFile=NULL, refColorsFile=NULL,
                             refSamplesIID="IID", refSamplesPop="Pop",
                             refColorsColor="Color", refColorsPop="Pop",
-                            studyColor="#2c7bb6",
+                            studyColor="#2c7bb6", label=TRUE,
                             interactive=FALSE, verbose=TRUE,
                             path2plink=NULL, showPlinkOutput=TRUE) {
     fail_sex <- NULL
@@ -177,7 +177,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                            verbose=verbose,
                                            path2plink=path2plink,
                                            showPlinkOutput=showPlinkOutput,
-                                           fixMixup=fixMixup, interactive=FALSE)
+                                           fixMixup=fixMixup,
+                                           label=label, interactive=FALSE)
             if (!is.null(fail_sex$fail_sex)) {
                 write.table(fail_sex$fail_sex[,1:2],
                             file=paste(out, ".fail-sexcheck.IDs",
@@ -214,7 +215,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
             fail_het_imiss <-
                 evaluate_check_het_and_miss(qcdir=qcdir, name=name,
                                             imissTh=imissTh,
-                                            hetTh=hetTh,
+                                            hetTh=hetTh, label=label,
                                             interactive=FALSE)
             if (!is.null(fail_het_imiss$fail_imiss)) {
                 write.table(fail_het_imiss$fail_imiss[,1:2],
@@ -519,6 +520,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams evaluate_check_sex
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -544,6 +546,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                       externalSexSex="Sex", externalSexID="IID",
                       fixMixup=FALSE,
                       interactive=FALSE, verbose=FALSE,
+                      label=TRUE,
                       path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_sex) {
         run_sex <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
@@ -555,6 +558,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                                maleTh=maleTh, femaleTh=femaleTh,
                                interactive=interactive, fixMixup=fixMixup,
                                indir=indir,
+                               label=label,
                                externalFemale=externalFemale,
                                externalMale=externalMale,
                                externalSexSex=externalSexSex,
@@ -621,6 +625,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 #' larger than 0.
 #' @inheritParams checkPlink
+#' @inheritParams evaluate_check_sex
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -651,6 +656,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' }
 check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                run.check_het_and_miss=TRUE,
+                               label=TRUE,
                                interactive=FALSE, verbose=FALSE,
                                path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_het_and_miss) {
@@ -664,7 +670,8 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                           showPlinkOutput=showPlinkOutput)
     }
     fail <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,  hetTh=hetTh,
-                                 imissTh=imissTh, interactive=interactive)
+                                 imissTh=imissTh, interactive=interactive,
+                                 label=label)
     return(fail)
 }
 
@@ -990,6 +997,8 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' information in externalSex.
 #' @param externalSexID [character] Column identifier for column containing ID
 #' information in externalSex.
+#' @param label [logical] Set TRUE, to add fail IDs as text labels in scatter
+#' plot.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -1019,7 +1028,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                fixMixup=FALSE, indir=qcdir,
                                externalFemale="F", externalMale="M",
                                externalSexSex="Sex", externalSexID="IID",
-                               verbose=FALSE,
+                               verbose=FALSE, label=TRUE,
                                path2plink=NULL,
                                showPlinkOutput=TRUE,
                                interactive=FALSE) {
@@ -1127,11 +1136,6 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
         ggtitle("Check assigned sex versus SNP sex") +
         xlab("Reported Sex (PEDSEX)") +
         ylab("ChrX heterozygosity") +
-        ggrepel::geom_label_repel(data=data.frame(x=fail_sex$PEDSEX,
-                                                  y=fail_sex$F,
-                                                  label=fail_sex$IID),
-                                  aes_string(x='x',y='y', label='label'),
-                                  size=2) +
         geom_segment(data=data.frame(x=0.8, xend=1.2, y=maleTh,
                                      yend=maleTh),
                      aes_string(x='x', xend='xend', y='y', yend='yend'), lty=2,
@@ -1139,8 +1143,16 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
         geom_segment(data=data.frame(x=1.8, xend=2.2, y=femaleTh,
                                      yend=femaleTh), lty=2,
                      aes_string(x='x', xend='xend', y='y', yend='yend'),
-                     color="#e7298a") +
-        theme_bw()
+                     color="#e7298a")
+    if (label) {
+        p_sexcheck <-
+            p_sexcheck + ggrepel::geom_label_repel(data=data.frame(x=fail_sex$PEDSEX,
+                                                  y=fail_sex$F,
+                                                  label=fail_sex$IID),
+                                  aes_string(x='x',y='y', label='label'),
+                                  size=2)
+    }
+    p_sexcheck <- p_sexcheck +   theme_bw()
     if (length(unique(sexcheck$PEDSEX)) == 2) {
         p_sexcheck <- p_sexcheck +
             scale_color_manual(values=c("#377eb8", "#e41a1c"),
@@ -1297,6 +1309,8 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
 #' , other_arguments) or pdf(outfile) print(p_het_imiss) dev.off().
+#' @param label [logical] Set TRUE, to add fail IDs as text labels in scatter
+#' plot.
 #' @return named [list] with i) fail_imiss dataframe containing FID (Family ID),
 #' IID (Within-family ID), MISS_PHENO (Phenotype missing? (Y/N)), N_MISS (Number
 #' of missing genotype call(s), not including obligatory missings), N_GENO (
@@ -1318,7 +1332,7 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' interactive=FALSE)
 #' }
 evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
-                                  hetTh=3, interactive=FALSE) {
+                                  hetTh=3, label=TRUE, interactive=FALSE) {
 
     prefix <- makepath(qcdir, name)
 
@@ -1382,13 +1396,17 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                    col="#e7298a", lty=2) +
         geom_hline(yintercept=mean(het_imiss$F) + (hetTh*sd(het_imiss$F)),
                    col="#e7298a", lty=2) +
-        geom_vline(xintercept=log10(imissTh), col="#e7298a", lty=2) +
-        ggrepel::geom_label_repel(data=data.frame(x=fail_het_imiss$logF_MISS,
-                                                  y=fail_het_imiss$F,
-                                                  label=fail_het_imiss$IID),
+        geom_vline(xintercept=log10(imissTh), col="#e7298a", lty=2)
+    if (label) {
+        p_het_imiss <-
+            p_het_imiss + ggrepel::geom_label_repel(
+                                data=data.frame(x=fail_het_imiss$logF_MISS,
+                                                y=fail_het_imiss$F,
+                                                label=fail_het_imiss$IID),
                                   aes_string(x='x',y='y', label='label'),
-                                  size=2) +
-        theme_bw()
+                                  size=2)
+    }
+    p_het_imiss <- p_het_imiss + theme_bw()
     if (interactive) print(p_het_imiss)
     return(list(fail_imiss=fail_imiss, fail_het=fail_het,
                 p_het_imiss=p_het_imiss))
