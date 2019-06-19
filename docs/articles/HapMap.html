@@ -6,14 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Processing HapMap III reference data for ancestry estimation • plinkQC</title>
-<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.1/clipboard.min.js" integrity="sha256-hIvIxeqhGZF+VVeM55k0mJvWpQ6gTkWk3Emc+NmowYA=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Processing HapMap III reference data for ancestry estimation">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -31,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -104,7 +103,7 @@
       <h1>Processing HapMap III reference data for ancestry estimation</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2019-03-01</h4>
+            <h4 class="date">2019-06-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/HapMap.Rmd"><code>vignettes/HapMap.Rmd</code></a></small>
       <div class="hidden name"><code>HapMap.Rmd</code></div>
@@ -126,59 +125,59 @@
 <h2 class="hasAnchor">
 <a href="#set-up" class="anchor"></a>Set-up</h2>
 <p>We will first set up some bash variables and create directories needed; storing the names and directories of the reference will make it easy to use updated versions of the reference in the future. Is is also useful to keep the PLINK log-files for future reference. In order to keep the data directory tidy, we’ll create a directory for the log files and move them to the log directory here after each analysis step.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="va">refdir=</span><span class="st">'~/reference'</span>
-<span class="fu">mkdir</span> -r <span class="va">$qcdir</span>/plink_log</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="va">refdir=</span><span class="st">'~/reference'</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="fu">mkdir</span> -r <span class="va">$qcdir</span>/plink_log</a></code></pre></div>
 </div>
 <div id="download-and-convert-hapmap-phase-iii-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#download-and-convert-hapmap-phase-iii-data" class="anchor"></a>Download and convert Hapmap phase III data</h2>
 <p>Hapmap phase 3 data (HapMapIII) is available in <a href="https://www.cog-genomics.org/plink/1.9/input#ped">PLINK text format</a> at ncbi. In addition, a sample file with information about the individuals’ ancestry is available and shoud be downloaded as in input for <code>plinkQC::chec_Ancestry()</code>. The following code chunk downloads and unzips the data.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">cd</span> <span class="va">$refdir</span>
-
-<span class="va">ftp=</span>ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/2009-01_phaseIII/plink_format/
-<span class="va">prefix=</span>hapmap3_r2_b36_fwd.consensus.qc.poly
-
-<span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.map.bz2
-<span class="fu">bunzip2</span> <span class="va">$prefix</span>.map.bz2
-
-<span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.ped.bz2
-<span class="fu">bunzip2</span> <span class="va">$prefix</span>.per.bz2
-
-<span class="fu">wget</span> <span class="va">$ftp</span>/relationships_w_pops_121708.txt</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="bu">cd</span> <span class="va">$refdir</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="va">ftp=</span>ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/2009-01_phaseIII/plink_format/</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="va">prefix=</span>hapmap3_r2_b36_fwd.consensus.qc.poly</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.map.bz2</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="fu">bunzip2</span> <span class="va">$prefix</span>.map.bz2</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.ped.bz2</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="fu">bunzip2</span> <span class="va">$prefix</span>.per.bz2</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="fu">wget</span> <span class="va">$ftp</span>/relationships_w_pops_121708.txt</a></code></pre></div>
 <p>We then convert the <a href="https://www.cog-genomics.org/plink/1.9/input#ped">PLINK text format</a> to the standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped">PLINK binary format</a>.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">plink</span> --file <span class="va">$refdir</span>/<span class="va">$prefix</span> \
-      --make-bed \
-      --out <span class="va">$refdir</span>/HapMapIII_NCBI36
-<span class="fu">mv</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.log <span class="va">$refdir</span>/log</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">plink</span> --file <span class="va">$refdir</span>/<span class="va">$prefix</span> \</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">      --make-bed \</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">      --out <span class="va">$refdir</span>/HapMapIII_NCBI36</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="fu">mv</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.log <span class="va">$refdir</span>/log</a></code></pre></div>
 </div>
 <div id="update-annotation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#update-annotation" class="anchor"></a>Update annotation</h2>
 <p>The genome build of HapMap III data is NCBI36. Currently most datasets are updated to CGRCh37 or CGRCh38. In order to update the HapMap III data to the desired build, we use the UCSC <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver">liftOver</a> tool. The liftOver tool takes information in a format similar to the <a href="https://www.cog-genomics.org/plink/1.9/formats#bim">PLINK .bim</a> format, the <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">UCSC bed format</a> and a <a href="http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/">liftover chain</a>, containing the mapping information between the old genome (target) and new genome (query). It returns the updated annotation (newFile) and a file with unmappable variants (unMapped):</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">liftOver</span> oldFile liftover.chain newFile unMapped</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">liftOver</span> oldFile liftover.chain newFile unMapped</a></code></pre></div>
 <p>We first need to download the liftOver tool from <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="uri">https://genome.ucsc.edu/cgi-bin/hgLiftOver</a> and the appropriate liftover chain from <a href="http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/" class="uri">http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/</a>). We then convert the <a href="https://www.cog-genomics.org/plink/1.9/formats#bim">PLINK .bim</a> format, to the zero-based <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">UCSC bed</a> format.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">awk</span> <span class="st">'{print "chr" $1, $4 -1, $4, $2 }'</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.bim <span class="kw">|</span> <span class="kw">\</span>
-    <span class="fu">sed</span> <span class="st">'s/chr23/chrX/'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/chr24/chrY/'</span> <span class="op">&gt;</span> \
-    <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="fu">awk</span> <span class="st">'{print "chr" $1, $4 -1, $4, $2 }'</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.bim <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">|</a></span> <span class="kw">\</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">    <span class="fu">sed</span> <span class="st">'s/chr23/chrX/'</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">|</a></span> <span class="fu">sed</span> <span class="st">'s/chr24/chrY/'</span> <span class="op">&gt;</span> \</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">    <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift</a></code></pre></div>
 <p>We use the liftOver tool and the UCSC bed formated annotation file together with the appropriate chain file to do the lift over.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">liftOver</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift <span class="va">$refdir</span>/hg18ToHg19.over.chain \
-    <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="va">$refdir</span>/HapMapIII_NCBI36.unMapped</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">liftOver</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift <span class="va">$refdir</span>/hg18ToHg19.over.chain \</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">    <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="va">$refdir</span>/HapMapIII_NCBI36.unMapped</a></code></pre></div>
 <p>After successful liftover, we will be able to extract i) the variants that were mappable from the old to the new genome and ii) their updated positions</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># ectract mapped variants</span>
-<span class="fu">awk</span> <span class="st">'{print $4}'</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="op">&gt;</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps
-<span class="co"># ectract updated positions</span>
-<span class="fu">awk</span> <span class="st">'{print $4, $3}'</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="op">&gt;</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># ectract mapped variants</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="fu">awk</span> <span class="st">'{print $4}'</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="op">&gt;</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co"># ectract updated positions</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="fu">awk</span> <span class="st">'{print $4, $3}'</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="op">&gt;</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos</a></code></pre></div>
 </div>
 <div id="update-the-reference-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#update-the-reference-data" class="anchor"></a>Update the reference data</h2>
 <p>We can now use PLINK to extract the mappable variants from the old build and update their position. After these steps, the HapMap III dataset can be used for infering study ancestry as described in the corresponding <a href="https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html">vignette</a>.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">plink</span> --bfile <span class="va">$refdir</span>/HapMapIII_NCBI36 \
-    --extract <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps \
-    --update-map <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos \
-    --make-bed \
-    --out <span class="va">$refdir</span>/HapMapIII_CGRCh37
-<span class="fu">mv</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.log <span class="va">$refdir</span>/log</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="ex">plink</span> --bfile <span class="va">$refdir</span>/HapMapIII_NCBI36 \</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">    --extract <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps \</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">    --update-map <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos \</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">    --make-bed \</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">    --out <span class="va">$refdir</span>/HapMapIII_CGRCh37</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="fu">mv</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.log <span class="va">$refdir</span>/log</a></code></pre></div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
@@ -225,9 +224,8 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
-
       </footer>
 </div>
 
