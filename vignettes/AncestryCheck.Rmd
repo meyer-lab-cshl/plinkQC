@@ -233,7 +233,7 @@ exclude_ancestry <-
                                                 sep=""),
                             interactive=TRUE)
 ```
-```{r load ancestry, echo=FALSE, fig.align='center'}
+```{r load ancestry, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("checkAncestry.png")
 ```
 

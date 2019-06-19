@@ -115,10 +115,19 @@ individual IDs to the qcdir. These IDs will be removed in the computation of the
 `perMarkerQC`. If the list is not present, `perMarkerQC` will send a message
 about conducting the quality control on the entire dataset.
 
+NB: To demonstrate the results of the ancestry check, the required eigenvector
+file of the combined study and reference datasets have been precomputed and
+for the purpose of this example will be copied to the `qcdir`. In practice,
+the `qcdir` will often be the same as the `indir` and this step will not be
+required.
+
+```{r copy files}
+system(paste("cp", file.path(package.dir, 'extdata/data.HapMapIII.eigenvec'),
+             qcdir))
+```
+
 `perIndividualQC` displays the results of the quality control steps in a
-multi-panel plot. NB: To reduce the data size of the example data in plinkQC,
-data.genome  has already been reduced to the individuals that are related. Thus
-the relatedness plots in C only show counts for related individuals.
+multi-panel plot. 
 
 ```{r individual QC,  eval=FALSE, fig.height=12, fig.width=9}
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
@@ -131,7 +140,7 @@ fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
                             interactive=TRUE, verbose=TRUE)
 
 ```
-```{r load individualQC, echo=FALSE, fig.height=12, fig.width=9, fig.align='center'}
+```{r load individualQC, echo=FALSE,out.width = "500px", fig.align='center'}
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("individualQC.png")
 ```
@@ -139,11 +148,12 @@ knitr::include_graphics("individualQC.png")
 
 `overviewperIndividualQC` depicts overview plots of quality control failures and
 the intersection of quality control failures with ancestry exclusion.
-```{r overview individual QC, eval=FALSE}
+```{r overview individual QC,fig.width=7, fig.height=7, eval=FALSE}
 overview_individuals <- overviewPerIndividualQC(fail_individuals,
                                                 interactive=TRUE)
 ```
-```{r load overviewIndividualQC, echo=FALSE}
+
+```{r load overviewIndividualQC, out.width = "500px", echo=FALSE}
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewQC.png")
 knitr::include_graphics("overviewAncestryQC.png")
@@ -165,7 +175,7 @@ fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
                             showPlinkOutput=FALSE)
 ```
 
-```{r load markerQC, echo=FALSE, fig.height=9, fig.width=6, fig.align='center'}
+```{r load markerQC, echo=FALSE, out.width = "500px", fig.align='center'}
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("markerQC.png")
 ```
@@ -176,7 +186,7 @@ failures and their overlaps.
 overview_marker <- overviewPerMarkerQC(fail_markers, interactive=TRUE)
 ```
 
-```{r load overviewMarkerQC, echo=FALSE}
+```{r load overviewMarkerQC, out.width = "500px", echo=FALSE}
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewMarkerQC.png")
 ```
@@ -213,11 +223,11 @@ between PEDSEX and SNPSEX was detected, by SNPSEX == Sex, PEDSEX of these
 individuals can optionally be updated. `check_sex` depicts the X-chromosomal
 heterozygosity (SNPSEX) of the samples split by their (PEDSEX).
 
-```{r check sex, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
+```{r check sex, eval=FALSE, out.width = "500px", fig.align='center'}
 fail_sex <- check_sex(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       verbose=TRUE, path2plink=path2plink)
 ```
-```{r load checkSex, echo=FALSE, fig.align='center'}
+```{r load checkSex, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("checkSex.png")
 ```
 
@@ -243,7 +253,7 @@ missingness rates on x-axis and their heterozygosity rates on the y-axis.
 fail_het_imiss <- check_het_and_miss(indir=indir, qcdir=qcdir, name=name,
                                      interactive=TRUE, path2plink=path2plink)
 ```
-```{r load checkHetImiss, echo=FALSE, fig.align='center'}
+```{r load checkHetImiss, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("checkHetImiss.png")
 ```
 
@@ -268,7 +278,7 @@ exclude_relatedness <- check_relatedness(indir=indir, qcdir=qcdir, name=name,
                                          interactive=TRUE,
                                          path2plink=path2plink)
 ```
-```{r load checkRelatedness, echo=FALSE, fig.align='center'}
+```{r load checkRelatedness, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("checkRelatedness.png")
 ```
 
@@ -301,7 +311,7 @@ exclude_ancestry <- check_ancestry(indir=indir, qcdir=qcdir, name=name,
                             path2plink=path2plink, run.check_ancestry = FALSE,
                             interactive=TRUE)
 ```
-```{r load ancestry, echo=FALSE, fig.align='center'}
+```{r load ancestry, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("checkAncestry.png")
 ```
 
@@ -320,7 +330,7 @@ fail_snpmissing <- check_snp_missingness(indir=indir, qcdir=qcdir, name=name,
                                          showPlinkOutput=FALSE)
 ```
 
-```{r load snp missing, echo=FALSE, fig.align='center'}
+```{r load snp missing, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("snpmissingness.png")
 ```
 ## Markers with deviation from HWE
@@ -338,7 +348,7 @@ frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test.
 fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       path2plink=path2plink, showPlinkOutput=FALSE)
 ```
-```{r load hwe, echo=FALSE, fig.align='center'}
+```{r load hwe, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("hwe.png")
 ```
 
@@ -355,7 +365,7 @@ that passed the `perIndividualQC`.
 fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       path2plink=path2plink, showPlinkOutput=FALSE)
 ```
-```{r load  maf, echo=FALSE, fig.align='center'}
+```{r load  maf, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("maf.png")
 ```
 
