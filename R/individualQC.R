@@ -319,7 +319,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
         mismatched_sex <- NULL
     }
     if(!is.null(fail_ancestry)) {
-        ancestry <- select_(fail_ancestryx$fail_ancestry, "FID", "IID")
+        ancestry <- select_(fail_ancestry$fail_ancestry, "FID", "IID")
     } else {
         ancestry <- NULL
     }
@@ -1179,7 +1179,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                   aes_string(x='x',y='y', label='label'),
                                   size=2)
     }
-    p_sexcheck <- p_sexcheck +   theme_bw()
+    p_sexcheck <- p_sexcheck + theme_bw()
     if (length(unique(sexcheck$PEDSEX)) == 2) {
         p_sexcheck <- p_sexcheck +
             scale_color_manual(values=c("#377eb8", "#e41a1c"),
