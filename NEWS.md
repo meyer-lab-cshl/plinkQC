@@ -1,3 +1,8 @@
+# plinkQC 0.2.2
+## minor changes
+* Fix IDs written to fail.IDs file: previous versions wrote IID,IID, now fixed
+to FID, IID (see [here](https://github.com/HannahVMeyer/plinkQC/issues/2)).
+
 # plinkQC 0.2.1
 ## minor changes
 * Fix path check bug in checkPlink
