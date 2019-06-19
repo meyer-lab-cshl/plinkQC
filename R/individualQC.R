@@ -298,19 +298,46 @@ perIndividualQC <- function(indir, name, qcdir=indir,
         }
     }
 
-    fail_list <- list(missing_genotype=as.vector(fail_het_imiss$fail_imiss$IID),
-                      highIBD=as.vector(fail_relatedness$failIDs$IID),
-                      outlying_heterozygosity=
-                          as.vector(fail_het_imiss$fail_het$IID),
-                      mismatched_sex=as.vector(fail_sex$fail_sex$IID),
-                      ancestry=as.vector(fail_ancestry$fail_ancestry$IID))
+    if(!is.null(fail_het_imiss)) {
+        missing_genotype <- select_(fail_het_imiss$fail_imiss, "FID", "IID")
+        } else {
+        missing_genotype <- NULL
+    }
+    if(!is.null(fail_relatedness)) {
+        highIBD <- select_(fail_relatedness$failIDs, "FID", "IID")
+    } else {
+        highIBD <- NULL
+    }
+    if(!is.null(fail_het_imiss)) {
+        outlying_heterozygosity <- select_(fail_het_imiss$fail_het, "FID", "IID")
+    } else {
+        outlying_heterozygosity <- NULL
+    }
+    if(!is.null(fail_sex)) {
+        mismatched_sex<- select_(fail_sex$fail_sex, "FID", "IID")
+    } else {
+        mismatched_sex <- NULL
+    }
+    if(!is.null(fail_ancestry)) {
+        ancestry <- select_(fail_ancestryx$fail_ancestry, "FID", "IID")
+    } else {
+        ancestry <- NULL
+    }
+
+    fail_list <- list(missing_genotype=missing_genotype,
+                      highIBD=highIBD,
+                      outlying_heterozygosity=outlying_heterozygosity,
+                      mismatched_sex=mismatched_sex,
+                      ancestry=ancestry)
 
     if(verbose) message(paste("Combine fail IDs into ", out, ".fail.IDs",
                               sep=""))
-    uniqueFails <- unique(unlist(fail_list))
-    write.table(cbind(uniqueFails, uniqueFails),
-                        file=paste(out, ".fail.IDs",sep=""),
-                        quote=FALSE, row.names=FALSE, col.names=FALSE)
+
+    uniqueFails <- do.call(rbind, fail_list)
+    uniqueFails <- uniqueFails[!duplicated(uniqueFails$IID),]
+
+    write.table(uniqueFails, file=paste(out, ".fail.IDs",sep=""),
+                quote=FALSE, row.names=FALSE, col.names=FALSE)
 
     plots_sampleQC <- list(p_sexcheck, p_het_imiss, p_relatedness, p_ancestry)
     plots_sampleQC <- plots_sampleQC[sapply(plots_sampleQC,
