@@ -207,6 +207,9 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
 
     # individuals with at least one pair-wise comparison > relatednessTh
     highRelated <- dplyr::filter_(relatedness, ~M > relatednessTh)
+    if (nrow(highRelated) == 0) {
+        return(list(relatednessFails=NULL, failIDs=NULL))
+    }
     uniqueIIDs <- unique(c(highRelated$IID1, highRelated$IID2))
 
     fail_other <- NULL
