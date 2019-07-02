@@ -298,27 +298,27 @@ perIndividualQC <- function(indir, name, qcdir=indir,
         }
     }
 
-    if(!is.null(fail_het_imiss)) {
+    if(!is.null(fail_het_imiss$fail_imiss)) {
         missing_genotype <- select_(fail_het_imiss$fail_imiss, "FID", "IID")
         } else {
         missing_genotype <- NULL
     }
-    if(!is.null(fail_relatedness)) {
+    if(!is.null(fail_relatedness$failIDs)) {
         highIBD <- select_(fail_relatedness$failIDs, "FID", "IID")
     } else {
         highIBD <- NULL
     }
-    if(!is.null(fail_het_imiss)) {
+    if(!is.null(fail_het_imiss$fail_het)) {
         outlying_heterozygosity <- select_(fail_het_imiss$fail_het, "FID", "IID")
     } else {
         outlying_heterozygosity <- NULL
     }
-    if(!is.null(fail_sex)) {
+    if(!is.null(fail_sex$fail_sex)) {
         mismatched_sex<- select_(fail_sex$fail_sex, "FID", "IID")
     } else {
         mismatched_sex <- NULL
     }
-    if(!is.null(fail_ancestry)) {
+    if(!is.null(fail_ancestry$fail_ancestry)) {
         ancestry <- select_(fail_ancestry$fail_ancestry, "FID", "IID")
     } else {
         ancestry <- NULL
