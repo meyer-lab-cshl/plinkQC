@@ -5,7 +5,8 @@
 \title{Run PLINK IBD estimation}
 \usage{
 run_check_relatedness(indir, name, qcdir = indir, highIBDTh = 0.185,
-  path2plink = NULL, showPlinkOutput = TRUE, verbose = FALSE)
+  mafThRelatedness = 0.1, path2plink = NULL, showPlinkOutput = TRUE,
+  verbose = FALSE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -21,6 +22,9 @@ qcdir=indir.}
 \item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
 pair of individuals; only pairwise relationship estimates larger than this
 threshold will be recorded.}
+
+\item{mafThRelatedness}{[double] Threshold of minor allele frequency filter
+for selecting variants for IBD estimation.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
@@ -38,12 +42,12 @@ printed to standard out.}
 Run LD pruning on dataset with plink --exclude range highldfile
 --indep-pairwise 50 5 0.2, where highldfile contains regions of high LD as
 provided by Anderson et (2010) Nature Protocols. Subsequently, plink
---genome is run on the LD pruned data. plink --genome calculates identity
-by state (IBS) for each pair of individuals based on the average proportion
-of alleles shared at genotyped SNPs. The degree of recent shared ancestry,
-i.e. the identity by descent (IBD) can be estimated from the genome-wide IBS.
-The proportion of IBD between two individuals is returned by --genome as
-PI_HAT.
+--genome is run on the LD pruned, maf-filtered data. plink --genome
+calculates identity by state (IBS) for each pair of individuals based on the
+average proportion of alleles shared at genotyped SNPs. The degree of recent
+shared ancestry,i.e. the identity by descent (IBD) can be estimated from the
+genome-wide IBS. The proportion of IBD between two individuals is returned by
+--genome as PI_HAT.
 }
 \details{
 Both \code{\link{run_check_relatedness}} and its evaluation via

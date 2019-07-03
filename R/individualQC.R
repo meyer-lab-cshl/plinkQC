@@ -132,6 +132,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             do.run_check_relatedness=TRUE,
                             do.evaluate_check_relatedness=TRUE,
                             highIBDTh=0.1875,
+                            mafThRelatedness=0.1,
                             dont.check_ancestry=FALSE,
                             do.run_check_ancestry=TRUE,
                             do.evaluate_check_ancestry=TRUE,
@@ -236,6 +237,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
         if (do.run_check_relatedness) {
             run <- run_check_relatedness(qcdir=qcdir, indir=indir, name=name,
                                          path2plink=path2plink,
+                                         mafThRelatedness=mafThRelatedness,
                                          showPlinkOutput=showPlinkOutput,
                                          verbose=verbose)
         }
@@ -547,6 +549,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams run_check_sex
 #' @inheritParams evaluate_check_sex
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -652,7 +655,9 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 #' larger than 0.
 #' @inheritParams checkPlink
-#' @inheritParams evaluate_check_sex
+#' @inheritParams evaluate_check_het_and_miss
+#' @inheritParams run_check_heterozygosity
+#' @inheritParams run_check_missingness
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -751,6 +756,9 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' @param imissTh [double] Threshold for acceptable missing genotype rate in any
 #' individual; has to be proportion between (0,1)
 #' @inheritParams checkPlink
+#' @inheritParams run_check_relatedness
+#' @inheritParams evaluate_check_relatedness
+#' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -786,10 +794,12 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                               imissTh=0.03, run.check_relatedness=TRUE,
                               interactive=FALSE, verbose=FALSE,
-                              path2plink=NULL, showPlinkOutput=TRUE) {
+                              mafThRelatedness=0.1, path2plink=NULL,
+                              showPlinkOutput=TRUE) {
     if (run.check_relatedness) {
         run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name,
                                      verbose=verbose,
+                                     mafThRelatedness=mafThRelatedness,
                                      path2plink=path2plink,
                                      highIBDTh=highIBDTh,
                                      showPlinkOutput=showPlinkOutput)
@@ -876,6 +886,8 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 #' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams run_check_ancestry
+#' @inheritParams evaluate_check_ancestry
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1444,12 +1456,12 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' Run LD pruning on dataset with plink --exclude range highldfile
 #' --indep-pairwise 50 5 0.2, where highldfile contains regions of high LD as
 #' provided by Anderson et (2010) Nature Protocols. Subsequently, plink
-#' --genome is run on the LD pruned data. plink --genome calculates identity
-#' by state (IBS) for each pair of individuals based on the average proportion
-#' of alleles shared at genotyped SNPs. The degree of recent shared ancestry,
-#' i.e. the identity by descent (IBD) can be estimated from the genome-wide IBS.
-#' The proportion of IBD between two individuals is returned by --genome as
-#' PI_HAT.
+#' --genome is run on the LD pruned, maf-filtered data. plink --genome
+#' calculates identity by state (IBS) for each pair of individuals based on the
+#' average proportion of alleles shared at genotyped SNPs. The degree of recent
+#' shared ancestry,i.e. the identity by descent (IBD) can be estimated from the
+#' genome-wide IBS. The proportion of IBD between two individuals is returned by
+#' --genome as PI_HAT.
 #'
 #' Both \code{\link{run_check_relatedness}} and its evaluation via
 #' \code{\link{evaluate_check_relatedness}} can simply be invoked by
@@ -1465,6 +1477,8 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' @param highIBDTh [double] Threshold for acceptable proportion of IBD between
 #' pair of individuals; only pairwise relationship estimates larger than this
 #' threshold will be recorded.
+#' @param mafThRelatedness [double] Threshold of minor allele frequency filter
+#' for selecting variants for IBD estimation.
 #' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -1480,7 +1494,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name)
 #' }
 run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
-                                  path2plink=NULL,
+                                  mafThRelatedness=0.1, path2plink=NULL,
                                   showPlinkOutput=TRUE, verbose=FALSE) {
 
     prefix <- makepath(indir, name)
@@ -1498,10 +1512,15 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                 std_out=showPlinkOutput, std_err=showPlinkOutput)
 
     if (verbose) message("Run check_relatedness via plink --genome")
+    if (!is.null(mafThRelatedness)) {
+        maf <- c("--maf", mafThRelatedness)
+    } else {
+        maf <- NULL
+    }
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--extract",
                           paste(out, ".prune.in", sep=""),
-                          "--maf", 0.1, "--genome", "--min", highIBDTh,
+                          maf, "--genome", "--min", highIBDTh,
                           "--out", out),
                  std_out=showPlinkOutput, std_err=showPlinkOutput)
     if (!file.exists(paste(prefix, ".imiss", sep=""))) {

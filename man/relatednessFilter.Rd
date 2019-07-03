@@ -9,7 +9,8 @@ relatednessFilter(relatedness, otherCriterion = NULL, relatednessTh,
   "lt", "le", "eq"), relatednessIID1 = "IID1",
   relatednessIID2 = "IID2", relatednessFID1 = NULL,
   relatednessFID2 = NULL, relatednessRelatedness = "PI_HAT",
-  otherCriterionIID = "IID", otherCriterionMeasure = NULL)
+  otherCriterionIID = "IID", otherCriterionMeasure = NULL,
+  verbose = FALSE)
 }
 \arguments{
 \item{relatedness}{[data.frame] containing pair-wise relatedness estimates
@@ -66,6 +67,8 @@ individual IDs.}
 
 \item{otherCriterionMeasure}{[character] Column name of the column containing
 the measure of the otherCriterion (for instance SNP missingness rate).}
+
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \value{
 named [list] with i) relatednessFails, a [data.frame] containing the

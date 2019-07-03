@@ -155,6 +155,7 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' individual IDs.
 #' @param otherCriterionMeasure [character] Column name of the column containing
 #' the measure of the otherCriterion (for instance SNP missingness rate).
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return named [list] with i) relatednessFails, a [data.frame] containing the
 #' reordered input data.frame relatedness after filtering for pairs of
 #' individuals in relatednessIID1 and relatednessIID2, that fail the relatedness
@@ -170,7 +171,8 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
                               relatednessFID1=NULL, relatednessFID2=NULL,
                               relatednessRelatedness="PI_HAT",
                               otherCriterionIID="IID",
-                              otherCriterionMeasure=NULL ) {
+                              otherCriterionMeasure=NULL,
+                              verbose=FALSE) {
 
     if (!(relatednessIID1 %in% names(relatedness))) {
         stop(paste("Column", relatednessIID1, "not found!"))
