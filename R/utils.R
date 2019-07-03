@@ -246,6 +246,13 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         # remove samples that fail other criterion
         highRelated <- highRelated[!(highRelated$IID1 %in% fail_other |
                                          highRelated$IID2 %in% fail_other), ]
+        if (nrow(highRelated) == 0) {
+            if (verbose) {
+                message("Relatedness cannot be evaluated as all individuals",
+                        "involved fail due to otherCriterion")
+            }
+            return(list(relatednessFails=NULL, failIDs=NULL))
+        }
         uniqueIIDs <- unique(c(highRelated$IID1, highRelated$IID2))
     }
     # all samples with related individuals
