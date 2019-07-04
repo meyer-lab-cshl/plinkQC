@@ -182,9 +182,8 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
     fail_counts <- sapply(fail_list, list2counts, unique_markers_fail)
     rownames(fail_counts) <-  unique_markers_fail
 
-    if (interactive) {
         if (length(fail_list) >= 2) {
-            UpSetR::upset(UpSetR::fromList(fail_list),
+            p <- UpSetR::upset(UpSetR::fromList(fail_list),
                       order.by = "freq",
                       empty.intersections = "on", text.scale=1.2,
                       # Include when UpSetR v1.4.1 is released
@@ -198,12 +197,16 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
                     "least two elements in list required, but only ",
                     length(fail_list) ," provided")
         }
-        #print(p_overview)
+        p_overview <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
+                                         nrow=2, align='v', rel_heights = c(3,1),
+                                         rel_widths = c(2,3))
+    if (interactive) {
+        print(p_overview)
     }
     nr_fail_markers <- length(unique_markers_fail)
     return(list(nr_fail_samples=nr_fail_markers,
-                fail_QC=fail_counts))
-                #p_overview=p_overview))
+                fail_QC=fail_counts,
+                p_overview=p_overview))
 }
 
 #' Identification of SNPs with high missingness rate
