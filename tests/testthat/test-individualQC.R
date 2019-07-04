@@ -234,10 +234,3 @@ test_that('evaluate_check_ancestry returns correct fail IDs for example data',{
     expect_true(all(fail$fail_ancestry$IID %in% fail_ancestryIDs[,1]))
 })
 
-context('Test overviewPerIndividualQC')
-test_that('overviewPerIndividualQC returns QC fails message', {
-    results_perSampleQC <- list(fail_list=list(a=1:10), p_SampleQC=NULL)
-    expect_message(overviewPerIndividualQC(results_perSampleQC,
-                                           interactive=TRUE),
-                   "overviewSampleQC for QC fails cannot be displayed with")
-})
