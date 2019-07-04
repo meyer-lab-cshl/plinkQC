@@ -1,3 +1,7 @@
+# plinkQC 0.2.3
+## minor changes
+* Include check in case all samples fail perIndividual QC (#894acc1f)
+
 # plinkQC 0.2.2
 ## minor changes
 * Fix IDs written to fail.IDs file: previous versions wrote IID,IID, now fixed
