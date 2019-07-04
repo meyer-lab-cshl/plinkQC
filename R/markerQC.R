@@ -287,6 +287,19 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                               paste(out, suffix, sep="")),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
+        allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                        data.table=FALSE,
+                                        stringsAsFactors=FALSE,
+                                        header=FALSE)
+        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+                                          data.table=FALSE,
+                                          stringsAsFactors=FALSE,
+                                          header=FALSE)
+        if(all(failsamples[,2] %in% allsamples[,2])) {
+            stop("All samples are contained in the .fail.IDs file ",
+                 "from perIndividualQC, no samples remaining for ",
+                 "check_SNP_missingness")
+        }
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove",
@@ -418,6 +431,18 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                               paste(out, suffix, sep="")),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
+        allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                        data.table=FALSE,
+                                        stringsAsFactors=FALSE,
+                                        header=FALSE)
+        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+                                          data.table=FALSE,
+                                          stringsAsFactors=FALSE,
+                                          header=FALSE)
+        if(all(failsamples[,2] %in% allsamples[,2])) {
+            stop("All samples are contained in the .fail.IDs file ",
+                 "from perIndividualQC, no samples remaining for check_hwe")
+        }
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove",
@@ -539,6 +564,18 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
         fail_samples <- 0
     } else {
+        allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                        data.table=FALSE,
+                                        stringsAsFactors=FALSE,
+                                        header=FALSE)
+        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+                                          data.table=FALSE,
+                                          stringsAsFactors=FALSE,
+                                          header=FALSE)
+        if(all(failsamples[,2] %in% allsamples[,2])) {
+            stop("All samples are contained in the .fail.IDs file ",
+                 "from perIndividualQC, no samples remaining for check_maf")
+        }
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove",
