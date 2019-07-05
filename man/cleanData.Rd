@@ -120,7 +120,7 @@ fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name)
 
 # Create new dataset of indiviudals and markers passing QC
 ids_all <- cleanData(indir=indir, qcdir=qcdir, name=name, macTh=15,
-interactive=FALSE, verbose=TRUE, path2plink=path2plink, filterAncestry=TRUE,
+verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
 filterRelated=TRUE)
 }
 }

@@ -35,12 +35,12 @@
 <meta property="og:description" content="Run LD pruning on dataset with plink --exclude range highldfile
 --indep-pairwise 50 5 0.2, where highldfile contains regions of high LD as
 provided by Anderson et (2010) Nature Protocols. Subsequently, plink
---genome is run on the LD pruned data. plink --genome calculates identity
-by state (IBS) for each pair of individuals based on the average proportion
-of alleles shared at genotyped SNPs. The degree of recent shared ancestry,
-i.e. the identity by descent (IBD) can be estimated from the genome-wide IBS.
-The proportion of IBD between two individuals is returned by --genome as
-PI_HAT." />
+--genome is run on the LD pruned, maf-filtered data. plink --genome
+calculates identity by state (IBS) for each pair of individuals based on the
+average proportion of alleles shared at genotyped SNPs. The degree of recent
+shared ancestry,i.e. the identity by descent (IBD) can be estimated from the
+genome-wide IBS. The proportion of IBD between two individuals is returned by
+--genome as PI_HAT." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -71,7 +71,7 @@ PI_HAT." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -152,17 +152,18 @@ PI_HAT." />
     <p>Run LD pruning on dataset with plink --exclude range highldfile
 --indep-pairwise 50 5 0.2, where highldfile contains regions of high LD as
 provided by Anderson et (2010) Nature Protocols. Subsequently, plink
---genome is run on the LD pruned data. plink --genome calculates identity
-by state (IBS) for each pair of individuals based on the average proportion
-of alleles shared at genotyped SNPs. The degree of recent shared ancestry,
-i.e. the identity by descent (IBD) can be estimated from the genome-wide IBS.
-The proportion of IBD between two individuals is returned by --genome as
-PI_HAT.</p>
+--genome is run on the LD pruned, maf-filtered data. plink --genome
+calculates identity by state (IBS) for each pair of individuals based on the
+average proportion of alleles shared at genotyped SNPs. The degree of recent
+shared ancestry,i.e. the identity by descent (IBD) can be estimated from the
+genome-wide IBS. The proportion of IBD between two individuals is returned by
+--genome as PI_HAT.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>run_check_relatedness</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.185</span>,
-  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,6 +189,11 @@ qcdir=indir.</p></td>
       <td><p>[double] Threshold for acceptable proportion of IBD between
 pair of individuals; only pairwise relationship estimates larger than this
 threshold will be recorded.</p></td>
+    </tr>
+    <tr>
+      <th>mafThRelatedness</th>
+      <td><p>[double] Threshold of minor allele frequency filter
+for selecting variants for IBD estimation.</p></td>
     </tr>
     <tr>
       <th>path2plink</th>

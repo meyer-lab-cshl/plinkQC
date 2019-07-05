@@ -66,7 +66,7 @@ genetic ancestry." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -160,14 +160,14 @@ genetic ancestry.</p>
   <span class='kw'>do.evaluate_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>dont.check_relatedness</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>do.evaluate_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
-  <span class='kw'>dont.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>prefixMergedDataset</span>,
-  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
-  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>dont.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>do.run_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>do.evaluate_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>prefixMergedDataset</span>, <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
+  <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>, <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
+  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -305,6 +305,11 @@ do.run_check_relatedness and do.evaluate_check_relatedness.</p></td>
       <th>highIBDTh</th>
       <td><p>[double] Threshold for acceptable proportion of IBD between
 pair of individuals.</p></td>
+    </tr>
+    <tr>
+      <th>mafThRelatedness</th>
+      <td><p>[double] Threshold of minor allele frequency filter
+for selecting variants for IBD estimation.</p></td>
     </tr>
     <tr>
       <th>dont.check_ancestry</th>
