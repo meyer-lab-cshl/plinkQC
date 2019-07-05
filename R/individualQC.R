@@ -431,21 +431,20 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
     fail_counts_wo_ancestry <- UpSetR::fromList(id_list_wo_ancestry)
     rownames(fail_counts_wo_ancestry) <- unique_samples_fail_wo_ancestry
 
+    p <- UpSetR::upset(fail_counts_wo_ancestry,
+                       order.by = "freq",
+                       empty.intersections = "on", text.scale=1.2,
+                       # Include when UpSetR v1.4.1 is released
+                       #title="Overview quality control failures",
+                       mainbar.y.label="Samples failing multiple QC checks",
+                       sets.x.label="Sample fails per QC check",
+                       main.bar.color="#1b9e77", matrix.color="#1b9e77",
+                       sets.bar.color="#d95f02")
+    p_qc <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
+                               nrow=2, align='v', rel_heights = c(3,1),
+                               rel_widths = c(2,3))
     if (interactive) {
-        p <- UpSetR::upset(fail_counts_wo_ancestry,
-                           order.by = "freq",
-                           empty.intersections = "on", text.scale=1.2,
-                           # Include when UpSetR v1.4.1 is released
-                           #title="Overview quality control failures",
-                           mainbar.y.label="Samples failing multiple QC checks",
-                           sets.x.label="Sample fails per QC check",
-                           main.bar.color="#1b9e77", matrix.color="#1b9e77",
-                           sets.bar.color="#d95f02")
-        p_qc <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
-                                   nrow=2, align='v', rel_heights = c(3,1),
-                                   rel_widths = c(2,3))
         print(p_qc)
-
     }
 
     fail_counts_wo_ancestry <- merge(samples_fail_all, fail_counts_wo_ancestry,
@@ -459,21 +458,21 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
         fail_counts_all <- UpSetR::fromList(fail_all)
         rownames(fail_counts_all) <- unique_samples_fail_all
 
+        m <- UpSetR::upset(fail_counts_all,
+                      order.by = "freq",
+                      # Include when UpSetR v1.4.1 is released
+                      # title=
+                      # "Intersection between QC and ancestry failures",
+                      mainbar.y.label=
+                          "Samples failing QC and ancestry checks",
+                                  sets.x.label="Sample fails per QC check",
+                      empty.intersections = "on", text.scale=1.2,
+                      main.bar.color="#7570b3", matrix.color="#7570b3",
+                      sets.bar.color="#e7298a" )
+        p_all <- cowplot::plot_grid(NULL, m$Main_bar, m$Sizes, m$Matrix,
+                                   nrow=2, align='v', rel_heights = c(3,1),
+                                   rel_widths = c(2,3))
         if (interactive) {
-            m <- UpSetR::upset(fail_counts_all,
-                          order.by = "freq",
-                          # Include when UpSetR v1.4.1 is released
-                          # title=
-                          # "Intersection between QC and ancestry failures",
-                          mainbar.y.label=
-                              "Samples failing QC and ancestry checks",
-                                      sets.x.label="Sample fails per QC check",
-                          empty.intersections = "on", text.scale=1.2,
-                          main.bar.color="#7570b3", matrix.color="#7570b3",
-                          sets.bar.color="#e7298a" )
-            p_all <- cowplot::plot_grid(NULL, m$Main_bar, m$Sizes, m$Matrix,
-                                       nrow=2, align='v', rel_heights = c(3,1),
-                                       rel_widths = c(2,3))
             print(p_all)
         }
         fail_counts_all <- merge(samples_fail_all, fail_counts_all,
@@ -1402,7 +1401,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
     fail_imiss <- imiss[imiss$F_MISS > imissTh,]
 
     names_het <- c("FID", "IID", "O.HOM.", "E.HOM.", "N.NM.", "F")
-    het <- read.table(paste(prefix, ".het", sep=""), header=TRUE)
+    het <- read.table(paste(prefix, ".het", sep=""), header=TRUE, as.is=TRUE)
     if (!all(names_het == names(het))) {
         stop("Header of ", prefix, ".het is not correct. Was your
              file generated with plink --het?")
