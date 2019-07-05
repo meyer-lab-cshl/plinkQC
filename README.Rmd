@@ -12,6 +12,11 @@ knitr::opts_chunk$set(
 )
 ```
 
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
+[![Build Status](https://travis-ci.org/HannahVMeyer/plinkQC.svg?branch=master)](https://travis-ci.org/HannahVMeyer/plinkQC)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue)](http://cran.rstudio.com/web/packages/plinkQC/index.html)
+
 ## <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 
 **plinkQC** is a R/CRAN package for **genotype quality control** in genetic
