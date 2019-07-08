@@ -283,7 +283,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
-        if(all(failsamples[,2] %in% allsamples[,2])) {
+        if(all(allsamples[,2] %in% failsamples[,2])) {
             stop("All samples are contained in the .fail.IDs file ",
                  "from perIndividualQC, no samples remaining for ",
                  "check_SNP_missingness")
@@ -427,7 +427,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
-        if(all(failsamples[,2] %in% allsamples[,2])) {
+        if(all(allsamples[,2] %in% failsamples[,2])) {
             stop("All samples are contained in the .fail.IDs file ",
                  "from perIndividualQC, no samples remaining for check_hwe")
         }
@@ -560,7 +560,7 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
-        if(all(failsamples[,2] %in% allsamples[,2])) {
+        if(all(allsamples[,2] %in% failsamples[,2])) {
             stop("All samples are contained in the .fail.IDs file ",
                  "from perIndividualQC, no samples remaining for check_maf")
         }
