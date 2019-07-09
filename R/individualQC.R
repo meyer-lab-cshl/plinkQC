@@ -129,7 +129,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             do.run_check_relatedness=TRUE,
                             do.evaluate_check_relatedness=TRUE,
                             highIBDTh=0.1875,
-                            genomebuild='hg18',
+                            genomebuild='hg19',
                             dont.check_ancestry=FALSE,
                             do.run_check_ancestry=TRUE,
                             do.evaluate_check_ancestry=TRUE,
@@ -785,7 +785,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' run.check_relatedness=FALSE)
 #' }
 check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
-                              genomebuild='hg18', imissTh=0.03,
+                              genomebuild='hg19', imissTh=0.03,
                               run.check_relatedness=TRUE,
                               interactive=FALSE, verbose=FALSE,
                               path2plink=NULL, showPlinkOutput=TRUE) {
@@ -1497,7 +1497,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name)
 #' }
 run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
-                                  path2plink=NULL, genomebuild='hg18',
+                                  path2plink=NULL, genomebuild='hg19',
                                   showPlinkOutput=TRUE, verbose=FALSE) {
 
     prefix <- makepath(indir, name)
