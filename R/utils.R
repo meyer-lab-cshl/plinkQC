@@ -200,7 +200,13 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         }
         names(relatedness)[names(relatedness) == relatednessFID1] <- "FID1"
         names(relatedness)[names(relatedness) == relatednessFID2] <- "FID2"
+        relatedness$FID1 <- as.character(relatedness$FID1)
+        relatedness$FID2 <- as.character(relatedness$FID2)
     }
+
+    relatedness$IID1 <- as.character(relatedness$IID1)
+    relatedness$IID2 <- as.character(relatedness$IID2)
+
     relatedness_original <- relatedness
     relatedness <- dplyr::select_(relatedness, ~IID1, ~IID2, ~M)
 
