@@ -162,48 +162,36 @@ perMarkerQC <- function(indir, qcdir=indir, name,
 #' overview <- overviewPerMarkerQC(fail_markers)
 #' }
 overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
-    list2counts <- function(element, all_names) {
-        all_names[!(all_names %in% element)] <- 0
-        all_names[all_names %in% element] <- 1
-        return(as.numeric(all_names))
-    }
     if (length(perMarkerQC) == 2 &&
         !all(names(results_perMarkerQC) == c("fail_list", "p_markerQC"))) {
         stop("results_perMarkerQC not direct output of perMarkerQC")
     }
     fail_list <- results_perMarkerQC$fail_list
-    # Remove null elements
-    fail_list <- fail_list[!sapply(fail_list, is.null)]
-
-    unique_samples_fail_all <- unique(unlist(fail_list))
 
     # overview QC fails
     unique_markers_fail <- unique(unlist(fail_list))
-    fail_counts <- sapply(fail_list, list2counts, unique_markers_fail)
+    fail_counts <- UpSetR::fromList(fail_list)
     rownames(fail_counts) <-  unique_markers_fail
 
+    p <- UpSetR::upset(fail_counts,
+                       order.by = "freq",
+                       empty.intersections = "on", text.scale=1.2,
+                       # Include when UpSetR v1.4.1 is released
+                       # title="Overview quality control failures",
+                       mainbar.y.label="Markers failing multiple QC checks",
+                       sets.x.label="Marker fails per QC check",
+                       main.bar.color="#1b9e77", matrix.color="#1b9e77",
+                       sets.bar.color="#d95f02")
+    p_overview <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
+                                     nrow=2, align='v', rel_heights = c(3,1),
+                                     rel_widths = c(2,3))
     if (interactive) {
-        if (length(fail_list) >= 2) {
-            UpSetR::upset(UpSetR::fromList(fail_list),
-                      order.by = "freq",
-                      empty.intersections = "on", text.scale=1.2,
-                      # Include when UpSetR v1.4.1 is released
-                      # title="Overview quality control failures",
-                      mainbar.y.label="Markers failing multiple QC checks",
-                      sets.x.label="Marker fails per QC check",
-                      main.bar.color="#1b9e77", matrix.color="#1b9e77",
-                      sets.bar.color="#d95f02")
-        } else {
-            message("overviewMarkerQC cannot be displayed with UpSetR: at ",
-                    "least two elements in list required, but only ",
-                    length(fail_list) ," provided")
-        }
-        #print(p_overview)
+        print(p_overview)
     }
     nr_fail_markers <- length(unique_markers_fail)
     return(list(nr_fail_samples=nr_fail_markers,
-                fail_QC=fail_counts))
-                #p_overview=p_overview))
+                fail_QC=fail_counts,
+                p_overview=p_overview))
 }
 
 #' Identification of SNPs with high missingness rate
@@ -287,6 +275,19 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                               paste(out, suffix, sep="")),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
+        allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                        data.table=FALSE,
+                                        stringsAsFactors=FALSE,
+                                        header=FALSE)
+        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+                                          data.table=FALSE,
+                                          stringsAsFactors=FALSE,
+                                          header=FALSE)
+        if(all(allsamples[,2] %in% failsamples[,2])) {
+            stop("All samples are contained in the .fail.IDs file ",
+                 "from perIndividualQC, no samples remaining for ",
+                 "check_SNP_missingness")
+        }
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove",
@@ -418,6 +419,18 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                               paste(out, suffix, sep="")),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
+        allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                        data.table=FALSE,
+                                        stringsAsFactors=FALSE,
+                                        header=FALSE)
+        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+                                          data.table=FALSE,
+                                          stringsAsFactors=FALSE,
+                                          header=FALSE)
+        if(all(allsamples[,2] %in% failsamples[,2])) {
+            stop("All samples are contained in the .fail.IDs file ",
+                 "from perIndividualQC, no samples remaining for check_hwe")
+        }
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove",
@@ -539,6 +552,18 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
         fail_samples <- 0
     } else {
+        allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                        data.table=FALSE,
+                                        stringsAsFactors=FALSE,
+                                        header=FALSE)
+        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+                                          data.table=FALSE,
+                                          stringsAsFactors=FALSE,
+                                          header=FALSE)
+        if(all(allsamples[,2] %in% failsamples[,2])) {
+            stop("All samples are contained in the .fail.IDs file ",
+                 "from perIndividualQC, no samples remaining for check_maf")
+        }
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove",

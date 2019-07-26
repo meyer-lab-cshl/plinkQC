@@ -1,7 +1,25 @@
+# plinkQC 0.2.3
+## major changes
+* Enable return of overview plots as ggplot object
+  (fixes #6 in ab2e840f0f22ccdeb5317475698aa58e7eecd345 and
+  101e74e318752b2f8038330245d875f6afd5b57b)
+
+## minor changes
+* give user option to choose maf threshold for relatedness filtering (relates to
+  #3)
+
+## bug fixes
+* Include check for zero related individuals fixing #3 in
+  1445a88d41d985e73ffdd161144229683f8352cd
+* Include check in case all samples fail perIndividual QC in
+   894acc1fa03dadfe0ad2028888142171bcc641eb and
+   04642246d18ed4eaac5b9d9a6931d1ecb08308e8)
+
+
 # plinkQC 0.2.2
 ## minor changes
 * Fix IDs written to fail.IDs file: previous versions wrote IID,IID, now fixed
-to FID, IID (see [here](https://github.com/HannahVMeyer/plinkQC/issues/2)).
+to FID, IID (fixes #2).
 
 # plinkQC 0.2.1
 ## minor changes

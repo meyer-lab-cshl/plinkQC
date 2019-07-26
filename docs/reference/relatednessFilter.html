@@ -74,7 +74,7 @@ analysis)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -172,7 +172,8 @@ analysis).</p>
   <span class='st'>"lt"</span>, <span class='st'>"le"</span>, <span class='st'>"eq"</span>), <span class='kw'>relatednessIID1</span> <span class='kw'>=</span> <span class='st'>"IID1"</span>,
   <span class='kw'>relatednessIID2</span> <span class='kw'>=</span> <span class='st'>"IID2"</span>, <span class='kw'>relatednessFID1</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>relatednessFID2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>relatednessRelatedness</span> <span class='kw'>=</span> <span class='st'>"PI_HAT"</span>,
-  <span class='kw'>otherCriterionIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>otherCriterionMeasure</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>otherCriterionIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>otherCriterionMeasure</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -255,6 +256,10 @@ individual IDs.</p></td>
       <th>otherCriterionMeasure</th>
       <td><p>[character] Column name of the column containing
 the measure of the otherCriterion (for instance SNP missingness rate).</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
     </tr>
     </table>
     

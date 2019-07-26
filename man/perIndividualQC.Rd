@@ -13,14 +13,14 @@ perIndividualQC(indir, name, qcdir = indir, dont.check_sex = FALSE,
   do.evaluate_check_het_and_miss = TRUE, imissTh = 0.03, hetTh = 3,
   dont.check_relatedness = FALSE, do.run_check_relatedness = TRUE,
   do.evaluate_check_relatedness = TRUE, highIBDTh = 0.1875,
-  dont.check_ancestry = FALSE, do.run_check_ancestry = TRUE,
-  do.evaluate_check_ancestry = TRUE, prefixMergedDataset,
-  europeanTh = 1.5, refSamples = NULL, refColors = NULL,
-  refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
-  refSamplesPop = "Pop", refColorsColor = "Color",
-  refColorsPop = "Pop", studyColor = "#2c7bb6", label = TRUE,
-  interactive = FALSE, verbose = TRUE, path2plink = NULL,
-  showPlinkOutput = TRUE)
+  mafThRelatedness = 0.1, dont.check_ancestry = FALSE,
+  do.run_check_ancestry = TRUE, do.evaluate_check_ancestry = TRUE,
+  prefixMergedDataset, europeanTh = 1.5, refSamples = NULL,
+  refColors = NULL, refSamplesFile = NULL, refColorsFile = NULL,
+  refSamplesIID = "IID", refSamplesPop = "Pop",
+  refColorsColor = "Color", refColorsPop = "Pop",
+  studyColor = "#2c7bb6", label = TRUE, interactive = FALSE,
+  verbose = TRUE, path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -110,6 +110,9 @@ do.run_check_relatedness and do.evaluate_check_relatedness.}
 
 \item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
 pair of individuals.}
+
+\item{mafThRelatedness}{[double] Threshold of minor allele frequency filter
+for selecting variants for IBD estimation.}
 
 \item{dont.check_ancestry}{[logical] If TRUE, no ancestry check will be
 conducted; short for do.run_check_ancestry=FALSE and

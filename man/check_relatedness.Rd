@@ -6,7 +6,8 @@
 \usage{
 check_relatedness(indir, name, qcdir = indir, highIBDTh = 0.1875,
   imissTh = 0.03, run.check_relatedness = TRUE, interactive = FALSE,
-  verbose = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
+  verbose = FALSE, mafThRelatedness = 0.1, path2plink = NULL,
+  showPlinkOutput = TRUE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -40,6 +41,9 @@ save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
 other_arguments) or pdf(outfile) print(p_IBD) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+
+\item{mafThRelatedness}{[double] Threshold of minor allele frequency filter
+for selecting variants for IBD estimation.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.

@@ -24,9 +24,3 @@ test_that('check_maf throws file error',{
                            verbose=FALSE),
                  "plink family file")
 })
-
-test_that('overviewPerMarkerQC returns QC fails message', {
-    results_perMarkerQC <- list(fail_list=list(a=1:10), p_markerQC=NULL)
-    expect_message(overviewPerMarkerQC(results_perMarkerQC, interactive=TRUE),
-                    "overviewMarkerQC cannot be displayed with UpSetR")
-})

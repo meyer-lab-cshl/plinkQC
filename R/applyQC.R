@@ -79,7 +79,7 @@
 #'
 #' # Create new dataset of indiviudals and markers passing QC
 #' ids_all <- cleanData(indir=indir, qcdir=qcdir, name=name, macTh=15,
-#' interactive=FALSE, verbose=TRUE, path2plink=path2plink, filterAncestry=TRUE,
+#' verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
 #' filterRelated=TRUE)
 #' }
 
@@ -115,6 +115,9 @@ cleanData <- function(indir, name, qcdir=indir,
 
     # Remove remove.IDs file if already existing
     removeIDs <- NULL
+    IDs <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                   data.table=FALSE, stringsAsFactors=FALSE,
+                                   header=FALSE)
     if (any(sampleFilter)) {
         if (filterRelated) {
             if (!file.exists(paste(out, ".fail-IBD.IDs", sep=""))){
@@ -202,6 +205,10 @@ cleanData <- function(indir, name, qcdir=indir,
         }
         # ensure unique IDs in remove.IDs
         removeIDs <- removeIDs[!duplicated(removeIDs),]
+        if (nrow(removeIDs) == nrow(IDs)) {
+                stop("All samples are flagged as .fail.IDs ",
+                     "no samples remaining to generate the QCed dataset.")
+        }
         if (verbose) message("Write file with remove IDs")
         write.table(removeIDs, paste(out, ".remove.IDs", sep=""),
                     col.names=FALSE, row.names=FALSE, quote=FALSE)
@@ -212,9 +219,7 @@ cleanData <- function(indir, name, qcdir=indir,
         remove <- c("--remove", paste(out, ".remove.IDs", sep=""))
         fail_samples <- nrow(removeIDs)
     } else {
-        keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
-                                     data.table=FALSE, stringsAsFactors=FALSE,
-                                     header=FALSE)
+        keepIDs <- IDs
         removeIDs <- NULL
         remove <- NULL
         fail_samples <- 0

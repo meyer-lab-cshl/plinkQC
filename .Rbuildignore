@@ -1,0 +1,17 @@
+^CRAN-RELEASE$
+^Meta$
+^doc$
+^docs$
+^_pkgdown\.yml$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.travis\.yml$
+^codecov\.yml$
+^README\.Rmd$
+^README-.*\.png$
+README\.html
+INDEX\.Rmd
+INDEX\.md
+inst/extdata/createData
+inst/extdata/plink_log
+^cran-comments\.md$
