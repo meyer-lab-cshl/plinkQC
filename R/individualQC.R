@@ -101,8 +101,6 @@
 #' qcdir <- tempdir()
 #' name <- "data"
 #' # All quality control checks
-#' # In this examples, run_check* already conducted and outcome files present
-#' # in qcdir, hence dont.check_* all set to FALSE
 #' \dontrun{
 #' fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
@@ -114,8 +112,7 @@
 #' # Only check sex and missingness/heterozygosity
 #' fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 #' dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
-#' interactive=FALSE, verbose=FALSE, do.run_check_het_and_miss=FALSE,
-#' do.run_check_sex=FALSE)
+#' interactive=FALSE, verbose=FALSE)
 #' }
 perIndividualQC <- function(indir, name, qcdir=indir,
                             dont.check_sex=FALSE,
@@ -133,6 +130,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             do.evaluate_check_relatedness=TRUE,
                             highIBDTh=0.1875,
                             mafThRelatedness=0.1,
+                            genomebuild='hg19',
                             dont.check_ancestry=FALSE,
                             do.run_check_ancestry=TRUE,
                             do.evaluate_check_ancestry=TRUE,
@@ -238,6 +236,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
             run <- run_check_relatedness(qcdir=qcdir, indir=indir, name=name,
                                          path2plink=path2plink,
                                          mafThRelatedness=mafThRelatedness,
+                                         genomebuild=genomebuild,
                                          showPlinkOutput=showPlinkOutput,
                                          verbose=verbose)
         }
@@ -765,6 +764,8 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' @inheritParams run_check_relatedness
 #' @inheritParams evaluate_check_relatedness
 #' @inheritParams checkPlink
+=======
+>>>>>>> dev
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -798,7 +799,8 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' run.check_relatedness=FALSE)
 #' }
 check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
-                              imissTh=0.03, run.check_relatedness=TRUE,
+                              genomebuild='hg19', imissTh=0.03,
+                              run.check_relatedness=TRUE,
                               interactive=FALSE, verbose=FALSE,
                               mafThRelatedness=0.1, path2plink=NULL,
                               showPlinkOutput=TRUE) {
@@ -1485,10 +1487,25 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' threshold will be recorded.
 #' @param mafThRelatedness [double] Threshold of minor allele frequency filter
 #' for selecting variants for IBD estimation.
+#' @param genomebuild [character] Name of the genome build of the PLINK file
+#' annotations, ie mappings in the name.bim file. Will be used to remove
+#' high-LD regions based on the coordinates of the respective build. Options
+#' are hg18, hg19 and hg38. See @details.
 #' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @details The IBD estimation is conducted on LD pruned data and in a first
+#' step, high LD regions are excluded. The regions were derived from the
+#' high-LD-regions file provided by Anderson et (2010) Nature Protocols. These
+#' regions are in NCBI36 (hg18) coordinates and were lifted to GRCh37 (hg19)
+#' and GRC38 (hg38) coordinates using the liftOver tool available here:
+#' \url{https://genome.ucsc.edu/cgi-bin/hgLiftOver}. The 'Minimum ratio of bases
+#' that must remap' which was set to 0.5 and the 'Allow multiple output regions'
+#' box ticked; for all other parameters, the default options were selected.
+#' LiftOver files were generated on July 9,2019. The commands for formatting
+#' the files are provided in system.file("extdata", 'liftOver.cmd',
+#' package="plinkQC").
 #' @export
 #' @examples
 #' indir <- system.file("extdata", package="plinkQC")
@@ -1501,6 +1518,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' }
 run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                                   mafThRelatedness=0.1, path2plink=NULL,
+                                  path2plink=NULL, genomebuild='hg19',
                                   showPlinkOutput=TRUE, verbose=FALSE) {
 
     prefix <- makepath(indir, name)
@@ -1509,8 +1527,24 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
 
-    highld <- system.file("extdata", 'high-LD-regions.txt', package="plinkQC")
+    if (tolower(genomebuild) == 'hg18' || tolower(genomebuild) == 'NCBI36') {
+        highld <- system.file("extdata", 'high-LD-regions-hg18-NCBI36.txt',
+                               package="plinkQC")
+    } else if (tolower(genomebuild) == 'hg19' ||
+               tolower(genomebuild) == 'grch37') {
+        highld <- system.file("extdata", 'high-LD-regions-hg19-GRCh37.txt',
+                              package="plinkQC")
+    } else if (tolower(genomebuild) == 'hg38' ||
+               tolower(genomebuild) == 'grch38') {
+        highld <- system.file("extdata", 'high-LD-regions-hg38-GRCh38.txt',
+                              package="plinkQC")
+    } else {
+        stop(genomebuild, "is not a known/provided human genome build.",
+             "Options are: hg18, hg19, and hg38")
+    }
 
+    if (verbose) message(paste("Use", genomebuild, "coordinates for pruning of",
+                               "high-ld regions"))
     if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--exclude", "range", highld,
