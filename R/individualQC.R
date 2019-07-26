@@ -764,8 +764,6 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' @inheritParams run_check_relatedness
 #' @inheritParams evaluate_check_relatedness
 #' @inheritParams checkPlink
-=======
->>>>>>> dev
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -1517,7 +1515,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name)
 #' }
 run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
-                                  mafThRelatedness=0.1, path2plink=NULL,
+                                  mafThRelatedness=0.1,
                                   path2plink=NULL, genomebuild='hg19',
                                   showPlinkOutput=TRUE, verbose=FALSE) {
 
