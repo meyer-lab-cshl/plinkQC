@@ -13,14 +13,15 @@ perIndividualQC(indir, name, qcdir = indir, dont.check_sex = FALSE,
   do.evaluate_check_het_and_miss = TRUE, imissTh = 0.03, hetTh = 3,
   dont.check_relatedness = FALSE, do.run_check_relatedness = TRUE,
   do.evaluate_check_relatedness = TRUE, highIBDTh = 0.1875,
-  mafThRelatedness = 0.1, dont.check_ancestry = FALSE,
-  do.run_check_ancestry = TRUE, do.evaluate_check_ancestry = TRUE,
-  prefixMergedDataset, europeanTh = 1.5, refSamples = NULL,
-  refColors = NULL, refSamplesFile = NULL, refColorsFile = NULL,
-  refSamplesIID = "IID", refSamplesPop = "Pop",
-  refColorsColor = "Color", refColorsPop = "Pop",
-  studyColor = "#2c7bb6", label = TRUE, interactive = FALSE,
-  verbose = TRUE, path2plink = NULL, showPlinkOutput = TRUE)
+  mafThRelatedness = 0.1, genomebuild = "hg19",
+  dont.check_ancestry = FALSE, do.run_check_ancestry = TRUE,
+  do.evaluate_check_ancestry = TRUE, prefixMergedDataset,
+  europeanTh = 1.5, refSamples = NULL, refColors = NULL,
+  refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
+  refSamplesPop = "Pop", refColorsColor = "Color",
+  refColorsPop = "Pop", studyColor = "#2c7bb6", label = TRUE,
+  interactive = FALSE, verbose = TRUE, path2plink = NULL,
+  showPlinkOutput = TRUE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -113,6 +114,11 @@ pair of individuals.}
 
 \item{mafThRelatedness}{[double] Threshold of minor allele frequency filter
 for selecting variants for IBD estimation.}
+
+\item{genomebuild}{[character] Name of the genome build of the PLINK file
+annotations, ie mappings in the name.bim file. Will be used to remove
+high-LD regions based on the coordinates of the respective build. Options
+are hg18, hg19 and hg38. See @details.}
 
 \item{dont.check_ancestry}{[logical] If TRUE, no ancestry check will be
 conducted; short for do.run_check_ancestry=FALSE and
@@ -238,8 +244,6 @@ indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 name <- "data"
 # All quality control checks
-# In this examples, run_check* already conducted and outcome files present
-# in qcdir, hence dont.check_* all set to FALSE
 \dontrun{
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
@@ -251,7 +255,6 @@ do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
 # Only check sex and missingness/heterozygosity
 fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
-interactive=FALSE, verbose=FALSE, do.run_check_het_and_miss=FALSE,
-do.run_check_sex=FALSE)
+interactive=FALSE, verbose=FALSE)
 }
 }

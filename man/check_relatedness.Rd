@@ -5,9 +5,9 @@
 \title{Identification of related individuals}
 \usage{
 check_relatedness(indir, name, qcdir = indir, highIBDTh = 0.1875,
-  imissTh = 0.03, run.check_relatedness = TRUE, interactive = FALSE,
-  verbose = FALSE, mafThRelatedness = 0.1, path2plink = NULL,
-  showPlinkOutput = TRUE)
+  genomebuild = "hg19", imissTh = 0.03, run.check_relatedness = TRUE,
+  interactive = FALSE, verbose = FALSE, mafThRelatedness = 0.1,
+  path2plink = NULL, showPlinkOutput = TRUE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -24,6 +24,11 @@ qcdir/name.genome exist. User needs writing permission to qcdir.}
 
 \item{highIBDTh}{[double] Threshold for acceptable proportion of IBD between
 pair of individuals.}
+
+\item{genomebuild}{[character] Name of the genome build of the PLINK file
+annotations, ie mappings in the name.bim file. Will be used to remove
+high-LD regions based on the coordinates of the respective build. Options
+are hg18, hg19 and hg38. See @details.}
 
 \item{imissTh}{[double] Threshold for acceptable missing genotype rate in any
 individual; has to be proportion between (0,1)}

@@ -5,8 +5,8 @@
 \title{Run PLINK IBD estimation}
 \usage{
 run_check_relatedness(indir, name, qcdir = indir, highIBDTh = 0.185,
-  mafThRelatedness = 0.1, path2plink = NULL, showPlinkOutput = TRUE,
-  verbose = FALSE)
+  mafThRelatedness = 0.1, path2plink = NULL, genomebuild = "hg19",
+  showPlinkOutput = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -33,6 +33,11 @@ should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec_wait}}('plink').}
 
+\item{genomebuild}{[character] Name of the genome build of the PLINK file
+annotations, ie mappings in the name.bim file. Will be used to remove
+high-LD regions based on the coordinates of the respective build. Options
+are hg18, hg19 and hg38. See @details.}
+
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
 
@@ -53,6 +58,18 @@ genome-wide IBS. The proportion of IBD between two individuals is returned by
 Both \code{\link{run_check_relatedness}} and its evaluation via
 \code{\link{evaluate_check_relatedness}} can simply be invoked by
 \code{\link{check_relatedness}}.
+
+The IBD estimation is conducted on LD pruned data and in a first
+step, high LD regions are excluded. The regions were derived from the
+high-LD-regions file provided by Anderson et (2010) Nature Protocols. These
+regions are in NCBI36 (hg18) coordinates and were lifted to GRCh37 (hg19)
+and GRC38 (hg38) coordinates using the liftOver tool available here:
+\url{https://genome.ucsc.edu/cgi-bin/hgLiftOver}. The 'Minimum ratio of bases
+that must remap' which was set to 0.5 and the 'Allow multiple output regions'
+box ticked; for all other parameters, the default options were selected.
+LiftOver files were generated on July 9,2019. The commands for formatting
+the files are provided in system.file("extdata", 'liftOver.cmd',
+package="plinkQC").
 }
 \examples{
 indir <- system.file("extdata", package="plinkQC")
