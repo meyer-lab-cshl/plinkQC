@@ -298,6 +298,9 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         })
         nonRelated <- unique(unlist(nonRelated))
         failIDs <- duplicateIDs[!duplicateIDs %in% nonRelated]
+        if (length(nonRelated) == 0) {
+            return(list(relatednessFails = relatedness, failIDs = failIDs))
+        }
     }
     allFailIIDs <- c(failIDs, fail_other)
     relatednessFails <- lapply(allFailIIDs, function(id) {
