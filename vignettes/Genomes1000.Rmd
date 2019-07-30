@@ -49,8 +49,8 @@ keep the data directory tidy, we'll create a directory for the log files and
 move them to the log directory here after each analysis step.
 
 ```{bash setup, eval=FALSE}
-refdir='~/reference'
-mkdir -r $qcdir/plink_log
+refdir=~/reference
+mkdir -p $refdir/plink_log
 ```
 
 ## PLINK software
@@ -87,10 +87,9 @@ plink2 --zst-decompress all_phase3.pgen.zst > all_phase3.pgen
 
 wget $pvar
 mv 'all_phase3.pvar.zst?dl=1' all_phase3.pvar.zst
-plink2 --zst-decompress all_phase3.pvar.zst > all_phase3.pvar
 
 wget $sample
-mv 'phase3_corrected.psam\?dl\=1' all_phase3.psam
+mv 'phase3_corrected.psam?dl=1' all_phase3.psam
 ```
 
 ## Convert 1000 Genomes phase 3 data to plink 1 binary format
@@ -99,7 +98,8 @@ We then convert the
 (at the moment) more standardly used
 [PLINK 1 binary format](https://www.cog-genomics.org/plink/1.9/inputbped).
 ```{bash convert, eval=FALSE}
-plink2 --pfile $refdir/all_phase3 \
+plink2 --pfile $refdir/all_phase3 vzs\
+      --max-alleles 2
       --make-bed \
       --out $refdir/all_phase3
 mv $refdir/all_phase3.log $refdir/log
