@@ -100,11 +100,11 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 
 #' Remove related individuals while keeping maximum number of individuals
 #'
-#' \code{filterRelatedness} takes a data.frame with pair-wise relatedness
+#' \code{relatednessFilter} takes a data.frame with pair-wise relatedness
 #' measures of samples and returns pairs of individual IDs that are related as
 #' well as a list of suggested individual IDs to remove.
-#' \code{filterRelatedness} finds pairs of samples whose relatedness estimate is
-#' larger than the specified relatednessTh. Subsequently, for pairs of
+#' \code{frelatednessFilter} finds pairs of samples whose relatedness estimate
+#' is larger than the specified relatednessTh. Subsequently, for pairs of
 #' individual that do not have additional relatives in the dataset, the
 #' individual with the worse otherCriterionMeasure (if provided) or arbitrarily
 #' individual 1 of that pair is selected and returned as the individual failing
