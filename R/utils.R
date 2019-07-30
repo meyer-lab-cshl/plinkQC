@@ -313,9 +313,9 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         })
         nonRelated <- unique(unlist(nonRelated))
         failIDs <- duplicateIDs[!duplicateIDs %in% nonRelated]
-        if (length(nonRelated) == 0) {
-            return(list(relatednessFails = relatedness, failIDs = failIDs))
-        }
+        #if (length(nonRelated) == 0) {
+        #    return(list(relatednessFails = relatedness, failIDs = failIDs))
+        #}
     }
     allFailIIDs <- c(failIDs, fail_other)
     relatednessFails <- lapply(allFailIIDs, function(id) {
@@ -325,7 +325,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
             relatedness_original$M > relatednessTh
         if (any(fail_inreverse)) {
             inreverse <- relatedness_original[fail_inreverse, ]
-            if (relatednessFID2 %in% names(relatedness_original)) {
+            if (!is.null(relatednessFID2)) {
                 id1 <-
                     c(which(colnames(relatedness_original) == relatednessIID1),
                       which(colnames(relatedness_original) == relatednessFID1))
@@ -353,7 +353,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         names(relatednessFails) <- relatedness_names
         rownames(relatednessFails) <- 1:nrow(relatednessFails)
         uniqueFails <- relatednessFails[!duplicated(relatednessFails$IID1),]
-        if (relatednessFID2 %in% names(relatedness_original)) {
+        if (!is.null(relatednessFID2)) {
             failIDs <- data.frame(FID=uniqueFails$FID1,
                               IID=uniqueFails$IID1)
         } else {
