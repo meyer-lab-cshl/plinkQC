@@ -175,18 +175,28 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
                               verbose=FALSE) {
 
     if (!(relatednessIID1 %in% names(relatedness))) {
-        stop(paste("Column", relatednessIID1, "not found!"))
+        stop(paste("Column", relatednessIID1, "for relatedness not found!"))
     }
     if (!(relatednessIID2 %in% names(relatedness))) {
-        stop(paste("Column", relatednessIID1, "not found!"))
+        stop(paste("Column", relatednessIID1, "for relatedness not found!"))
     }
     if (!(relatednessRelatedness %in% names(relatedness))) {
-        stop(paste("Column", relatednessRelatedness, "not found!"))
+        stop(paste("Column", relatednessRelatedness,
+                   "for relatedness not found!"))
     }
+
+    iid1_index <- which(colnames(relatedness) == relatednessIID1)
+    iid2_index <- which(colnames(relatedness) == relatednessIID2)
+
+    relatedness[,iid1_index] <- as.character(relatedness[,iid1_index])
+    relatedness[,iid2_index] <- as.character(relatedness[,iid2_index])
+
     relatedness_names <- names(relatedness)
-    names(relatedness)[names(relatedness) == relatednessIID1] <- "IID1"
-    names(relatedness)[names(relatedness) == relatednessIID2] <- "IID2"
+    names(relatedness)[iid1_index] <- "IID1"
+    names(relatedness)[iid2_index] <- "IID2"
     names(relatedness)[names(relatedness) == relatednessRelatedness] <- "M"
+
+    relatedness_original <- relatedness
 
     if (!is.null(relatednessFID1) && is.null(relatednessFID2) ||
         is.null(relatednessFID1) && !is.null(relatednessFID2) ) {
@@ -195,45 +205,58 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     }
     if (!is.null(relatednessFID1) && !is.null(relatednessFID2)) {
         if (!(relatednessFID1 %in% names(relatedness))) {
-            stop(paste("Column", relatednessFID1, "not found!"))
+            stop(paste("Column", relatednessFID1, "for relatedness not found!"))
         }
         if (!(relatednessFID2 %in% names(relatedness))) {
-            stop(paste("Column", relatednessFID2, "not found!"))
+            stop(paste("Column", relatednessFID2, "for relatedness not found!"))
         }
-        names(relatedness)[names(relatedness) == relatednessFID1] <- "FID1"
-        names(relatedness)[names(relatedness) == relatednessFID2] <- "FID2"
+        fid1_index <- which(colnames(relatedness) == relatednessFID1)
+        fid2_index <- which(colnames(relatedness) == relatednessFID2)
+        names(relatedness)[fid1_index] <- "FID1"
+        names(relatedness)[fid2_index] <- "FID2"
         relatedness$FID1 <- as.character(relatedness$FID1)
         relatedness$FID2 <- as.character(relatedness$FID2)
     }
 
-    relatedness$IID1 <- as.character(relatedness$IID1)
-    relatedness$IID2 <- as.character(relatedness$IID2)
-
-    relatedness_original <- relatedness
+    # Remove symmetric IID rows
     relatedness <- dplyr::select_(relatedness, ~IID1, ~IID2, ~M)
 
+    sortedIDs <- data.frame(t(apply(relatedness, 1, function(pair) {
+        c(sort(c(pair[1], pair[2])))
+        })), stringsAsFactors=FALSE)
+    keepIndex <- which(!duplicated(sortedIDs))
+
+    relatedness_original <- relatedness_original[keepIndex,]
+    relatedness <- relatedness[keepIndex,]
 
     # individuals with at least one pair-wise comparison > relatednessTh
     highRelated <- dplyr::filter_(relatedness, ~M > relatednessTh)
     if (nrow(highRelated) == 0) {
         return(list(relatednessFails=NULL, failIDs=NULL))
     }
+
     uniqueIIDs <- unique(c(highRelated$IID1, highRelated$IID2))
 
-    fail_other <- NULL
+    failIDs_other <- NULL
     if (!is.null(otherCriterion)) {
         otherCriterionThDirection <- match.arg(otherCriterionThDirection)
         if (!(otherCriterionMeasure %in% names(otherCriterion))) {
-            stop(paste("Column", otherCriterionMeasure, "not found!"))
+            stop(paste("Column", otherCriterionMeasure,
+                       "for otherCriterion not found!"))
         }
         if (!(otherCriterionIID %in% names(otherCriterion))) {
-            stop(paste("Column", otherCriterionIID, "not found!"))
+            stop(paste("Column", otherCriterionIID,
+                       "for otherCriterion not found!"))
         }
         names(otherCriterion)[names(otherCriterion) ==
                                   otherCriterionMeasure] <- "M"
         names(otherCriterion)[names(otherCriterion) ==
                                   otherCriterionIID] <- "IID"
 
+        if (any(!uniqueIIDs %in% otherCriterion$IID)) {
+            stop("Not all IIDs provided in relatedness are contained in" ,
+                 "otherCriterion")
+        }
         fail_other <- apply(highRelated, 1, function(pair) {
             failID1 <- NULL
             failID2 <- NULL
@@ -249,14 +272,14 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
             if (two) failID2 <- pair[2]
             return(c(failID1, failID2))
         })
-        fail_other <- unique(unlist(fail_other))
+        failIDs_other <- unique(unlist(fail_other))
 
         # remove samples that fail other criterion
-        highRelated <- highRelated[!(highRelated$IID1 %in% fail_other |
-                                         highRelated$IID2 %in% fail_other), ]
+        highRelated <- highRelated[!(highRelated$IID1 %in% failIDs_other |
+                                         highRelated$IID2 %in% failIDs_other), ]
         if (nrow(highRelated) == 0) {
             if (verbose) {
-                message("Relatedness cannot be evaluated as all individuals",
+                message("Relatedness cannot be evaluated as all individuals ",
                         "involved fail due to otherCriterion")
             }
             return(list(relatednessFails=NULL, failIDs=NULL))
@@ -267,14 +290,20 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     allRelated <- c(highRelated$IID1, highRelated$IID2)
 
     # Further selection of samples with relatives in cohort
-    duplicateIDs <- unique(allRelated[duplicated(allRelated)])
+    multipleRelative <- unique(allRelated[duplicated(allRelated)])
+    singleRelative <- uniqueIIDs[!uniqueIIDs %in% multipleRelative]
 
-    if (length(duplicateIDs) == 0) {
-        # Only one related samples per individual
+    highRelatedMultiple <- highRelated[highRelated$IID1 %in% multipleRelative |
+                                        highRelated$IID2 %in% multipleRelative,]
+    highRelatedSingle <- highRelated[highRelated$IID1 %in% singleRelative &
+                                       highRelated$IID2 %in% singleRelative,]
+
+    # Only one related samples per individual
+    if(length(singleRelative) != 0) {
         if (!is.null(otherCriterion)) {
             # choose one with best otherCriterion, if equal arbitrarily return
             # the first one as fail
-            failIDs <- apply(highRelated, 1, function(pair) {
+            failIDs_single <- apply(highRelatedSingle, 1, function(pair) {
                 one_two <- evaluateDirection(
                     otherCriterion$M[otherCriterion$IID == pair[1]],
                     otherCriterion$M[otherCriterion$IID == pair[2]],
@@ -290,34 +319,37 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
             })
         } else {
             # randomly choose one to exclude
-            failIDs <- highRelated[1,]
+            failIDs_single <- highRelatedSingle[,1]
         }
     } else {
+        failIDs_single <- NULL
+    }
+    if(length(multipleRelative) != 0) {
         # Get all related samples per individual
-        relatedPerID <- lapply(duplicateIDs, function(x) {
-            tmp <- highRelated[rowSums(cbind(highRelated$IID1 %in% x,
-                                             highRelated$IID2 %in% x)) != 0,1:2]
+        relatedPerID <- lapply(multipleRelative, function(x) {
+            tmp <- highRelatedMultiple[rowSums(
+                cbind(highRelatedMultiple$IID1 %in% x,
+                      highRelatedMultiple$IID2 %in% x)) != 0,1:2]
             rel <- unique(unlist(tmp))
             return(rel)
         })
-        names(relatedPerID) <- duplicateIDs
+        names(relatedPerID) <- multipleRelative
 
         # Find all non-related samples from family structures
         nonRelated <- lapply(relatedPerID, function(rel) {
             pairwise <- t(combn(rel, 2))
-            combination <- (pairwise[,1] %in% highRelated$IID1 &
-                            pairwise[,2] %in% highRelated$IID2) |
-                            (pairwise[,2] %in% highRelated$IID1 &
-                            pairwise[,1] %in% highRelated$IID2)
+            combination <- (pairwise[,1] %in% highRelatedMultiple$IID1 &
+                            pairwise[,2] %in% highRelatedMultiple$IID2) |
+                            (pairwise[,2] %in% highRelatedMultiple$IID1 &
+                            pairwise[,1] %in% highRelatedMultiple$IID2)
             return(pairwise[!combination,])
         })
         nonRelated <- unique(unlist(nonRelated))
-        failIDs <- duplicateIDs[!duplicateIDs %in% nonRelated]
-        if (length(nonRelated) == 0) {
-            return(list(relatednessFails = relatedness, failIDs = failIDs))
-        }
+        failIDs_multiple <- c(multipleRelative[!multipleRelative %in% nonRelated])
+    } else {
+        failIDs_multiple <- NULL
     }
-    allFailIIDs <- c(failIDs, fail_other)
+    allFailIIDs <- c(failIDs_single, failIDs_multiple, failIDs_other)
     relatednessFails <- lapply(allFailIIDs, function(id) {
         fail_inorder <- relatedness_original$IID1 == id &
             relatedness_original$M > relatednessTh
@@ -325,16 +357,12 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
             relatedness_original$M > relatednessTh
         if (any(fail_inreverse)) {
             inreverse <- relatedness_original[fail_inreverse, ]
-            if (relatednessFID2 %in% names(relatedness_original)) {
-                id1 <-
-                    c(which(colnames(relatedness_original) == relatednessIID1),
-                      which(colnames(relatedness_original) == relatednessFID1))
-                id2 <-
-                    c(which(colnames(relatedness_original) == relatednessIID2),
-                      which(colnames(relatedness_original) == relatednessFID2))
+            if (!is.null(relatednessFID2)) {
+                id1 <- c(iid1_index,fid1_index)
+                id2 <- c(iid2_index,fid2_index)
             } else {
-                id1 <- which(colnames(relatedness_original) == relatednessIID1)
-                id2 <- which(colnames(relatedness_original) == relatednessIID2)
+                id1 <- iid1_index
+                id2 <- iid2_index
             }
             inreverse[,c(id1, id2)] <- inreverse[,c(id2, id1)]
             names(inreverse) <- relatedness_names
@@ -352,12 +380,12 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     } else {
         names(relatednessFails) <- relatedness_names
         rownames(relatednessFails) <- 1:nrow(relatednessFails)
-        uniqueFails <- relatednessFails[!duplicated(relatednessFails$IID1),]
-        if (relatednessFID2 %in% names(relatedness_original)) {
-            failIDs <- data.frame(FID=uniqueFails$FID1,
-                              IID=uniqueFails$IID1)
+        uniqueFails <- relatednessFails[!duplicated(relatednessFails[,iid1_index]),]
+        if (!is.null(relatednessFID2)) {
+            failIDs <- data.frame(FID=uniqueFails[,fid1_index],
+                              IID=uniqueFails[,iid1_index])
         } else {
-            failIDs <- data.frame(IID=uniqueFails$IID1)
+            failIDs <- data.frame(IID=uniqueFails[,iid1_index])
         }
     }
     return(list(relatednessFails=relatednessFails, failIDs=failIDs))
