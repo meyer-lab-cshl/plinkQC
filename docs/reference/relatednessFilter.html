@@ -32,11 +32,11 @@
 
 <meta property="og:title" content="Remove related individuals while keeping maximum number of individuals — relatednessFilter" />
 
-<meta property="og:description" content="filterRelatedness takes a data.frame with pair-wise relatedness
+<meta property="og:description" content="relatednessFilter takes a data.frame with pair-wise relatedness
 measures of samples and returns pairs of individual IDs that are related as
 well as a list of suggested individual IDs to remove.
-filterRelatedness finds pairs of samples whose relatedness estimate is
-larger than the specified relatednessTh. Subsequently, for pairs of
+frelatednessFilter finds pairs of samples whose relatedness estimate
+is larger than the specified relatednessTh. Subsequently, for pairs of
 individual that do not have additional relatives in the dataset, the
 individual with the worse otherCriterionMeasure (if provided) or arbitrarily
 individual 1 of that pair is selected and returned as the individual failing
@@ -152,11 +152,11 @@ analysis)." />
 
     <div class="ref-description">
     
-    <p><code>filterRelatedness</code> takes a data.frame with pair-wise relatedness
+    <p><code>relatednessFilter</code> takes a data.frame with pair-wise relatedness
 measures of samples and returns pairs of individual IDs that are related as
 well as a list of suggested individual IDs to remove.
-<code>filterRelatedness</code> finds pairs of samples whose relatedness estimate is
-larger than the specified relatednessTh. Subsequently, for pairs of
+<code>frelatednessFilter</code> finds pairs of samples whose relatedness estimate
+is larger than the specified relatednessTh. Subsequently, for pairs of
 individual that do not have additional relatives in the dataset, the
 individual with the worse otherCriterionMeasure (if provided) or arbitrarily
 individual 1 of that pair is selected and returned as the individual failing

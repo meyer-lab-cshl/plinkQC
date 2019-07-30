@@ -162,8 +162,8 @@ genome-wide IBS. The proportion of IBD between two individuals is returned by
     </div>
 
     <pre class="usage"><span class='fu'>run_check_relatedness</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.185</span>,
-  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>genomebuild</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -205,6 +205,13 @@ platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href='https://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a></code>('plink').</p></td>
     </tr>
     <tr>
+      <th>genomebuild</th>
+      <td><p>[character] Name of the genome build of the PLINK file
+annotations, ie mappings in the name.bim file. Will be used to remove
+high-LD regions based on the coordinates of the respective build. Options
+are hg18, hg19 and hg38. See @details.</p></td>
+    </tr>
+    <tr>
       <th>showPlinkOutput</th>
       <td><p>[logical] If TRUE, plink log and error messages are
 printed to standard out.</p></td>
@@ -220,6 +227,17 @@ printed to standard out.</p></td>
     <p>Both <code>run_check_relatedness</code> and its evaluation via
 <code><a href='evaluate_check_relatedness.html'>evaluate_check_relatedness</a></code> can simply be invoked by
 <code><a href='check_relatedness.html'>check_relatedness</a></code>.</p>
+<p>The IBD estimation is conducted on LD pruned data and in a first
+step, high LD regions are excluded. The regions were derived from the
+high-LD-regions file provided by Anderson et (2010) Nature Protocols. These
+regions are in NCBI36 (hg18) coordinates and were lifted to GRCh37 (hg19)
+and GRC38 (hg38) coordinates using the liftOver tool available here:
+<a href='https://genome.ucsc.edu/cgi-bin/hgLiftOver'>https://genome.ucsc.edu/cgi-bin/hgLiftOver</a>. The 'Minimum ratio of bases
+that must remap' which was set to 0.5 and the 'Allow multiple output regions'
+box ticked; for all other parameters, the default options were selected.
+LiftOver files were generated on July 9,2019. The commands for formatting
+the files are provided in system.file("extdata", 'liftOver.cmd',
+package="plinkQC").</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
