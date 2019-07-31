@@ -9,12 +9,31 @@ multiple <- data.frame(ID1 = paste(LETTERS[1:10], 21:30, sep=""),
                      ID2 = paste(LETTERS[c(5,5,2,2,3,3,3,3,6,6)],
                                  c(21:30)[c(5,5,2,2,3,3,3,3,6,6)], sep=""),
                      values = runif(10, 0.22, 0.89), stringsAsFactors=FALSE)
+
+complicated_all_id <- paste(LETTERS[1:4], 31:34, sep="")
+complicated_all <- t(combn(complicated_all_id, 2))
+complicated_all <- data.frame(ID1=complicated_all[,1],
+                              ID2=complicated_all[,2],
+                              values = runif(6, 0.22, 0.89),
+                              stringsAsFactors=FALSE)
+
+complicated_complete_id <- paste(LETTERS[5:8], 31:34, sep="")
+complicated_complete <- t(combn(complicated_complete_id, 2))
+complicated_subset <- data.frame(ID1=complicated_complete[-1,1],
+                              ID2=complicated_complete[-1,2],
+                              values = runif(5, 0.22, 0.89),
+                              stringsAsFactors=FALSE)
+subset_fail <- complicated_id[!complicated_id %in% complicated_complete[1,]]
+
 nonrelated <- data.frame(ID1 = paste(LETTERS[1:10], 31:40, sep=""),
                          ID2 = paste(LETTERS[11:20], 31:40, sep=""),
                          values = runif(10, 0.01, 0.1), stringsAsFactors=FALSE)
-expectedfail <- c(single$ID1, unique(multiple$ID2))
 
-df <- rbind(single, multiple, nonrelated)
+expectedfail <- c(single$ID1, unique(multiple$ID2), subset_fail)
+oneoffail <- complicated_all_id
+
+
+df <- rbind(single, multiple, complicated_subset, nonrelated)
 df_diagonal <- rbind(df, df[,c(2,1,3)])
 df_other <- data.frame(IID=unique(c(df$ID1, df$ID2)))
 df_other$values <- 0.6
@@ -114,9 +133,8 @@ test_that('relatednessFilter returns correct fail IDs for plink genome-like file
                                    relatednessTh=0.185,
                                    relatednessRelatedness="values",
                                    verbose=TRUE)
-    expect_true(all(failIDs$failIDs$IDs %in% expectedfail))
+    expect_true(all(failIDs$failIDs$IID %in% expectedfail))
 })
-
 
 test_that('relatednessFilter only returns fail IDs for plink genome-like file',{
     failIDs <- relatednessFilter(df, relatednessIID1="ID1",
@@ -124,7 +142,7 @@ test_that('relatednessFilter only returns fail IDs for plink genome-like file',{
                                  relatednessTh=0.185,
                                  relatednessRelatedness="values",
                                  verbose=TRUE)
-    expect_true(all(!nonrelated$ID1 %in% failIDs$failIDs$IDs))
+    expect_true(all(!nonrelated$ID1 %in% failIDs$failIDs$IID))
 })
 
 test_that('relatednessFilter returns correct fail IDs for diagonal-derived file',{
@@ -133,7 +151,7 @@ test_that('relatednessFilter returns correct fail IDs for diagonal-derived file'
                                  relatednessTh=0.185,
                                  relatednessRelatedness="values",
                                  verbose=TRUE)
-    expect_true(all(failIDs$failIDs$IDs %in% expectedfail))
+    expect_true(all(failIDs$failIDs$IID %in% expectedfail))
 })
 
 
@@ -143,5 +161,14 @@ test_that('relatednessFilter only returns fail IDs for diagonal-derived file',{
                                  relatednessTh=0.185,
                                  relatednessRelatedness="values",
                                  verbose=TRUE)
-    expect_true(all(!nonrelated$ID1 %in% failIDs$failIDs$IDs))
+    expect_true(all(!nonrelated$ID1 %in% failIDs$failIDs$IID))
+})
+
+test_that('relatednessFilter only returns one fail ID for 4-way relatedness',{
+    failIDs <- relatednessFilter(complicated_all, relatednessIID1="ID1",
+                                 relatednessIID2="ID2",
+                                 relatednessTh=0.185,
+                                 relatednessRelatedness="values",
+                                 verbose=TRUE)
+    expect_true(sum(!oneoffail %in% failIDs$failIDs$IID) == 1)
 })
