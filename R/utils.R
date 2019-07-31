@@ -324,8 +324,8 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     } else {
         failIDs_single <- NULL
     }
+
     if(length(multipleRelative) != 0) {
-        # Get all related samples per individual
         relatedPerID <- lapply(multipleRelative, function(x) {
             tmp <- highRelatedMultiple[rowSums(
                 cbind(highRelatedMultiple$IID1 %in% x,
@@ -334,16 +334,47 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
             return(rel)
         })
         names(relatedPerID) <- multipleRelative
+        relatedPerID <- relatedPerID[order(sapply(relatedPerID, length),
+                                           decreasing=TRUE)]
 
-        # Find all non-related samples from family structures
-        nonRelated <- lapply(relatedPerID, function(rel) {
-            pairwise <- t(combn(rel, 2))
-            combination <- (pairwise[,1] %in% highRelatedMultiple$IID1 &
-                            pairwise[,2] %in% highRelatedMultiple$IID2) |
-                            (pairwise[,2] %in% highRelatedMultiple$IID1 &
-                            pairwise[,1] %in% highRelatedMultiple$IID2)
-            return(pairwise[!combination,])
-        })
+        nonRelated <- vector("list", length(relatedPerID))
+        related <- vector("list", length(relatedPerID))
+        for (i in 1:length(relatedPerID)) {
+            pairwise <- t(combn(relatedPerID[[i]], 2))
+            index <- (highRelatedMultiple$IID1 %in% pairwise[,1] &
+                          highRelatedMultiple$IID2 %in% pairwise[,2]) |
+                (highRelatedMultiple$IID1 %in% pairwise[,2] &
+                     highRelatedMultiple$IID2 %in% pairwise[,1])
+            combination <- highRelatedMultiple[index,]
+            combination_graph <- igraph::graph_from_data_frame(combination,
+                                                               directed=FALSE)
+            combination_dist <- distances(combination_graph)
+            ind <- which(upper.tri(combination_dist,), arr.ind = TRUE)
+            dist_df <- data.frame(row = rownames(combination_dist)[ind[, 1]],
+                                  col = colnames(combination_dist)[ind[, 2]],
+                                  val = combination_dist[ind],
+                                  stringsAsFactors=FALSE)
+            if (all(dist_df$val == 1)) {
+                # check how often they occurr elsewhere
+                occurrence <- sapply(relatedPerID[[i]], function(y) {
+                    sum(sapply(relatedPerID, function(x) y %in% x))
+                })
+                # if occurrence the same everywhere, pick the first, else keep
+                # the one with minimum occurrence elsewhere
+                if (length(unique(occurrence)) == 1) {
+                    nonRelated[[i]] <- relatedPerID[[i]][1]
+                    related[[i]] <- relatedPerID[[i]][-1]
+                } else {
+                    nonRelated[[i]] <- names(occurrence)[which.min(occurrence)]
+                    related[[i]] <- names(occurrence)[-which.min(occurrence)]
+                }
+            } else {
+                nonRelated[[i]] <- c(dist_df$row[dist_df$val>1],
+                                     dist_df$col[dist_df$val>1])
+                related[[i]] <- relatedPerID[[i]][!relatedPerID[[i]] %in%
+                                                      nonRelated]
+            }
+        }
         nonRelated <- unique(unlist(nonRelated))
         failIDs_multiple <- c(multipleRelative[!multipleRelative %in% nonRelated])
     } else {
