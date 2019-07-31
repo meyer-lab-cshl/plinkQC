@@ -334,13 +334,9 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
             return(rel)
         })
         names(relatedPerID) <- multipleRelative
-        relatedPerID <- relatedPerID[order(sapply(relatedPerID, length),
-                                           decreasing=TRUE)]
 
-        nonRelated <- vector("list", length(relatedPerID))
-        related <- vector("list", length(relatedPerID))
-        for (i in 1:length(relatedPerID)) {
-            pairwise <- t(combn(relatedPerID[[i]], 2))
+        keepIDs_multiple <- lapply(relatedPerID, function(x) {
+            pairwise <- t(combn(x, 2))
             index <- (highRelatedMultiple$IID1 %in% pairwise[,1] &
                           highRelatedMultiple$IID2 %in% pairwise[,2]) |
                 (highRelatedMultiple$IID1 %in% pairwise[,2] &
@@ -356,27 +352,25 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
                                   stringsAsFactors=FALSE)
             if (all(dist_df$val == 1)) {
                 # check how often they occurr elsewhere
-                occurrence <- sapply(relatedPerID[[i]], function(y) {
-                    sum(sapply(relatedPerID, function(x) y %in% x))
+                occurrence <- sapply(x, function(id) {
+                    sum(sapply(relatedPerID, function(idlist) id %in% idlist))
                 })
                 # if occurrence the same everywhere, pick the first, else keep
                 # the one with minimum occurrence elsewhere
                 if (length(unique(occurrence)) == 1) {
-                    nonRelated[[i]] <- relatedPerID[[i]][1]
-                    related[[i]] <- relatedPerID[[i]][-1]
+                    nonRelated <- x[1]
                 } else {
-                    nonRelated[[i]] <- names(occurrence)[which.min(occurrence)]
-                    related[[i]] <- names(occurrence)[-which.min(occurrence)]
+                    nonRelated <- names(occurrence)[which.min(occurrence)]
                 }
             } else {
-                nonRelated[[i]] <- c(dist_df$row[dist_df$val>1],
+                nonRelated <- c(dist_df$row[dist_df$val>1],
                                      dist_df$col[dist_df$val>1])
-                related[[i]] <- relatedPerID[[i]][!relatedPerID[[i]] %in%
-                                                      nonRelated]
             }
-        }
-        nonRelated <- unique(unlist(nonRelated))
-        failIDs_multiple <- c(multipleRelative[!multipleRelative %in% nonRelated])
+            return(nonRelated)
+        })
+        keepIDs_multiple <- unique(unlist( keepIDs_multiple))
+        failIDs_multiple <- c(multipleRelative[!multipleRelative %in%
+                                                   keepIDs_multiple])
     } else {
         failIDs_multiple <- NULL
     }
