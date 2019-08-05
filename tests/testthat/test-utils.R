@@ -23,7 +23,7 @@ complicated_subset <- data.frame(ID1=complicated_complete[-1,1],
                               ID2=complicated_complete[-1,2],
                               values = runif(5, 0.22, 0.89),
                               stringsAsFactors=FALSE)
-subset_fail <- complicated_id[!complicated_id %in% complicated_complete[1,]]
+subset_fail <- complicated_complete_id[!complicated_complete_id %in% complicated_complete[1,]]
 
 nonrelated <- data.frame(ID1 = paste(LETTERS[1:10], 31:40, sep=""),
                          ID2 = paste(LETTERS[11:20], 31:40, sep=""),
@@ -165,7 +165,8 @@ test_that('relatednessFilter only returns fail IDs for diagonal-derived file',{
 })
 
 test_that('relatednessFilter only returns one fail ID for 4-way relatedness',{
-    failIDs <- relatednessFilter(complicated_all, relatednessIID1="ID1",
+    failIDs <- relatednessFilter(complicated_all,
+                                 relatednessIID1="ID1",
                                  relatednessIID2="ID2",
                                  relatednessTh=0.185,
                                  relatednessRelatedness="values",
