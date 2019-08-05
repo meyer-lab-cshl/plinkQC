@@ -344,13 +344,10 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
             combination <- highRelatedMultiple[index,]
             combination_graph <- igraph::graph_from_data_frame(combination,
                                                                directed=FALSE)
-            combination_dist <- distances(combination_graph)
-            ind <- which(upper.tri(combination_dist,), arr.ind = TRUE)
-            dist_df <- data.frame(row = rownames(combination_dist)[ind[, 1]],
-                                  col = colnames(combination_dist)[ind[, 2]],
-                                  val = combination_dist[ind],
-                                  stringsAsFactors=FALSE)
-            if (all(dist_df$val == 1)) {
+            all_iv_set <- igraph::ivs(combination_graph)
+            length_iv_set <- sapply(all_iv_set, function(x) length(x))
+
+            if (all(length_iv_set == 1)) {
                 # check how often they occurr elsewhere
                 occurrence <- sapply(x, function(id) {
                     sum(sapply(relatedPerID, function(idlist) id %in% idlist))
@@ -358,17 +355,16 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
                 # if occurrence the same everywhere, pick the first, else keep
                 # the one with minimum occurrence elsewhere
                 if (length(unique(occurrence)) == 1) {
-                    nonRelated <- x[1]
+                    nonRelated <- sort(x)[1]
                 } else {
                     nonRelated <- names(occurrence)[which.min(occurrence)]
                 }
             } else {
-                nonRelated <- c(dist_df$row[dist_df$val>1],
-                                     dist_df$col[dist_df$val>1])
+                nonRelated <- all_iv_set[which.max(length_iv_set)]
             }
             return(nonRelated)
         })
-        keepIDs_multiple <- unique(unlist( keepIDs_multiple))
+        keepIDs_multiple <- unique(unlist(keepIDs_multiple))
         failIDs_multiple <- c(multipleRelative[!multipleRelative %in%
                                                    keepIDs_multiple])
     } else {
