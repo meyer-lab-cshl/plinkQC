@@ -3,6 +3,8 @@
 * Enable return of overview plots as ggplot object
   (fixes #6 in ab2e840f0f22ccdeb5317475698aa58e7eecd345 and
   101e74e318752b2f8038330245d875f6afd5b57b)
+* Relationship filter now deals with more complicated relationship scenarios as
+  observed in plant genotype sets (fixed #11)
 
 ## minor changes
 * give user option to choose maf threshold for relatedness filtering (relates to
