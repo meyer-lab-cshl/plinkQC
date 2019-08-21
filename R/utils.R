@@ -109,9 +109,14 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' individual with the worse otherCriterionMeasure (if provided) or arbitrarily
 #' individual 1 of that pair is selected and returned as the individual failing
 #' the relatedness check. For more complex family structures, the unrelated
-#' individuals per family are selected (e.g. in a parents-offspring trio, the
-#' offspring will be marked as fail, while the parents will be kept in the
-#' analysis).
+#' individuals per family are selected (e.g. in a simple case of a
+#' parents-offspring trio, the offspring will be marked as fail, while the
+#' parents will be kept in the analysis). Selection is achieved by constructing
+#' a subgraphs of clusters of individuals that are related. filterRelatedness
+#' then finds themaximum independent set of vertices in the subgraphs of
+#' related individuals. If all individuals are all related (i.e. all maximum
+#' independent sets are 0), one individual of that cluster will be kept and all
+#' others listed as failIDs.
 #' @param relatedness [data.frame] containing pair-wise relatedness estimates
 #' (in column [relatednessRelatedness]) for individual 1 (in column
 #' [relatednessIID1] and individual 2 (in column [relatednessIID1]). Columns
@@ -157,10 +162,12 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' the measure of the otherCriterion (for instance SNP missingness rate).
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return named [list] with i) relatednessFails, a [data.frame] containing the
-#' reordered input data.frame relatedness after filtering for pairs of
-#' individuals in relatednessIID1 and relatednessIID2, that fail the relatedness
-#' QC and ii) failIDs, a [data.frame] with the [IID]s (and [FID]s if provided)
-#' of the individuals that fail the relatednessTh.
+#' data.frame relatedness after filtering for pairs of individuals in
+#' relatednessIID1 and relatednessIID2, that fail the relatedness
+#' QC; the data.frame is reordered with the fail individuals in column 1 and
+#' their related individuals in column 2 and ii) failIDs, a [data.frame] with
+#' the [IID]s (and [FID]s if provided) of the individuals that fail the
+#' relatednessTh.
 #' @export
 
 relatednessFilter <- function(relatedness, otherCriterion=NULL,
