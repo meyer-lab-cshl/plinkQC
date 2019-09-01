@@ -16,13 +16,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -50,12 +52,13 @@ genetic ancestry." />
 <![endif]-->
 
 
+
   </head>
 
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-standard navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -74,55 +77,44 @@ genetic ancestry." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
+<li>
+  <a href="../articles/plinkQC.html">Get started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file"></span>
-     
-    documentation
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/plinkQC.html">Step-by-step QC</a>
+      <a href="../articles/AncestryCheck.html">Ancestry estimation based on reference samples of known ethnicities</a>
     </li>
     <li>
-      <a href="../articles/AncestryCheck.html">Ancestry</a>
+      <a href="../articles/Genomes1000.html">Processing 1000 Genomes reference data for ancestry estimation</a>
     </li>
     <li>
-      <a href="../articles/HapMap.html">HapMap III reference</a>
-    </li>
-    <li>
-      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
+      <a href="../articles/HapMap.html">Processing HapMap III reference data for ancestry estimation</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
-     
-    news
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
-     
-    functions
-  </a>
-</li>
-<li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
-    github
   </a>
 </li>
       </ul>
@@ -132,6 +124,7 @@ genetic ancestry." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -160,14 +153,15 @@ genetic ancestry.</p>
   <span class='kw'>do.evaluate_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>dont.check_relatedness</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>do.evaluate_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
-  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>dont.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>do.run_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>do.evaluate_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>prefixMergedDataset</span>, <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
-  <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>, <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
-  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>genomebuild</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
+  <span class='kw'>dont.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>prefixMergedDataset</span>,
+  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
+  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -312,6 +306,13 @@ pair of individuals.</p></td>
 for selecting variants for IBD estimation.</p></td>
     </tr>
     <tr>
+      <th>genomebuild</th>
+      <td><p>[character] Name of the genome build of the PLINK file
+annotations, ie mappings in the name.bim file. Will be used to remove
+high-LD regions based on the coordinates of the respective build. Options
+are hg18, hg19 and hg38. See @details.</p></td>
+    </tr>
+    <tr>
       <th>dont.check_ancestry</th>
       <td><p>[logical] If TRUE, no ancestry check will be
 conducted; short for do.run_check_ancestry=FALSE and
@@ -431,7 +432,7 @@ TRUE).</p></td>
 plink should be accesible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
-and PLINK will be found by <code><a href='https://www.rdocumentation.org/packages/sys/topics/exec'>exec_wait</a></code>('plink').</p></td>
+and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec_wait</a></code>('plink').</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>
@@ -468,15 +469,13 @@ function individually.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
-<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/tempfile'>tempdir</a></span>()
+    <pre class="examples"><div class='input'><span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
+<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
 <span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
-<span class='co'># All quality control checks</span>
-<span class='co'># In this examples, run_check* already conducted and outcome files present</span>
-<span class='co'># in qcdir, hence dont.check_* all set to FALSE</span></div><span class='co'># NOT RUN {</span>
+<span class='co'># All quality control checks</span></div><span class='co'># NOT RUN {</span>
 <span class='no'>fail_individuals</span> <span class='kw'>&lt;-</span> <span class='fu'>perIndividualQC</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
-<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
-<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
+<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
 <span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
 <span class='kw'>do.run_check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
 <span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_ancestry</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
@@ -484,8 +483,7 @@ function individually.</p>
 <span class='co'># Only check sex and missingness/heterozygosity</span>
 <span class='no'>fail_sex_het_miss</span> <span class='kw'>&lt;-</span> <span class='fu'>perIndividualQC</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
 <span class='kw'>dont.check_ancestry</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>dont.check_relatedness</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
-<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -503,19 +501,23 @@ function individually.</p>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Hannah Meyer.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

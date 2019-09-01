@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ancestry estimation based on reference samples of known ethnicities • plinkQC</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Ancestry estimation based on reference samples of known ethnicities">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -19,7 +20,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-standard navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -38,54 +39,43 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
+<li>
+  <a href="../articles/plinkQC.html">Get started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file"></span>
-     
-    documentation
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/plinkQC.html">Step-by-step QC</a>
+      <a href="../articles/AncestryCheck.html">Ancestry estimation based on reference samples of known ethnicities</a>
     </li>
     <li>
-      <a href="../articles/AncestryCheck.html">Ancestry</a>
+      <a href="../articles/Genomes1000.html">Processing 1000 Genomes reference data for ancestry estimation</a>
     </li>
     <li>
-      <a href="../articles/HapMap.html">HapMap III reference</a>
-    </li>
-    <li>
-      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
+      <a href="../articles/HapMap.html">Processing HapMap III reference data for ancestry estimation</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
-     
-    news
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
-     
-    functions
-  </a>
-</li>
-<li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
-    github
   </a>
 </li>
       </ul>
@@ -97,13 +87,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Ancestry estimation based on reference samples of known ethnicities</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2019-07-05</h4>
+            <h4 class="date">2019-09-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/AncestryCheck.Rmd"><code>vignettes/AncestryCheck.Rmd</code></a></small>
       <div class="hidden name"><code>AncestryCheck.Rmd</code></div>
@@ -116,7 +107,7 @@
 <h1 class="hasAnchor">
 <a href="#ancestry-estimation" class="anchor"></a>Ancestry estimation</h1>
 <p>The identification of individuals of divergent ancestry can be achieved by combining the genotypes of the study population with genotypes of a reference dataset consisting of individuals from known ethnicities (for instance individuals from the Hapmap or 1000 genomes study <span class="citation">[1]</span>). Principal component analysis (PCA) on this combined genotype panel can then be used to detect population structure down to the level of the reference dataset (for Hapmap and 1000 Genomes, this is down to large-scale continental ancestry).</p>
-<p>In the following, the workflow for combining a study dataset with the reference samples, conducting PCA and estimating ancestry is demonstrated. The study dataset consists of 200 individuals and 10,000 genetic markers and is provided with <span class="math inline">\(plinkQC\)</span> in <code><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path(find.package('plinkQC'),'extdata')</a></code>.</p>
+<p>In the following, the workflow for combining a study dataset with the reference samples, conducting PCA and estimating ancestry is demonstrated. The study dataset consists of 200 individuals and 10,000 genetic markers and is provided with <span class="math inline">\(plinkQC\)</span> in <code><a href="https://rdrr.io/r/base/file.path.html">file.path(find.package('plinkQC'),'extdata')</a></code>.</p>
 </div>
 <div id="workflow" class="section level1">
 <h1 class="hasAnchor">
@@ -144,7 +135,7 @@
 <div id="prune-study-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#prune-study-data" class="anchor"></a>Prune study data</h3>
-<p>We will conduct principle component analysis on genetic variants that are pruned for variants in linkage disequlibrium (LD) with an <span class="math inline">\(r^2 &gt;0.2\)</span> in a 50kb window. The LD-pruned dataset is generated below, using plink –indep-pairwise to compute the LD-variants; additionally exclude range is used to remove genomic ranges of known high-LD structure. This file was originally provided by <span class="citation">[6]</span> and is available in <code><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path(find.package('plinkQC'),'extdata','high-LD-regions.txt')</a></code>.</p>
+<p>We will conduct principle component analysis on genetic variants that are pruned for variants in linkage disequlibrium (LD) with an <span class="math inline">\(r^2 &gt;0.2\)</span> in a 50kb window. The LD-pruned dataset is generated below, using plink –indep-pairwise to compute the LD-variants; additionally exclude range is used to remove genomic ranges of known high-LD structure. This file was originally provided by <span class="citation">[6]</span> and is available in <code><a href="https://rdrr.io/r/base/file.path.html">file.path(find.package('plinkQC'),'extdata','high-LD-regions.txt')</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">plink</span> --bfile  <span class="va">$qcdir</span>/<span class="va">$name</span> \</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">      --exclude range  <span class="va">$refdir</span>/<span class="va">$highld</span> \</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">      --indep-pairwise 50 5 0.2 \</a>
@@ -173,7 +164,7 @@
 <p>The following section uses an awk-script to check that the variant IDs of the reference data have the same chromosome ID as the study data. For computing the genetic PC, the annotation is not important, however, merging the files via PLINK will only work for variants with perfectly matching attributes. For simplicity, we update the pruned reference dataset. Note, that sex chromosomes are often encoded differently and might make the matching more difficult. Again, for simplicty and since not crucial to the final task, we will ignore XY-encoded sex chromosomes (via <code>sed -n '/^[XY]/!p'</code>).</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$2]=$1; next} \</span></a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">    ($2 in a &amp;&amp; a[$2] != $1)  {print a[$2],$2}'</span> \</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">|</a></span> <span class="kw">\</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">|</a></span> <span class="kw">\</span></a>
 <a class="sourceLine" id="cb4-4" data-line-number="4">    <span class="fu">sed</span> -n <span class="st">'/^[XY]/!p'</span> <span class="op">&gt;</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.toUpdateChr</a>
 <a class="sourceLine" id="cb4-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"><span class="ex">plink</span> --bfile <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned \</a>
@@ -251,18 +242,18 @@
 <h2 class="hasAnchor">
 <a href="#check-ancestry" class="anchor"></a>Check ancestry</h2>
 <p>We can use the .eigenvec file to estimate the ancestry of the study samples. Identifying individuals of divergent ancestry is implemented in <code>check_ancestry</code>. Currently, check ancestry only supports automatic selection of individuals of European descent. It uses principal components 1 and 2 to find the center of the known European reference samples. All study samples whose Euclidean distance from the centre falls outside the radius specified by the maximum Euclidean distance of the reference samples multiplied by the chosen <code>europeanTh</code> are considered non-European. <code>check_ancestry</code> shows the result of the ancestry analysis in a scatter plot of PC1 versus PC2 colour-coded for samples of the reference populations and the study population. From within R, run the following command to the ancestry check:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(plinkQC)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">indir &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"extdata"</span>, <span class="dt">package=</span><span class="st">"plinkQC"</span>)</a>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(plinkQC)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">indir &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="dt">package=</span><span class="st">"plinkQC"</span>)</a>
 <a class="sourceLine" id="cb11-3" data-line-number="3">name &lt;-<span class="st"> 'data'</span></a>
 <a class="sourceLine" id="cb11-4" data-line-number="4">refname &lt;-<span class="st"> 'HapMapIII'</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">prefixMergedDataset &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(name, <span class="st">"."</span>, refname, <span class="dt">sep=</span><span class="st">""</span>)</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">prefixMergedDataset &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(name, <span class="st">"."</span>, refname, <span class="dt">sep=</span><span class="st">""</span>)</a>
 <a class="sourceLine" id="cb11-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb11-7" data-line-number="7">exclude_ancestry &lt;-</a>
 <a class="sourceLine" id="cb11-8" data-line-number="8"><span class="st">    </span><span class="kw"><a href="../reference/evaluate_check_ancestry.html">evaluate_check_ancestry</a></span>(<span class="dt">indir=</span>indir, <span class="dt">name=</span>name,</a>
 <a class="sourceLine" id="cb11-9" data-line-number="9">                            <span class="dt">prefixMergedDataset=</span>prefixMergedDataset,</a>
-<a class="sourceLine" id="cb11-10" data-line-number="10">                            <span class="dt">refSamplesFile=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(indir, <span class="st">"/HapMap_ID2Pop.txt"</span>,</a>
+<a class="sourceLine" id="cb11-10" data-line-number="10">                            <span class="dt">refSamplesFile=</span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(indir, <span class="st">"/HapMap_ID2Pop.txt"</span>,</a>
 <a class="sourceLine" id="cb11-11" data-line-number="11">                                                 <span class="dt">sep=</span><span class="st">""</span>), </a>
-<a class="sourceLine" id="cb11-12" data-line-number="12">                            <span class="dt">refColorsFile=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(indir, <span class="st">"/HapMap_PopColors.txt"</span>,</a>
+<a class="sourceLine" id="cb11-12" data-line-number="12">                            <span class="dt">refColorsFile=</span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(indir, <span class="st">"/HapMap_PopColors.txt"</span>,</a>
 <a class="sourceLine" id="cb11-13" data-line-number="13">                                                <span class="dt">sep=</span><span class="st">""</span>),</a>
 <a class="sourceLine" id="cb11-14" data-line-number="14">                            <span class="dt">interactive=</span><span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="checkAncestry.png" width="500px" style="display: block; margin: auto;"></p>
@@ -318,17 +309,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Hannah Meyer.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
