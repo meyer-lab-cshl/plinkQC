@@ -32,6 +32,7 @@ Imports:
     cowplot,
     UpSetR,
     dplyr,
+    igraph (>= 1.2.4),
     sys
 Suggests:
     testthat,

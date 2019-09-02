@@ -109,9 +109,14 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' individual with the worse otherCriterionMeasure (if provided) or arbitrarily
 #' individual 1 of that pair is selected and returned as the individual failing
 #' the relatedness check. For more complex family structures, the unrelated
-#' individuals per family are selected (e.g. in a parents-offspring trio, the
-#' offspring will be marked as fail, while the parents will be kept in the
-#' analysis).
+#' individuals per family are selected (e.g. in a simple case of a
+#' parents-offspring trio, the offspring will be marked as fail, while the
+#' parents will be kept in the analysis). Selection is achieved by constructing
+#' a subgraphs of clusters of individuals that are related. filterRelatedness
+#' then finds themaximum independent set of vertices in the subgraphs of
+#' related individuals. If all individuals are all related (i.e. all maximum
+#' independent sets are 0), one individual of that cluster will be kept and all
+#' others listed as failIDs.
 #' @param relatedness [data.frame] containing pair-wise relatedness estimates
 #' (in column [relatednessRelatedness]) for individual 1 (in column
 #' [relatednessIID1] and individual 2 (in column [relatednessIID1]). Columns
@@ -157,10 +162,12 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' the measure of the otherCriterion (for instance SNP missingness rate).
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return named [list] with i) relatednessFails, a [data.frame] containing the
-#' reordered input data.frame relatedness after filtering for pairs of
-#' individuals in relatednessIID1 and relatednessIID2, that fail the relatedness
-#' QC and ii) failIDs, a [data.frame] with the [IID]s (and [FID]s if provided)
-#' of the individuals that fail the relatednessTh.
+#' data.frame relatedness after filtering for pairs of individuals in
+#' relatednessIID1 and relatednessIID2, that fail the relatedness
+#' QC; the data.frame is reordered with the fail individuals in column 1 and
+#' their related individuals in column 2 and ii) failIDs, a [data.frame] with
+#' the [IID]s (and [FID]s if provided) of the individuals that fail the
+#' relatednessTh.
 #' @export
 
 relatednessFilter <- function(relatedness, otherCriterion=NULL,
@@ -324,8 +331,8 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     } else {
         failIDs_single <- NULL
     }
+
     if(length(multipleRelative) != 0) {
-        # Get all related samples per individual
         relatedPerID <- lapply(multipleRelative, function(x) {
             tmp <- highRelatedMultiple[rowSums(
                 cbind(highRelatedMultiple$IID1 %in% x,
@@ -335,17 +342,38 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         })
         names(relatedPerID) <- multipleRelative
 
-        # Find all non-related samples from family structures
-        nonRelated <- lapply(relatedPerID, function(rel) {
-            pairwise <- t(combn(rel, 2))
-            combination <- (pairwise[,1] %in% highRelatedMultiple$IID1 &
-                            pairwise[,2] %in% highRelatedMultiple$IID2) |
-                            (pairwise[,2] %in% highRelatedMultiple$IID1 &
-                            pairwise[,1] %in% highRelatedMultiple$IID2)
-            return(pairwise[!combination,])
+        keepIDs_multiple <- lapply(relatedPerID, function(x) {
+            pairwise <- t(combn(x, 2))
+            index <- (highRelatedMultiple$IID1 %in% pairwise[,1] &
+                          highRelatedMultiple$IID2 %in% pairwise[,2]) |
+                (highRelatedMultiple$IID1 %in% pairwise[,2] &
+                     highRelatedMultiple$IID2 %in% pairwise[,1])
+            combination <- highRelatedMultiple[index,]
+            combination_graph <- igraph::graph_from_data_frame(combination,
+                                                               directed=FALSE)
+            all_iv_set <- igraph::ivs(combination_graph)
+            length_iv_set <- sapply(all_iv_set, function(x) length(x))
+
+            if (all(length_iv_set == 1)) {
+                # check how often they occurr elsewhere
+                occurrence <- sapply(x, function(id) {
+                    sum(sapply(relatedPerID, function(idlist) id %in% idlist))
+                })
+                # if occurrence the same everywhere, pick the first, else keep
+                # the one with minimum occurrence elsewhere
+                if (length(unique(occurrence)) == 1) {
+                    nonRelated <- sort(x)[1]
+                } else {
+                    nonRelated <- names(occurrence)[which.min(occurrence)]
+                }
+            } else {
+                nonRelated <- all_iv_set[which.max(length_iv_set)]
+            }
+            return(nonRelated)
         })
-        nonRelated <- unique(unlist(nonRelated))
-        failIDs_multiple <- c(multipleRelative[!multipleRelative %in% nonRelated])
+        keepIDs_multiple <- unique(unlist(keepIDs_multiple))
+        failIDs_multiple <- c(multipleRelative[!multipleRelative %in%
+                                                   keepIDs_multiple])
     } else {
         failIDs_multiple <- NULL
     }
