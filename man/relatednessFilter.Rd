@@ -92,9 +92,9 @@ the relatedness check. For more complex family structures, the unrelated
 individuals per family are selected (e.g. in a simple case of a
 parents-offspring trio, the offspring will be marked as fail, while the
 parents will be kept in the analysis). Selection is achieved by constructing
-a subgraphs of clusters of individuals that are related. filterRelatedness
-then finds themaximum independent set of vertices in the subgraphs of
-related individuals. If all individuals are all related (i.e. all maximum
-independent sets are 0), one individual of that cluster will be kept and all
-others listed as failIDs.
+subgraphs of clusters of individuals that are related.
+\code{relatednessFilter} then finds the maximum independent set of vertices
+in the subgraphs of related individuals. If all individuals are related (i.e.
+all maximum independent sets are 0), one individual of that cluster will be
+kept and all others listed as failIDs.
 }
