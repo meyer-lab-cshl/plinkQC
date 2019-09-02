@@ -83,7 +83,7 @@ relatednessTh.
 \code{relatednessFilter} takes a data.frame with pair-wise relatedness
 measures of samples and returns pairs of individual IDs that are related as
 well as a list of suggested individual IDs to remove.
-\code{frelatednessFilter} finds pairs of samples whose relatedness estimate
+\code{relatednessFilter} finds pairs of samples whose relatedness estimate
 is larger than the specified relatednessTh. Subsequently, for pairs of
 individual that do not have additional relatives in the dataset, the
 individual with the worse otherCriterionMeasure (if provided) or arbitrarily
