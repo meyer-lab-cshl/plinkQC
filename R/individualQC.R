@@ -1861,6 +1861,8 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                  header=FALSE, stringsAsFactors=FALSE,
                                  data.table=FALSE)[,1:2]
     colnames(samples) <- c("FID", "IID")
+    #samples$IID <- as.character(samples$IID)
+    #samples$FID <- as.character(samples$FID)
     if (!file.exists(paste(out, ".eigenvec", sep=""))){
         stop("plink --pca output file: ", out, ".eigenvec does not exist.")
     }
@@ -1869,6 +1871,8 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                   stringsAsFactors=FALSE, data.table=FALSE)
     colnames(pca_data) <- c("FID", "IID", paste("PC",1:(ncol(pca_data)-2),
                                                 sep=""))
+    #pca_data$IID <- as.character(pca_data$IID)
+    #pca_data$FID <- as.character(pca_data$FID)
 
     if (is.null(refSamples) && is.null(refSamplesFile)) {
         stop("Neither refSamples nor refSamplesFile are specified")
