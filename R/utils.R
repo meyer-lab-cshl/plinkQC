@@ -411,9 +411,11 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         uniqueFails <- relatednessFails[!duplicated(relatednessFails[,iid1_index]),]
         if (!is.null(relatednessFID2)) {
             failIDs <- data.frame(FID=uniqueFails[,fid1_index],
-                              IID=uniqueFails[,iid1_index])
+                              IID=uniqueFails[,iid1_index],
+                              stringsAsFactors=FALSE)
         } else {
-            failIDs <- data.frame(IID=uniqueFails[,iid1_index])
+            failIDs <- data.frame(IID=uniqueFails[,iid1_index],
+                                  stringsAsFactors=FALSE)
         }
     }
     return(list(relatednessFails=relatednessFails, failIDs=failIDs))
