@@ -2,7 +2,6 @@
 ^Meta$
 ^doc$
 ^docs$
-^_pkgdown\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
@@ -14,4 +13,5 @@ INDEX\.Rmd
 INDEX\.md
 inst/extdata/createData
 inst/extdata/plink_log
+pkgdown/
 ^cran-comments\.md$
