@@ -20,6 +20,8 @@
   containing only related individuals; fixes #11
 * Fix command for genotype conversion in 1000Genomes vignette, addressing issue
   #10
+* fix missing rownames error for overviewPerIndividualQC, when relatedness check
+  was included (issue #16, fc7a38b1f2b345d9c6c5d69f5dcf0bc57a857f62)
 
 
 # plinkQC 0.2.2
