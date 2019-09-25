@@ -6,7 +6,7 @@
 Status](https://travis-ci.org/HannahVMeyer/plinkQC.svg?branch=master)](https://travis-ci.org/HannahVMeyer/plinkQC)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue)](https://cran.rstudio.com/web/packages/plinkQC/index.html)
+[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue)](https://CRAN.R-project.org/package=plinkQC)
 
 ## <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 
