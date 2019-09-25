@@ -97,5 +97,4 @@ subgraphs of clusters of individuals that are related.
 in the subgraphs of related individuals. If all individuals are related (i.e.
 all maximum independent sets are 0), one individual of that cluster will be
 kept and all others listed as failIDs.
-
 }
