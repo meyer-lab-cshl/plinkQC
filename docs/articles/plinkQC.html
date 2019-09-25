@@ -105,7 +105,7 @@
     <div class="page-header toc-ignore">
       <h1>Genotype quality control with plinkQC</h1>
                         <h4 class="author">Hannah Meyer</h4>
-            
+
             <h4 class="date">2019-09-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/plinkQC.Rmd"><code>vignettes/plinkQC.Rmd</code></a></small>
@@ -154,6 +154,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <a href="#per-individual-quality-control-1" class="anchor"></a>Per-individual quality control</h2>
 <p>For <code>perIndividualQC</code>, one simply specifies the directory where the data is stored (qcdir) and the prefix of the plink files (i.e. prefix.bim, prefix.bed, prefix.fam). In addition, the names of the files containing information about the reference population and the merged dataset used in <code>check_ancestry</code> have to be provided: refSamplesFile, refColorsFile and prefixMergedDataset. Per default, all quality control checks will be conducted.</p>
 <p>In addition to running each check, <code>perIndividualQC</code> writes a list of all fail individual IDs to the qcdir. These IDs will be removed in the computation of the <code>perMarkerQC</code>. If the list is not present, <code>perMarkerQC</code> will send a message about conducting the quality control on the entire dataset.</p>
+<p>NB: To reduce the data size of the example data in <code>plinkQC</code>, data.genome has already been reduced to the individuals that are related. Thus the relatedness plots in C only show counts for related individuals only.</p>
 <p>NB: To demonstrate the results of the ancestry check, the required eigenvector file of the combined study and reference datasets have been precomputed and for the purpose of this example will be copied to the <code>qcdir</code>. In practice, the <code>qcdir</code> will often be the same as the <code>indir</code> and this step will not be required.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.html">system</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"cp"</span>, <span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(package.dir, <span class="st">'extdata/data.HapMapIII.eigenvec'</span>),</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">             qcdir))</a></code></pre></div>
@@ -170,7 +171,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <p><code>overviewperIndividualQC</code> depicts overview plots of quality control failures and the intersection of quality control failures with ancestry exclusion.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">overview_individuals &lt;-<span class="st"> </span><span class="kw"><a href="../reference/overviewPerIndividualQC.html">overviewPerIndividualQC</a></span>(fail_individuals,</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">                                                <span class="dt">interactive=</span><span class="ot">TRUE</span>)</a></code></pre></div>
-<p><img src="overviewQC.png" width="500px"><img src="overviewAncestryQC.png" width="500px"></p>
+<p><img src="overviewQC.png" width="500px"></p>
 </div>
 <div id="per-marker-quality-control-1" class="section level2">
 <h2 class="hasAnchor">
@@ -217,6 +218,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <h2 class="hasAnchor">
 <a href="#related-individuals" class="anchor"></a>Related individuals</h2>
 <p>Depending on the future use of the genotypes, it might required to remove any related individuals from the study. Related individuals can be identified by their proporting of shared alleles at the genotyped markers (identity by descend, IBD). Standardly, individuals with second-degree relatedness or higher will be excluded. Identifying related individuals is implemented in <code>check_relatedness</code>. It finds pairs of samples whose proportion of IBD is larger than the specified highIBDTh. Subsequently, for pairs of individual that do not have additional relatives in the dataset, the individual with the greater genotype missingness rate is selected and returned as the individual failing the relatedness check. For more complex family structures, the unrelated individuals per family are selected (e.g. in a parents-offspring trio, the offspring will be marked as fail, while the parents will be kept in the analysis).</p>
+<p>NB: To reduce the data size of the example data in <code>plinkQC</code>, data.genome has already been reduced to the individuals that are related. Thus the relatedness plots in C only show counts for related individuals only.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">exclude_relatedness &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_relatedness.html">check_relatedness</a></span>(<span class="dt">indir=</span>indir, <span class="dt">qcdir=</span>qcdir, <span class="dt">name=</span>name,</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">                                         <span class="dt">interactive=</span><span class="ot">TRUE</span>,</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">                                         <span class="dt">path2plink=</span>path2plink)</a></code></pre></div>

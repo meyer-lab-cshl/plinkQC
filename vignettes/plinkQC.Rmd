@@ -115,6 +115,10 @@ individual IDs to the qcdir. These IDs will be removed in the computation of the
 `perMarkerQC`. If the list is not present, `perMarkerQC` will send a message
 about conducting the quality control on the entire dataset.
 
+NB: To reduce the data size of the example data in `plinkQC`,
+data.genome  has already been reduced to the individuals that are related. Thus
+the relatedness plots in C only show counts for related individuals only.
+
 NB: To demonstrate the results of the ancestry check, the required eigenvector
 file of the combined study and reference datasets have been precomputed and
 for the purpose of this example will be copied to the `qcdir`. In practice,
@@ -156,7 +160,6 @@ overview_individuals <- overviewPerIndividualQC(fail_individuals,
 ```{r load overviewIndividualQC, out.width = "500px", echo=FALSE}
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewQC.png")
-knitr::include_graphics("overviewAncestryQC.png")
 ```
 
 
@@ -272,6 +275,10 @@ selected and returned as the individual failing the relatedness check. For more
 complex family structures, the unrelated individuals per family are selected
 (e.g. in a parents-offspring trio, the offspring will be marked as fail, while 
 the parents will be kept in the analysis).
+
+NB: To reduce the data size of the example data in `plinkQC`,
+data.genome  has already been reduced to the individuals that are related. Thus
+the relatedness plots in C only show counts for related individuals only.
 
 ```{r check related, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
 exclude_relatedness <- check_relatedness(indir=indir, qcdir=qcdir, name=name,
