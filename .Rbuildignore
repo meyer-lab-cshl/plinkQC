@@ -13,6 +13,7 @@ INDEX\.Rmd
 INDEX\.md
 inst/extdata/createData
 inst/extdata/plink_log
-pkgdown/
+_pkgdown.yml
 ^cran-comments\.md$
 pkgdown/
+.github/
