@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
 [![Build Status](https://travis-ci.org/HannahVMeyer/plinkQC.svg?branch=master)](https://travis-ci.org/HannahVMeyer/plinkQC)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue)](http://cran.rstudio.com/web/packages/plinkQC/index.html)
@@ -25,7 +25,7 @@ rates per individual, allele frequencies per genetic marker) and relationship
 functions easily accessible from within R and allows for automatic evaluation
 of the results.
 
-Full documentation is available at http://HannahVMeyer.github.io/plinkQC/.
+Full documentation is available at https://HannahVMeyer.github.io/plinkQC/.
 
 **plinkQC** generates a per-individual and per-marker quality control report.
 A step-by-step guide on how to run these analyses can be found
