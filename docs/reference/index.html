@@ -54,7 +54,7 @@
   <body>
     <div class="container template-reference-index">
       <header>
-      <div class="navbar navbar-standard navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -73,55 +73,44 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
+<li>
+  <a href="../articles/plinkQC.html">Get started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file"></span>
-     
-    documentation
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/plinkQC.html">Step-by-step QC</a>
+      <a href="../articles/AncestryCheck.html">Ancestry estimation based on reference samples of known ethnicities</a>
     </li>
     <li>
-      <a href="../articles/AncestryCheck.html">Ancestry</a>
+      <a href="../articles/Genomes1000.html">Processing 1000 Genomes reference data for ancestry estimation</a>
     </li>
     <li>
-      <a href="../articles/HapMap.html">HapMap III reference</a>
-    </li>
-    <li>
-      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
+      <a href="../articles/HapMap.html">Processing HapMap III reference data for ancestry estimation</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
-     
-    news
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
-     
-    functions
-  </a>
-</li>
-<li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
-    github
   </a>
 </li>
       </ul>
@@ -151,60 +140,22 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-main-quality-control-functions" class="hasAnchor"><a href="#section-main-quality-control-functions" class="anchor"></a>Main quality control functions</h2>
+          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="perIndividualQC.html">perIndividualQC()</a></code> </p>
+          <p><code><a href="checkPlink.html">checkPlink()</a></code> </p>
         </td>
-        <td><p>Quality control for all individuals in plink-dataset</p></td>
+        <td><p>Check PLINK software access</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="perMarkerQC.html">perMarkerQC()</a></code> </p>
+          <p><code><a href="check_ancestry.html">check_ancestry()</a></code> </p>
         </td>
-        <td><p>Quality control for all markers in plink-dataset</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="overviewPerIndividualQC.html">overviewPerIndividualQC()</a></code> </p>
-        </td>
-        <td><p>Overview of per sample QC</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="overviewPerMarkerQC.html">overviewPerMarkerQC()</a></code> </p>
-        </td>
-        <td><p>Overview of per marker QC</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cleanData.html">cleanData()</a></code> </p>
-        </td>
-        <td><p>Create plink dataset with individuals and markers passing quality control</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-individual-quality-control-functions" class="hasAnchor"><a href="#section-individual-quality-control-functions" class="anchor"></a>Individual quality control functions</h2>
-          <p class="section-desc"><p>Functions for step-by-step per-individual quality control</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="check_sex.html">check_sex()</a></code> </p>
-        </td>
-        <td><p>Identification of individuals with discordant sex information</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="check_relatedness.html">check_relatedness()</a></code> </p>
-        </td>
-        <td><p>Identification of related individuals</p></td>
+        <td><p>Identification of individuals of divergent ancestry</p></td>
       </tr><tr>
         
         <td>
@@ -215,18 +166,32 @@ heterozygosity rates</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="check_ancestry.html">check_ancestry()</a></code> </p>
+          <p><code><a href="check_hwe.html">check_hwe()</a></code> </p>
         </td>
-        <td><p>Identification of individuals of divergent ancestry</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-marker-quality-control-functions" class="hasAnchor"><a href="#section-marker-quality-control-functions" class="anchor"></a>Marker quality control functions</h2>
-          <p class="section-desc"><p>Functions for step-by-step per-marker quality control</p></p>
-        </th>
-      </tr>
-      <tr>
+        <td><p>Identification of SNPs showing a significant deviation from Hardy-Weinberg-
+equilibrium (HWE)</p></td>
+      </tr><tr>
+        
+        <td>
+
+          <p><code><a href="check_relatedness.html">check_relatedness()</a></code> </p>
+        </td>
+        <td><p>Identification of related individuals</p></td>
+
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="check_het_and_miss.html">check_het_and_miss()</a></code> </p>
+        </td>
+        <td><p>Identification of individuals with outlying missing genotype or
+heterozygosity rates</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="check_sex.html">check_sex()</a></code> </p>
+        </td>
+        <td><p>Identification of individuals with discordant sex information</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="check_snp_missingness.html">check_snp_missingness()</a></code> </p>
@@ -235,6 +200,7 @@ heterozygosity rates</p></td>
       </tr><tr>
         
         <td>
+
           <p><code><a href="check_maf.html">check_maf()</a></code> </p>
         </td>
         <td><p>Identification of SNPs with low minor allele frequency</p></td>
@@ -254,17 +220,60 @@ equilibrium (HWE)</p></td>
         </th>
       </tr>
       <tr>
+
         
         <td>
-          <p><code><a href="run_check_sex.html">run_check_sex()</a></code> </p>
+          <p><code><a href="evaluate_check_het_and_miss.html">evaluate_check_het_and_miss()</a></code> </p>
         </td>
-        <td><p>Run PLINK sexcheck</p></td>
+        <td><p>Evaluate results from PLINK missing genotype and heterozygosity rate check.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="evaluate_check_relatedness.html">evaluate_check_relatedness()</a></code> </p>
+        </td>
+        <td><p>Evaluate results from PLINK IBD estimation.</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="evaluate_check_sex.html">evaluate_check_sex()</a></code> </p>
         </td>
         <td><p>Evaluate results from PLINK sex check.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="overviewPerIndividualQC.html">overviewPerIndividualQC()</a></code> </p>
+        </td>
+        <td><p>Overview of per sample QC</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="overviewPerMarkerQC.html">overviewPerMarkerQC()</a></code> </p>
+        </td>
+        <td><p>Overview of per marker QC</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="perIndividualQC.html">perIndividualQC()</a></code> </p>
+        </td>
+        <td><p>Quality control for all individuals in plink-dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="perMarkerQC.html">perMarkerQC()</a></code> </p>
+        </td>
+        <td><p>Quality control for all markers in plink-dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="relatednessFilter.html">relatednessFilter()</a></code> </p>
+        </td>
+        <td><p>Remove related individuals while keeping maximum number of individuals</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="run_check_ancestry.html">run_check_ancestry()</a></code> </p>
+        </td>
+        <td><p>Run PLINK principal component analysis</p></td>
       </tr><tr>
         
         <td>
@@ -280,53 +289,11 @@ equilibrium (HWE)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="evaluate_check_het_and_miss.html">evaluate_check_het_and_miss()</a></code> </p>
-        </td>
-        <td><p>Evaluate results from PLINK missing genotype and heterozygosity rate check.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_check_relatedness.html">run_check_relatedness()</a></code> </p>
-        </td>
-        <td><p>Run PLINK IBD estimation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="evaluate_check_relatedness.html">evaluate_check_relatedness()</a></code> </p>
-        </td>
-        <td><p>Evaluate results from PLINK IBD estimation.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_check_ancestry.html">run_check_ancestry()</a></code> </p>
-        </td>
-        <td><p>Run PLINK principal component analysis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="evaluate_check_ancestry.html">evaluate_check_ancestry()</a></code> </p>
-        </td>
-        <td><p>Evaluate results from PLINK PCA on combined study and reference data</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-general-helper-functions" class="hasAnchor"><a href="#section-general-helper-functions" class="anchor"></a>General helper functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="checkPlink.html">checkPlink()</a></code> </p>
-        </td>
-        <td><p>Check PLINK software access</p></td>
-      </tr><tr>
-        
-        <td>
+
           <p><code><a href="testNumerics.html">testNumerics()</a></code> </p>
         </td>
         <td><p>Test lists for different properties of numerics</p></td>
+
       </tr><tr>
         
         <td>
@@ -341,11 +308,7 @@ equilibrium (HWE)</p></td>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-main-quality-control-functions">Main quality control functions</a></li>
-      <li><a href="#section-individual-quality-control-functions">Individual quality control functions</a></li>
-      <li><a href="#section-marker-quality-control-functions">Marker quality control functions</a></li>
-      <li><a href="#section-quality-control-helper-functions">Quality control helper functions</a></li>
-      <li><a href="#section-general-helper-functions">General helper functions</a></li>
+      <li><a href="#section-all-functions">All functions</a></li>
     </ul>
   </div>
 </div>
