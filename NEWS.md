@@ -16,6 +16,10 @@
 * Include check in case all samples fail perIndividual QC in
    894acc1fa03dadfe0ad2028888142171bcc641eb and
    04642246d18ed4eaac5b9d9a6931d1ecb08308e8)
+* Include checks for diagonal derived relationship estimates, and estimate data
+  containing only related individuals; fixes #11
+* Fix command for genotype conversion in 1000Genomes vignette, addressing issue
+  #10
 
 
 # plinkQC 0.2.2

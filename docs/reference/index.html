@@ -32,6 +32,8 @@
 
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Function reference" />
 
 
@@ -171,15 +173,18 @@ equilibrium (HWE)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="check_maf.html">check_maf()</a></code> </p>
-        </td>
-        <td><p>Identification of SNPs with low minor allele frequency</p></td>
-      </tr><tr>
-        
-        <td>
+
           <p><code><a href="check_relatedness.html">check_relatedness()</a></code> </p>
         </td>
         <td><p>Identification of related individuals</p></td>
+
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="check_het_and_miss.html">check_het_and_miss()</a></code> </p>
+        </td>
+        <td><p>Identification of individuals with outlying missing genotype or
+heterozygosity rates</p></td>
       </tr><tr>
         
         <td>
@@ -195,16 +200,27 @@ equilibrium (HWE)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="cleanData.html">cleanData()</a></code> </p>
+
+          <p><code><a href="check_maf.html">check_maf()</a></code> </p>
         </td>
-        <td><p>Create plink dataset with individuals and markers passing quality control</p></td>
+        <td><p>Identification of SNPs with low minor allele frequency</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="evaluate_check_ancestry.html">evaluate_check_ancestry()</a></code> </p>
+          <p><code><a href="check_hwe.html">check_hwe()</a></code> </p>
         </td>
-        <td><p>Evaluate results from PLINK PCA on combined study and reference data</p></td>
-      </tr><tr>
+        <td><p>Identification of SNPs showing a significant deviation from Hardy-Weinberg-
+equilibrium (HWE)</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-quality-control-helper-functions" class="hasAnchor"><a href="#section-quality-control-helper-functions" class="anchor"></a>Quality control helper functions</h2>
+          <p class="section-desc"><p>Helper functions for step-by-step per-individual quality control: accesible to the user, but recommended use via per-individual check_* functions.</p></p>
+        </th>
+      </tr>
+      <tr>
+
         
         <td>
           <p><code><a href="evaluate_check_het_and_miss.html">evaluate_check_het_and_miss()</a></code> </p>
@@ -273,21 +289,17 @@ equilibrium (HWE)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="run_check_relatedness.html">run_check_relatedness()</a></code> </p>
-        </td>
-        <td><p>Run PLINK IBD estimation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_check_sex.html">run_check_sex()</a></code> </p>
-        </td>
-        <td><p>Run PLINK sexcheck</p></td>
-      </tr><tr>
-        
-        <td>
+
           <p><code><a href="testNumerics.html">testNumerics()</a></code> </p>
         </td>
         <td><p>Test lists for different properties of numerics</p></td>
+
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="relatednessFilter.html">relatednessFilter()</a></code> </p>
+        </td>
+        <td><p>Remove related individuals while keeping maximum number of individuals</p></td>
       </tr>
     </tbody>
     </table>

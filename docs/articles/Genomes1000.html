@@ -10,7 +10,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Processing 1000 Genomes reference data for ancestry estimation">
+
+<script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="Processing 1000 Genomes reference data for ancestry estimation">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -94,7 +96,9 @@
       <h1>Processing 1000 Genomes reference data for ancestry estimation</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2019-09-01</h4>
+
+            <h4 class="date">2019-09-02</h4>
+
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/Genomes1000.Rmd"><code>vignettes/Genomes1000.Rmd</code></a></small>
       <div class="hidden name"><code>Genomes1000.Rmd</code></div>
@@ -116,8 +120,8 @@
 <h2 class="hasAnchor">
 <a href="#set-up" class="anchor"></a>Set-up</h2>
 <p>We will first set up some bash variables and create directories needed; storing the names and directories of the reference will make it easy to use updated versions of the reference in the future. Is is also useful to keep the PLINK log-files for future reference. In order to keep the data directory tidy, we’ll create a directory for the log files and move them to the log directory here after each analysis step.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="va">refdir=</span><span class="st">'~/reference'</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="fu">mkdir</span> -r <span class="va">$qcdir</span>/plink_log</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="va">refdir=</span>~/reference</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="fu">mkdir</span> -p <span class="va">$refdir</span>/plink_log</a></code></pre></div>
 </div>
 <div id="plink-software" class="section level2">
 <h2 class="hasAnchor">
@@ -141,19 +145,19 @@
 <a class="sourceLine" id="cb2-10" data-line-number="10"></a>
 <a class="sourceLine" id="cb2-11" data-line-number="11"><span class="fu">wget</span> <span class="va">$pvar</span></a>
 <a class="sourceLine" id="cb2-12" data-line-number="12"><span class="fu">mv</span> <span class="st">'all_phase3.pvar.zst?dl=1'</span> all_phase3.pvar.zst</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="ex">plink2</span> --zst-decompress all_phase3.pvar.zst <span class="op">&gt;</span> all_phase3.pvar</a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="fu">wget</span> <span class="va">$sample</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="fu">mv</span> <span class="st">'phase3_corrected.psam\?dl\=1'</span> all_phase3.psam</a></code></pre></div>
+<a class="sourceLine" id="cb2-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="fu">wget</span> <span class="va">$sample</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="fu">mv</span> <span class="st">'phase3_corrected.psam?dl=1'</span> all_phase3.psam</a></code></pre></div>
 </div>
 <div id="convert-1000-genomes-phase-3-data-to-plink-1-binary-format" class="section level2">
 <h2 class="hasAnchor">
 <a href="#convert-1000-genomes-phase-3-data-to-plink-1-binary-format" class="anchor"></a>Convert 1000 Genomes phase 3 data to plink 1 binary format</h2>
 <p>We then convert the <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a> to the (at the moment) more standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped">PLINK 1 binary format</a>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">plink2</span> --pfile <span class="va">$refdir</span>/all_phase3 \</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">      --make-bed \</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">      --out <span class="va">$refdir</span>/all_phase3</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="fu">mv</span> <span class="va">$refdir</span>/all_phase3.log <span class="va">$refdir</span>/log</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">plink2</span> --pfile <span class="va">$refdir</span>/all_phase3 vzs\</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">      --max-alleles 2</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">      <span class="ex">--make-bed</span> \</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">      --out <span class="va">$refdir</span>/all_phase3</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="fu">mv</span> <span class="va">$refdir</span>/all_phase3.log <span class="va">$refdir</span>/log</a></code></pre></div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

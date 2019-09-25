@@ -100,11 +100,11 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 
 #' Remove related individuals while keeping maximum number of individuals
 #'
-#' \code{filterRelatedness} takes a data.frame with pair-wise relatedness
+#' \code{relatednessFilter} takes a data.frame with pair-wise relatedness
 #' measures of samples and returns pairs of individual IDs that are related as
 #' well as a list of suggested individual IDs to remove.
-#' \code{filterRelatedness} finds pairs of samples whose relatedness estimate is
-#' larger than the specified relatednessTh. Subsequently, for pairs of
+#' \code{relatednessFilter} finds pairs of samples whose relatedness estimate
+#' is larger than the specified relatednessTh. Subsequently, for pairs of
 #' individual that do not have additional relatives in the dataset, the
 #' individual with the worse otherCriterionMeasure (if provided) or arbitrarily
 #' individual 1 of that pair is selected and returned as the individual failing
@@ -112,11 +112,11 @@ testNumerics <- function(numbers, positives=NULL, integers=NULL,
 #' individuals per family are selected (e.g. in a simple case of a
 #' parents-offspring trio, the offspring will be marked as fail, while the
 #' parents will be kept in the analysis). Selection is achieved by constructing
-#' a subgraphs of clusters of individuals that are related. filterRelatedness
-#' then finds themaximum independent set of vertices in the subgraphs of
-#' related individuals. If all individuals are all related (i.e. all maximum
-#' independent sets are 0), one individual of that cluster will be kept and all
-#' others listed as failIDs.
+#' subgraphs of clusters of individuals that are related.
+#' \code{relatednessFilter} then finds the maximum independent set of vertices
+#' in the subgraphs of related individuals. If all individuals are related (i.e.
+#' all maximum independent sets are 0), one individual of that cluster will be
+#' kept and all others listed as failIDs.
 #' @param relatedness [data.frame] containing pair-wise relatedness estimates
 #' (in column [relatednessRelatedness]) for individual 1 (in column
 #' [relatednessIID1] and individual 2 (in column [relatednessIID1]). Columns
