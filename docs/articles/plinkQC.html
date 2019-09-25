@@ -20,7 +20,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-standard navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -39,43 +39,54 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
-<li>
-  <a href="../articles/plinkQC.html">Get started</a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    <span class="fa fa-file"></span>
+     
+    documentation
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/AncestryCheck.html">Ancestry estimation based on reference samples of known ethnicities</a>
+      <a href="../articles/plinkQC.html">Step-by-step QC</a>
     </li>
     <li>
-      <a href="../articles/Genomes1000.html">Processing 1000 Genomes reference data for ancestry estimation</a>
+      <a href="../articles/AncestryCheck.html">Ancestry</a>
     </li>
     <li>
-      <a href="../articles/HapMap.html">Processing HapMap III reference data for ancestry estimation</a>
+      <a href="../articles/HapMap.html">HapMap III reference</a>
+    </li>
+    <li>
+      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
      
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-code"></span>
+     
+    functions
+  </a>
+</li>
+<li>
+  <a href="https://github.com/HannahVMeyer/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
+     
+    github
   </a>
 </li>
       </ul>
@@ -94,7 +105,7 @@
       <h1>Genotype quality control with plinkQC</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2019-09-01</h4>
+            <h4 class="date">2019-09-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HannahVMeyer/plinkQC/blob/master/vignettes/plinkQC.Rmd"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="hidden name"><code>plinkQC.Rmd</code></div>
@@ -142,6 +153,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <a href="#per-individual-quality-control-1" class="anchor"></a>Per-individual quality control</h2>
 <p>For <code>perIndividualQC</code>, one simply specifies the directory where the data is stored (qcdir) and the prefix of the plink files (i.e. prefix.bim, prefix.bed, prefix.fam). In addition, the names of the files containing information about the reference population and the merged dataset used in <code>check_ancestry</code> have to be provided: refSamplesFile, refColorsFile and prefixMergedDataset. Per default, all quality control checks will be conducted.</p>
 <p>In addition to running each check, <code>perIndividualQC</code> writes a list of all fail individual IDs to the qcdir. These IDs will be removed in the computation of the <code>perMarkerQC</code>. If the list is not present, <code>perMarkerQC</code> will send a message about conducting the quality control on the entire dataset.</p>
+<p>NB: To reduce the data size of the example data in <code>plinkQC</code>, data.genome has already been reduced to the individuals that are related. Thus the relatedness plots in C only show counts for related individuals only.</p>
 <p>NB: To demonstrate the results of the ancestry check, the required eigenvector file of the combined study and reference datasets have been precomputed and for the purpose of this example will be copied to the <code>qcdir</code>. In practice, the <code>qcdir</code> will often be the same as the <code>indir</code> and this step will not be required.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.html">system</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"cp"</span>, <span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(package.dir, <span class="st">'extdata/data.HapMapIII.eigenvec'</span>),</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">             qcdir))</a></code></pre></div>
@@ -158,7 +170,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <p><code>overviewperIndividualQC</code> depicts overview plots of quality control failures and the intersection of quality control failures with ancestry exclusion.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">overview_individuals &lt;-<span class="st"> </span><span class="kw"><a href="../reference/overviewPerIndividualQC.html">overviewPerIndividualQC</a></span>(fail_individuals,</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">                                                <span class="dt">interactive=</span><span class="ot">TRUE</span>)</a></code></pre></div>
-<p><img src="overviewQC.png" width="500px"><img src="overviewAncestryQC.png" width="500px"></p>
+<p><img src="overviewQC.png" width="500px"></p>
 </div>
 <div id="per-marker-quality-control-1" class="section level2">
 <h2 class="hasAnchor">
@@ -205,6 +217,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <h2 class="hasAnchor">
 <a href="#related-individuals" class="anchor"></a>Related individuals</h2>
 <p>Depending on the future use of the genotypes, it might required to remove any related individuals from the study. Related individuals can be identified by their proporting of shared alleles at the genotyped markers (identity by descend, IBD). Standardly, individuals with second-degree relatedness or higher will be excluded. Identifying related individuals is implemented in <code>check_relatedness</code>. It finds pairs of samples whose proportion of IBD is larger than the specified highIBDTh. Subsequently, for pairs of individual that do not have additional relatives in the dataset, the individual with the greater genotype missingness rate is selected and returned as the individual failing the relatedness check. For more complex family structures, the unrelated individuals per family are selected (e.g. in a parents-offspring trio, the offspring will be marked as fail, while the parents will be kept in the analysis).</p>
+<p>NB: To reduce the data size of the example data in <code>plinkQC</code>, data.genome has already been reduced to the individuals that are related. Thus the relatedness plots in C only show counts for related individuals only.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">exclude_relatedness &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check_relatedness.html">check_relatedness</a></span>(<span class="dt">indir=</span>indir, <span class="dt">qcdir=</span>qcdir, <span class="dt">name=</span>name,</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">                                         <span class="dt">interactive=</span><span class="ot">TRUE</span>,</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">                                         <span class="dt">path2plink=</span>path2plink)</a></code></pre></div>
