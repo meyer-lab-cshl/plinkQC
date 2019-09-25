@@ -8,11 +8,13 @@
 
 <title>Identification of individuals with discordant sex information — check_sex • plinkQC</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -34,8 +36,8 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Identification of individuals with discordant sex information — check_sex" />
 
+<meta property="og:title" content="Identification of individuals with discordant sex information — check_sex" />
 <meta property="og:description" content="Runs and evaluates results from plink --check-sex.
 check_sex returns IIDs for individuals whose SNPSEX != PEDSEX
 (where the SNPSEX is determined by the heterozygosity rate across
@@ -51,6 +53,7 @@ updated (fixMixup=TRUE).
 check_sex depicts the X-chromosomal heterozygosity (SNPSEX) of
 the individuals split by their (PEDSEX)." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -117,7 +120,6 @@ the individuals split by their (PEDSEX)." />
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
@@ -159,7 +161,6 @@ the individuals split by their (PEDSEX)." />
     </div>
 
     <div class="ref-description">
-    
     <p>Runs and evaluates results from plink --check-sex.
 <code>check_sex</code> returns IIDs for individuals whose SNPSEX != PEDSEX
 (where the SNPSEX is determined by the heterozygosity rate across
@@ -174,7 +175,6 @@ detected, while SNPSEX == Sex, PEDSEX of these individuals can optionally be
 updated (fixMixup=TRUE).
 <code>check_sex</code> depicts the X-chromosomal heterozygosity (SNPSEX) of
 the individuals split by their (PEDSEX).</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>check_sex</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
@@ -182,7 +182,7 @@ the individuals split by their (PEDSEX).</p>
   <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>, <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>, <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
   <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -283,7 +283,7 @@ and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'
 printed to standard out.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Named list with i) fail_sex: [data.frame] with FID, IID, PEDSEX,
@@ -293,7 +293,6 @@ externalSex was provided) of individuals whose PEDSEX != Sex and Sex ==
 SNPSEX and iii) p_sexcheck, a ggplot2-object 'containing' a scatter plot of
 the X-chromosomal heterozygosity (SNPSEX) of the sample split by their
 (PEDSEX), which can be shown by print(p_sexcheck).</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>check_sex</code> wraps around <code><a href='run_check_sex.html'>run_check_sex</a></code>  and
@@ -304,7 +303,6 @@ the X-chromosomal heterozygosity (SNPSEX) of the sample split by their
 <p>For details on the output data.frame fail_sex, check the original
 description on the PLINK output format page:
 <a href='https://www.cog-genomics.org/plink/1.9/formats#sexcheck'>https://www.cog-genomics.org/plink/1.9/formats#sexcheck</a>.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'> </div><span class='co'># NOT RUN {</span>
@@ -318,11 +316,8 @@ description on the PLINK output format page:
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

@@ -8,11 +8,13 @@
 
 <title>Evaluate results from PLINK PCA on combined study and reference data — evaluate_check_ancestry • plinkQC</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -34,8 +36,8 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Evaluate results from PLINK PCA on combined study and reference data — evaluate_check_ancestry" />
 
+<meta property="og:title" content="Evaluate results from PLINK PCA on combined study and reference data — evaluate_check_ancestry" />
 <meta property="og:description" content="Evaluates and depicts results of plink --pca (via
 run_check_ancestry or externally conducted pca) on merged
 genotypes from individuals to be QCed and individuals of reference population
@@ -51,6 +53,7 @@ as failing the ancestry check.
 check_ancestry creates a scatter plot of PC1 versus PC2 colour-coded for
 samples of the reference populations and the study population." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -117,7 +120,6 @@ samples of the reference populations and the study population." />
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
@@ -159,7 +161,6 @@ samples of the reference populations and the study population." />
     </div>
 
     <div class="ref-description">
-    
     <p>Evaluates and depicts results of plink --pca (via
 <code><a href='run_check_ancestry.html'>run_check_ancestry</a></code> or externally conducted pca) on merged
 genotypes from individuals to be QCed and individuals of reference population
@@ -174,7 +175,6 @@ r=europeanTh* maxDist are considered non-European and their IDs are returned
 as failing the ancestry check.
 check_ancestry creates a scatter plot of PC1 versus PC2 colour-coded for
 samples of the reference populations and the study population.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>evaluate_check_ancestry</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='no'>prefixMergedDataset</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
@@ -182,7 +182,7 @@ samples of the reference populations and the study population.</p>
   <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
   <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
   <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -283,7 +283,7 @@ save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 other_arguments) or pdf(outfile) print(p_ancestry) dev.off().</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Named [list] with i) fail_ancestry, containing a [data.frame] with
@@ -291,13 +291,11 @@ FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
 'containing' a scatter plot of PC1 versus PC2 colour-coded for samples of the
 reference populations and the study population, which can be shown by
 print(p_ancestry).</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Both <code><a href='run_check_ancestry.html'>run_check_ancestry</a></code> and
 <code>evaluate_check_ancestry</code> can simply be invoked by
 <code><a href='check_ancestry.html'>check_ancestry</a></code>.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
@@ -313,11 +311,8 @@ print(p_ancestry).</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
