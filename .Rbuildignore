@@ -17,3 +17,4 @@ _pkgdown.yml
 ^cran-comments\.md$
 pkgdown/
 .github/
+CODE_OF_CONDUCT.md
