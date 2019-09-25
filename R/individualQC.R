@@ -1652,7 +1652,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
     testNumerics(numbers=highIBDTh, positives=highIBDTh, proportions=highIBDTh)
     names_imiss <- c("FID", "IID", "MISS_PHENO", "N_MISS", "N_GENO", "F_MISS")
     imiss <- read.table(paste(prefix, ".imiss", sep=""), header=TRUE,
-                        as.is=TRUE)
+                        as.is=TRUE, stringsAsFactors=FALSE)
     if (!all(names_imiss == names(imiss))) {
         stop("Header of ", prefix, ".imiss is not correct. Was your
              file generated with plink --imiss?")
@@ -1660,7 +1660,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
     names_genome <- c("FID1", "IID1", "FID2", "IID2", "RT", "EZ", "Z0", "Z1",
                       "Z2", "PI_HAT", "PHE", "DST", "PPC", "RATIO")
     genome <- read.table(paste(prefix, ".genome", sep=""), header=TRUE,
-                         as.is=TRUE)
+                         as.is=TRUE, stringsAsFactors=FALSE)
     if (!all(names_genome == names(genome))) {
         stop("Header of ", prefix, ".genome is not correct. Was your
              file generated with plink --genome?")
