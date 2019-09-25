@@ -44,7 +44,7 @@ library(devtools)
 install_github("HannahVMeyer/plinkQC")
 ```
 
-The current CRAN version of **plinkQC** is: 0.2.2 and can be installed
+The current CRAN version of **plinkQC** is: 0.2.3 and can be installed
 via
 
 ``` r
