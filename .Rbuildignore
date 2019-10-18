@@ -23,3 +23,4 @@ codemeta.json
 generate
 paper.json
 paper.md
+^codemeta\.json$
