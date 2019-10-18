@@ -33,4 +33,11 @@
 
 0 errors | 0 warnings | 1 note
 
-* This is a new release.
+
+* This is a new release
+
+## Comments
+* move of code repository
+* new urls
+* major version update which should have been done with the previous release
+

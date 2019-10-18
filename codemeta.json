@@ -1,0 +1,238 @@
+{
+  "@context": ["https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld", "http://schema.org"],
+  "@type": "Code",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Hannah",
+      "familyName": "Meyer",
+      "email": "hannah.v.meyer@gmail.com",
+      "@id": "https://orcid.org/0000-0003-4564-0899"
+    }
+  ],
+  "identifier": "plinkQC",
+  "codeRepository": "https://meyer-lab-cshl.github.io/plinkQC",
+  "dateModified": "2019-10-09",
+  "dateCreated": "2019-10-09",
+  "description": "Genotyping arrays enable the direct measurement of an individuals\n    genotype at thousands of markers. 'plinkQC' facilitates genotype quality\n    control for genetic association studies as described by Anderson and\n    colleagues (2010) <doi:10.1038/nprot.2010.116>. It makes 'PLINK' basic\n    statistics (e.g. missing genotyping rates per individual, allele frequencies\n    per genetic marker) and relationship functions accessible from 'R' and\n    generates a per-individual and per-marker quality control report.\n    Individuals and markers that fail the quality control can subsequently be\n    removed to generate a new, clean dataset. Removal of individuals based on\n    relationship status is optimised to retain as many individuals as possible\n    in the study.",
+  "keywords": "genotype quality control, genetic association studies, plink",
+  "license": "https://spdx.org/licenses/MIT",
+  "title": "plinkQC",
+  "version": "0.3.0",
+  "name": "plinkQC: Genotype Quality Control with 'PLINK'",
+  "issueTracker": "https://github.com/meyer-lab-cshl/plinkQC/issues",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "version": "3.6.1",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 3.6.1 (2019-07-05)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
+  "contributor": {},
+  "copyrightHolder": {},
+  "funder": {},
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Hannah",
+      "familyName": "Meyer",
+      "email": "hannah.v.meyer@gmail.com",
+      "@id": "https://orcid.org/0000-0003-4564-0899"
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    }
+  ],
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "R",
+      "name": "R",
+      "version": ">= 3.6.0"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "methods",
+      "name": "methods"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "optparse",
+      "name": "optparse",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=optparse"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "version": ">= 1.11.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "R.utils",
+      "name": "R.utils",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=R.utils"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "ggplot2",
+      "name": "ggplot2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggplot2"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "ggforce",
+      "name": "ggforce",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggforce"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "ggrepel",
+      "name": "ggrepel",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggrepel"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "cowplot",
+      "name": "cowplot",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=cowplot"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "UpSetR",
+      "name": "UpSetR",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=UpSetR"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "dplyr",
+      "name": "dplyr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "igraph",
+      "name": "igraph",
+      "version": ">= 1.2.4",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=igraph"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "sys",
+      "name": "sys",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=sys"
+    }
+  ],
+  "releaseNotes": "https://github.com/meyer-lab-cshl/plinkQC/blob/master/NEWS.md",
+  "readme": "https://github.com/meyer-lab-cshl/plinkQC/blob/master/README.md",
+  "contIntegration": "https://travis-ci.org/meyer-lab-cshl/plinkQC",
+  "relatedLink": "https://CRAN.R-project.org/package=plinkQC"
+}

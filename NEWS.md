@@ -1,3 +1,9 @@
+# plinkQC 0.3.0
+## major changes
+* Relationship filter can handle more complicated relationship scenarios as
+  observed in plant genotype sets (fixed #11)
+* code moved to the meyer-lab repository: https://github.com/meyer-lab-cshl/plinkQC
+
 # plinkQC 0.2.3
 ## major changes
 * Enable return of overview plots as ggplot object
@@ -22,7 +28,7 @@
   #10
 * fix missing rownames error for overviewPerIndividualQC, when relatedness check
   was included (issue #16, fc7a38b1f2b345d9c6c5d69f5dcf0bc57a857f62)
-
+* fix vignette mismatch (issue #16, 09dcd59e77178b35747aae81a5c1988712e20de9)
 
 # plinkQC 0.2.2
 ## minor changes
