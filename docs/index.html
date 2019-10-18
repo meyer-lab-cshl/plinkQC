@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -123,17 +123,17 @@
 <p><strong>plinkQC</strong> is a R/CRAN package for <strong>genotype quality control</strong> in genetic association studies. It makes PLINK basic statistics (e.g.missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions easily accessible from within R and allows for automatic evaluation of the results.</p>
 <p><strong>plinkQC</strong> generates a per-individual and per-marker quality control report. A step-by-step guide on how to run these analyses can be found <a href="https://hannahvmeyer.github.io/plinkQC/articles/plinkQC.html">here</a>.</p>
 <p>Individuals and markers that fail the quality control can subsequently be removed with <strong>plinkQC</strong> to generate a new, clean dataset.</p>
-<p><strong>plinkQC</strong> facilitates an ancestry check for study individuals based on comparison to reference datasets. The processing of the reference datasets is documented in detail <a href="https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html">here</a>.</p>
+<p><strong>plinkQC</strong> facilitates an ancestry check for study individuals based on comparison to reference datasets. The processing of the reference datasets is documented in detail <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">here</a>.</p>
 <p>Removal of individuals based on relationship status via <strong>plinkQC</strong> is optimised to retain as many individuals as possible in the study.</p>
 <p><img src="qc.png" width="372"></p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a><i class="fa fa-rocket" aria-hidden="true"></i> Installation</h2>
-<p>The current github version of <strong>plinkQC</strong> is: 0.2.3 and can be installed via</p>
+<p>The current github version of <strong>plinkQC</strong> is: 0.3.0 and can be installed via</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(devtools)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/reexports.html">install_github</a></span>(<span class="st">"HannahVMeyer/plinkQC"</span>)</a></code></pre></div>
-<p>The current CRAN version of <strong>plinkQC</strong> is: 0.2.2 and can be installed via</p>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"meyer-lab-cshl/plinkQC"</span>)</a></code></pre></div>
+<p>The current CRAN version of <strong>plinkQC</strong> is: 0.2.3 and can be installed via</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"plinkQC"</span>)</a></code></pre></div>
 <p>A log of version changes can be found <a href="news/index.html">here</a>.</p>
 </div>
@@ -145,9 +145,7 @@
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=plinkQC">https://​cloud.r-project.org/​package=plinkQC</a>
 </li>
-<li>Browse source code at <br><a href="https://github.com/HannahVMeyer/plinkQC">https://​github.com/​HannahVMeyer/​plinkQC</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/HannahVMeyer/plinkQC/issues">https://​github.com/​HannahVMeyer/​plinkQC/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/meyer-lab-cshl/plinkQC/issues">https://​github.com/​meyer-lab-cshl/​plinkQC/​issues</a>
 </li>
 </ul>
 </div>
@@ -166,13 +164,14 @@
 </ul>
 </div>
 
+
       <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=plinkQC"><img src="http://www.r-pkg.org/badges/version/plinkQC" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://travis-ci.org/HannahVMeyer/plinkQC"><img src="https://travis-ci.org/HannahVMeyer/plinkQC.svg?branch=master" alt="Build Status"></a></li>
+<li><a href="https://travis-ci.org/meyer-lab-cshl/plinkQC"><img src="https://travis-ci.org/meyer-lab-cshl/plinkQC.svg?branch=master" alt="Build Status"></a></li>
 <li><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></li>
-<li><a href="http://cran.rstudio.com/web/packages/plinkQC/index.html"><img src="http://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue" alt="Downloads"></a></li>
+<li><a href="https://cran.r-project.org/package=plinkQC"><img src="http://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue" alt="Downloads"></a></li>
 </ul>
 </div>
 </div>

@@ -8,11 +8,13 @@
 
 <title>Check PLINK software access — checkPlink • plinkQC</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -34,12 +36,13 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Check PLINK software access — checkPlink" />
 
+<meta property="og:title" content="Check PLINK software access — checkPlink" />
 <meta property="og:description" content="checkPlink checks that the PLINK software
 (https://www.cog-genomics.org/plink/1.9/)
 can be found from system call." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -70,7 +73,7 @@ can be found from system call." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -106,7 +109,6 @@ can be found from system call." />
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
@@ -143,20 +145,18 @@ can be found from system call." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Check PLINK software access</h1>
-    <small class="dont-index">Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    
     <div class="hidden name"><code>checkPlink.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
     <p>checkPlink checks that the PLINK software
 (<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a>)
 can be found from system call.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>checkPlink</span>(<span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -170,20 +170,18 @@ platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec_wait</a></code>('plink').</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Path to PLINK executable.</p>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-          </ul>
+    </ul>
 
   </div>
 </div>

@@ -8,11 +8,13 @@
 
 <title>Run PLINK IBD estimation — run_check_relatedness • plinkQC</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -34,8 +36,8 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Run PLINK IBD estimation — run_check_relatedness" />
 
+<meta property="og:title" content="Run PLINK IBD estimation — run_check_relatedness" />
 <meta property="og:description" content="Run LD pruning on dataset with plink --exclude range highldfile
 --indep-pairwise 50 5 0.2, where highldfile contains regions of high LD as
 provided by Anderson et (2010) Nature Protocols. Subsequently, plink
@@ -46,6 +48,7 @@ shared ancestry,i.e. the identity by descent (IBD) can be estimated from the
 genome-wide IBS. The proportion of IBD between two individuals is returned by
 --genome as PI_HAT." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -76,7 +79,7 @@ genome-wide IBS. The proportion of IBD between two individuals is returned by
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -112,7 +115,6 @@ genome-wide IBS. The proportion of IBD between two individuals is returned by
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
@@ -149,12 +151,11 @@ genome-wide IBS. The proportion of IBD between two individuals is returned by
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Run PLINK IBD estimation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/R/individualQC.R'><code>R/individualQC.R</code></a></small>
+    
     <div class="hidden name"><code>run_check_relatedness.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
     <p>Run LD pruning on dataset with plink --exclude range highldfile
 --indep-pairwise 50 5 0.2, where highldfile contains regions of high LD as
 provided by Anderson et (2010) Nature Protocols. Subsequently, plink
@@ -164,13 +165,12 @@ average proportion of alleles shared at genotyped SNPs. The degree of recent
 shared ancestry,i.e. the identity by descent (IBD) can be estimated from the
 genome-wide IBS. The proportion of IBD between two individuals is returned by
 --genome as PI_HAT.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>run_check_relatedness</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.185</span>,
   <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>genomebuild</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
   <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -227,7 +227,7 @@ printed to standard out.</p></td>
       <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Both <code>run_check_relatedness</code> and its evaluation via
@@ -244,7 +244,6 @@ box ticked; for all other parameters, the default options were selected.
 LiftOver files were generated on July 9,2019. The commands for formatting
 the files are provided in system.file("extdata", 'liftOver.cmd',
 package="plinkQC").</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
@@ -259,9 +258,7 @@ package="plinkQC").</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

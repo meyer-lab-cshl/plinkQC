@@ -8,11 +8,13 @@
 
 <title>Identification of SNPs with high missingness rate — check_snp_missingness • plinkQC</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -34,14 +36,15 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Identification of SNPs with high missingness rate — check_snp_missingness" />
 
+<meta property="og:title" content="Identification of SNPs with high missingness rate — check_snp_missingness" />
 <meta property="og:description" content="Runs and evaluates results from plink --missing --freq. It calculate the
 rates of missing genotype calls and frequency for all variants in the
 individuals that passed the perIndividualQC. The SNP
 missingness rates (stratified by minor allele frequency) are depicted as
 histograms." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -72,7 +75,7 @@ histograms." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -108,7 +111,6 @@ histograms." />
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
@@ -145,24 +147,22 @@ histograms." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Identification of SNPs with high missingness rate</h1>
-    <small class="dont-index">Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/R/markerQC.R'><code>R/markerQC.R</code></a></small>
+    
     <div class="hidden name"><code>check_snp_missingness.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
     <p>Runs and evaluates results from plink --missing --freq. It calculate the
 rates of missing genotype calls and frequency for all variants in the
 individuals that passed the <code><a href='perIndividualQC.html'>perIndividualQC</a></code>. The SNP
 missingness rates (stratified by minor allele frequency) are depicted as
 histograms.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>check_snp_missingness</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>lmissTh</span> <span class='kw'>=</span> <span class='fl'>0.01</span>,
   <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -217,7 +217,7 @@ and specifically, if TRUE, plink log will be displayed.</p></td>
 printed to standard out.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Named list with i) fail_missingness containing a [data.frame] with
@@ -228,7 +228,6 @@ include nonmales on Ychr; Only present with --within/--family), N_GENO
 (Number of potentially valid call(s)), F_MISS (Missing call rate) for all
 SNPs failing the lmissTh and ii) p_lmiss, a ggplot2-object 'containing' the
 SNP missingness histogram which can be shown by (print(p_lmiss)).</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>check_snp_missingness</code> uses plink --remove name.fail.IDs --missing
@@ -239,7 +238,6 @@ the statistics.</p>
 <p>For details on the output data.frame fail_missingness, check the original
 description on the PLINK output format page:
 <a href='https://www.cog-genomics.org/plink/1.9/formats#lmiss'>https://www.cog-genomics.org/plink/1.9/formats#lmiss</a>.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
@@ -256,11 +254,8 @@ description on the PLINK output format page:
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

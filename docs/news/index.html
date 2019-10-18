@@ -8,11 +8,13 @@
 
 <title>Changelog • plinkQC</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -34,7 +36,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
+
 <meta property="og:title" content="Changelog" />
+
 
 
 
@@ -65,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -101,7 +105,6 @@
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
@@ -138,19 +141,33 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/HannahVMeyer/plinkQC/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+      
     </div>
 
-    <div id="plinkqc-0-2-3" class="section level1">
+    <div id="plinkqc-0-3-0" class="section level1">
 <h1 class="page-header">
-<a href="#plinkqc-0-2-3" class="anchor"></a>plinkQC 0.2.3<small> Unreleased </small>
+<a href="#plinkqc-0-3-0" class="anchor"></a>plinkQC 0.3.0<small> Unreleased </small>
 </h1>
 <div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>major changes</h2>
 <ul>
-<li>Enable return of overview plots as ggplot object (fixes <a href='https://github.com/HannahVMeyer/plinkQC/issues/6'>#6</a> in ab2e840f0f22ccdeb5317475698aa58e7eecd345 and 101e74e318752b2f8038330245d875f6afd5b57b)</li>
-<li>Relationship filter now deals with more complicated relationship scenarios as observed in plant genotype sets (fixed <a href='https://github.com/HannahVMeyer/plinkQC/issues/11'>#11</a>)</li>
+<li>Relationship filter can handle more complicated relationship scenarios as observed in plant genotype sets (fixed #11)</li>
+<li>code moved to the meyer-lab repository: <a href="https://github.com/meyer-lab-cshl/plinkQC" class="uri">https://github.com/meyer-lab-cshl/plinkQC</a>
+</li>
+</ul>
+</div>
+</div>
+    <div id="plinkqc-0-2-3" class="section level1">
+<h1 class="page-header">
+<a href="#plinkqc-0-2-3" class="anchor"></a>plinkQC 0.2.3<small> 2019-09-25 </small>
+</h1>
+<div id="major-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes-1" class="anchor"></a>major changes</h2>
+<ul>
+<li>Enable return of overview plots as ggplot object (fixes #6 in ab2e840f0f22ccdeb5317475698aa58e7eecd345 and 101e74e318752b2f8038330245d875f6afd5b57b)</li>
+<li>Relationship filter now deals with more complicated relationship scenarios as observed in plant genotype sets (fixed #11)</li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
@@ -158,18 +175,20 @@
 <a href="#minor-changes" class="anchor"></a>minor changes</h2>
 <ul>
 <li>give user option to choose maf threshold for relatedness filtering (relates to
-<a href='https://github.com/HannahVMeyer/plinkQC/issues/3'>#3</a>)</li>
+#3)</li>
 </ul>
 </div>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>bug fixes</h2>
 <ul>
-<li>Include check for zero related individuals fixing <a href='https://github.com/HannahVMeyer/plinkQC/issues/3'>#3</a> in 1445a88d41d985e73ffdd161144229683f8352cd</li>
+<li>Include check for zero related individuals fixing #3 in 1445a88d41d985e73ffdd161144229683f8352cd</li>
 <li>Include check in case all samples fail perIndividual QC in 894acc1fa03dadfe0ad2028888142171bcc641eb and 04642246d18ed4eaac5b9d9a6931d1ecb08308e8)</li>
-<li>Include checks for diagonal derived relationship estimates, and estimate data containing only related individuals; fixes <a href='https://github.com/HannahVMeyer/plinkQC/issues/11'>#11</a></li>
+<li>Include checks for diagonal derived relationship estimates, and estimate data containing only related individuals; fixes #11</li>
 <li>Fix command for genotype conversion in 1000Genomes vignette, addressing issue
-<a href='https://github.com/HannahVMeyer/plinkQC/issues/10'>#10</a></li>
+#10</li>
+<li>fix missing rownames error for overviewPerIndividualQC, when relatedness check was included (issue #16, fc7a38b1f2b345d9c6c5d69f5dcf0bc57a857f62)</li>
+<li>fix vignette mismatch (issue #16, 09dcd59e77178b35747aae81a5c1988712e20de9)</li>
 </ul>
 </div>
 </div>
@@ -181,7 +200,7 @@
 <h2 class="hasAnchor">
 <a href="#minor-changes-1" class="anchor"></a>minor changes</h2>
 <ul>
-<li>Fix IDs written to fail.IDs file: previous versions wrote IID,IID, now fixed to FID, IID (fixes <a href='https://github.com/HannahVMeyer/plinkQC/issues/2'>#2</a>).</li>
+<li>Fix IDs written to fail.IDs file: previous versions wrote IID,IID, now fixed to FID, IID (fixes #2).</li>
 </ul>
 </div>
 </div>
@@ -202,9 +221,9 @@
 <h1 class="page-header">
 <a href="#plinkqc-0-2-0" class="anchor"></a>plinkQC 0.2.0<small> 2018-11-09 </small>
 </h1>
-<div id="major-changes-1" class="section level2">
+<div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-1" class="anchor"></a>major changes</h2>
+<a href="#major-changes-2" class="anchor"></a>major changes</h2>
 <ul>
 <li>All system calls to plink are conducted with sys::exec_wait - this should solve platform dependent issues, mainly comptatibility with windows.</li>
 <li>Make path construction compatible with windows.</li>
@@ -228,9 +247,9 @@
 <h1 class="page-header">
 <a href="#plinkqc-0-1-1" class="anchor"></a>plinkQC 0.1.1<small> 2018-11-06 </small>
 </h1>
-<div id="major-changes-2" class="section level2">
+<div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-2" class="anchor"></a>major changes</h2>
+<a href="#major-changes-3" class="anchor"></a>major changes</h2>
 <ul>
 <li>run_check_relatedness will only save IBD estimates of individuals whose estimates are higher than the threshold.</li>
 </ul>
@@ -259,6 +278,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#plinkqc-0-3-0">0.3.0</a></li>
         <li><a href="#plinkqc-0-2-3">0.2.3</a></li>
         <li><a href="#plinkqc-0-2-2">0.2.2</a></li>
         <li><a href="#plinkqc-0-2-1">0.2.1</a></li>
