@@ -2,6 +2,7 @@
 ^Meta$
 ^doc$
 ^docs$
+.github
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
@@ -13,9 +14,9 @@ INDEX\.Rmd
 INDEX\.md
 inst/extdata/createData
 inst/extdata/plink_log
-pkgdown/
 ^cran-comments\.md$
 pkgdown/
+_pkgdown.yml
 Check-list-Joss.md
 Figure1.pdf
 codemeta.json
