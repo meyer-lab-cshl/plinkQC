@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
 [![Build
 Status](https://travis-ci.org/meyer-lab-cshl/plinkQC.svg?branch=master)](https://travis-ci.org/meyer-lab-cshl/plinkQC)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue)](http://cran.rstudio.com/web/packages/plinkQC/index.html)
+[![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue)](https://CRAN.R-project.org/package=plinkQC)
 
 ## <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 
@@ -17,7 +17,9 @@ genetic marker) and relationship functions easily accessible from within
 R and allows for automatic evaluation of the results.
 
 Full documentation is available at
+
 <http://meyer-lab-cshl.github.io/plinkQC/>.
+
 
 **plinkQC** generates a per-individual and per-marker quality control
 report. A step-by-step guide on how to run these analyses can be found
@@ -52,4 +54,10 @@ install.packages("plinkQC")
 ```
 
 A log of version changes can be found
+
 [here](https://github.com/meyer-lab-cshl/plinkQC/blob/master/NEWS.md).
+
+## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
+Meyer HV (2018) plinkQC: Genotype quality control in genetic association
+studies. doi:10.5281/zenodo.3373798
+
