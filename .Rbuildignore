@@ -16,3 +16,9 @@ inst/extdata/plink_log
 pkgdown/
 ^cran-comments\.md$
 pkgdown/
+Check-list-Joss.md
+Figure1.pdf
+codemeta.json
+generate
+paper.json
+paper.md
