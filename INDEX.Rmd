@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/plinkQC)](https://cran.r-project.org/package=plinkQC)
 [![Build Status](https://travis-ci.org/meyer-lab-cshl/plinkQC.svg?branch=master)](https://travis-ci.org/meyer-lab-cshl/plinkQC)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue)](http://cran.rstudio.com/web/packages/plinkQC/index.html)
+[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/plinkQC?color=blue)](https://cran.r-project.org/package=plinkQC)
 
 ## <i class="fa fa-map" aria-hidden="true"></i> plinkQC
 
