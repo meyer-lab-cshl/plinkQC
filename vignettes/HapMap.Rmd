@@ -106,11 +106,21 @@ https://genome.ucsc.edu/cgi-bin/hgLiftOver and the appropriate liftover chain fr
 zero-based [UCSC bed](https://genome.ucsc.edu/FAQ/FAQformat.html#format1)
 format.
 
+Hapmap chromosome data is encoded numerically, with chrX represented by chr23,
+and chrY as chr24. In order to match to data encoded by chrX and chrY, we will
+have to rename these hapmap chromosomes. Converting to zero-based UCSC format 
+and re-coding chromosome codes can be achieved by:
+
 ```{bash prepare liftover, eval=FALSE}
 awk '{print "chr" $1, $4 -1, $4, $2 }' $refdir/HapMapIII_NCBI36.bim | \
     sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > \
     $refdir/HapMapIII_NCBI36.tolift
 ```
+
+[Note: In the official HapMap release, chromosome codes described above, however
+in the orignal download files (link above), no chr24 detected. I will keep this
+line in for completeness, but note, when inspecting file that no chr24/chrY are
+present.]
 
 We use the liftOver tool and the UCSC bed formated annotation file together
 with the appropriate chain file to do the lift over.
