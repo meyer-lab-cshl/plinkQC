@@ -16,7 +16,7 @@ R and allows for automatic evaluation of the results.
 
 **plinkQC** generates a per-individual and per-marker quality control
 report. A step-by-step guide on how to run these analyses can be found
-[here](https://hannahvmeyer.github.io/plinkQC/articles/plinkQC.html).
+[here](https://meyer-lab-cshl.github.io/plinkQC/articles/plinkQC.html).
 
 Individuals and markers that fail the quality control can subsequently
 be removed with **plinkQC** to generate a new, clean dataset.
@@ -29,11 +29,11 @@ datasets is documented in detail
 Removal of individuals based on relationship status via **plinkQC** is
 optimised to retain as many individuals as possible in the study.
 
-![](docs/qc.png)<!-- -->
+<img src="docs/qc.png" width="744" />
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC** is: 0.3.0 and can be installed
+The current github version of **plinkQC** is: 0.3.1 and can be installed
 via
 
 ``` r
@@ -41,7 +41,7 @@ library(devtools)
 install_github("meyer-lab-cshl/plinkQC")
 ```
 
-The current CRAN version of **plinkQC** is: 0.2.3 and can be installed
+The current CRAN version of **plinkQC** is: 0.3.0 and can be installed
 via
 
 ``` r
@@ -49,3 +49,8 @@ install.packages("plinkQC")
 ```
 
 A log of version changes can be found [here](news/index.html).
+
+## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
+
+Meyer HV (2018) plinkQC: Genotype quality control in genetic association
+studies. <doi:10.5281/zenodo.3373798>
