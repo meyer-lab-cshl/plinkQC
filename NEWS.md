@@ -1,3 +1,8 @@
+# plinkQC 0.3.1
+## minor changes
+* Fixed dead links in vignettes (caused by migration of repository): da987d8f225aa6aca0596b9c4f6a2484b102bdb6
+* Added not about chrY in Hapmap data (vignette): e8afbb9842ed9421461a8114ac0a00f7955cf0c0
+
 # plinkQC 0.3.0
 ## major changes
 * Relationship filter can handle more complicated relationship scenarios as

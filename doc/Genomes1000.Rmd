@@ -36,7 +36,7 @@ The following vignette shows the processing steps required to use samples of the
 1000 Genomes study [@a1000Genomes2015],[@b1000Genomes2015] as a reference
 dataset. Using the 1000 Genomes reference, population structure down to
 large-scale continental ancestry can be detected. A step-by-step instruction on
-how to conduct this ancestry analysis is described in this [vignette](https://hannahvmeyer.github.io/plinkQC/articles/AncestryCheck.html).
+how to conduct this ancestry analysis is described in this [vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
 
 
 # Workflow
