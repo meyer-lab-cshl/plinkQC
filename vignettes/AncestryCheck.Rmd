@@ -72,6 +72,36 @@ matching by chromosome, position and alleles. The following sections show how
 to extract the relevant data from the reference and study dataset and how to
 filter matching variants.
 
+### Filter reference and study data for non A-T or G-C SNPs
+We will use an awk script to find A→T and C→G SNPs. As these SNPs are more
+difficult to align and only a subset of SNPs is required for the anlysis, we
+will remove them from both the reference and study data set.
+
+```{bash filter at and gc snps, eval=FALSE}
+awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
+                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}' \
+    $qcdir/$name.bim  > \
+    $qcdir/$name.ac_gt_snps
+
+awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
+                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}' \
+    $refdir/$refname.bim  > \
+    $qcdir/$refname.ac_gt_snps
+   
+plink --bfile  $refdir/$refname \
+      --exclude $qcdir/$refname.ac_gt_snps \
+      --make-bed \
+      --out $qcdir/$refname.no_ac_gt_snps
+mv  $qcdir/$refname.no_ac_gt_snps.log $qcdir/plink_log/$refname.no_ac_gt_snps.log
+
+plink --bfile  $qcdir/$name \
+      --exclude $qcdir/$name.ac_gt_snps \
+      --make-bed \
+      --out $qcdir/$name.no_ac_gt_snps
+mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
+```
+
+
 ### Prune study data
 We will conduct principle component analysis on genetic variants that are
 pruned for variants in linkage disequlibrium (LD) with an $r^2 >0.2$ in a 50kb
@@ -82,17 +112,17 @@ ranges of known high-LD structure. This file was originally provided by
 `file.path(find.package('plinkQC'),'extdata','high-LD-regions.txt')`.
 
 ```{bash prune, eval=FALSE}
-plink --bfile  $qcdir/$name \
+plink --bfile  $qcdir/$name.no_ac_gt_snps \
       --exclude range  $refdir/$highld \
       --indep-pairwise 50 5 0.2 \
-      --out $qcdir/$name
-mv  $qcdir/$name.prune.log $qcdir/plink_log/$name.prune
+      --out $qcdir/$name.no_ac_gt_snps
+mv  $qcdir/$name.prune.log $qcdir/plink_log/$name.prune.log
 
-plink --bfile  $qcdir/$name \
-      --extract $qcdir/$name.prune.in \
+plink --bfile  $qcdir/$name.no_ac_gt_snps \
+      --extract $qcdir/$name.no_ac_gt_snps.prune.in \
       --make-bed \
       --out $qcdir/$name.pruned
-mv  $qcdir/$name.pruned.log $qcdir/plink_log/$name.pruned
+mv  $qcdir/$name.pruned.log $qcdir/plink_log/$name.pruned.log
 ```
 
 ### Filter reference data for the same SNP set as in study
@@ -103,7 +133,7 @@ plink --bfile  $refdir/$refname \
       --extract $qcdir/$name.prune.in \
       --make-bed \
       --out $qcdir/$refname.pruned
-mv  $qcdir/$refname.pruned.log $qcdir/plink_log/$refname.pruned
+mv  $qcdir/$refname.pruned.log $qcdir/plink_log/$refname.pruned.log
 ```
 
 ### Check and correct chromosome mismatch
