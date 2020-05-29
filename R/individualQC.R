@@ -921,6 +921,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            refSamplesIID="IID", refSamplesPop="Pop",
                            refColorsColor="Color", refColorsPop="Pop",
                            studyColor="#2c7bb6",
+                           legend_labels_per_row=6,
                            run.check_ancestry=TRUE,
                            interactive=FALSE, verbose=verbose,
                            path2plink=NULL, showPlinkOutput=TRUE) {
@@ -943,6 +944,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                                         refColorsColor=refColorsColor,
                                         refColorsPop=refColorsPop,
                                         studyColor=studyColor,
+                                        legend_labels_per_row=legend_labels_per_row,
                                         interactive=interactive)
         return(fail)
 }
@@ -1820,6 +1822,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' IDs in refColors/refColorsFile.
 #' @param studyColor [character] Colour to be used for study population if plot
 #' is TRUE.
+#' @param legend_labels_per_row [integer] Number of population names per row in PCA plot.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -1849,6 +1852,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     refSamplesIID="IID", refSamplesPop="Pop",
                                     refColorsColor="Color", refColorsPop="Pop",
                                     studyColor="#2c7bb6",
+                                    legend_labels_per_row=6,
                                     interactive=FALSE) {
 
     prefix <- makepath(indir, name)
@@ -1866,7 +1870,8 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     if (!file.exists(paste(out, ".eigenvec", sep=""))){
         stop("plink --pca output file: ", out, ".eigenvec does not exist.")
     }
-    testNumerics(numbers=europeanTh, positives=europeanTh)
+    testNumerics(numbers=c(europeanTh, legend_labels_per_row),
+                 positives=c(europeanTh, legend_labels_per_row))
     pca_data <- data.table::fread(paste(out, ".eigenvec", sep=""),
                                   stringsAsFactors=FALSE, data.table=FALSE)
     colnames(pca_data) <- c("FID", "IID", paste("PC",1:(ncol(pca_data)-2),
@@ -1960,6 +1965,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     non_europeans <- dplyr::filter_(data_name, ~euclid_dist >
                                         (max_euclid_dist * europeanTh))
     fail_ancestry <- dplyr::select_(non_europeans, ~FID, ~IID)
+    legend_rows <- round(nrow(colors)/legend_labels_per_row)
     p_ancestry <- ggplot()
     p_ancestry <- p_ancestry +
         geom_point(data=data_all,
@@ -1969,7 +1975,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                    size=1) +
         scale_color_manual(values=colors$Color,
                            name="Population") +
-        guides(color=guide_legend(nrow=2, byrow=TRUE)) +
+        guides(color=guide_legend(nrow=legend_rows, byrow=TRUE)) +
         ggforce::geom_circle(aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
                                  r=(max_euclid_dist * europeanTh))) +
         ggtitle("PCA on combined reference and study genotypes") +

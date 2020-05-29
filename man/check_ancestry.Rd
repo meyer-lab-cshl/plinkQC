@@ -4,13 +4,28 @@
 \alias{check_ancestry}
 \title{Identification of individuals of divergent ancestry}
 \usage{
-check_ancestry(indir, name, qcdir = indir, prefixMergedDataset,
-  europeanTh = 1.5, refSamples = NULL, refColors = NULL,
-  refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
-  refSamplesPop = "Pop", refColorsColor = "Color",
-  refColorsPop = "Pop", studyColor = "#2c7bb6",
-  run.check_ancestry = TRUE, interactive = FALSE, verbose = verbose,
-  path2plink = NULL, showPlinkOutput = TRUE)
+check_ancestry(
+  indir,
+  name,
+  qcdir = indir,
+  prefixMergedDataset,
+  europeanTh = 1.5,
+  refSamples = NULL,
+  refColors = NULL,
+  refSamplesFile = NULL,
+  refColorsFile = NULL,
+  refSamplesIID = "IID",
+  refSamplesPop = "Pop",
+  refColorsColor = "Color",
+  refColorsPop = "Pop",
+  studyColor = "#2c7bb6",
+  legend_labels_per_row = 6,
+  run.check_ancestry = TRUE,
+  interactive = FALSE,
+  verbose = verbose,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -72,6 +87,8 @@ refColors/refColorsFile}
 IDs in refColors/refColorsFile.}
 
 \item{studyColor}{[character] Colour to be used for study population.}
+
+\item{legend_labels_per_row}{[integer] Number of population names per row in PCA plot.}
 
 \item{run.check_ancestry}{[logical] Should plink --pca be run to
 determine principal components of merged dataset; if FALSE, it is assumed
