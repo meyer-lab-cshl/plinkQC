@@ -194,11 +194,20 @@ test_that('evaluate_check_ancestry throws missing population code error',{
                  "Not all refSamples populations")
 })
 
-test_that('evaluate_check_ancestry throws missing missing ID error',{
-    testRefs <- refSamples[1:4,]
+test_that('evaluate_check_ancestry throws missing refPopulation code error',{
     expect_error(evaluate_check_ancestry(qcdir, name,
                                          prefixMergedDataset=prefix,
-                                         refSamples=testRefs),
+                                         refSamples=refSamples,
+                                         refPopulation = c("CCC")),
+                 "Not all refPopulation populations")
+})
+
+test_that('evaluate_check_ancestry throws missing missing ID error',{
+    testRefs <- refSamples[84:88,]
+    expect_error(evaluate_check_ancestry(qcdir, name,
+                                         prefixMergedDataset=prefix,
+                                         refSamples=testRefs,
+                                         refPopulation = "CEU"),
                  "There are samples in the prefixMergedDataset")
 })
 

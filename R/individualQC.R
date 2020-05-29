@@ -1937,6 +1937,12 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
              refColors; missing population codes: ", paste(missing,
                                                            collapse=","))
     }
+    if (!all(refPopulation %in% refColors$Pop)) {
+        missing <- refPopulation[!refPopulation %in% refColors$Pop]
+        stop("Not all refPopulation populations found in population code of
+             refColors; missing population codes: ", paste(missing,
+                                                           collapse=","))
+    }
     refSamples <- merge(refSamples, refColors, by="Pop", all.X=TRUE)
 
     ## Combine pca data and population information ####
