@@ -1942,7 +1942,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
              in refSamples or ", prefix, ".fam")
     }
 
-    colors <-  data_all[, 23:24]
+    colors <-  dplyr::select_(data_all, ~Pop, ~Color)
     colors <- colors[!duplicated(colors$Pop),]
     colors <- colors[order(colors$Color),]
     colors$Pop <- factor(colors$Pop, levels=unique(colors$Pop))
