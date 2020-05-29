@@ -1936,11 +1936,12 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         stop("There are samples in the prefixMergedDataset that cannot be found
              in refSamples or ", prefix, ".fam")
     }
-    data_all <- data_all[order(data_all$Pop, decreasing=FALSE),]
 
-    refColors <- rbind(refColors, c(name, studyColor))
-    data_all$Color <- as.factor(data_all$Color)
-    data_all$Pop <- factor(data_all$Pop, levels=refColors$Pop)
+    colors <-  data_all[, 23:24]
+    colors <- colors[!duplicated(colors$Pop),]
+    colors <- colors[order(colors$Color),]
+    colors$Pop <- factor(colors$Pop, levels=unique(colors$Pop))
+    data_all$Pop <- factor(data_all$Pop, levels=levels(colors$Pop))
 
     ## Find mean coordinates and distances of reference Europeans ####
     all_european <- dplyr::filter_(data_all, ~Pop %in% c("CEU", "TSI"))
@@ -1960,14 +1961,13 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                         (max_euclid_dist * europeanTh))
     fail_ancestry <- dplyr::select_(non_europeans, ~FID, ~IID)
     p_ancestry <- ggplot()
-    p_ancestry <- p_ancestry + geom_point(data=data_all,
-                                          aes_string(x='PC1', y='PC2',
-                                                     color='Pop')) +
+    p_ancestry <- p_ancestry +
+        geom_point(data=data_all,
+                   aes_string(x='PC1', y='PC2', color='Pop')) +
         geom_point(data=dplyr::filter_(data_all, ~Pop != name),
-                   aes_string(x='PC1', y='PC2',
-                              color='Pop'),
+                   aes_string(x='PC1', y='PC2', color='Pop'),
                    size=1) +
-        scale_color_manual(values=refColors$Color,
+        scale_color_manual(values=colors$Color,
                            name="Population") +
         guides(color=guide_legend(nrow=2, byrow=TRUE)) +
         ggforce::geom_circle(aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
