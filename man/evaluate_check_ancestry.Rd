@@ -19,6 +19,7 @@ evaluate_check_ancestry(
   refColorsColor = "Color",
   refColorsPop = "Pop",
   studyColor = "#2c7bb6",
+  refPopulation = c("CEU", "TSI"),
   legend_labels_per_row = 6,
   interactive = FALSE
 )
@@ -83,6 +84,10 @@ IDs in refColors/refColorsFile.}
 
 \item{studyColor}{[character] Colour to be used for study population if plot
 is TRUE.}
+
+\item{refPopulation}{[vector] Vector with population identifiers of European
+reference population. Identifiers have to be corresponding to population IDs
+[refColorsPop] in refColorsfile/refColors.}
 
 \item{legend_labels_per_row}{[integer] Number of population names per row in PCA plot.}
 

@@ -10,6 +10,7 @@ check_ancestry(
   qcdir = indir,
   prefixMergedDataset,
   europeanTh = 1.5,
+  refPopulation = c("CEU", "TSI"),
   refSamples = NULL,
   refColors = NULL,
   refSamplesFile = NULL,
@@ -51,6 +52,10 @@ considered to be of European descent and samples outside this radius of
 non-European descent. The radius is computed as the maximum Euclidean
 distance of European reference samples to the centre of European reference
 samples.}
+
+\item{refPopulation}{[vector] Vector with population identifiers of European
+reference population. Identifiers have to be corresponding to population IDs
+[refColorsPop] in refColorsfile/refColors.}
 
 \item{refSamples}{[data.frame] Dataframe with sample identifiers
 [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
