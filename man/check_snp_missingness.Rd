@@ -4,9 +4,16 @@
 \alias{check_snp_missingness}
 \title{Identification of SNPs with high missingness rate}
 \usage{
-check_snp_missingness(indir, name, qcdir = indir, lmissTh = 0.01,
-  interactive = FALSE, path2plink = NULL, verbose = FALSE,
-  showPlinkOutput = TRUE)
+check_snp_missingness(
+  indir,
+  name,
+  qcdir = indir,
+  lmissTh = 0.01,
+  interactive = FALSE,
+  path2plink = NULL,
+  verbose = FALSE,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

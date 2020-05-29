@@ -4,11 +4,22 @@
 \alias{perMarkerQC}
 \title{Quality control for all markers in plink-dataset}
 \usage{
-perMarkerQC(indir, qcdir = indir, name,
-  do.check_snp_missingness = TRUE, lmissTh = 0.01,
-  do.check_hwe = TRUE, hweTh = 1e-05, do.check_maf = TRUE,
-  macTh = 20, mafTh = NULL, interactive = FALSE, verbose = TRUE,
-  path2plink = NULL, showPlinkOutput = TRUE)
+perMarkerQC(
+  indir,
+  qcdir = indir,
+  name,
+  do.check_snp_missingness = TRUE,
+  lmissTh = 0.01,
+  do.check_hwe = TRUE,
+  hweTh = 1e-05,
+  do.check_maf = TRUE,
+  macTh = 20,
+  mafTh = NULL,
+  interactive = FALSE,
+  verbose = TRUE,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

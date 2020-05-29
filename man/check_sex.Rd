@@ -4,11 +4,25 @@
 \alias{check_sex}
 \title{Identification of individuals with discordant sex information}
 \usage{
-check_sex(indir, name, qcdir = indir, maleTh = 0.8, femaleTh = 0.2,
-  run.check_sex = TRUE, externalSex = NULL, externalFemale = "F",
-  externalMale = "M", externalSexSex = "Sex", externalSexID = "IID",
-  fixMixup = FALSE, interactive = FALSE, verbose = FALSE,
-  label = TRUE, path2plink = NULL, showPlinkOutput = TRUE)
+check_sex(
+  indir,
+  name,
+  qcdir = indir,
+  maleTh = 0.8,
+  femaleTh = 0.2,
+  run.check_sex = TRUE,
+  externalSex = NULL,
+  externalFemale = "F",
+  externalMale = "M",
+  externalSexSex = "Sex",
+  externalSexID = "IID",
+  fixMixup = FALSE,
+  interactive = FALSE,
+  verbose = FALSE,
+  label = TRUE,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

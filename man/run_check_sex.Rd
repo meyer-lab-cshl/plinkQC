@@ -4,8 +4,14 @@
 \alias{run_check_sex}
 \title{Run PLINK sexcheck}
 \usage{
-run_check_sex(indir, name, qcdir = indir, verbose = FALSE,
-  path2plink = NULL, showPlinkOutput = TRUE)
+run_check_sex(
+  indir,
+  name,
+  qcdir = indir,
+  verbose = FALSE,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

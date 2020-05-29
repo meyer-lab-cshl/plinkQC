@@ -3,9 +3,5 @@
 \docType{package}
 \name{plinkQC}
 \alias{plinkQC}
-\alias{plinkQC-package}
 \title{plinkQC}
-\description{
-plinkQC
-}
 \keyword{internal}

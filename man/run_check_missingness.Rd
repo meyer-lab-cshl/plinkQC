@@ -4,8 +4,14 @@
 \alias{run_check_missingness}
 \title{Run PLINK missingness rate calculation}
 \usage{
-run_check_missingness(indir, name, qcdir = indir, verbose = FALSE,
-  path2plink = NULL, showPlinkOutput = TRUE)
+run_check_missingness(
+  indir,
+  name,
+  qcdir = indir,
+  verbose = FALSE,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

@@ -4,12 +4,26 @@
 \alias{cleanData}
 \title{Create plink dataset with individuals and markers passing quality control}
 \usage{
-cleanData(indir, name, qcdir = indir, filterSex = TRUE,
-  filterHeterozygosity = TRUE, filterSampleMissingness = TRUE,
-  filterAncestry = TRUE, filterRelated = TRUE,
-  filterSNPMissingness = TRUE, lmissTh = 0.01, filterHWE = TRUE,
-  hweTh = 1e-05, filterMAF = TRUE, macTh = 20, mafTh = NULL,
-  path2plink = NULL, verbose = FALSE, showPlinkOutput = TRUE)
+cleanData(
+  indir,
+  name,
+  qcdir = indir,
+  filterSex = TRUE,
+  filterHeterozygosity = TRUE,
+  filterSampleMissingness = TRUE,
+  filterAncestry = TRUE,
+  filterRelated = TRUE,
+  filterSNPMissingness = TRUE,
+  lmissTh = 0.01,
+  filterHWE = TRUE,
+  hweTh = 1e-05,
+  filterMAF = TRUE,
+  macTh = 20,
+  mafTh = NULL,
+  path2plink = NULL,
+  verbose = FALSE,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

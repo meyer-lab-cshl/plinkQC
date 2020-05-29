@@ -5,9 +5,16 @@
 \title{Identification of SNPs showing a significant deviation from Hardy-Weinberg-
 equilibrium (HWE)}
 \usage{
-check_hwe(indir, name, qcdir = indir, hweTh = 1e-05,
-  interactive = FALSE, path2plink = NULL, verbose = FALSE,
-  showPlinkOutput = TRUE)
+check_hwe(
+  indir,
+  name,
+  qcdir = indir,
+  hweTh = 1e-05,
+  interactive = FALSE,
+  path2plink = NULL,
+  verbose = FALSE,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
