@@ -64,13 +64,13 @@ corresponds to v1.9, whereas `plink2` corresponds to v2.
 1000 Genomes phase III (1000GenomesIII) is available in
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) at https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3.
 In addition, a sample file with information about the individuals' ancestry
-is available and shoud be downloaded as in input for `plinkQC::chec_Ancestry()`.
+is available and shoud be downloaded as in input for `plinkQC::check_ancestry()`.
 The following code chunk downloads and decompresses the data.
 The genome build of
 these files is the same as the original release of the 1000GenomesIII, namely
 CGRCh37. 
 
-NB: CGRCh38 positions in vcf format can be found [here](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/)
+NB: CGRCh38 positions in vcf format can be found [here](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/).
 The remainder of this vignette will however look at the data processing required
 for the 1000GenomesIII available in
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen).
