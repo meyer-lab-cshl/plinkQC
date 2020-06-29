@@ -57,7 +57,7 @@ status is optimised to retain as many individuals as possible in the study.
  original probe intensity data of the genotype array and is available in
 [plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
 
-**Note**: [PLINK](https://www.cog-genomics.org/plink/2.0/)2.0 is still in alpha
+**Note**: [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/) is still in alpha
 status with many re-implementations and updates, including output file changes.
 While these changes are ongoing, *plinkQC* will rely on users using PLINK 1.9.
 I will monitor PLINK 2.0 changes and check compatibility with `plinkQC`. If
