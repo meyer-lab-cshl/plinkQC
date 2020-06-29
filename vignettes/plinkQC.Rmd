@@ -52,10 +52,18 @@ generate a new, clean dataset. Removal of individuals based on relationship
 status is optimised to retain as many individuals as possible in the study.
 
 *plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
- (version $\ge$  1.9), which has to be manually installed prior to the usage of
+ (**version 1.9**), which has to be manually installed prior to the usage of
  *plinkQC*. It assumes the genotype have already been determined from the
  original probe intensity data of the genotype array and is available in
 [plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
+
+**Note**: [PLINK](https://www.cog-genomics.org/plink/2.0/)2.0 is still in alpha
+status with many re-implementations and updates, including output file changes.
+While these changes are ongoing, *plinkQC* will rely on users using PLINK 1.9.
+I will monitor PLINK 2.0 changes and check compatibility with `plinkQC`. If
+users require specific PLINK 2.0 output, I recommend using the [Step-by-Step]
+approach described below and manually saving to
+the output files expected from PLINK 1.9.
 
 The protocol is implemented in three main functions, the per-individual quality
 control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
@@ -340,6 +348,7 @@ fail_snpmissing <- check_snp_missingness(indir=indir, qcdir=qcdir, name=name,
 ```{r load snp missing, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("snpmissingness.png")
 ```
+
 ## Markers with deviation from HWE
 Markers with strong deviation from HWE might be indicative of genotyping or
 genotype-calling errors. As serious genotyping errors often yield
