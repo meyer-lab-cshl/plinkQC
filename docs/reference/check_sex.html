@@ -87,7 +87,7 @@ the individuals split by their (PEDSEX)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -180,11 +180,25 @@ updated (fixMixup=TRUE).
 the individuals split by their (PEDSEX).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_sex</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>run.check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>,
-  <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>, <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>, <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>check_sex</span>(
+  <span class='no'>indir</span>,
+  <span class='no'>name</span>,
+  <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
+  <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>run.check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>,
+  <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>,
+  <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>,
+  <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

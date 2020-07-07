@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
       <h1 data-toc-skip>Processing 1000 Genomes reference data for ancestry estimation</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2020-06-29</h4>
+            <h4 class="date">2020-07-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/Genomes1000.Rmd"><code>vignettes/Genomes1000.Rmd</code></a></small>
       <div class="hidden name"><code>Genomes1000.Rmd</code></div>
@@ -139,8 +139,8 @@
 <div id="download-and-decompress-1000-genomes-phase-3-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#download-and-decompress-1000-genomes-phase-3-data" class="anchor"></a>Download and decompress 1000 Genomes phase 3 data</h2>
-<p>1000 Genomes phase III (1000GenomesIII) is available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a> at <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>. In addition, a sample file with information about the individuals’ ancestry is available and shoud be downloaded as in input for <code>plinkQC::chec_Ancestry()</code>. The following code chunk downloads and decompresses the data. The genome build of these files is the same as the original release of the 1000GenomesIII, namely CGRCh37.</p>
-<p>NB: CGRCh38 positions in vcf format can be found <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/">here</a> The remainder of this vignette will however look at the data processing required for the 1000GenomesIII available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a>.</p>
+<p>1000 Genomes phase III (1000GenomesIII) is available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a> at <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>. In addition, a sample file with information about the individuals’ ancestry is available and shoud be downloaded as in input for <code><a href="../reference/check_ancestry.html">plinkQC::check_ancestry()</a></code>. The following code chunk downloads and decompresses the data. The genome build of these files is the same as the original release of the 1000GenomesIII, namely CGRCh37.</p>
+<p>NB: CGRCh38 positions in vcf format can be found <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/">here</a>. The remainder of this vignette will however look at the data processing required for the 1000GenomesIII available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="bu">cd</span> <span class="va">$refdir</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="va">pgen=</span>https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst<span class="ex">?dl</span>=1</span>

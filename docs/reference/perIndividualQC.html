@@ -77,7 +77,7 @@ genetic ancestry." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -160,24 +160,52 @@ to their SNP sex, their relatedness to other study individuals and their
 genetic ancestry.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>perIndividualQC</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>dont.check_sex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>do.run_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>do.evaluate_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>, <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>, <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>, <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>dont.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>dont.check_relatedness</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
-  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>genomebuild</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
-  <span class='kw'>dont.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>do.run_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>prefixMergedDataset</span>,
-  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
-  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>perIndividualQC</span>(
+  <span class='no'>indir</span>,
+  <span class='no'>name</span>,
+  <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
+  <span class='kw'>dont.check_sex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>do.run_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>,
+  <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>,
+  <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>,
+  <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>dont.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>do.run_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
+  <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>dont.check_relatedness</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>do.run_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
+  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>genomebuild</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
+  <span class='kw'>dont.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>do.run_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do.evaluate_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>prefixMergedDataset</span>,
+  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
+  <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
+  <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
+  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
+  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>,
+  <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

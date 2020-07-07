@@ -90,7 +90,7 @@ kept and all others listed as failIDs." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -186,13 +186,21 @@ all maximum independent sets are 0), one individual of that cluster will be
 kept and all others listed as failIDs.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>relatednessFilter</span>(<span class='no'>relatedness</span>, <span class='kw'>otherCriterion</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>relatednessTh</span>,
-  <span class='kw'>otherCriterionTh</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>otherCriterionThDirection</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"gt"</span>, <span class='st'>"ge"</span>,
-  <span class='st'>"lt"</span>, <span class='st'>"le"</span>, <span class='st'>"eq"</span>), <span class='kw'>relatednessIID1</span> <span class='kw'>=</span> <span class='st'>"IID1"</span>,
-  <span class='kw'>relatednessIID2</span> <span class='kw'>=</span> <span class='st'>"IID2"</span>, <span class='kw'>relatednessFID1</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>relatednessFID2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>relatednessRelatedness</span> <span class='kw'>=</span> <span class='st'>"PI_HAT"</span>,
-  <span class='kw'>otherCriterionIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>, <span class='kw'>otherCriterionMeasure</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>relatednessFilter</span>(
+  <span class='no'>relatedness</span>,
+  <span class='kw'>otherCriterion</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>relatednessTh</span>,
+  <span class='kw'>otherCriterionTh</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>otherCriterionThDirection</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"gt"</span>, <span class='st'>"ge"</span>, <span class='st'>"lt"</span>, <span class='st'>"le"</span>, <span class='st'>"eq"</span>),
+  <span class='kw'>relatednessIID1</span> <span class='kw'>=</span> <span class='st'>"IID1"</span>,
+  <span class='kw'>relatednessIID2</span> <span class='kw'>=</span> <span class='st'>"IID2"</span>,
+  <span class='kw'>relatednessFID1</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>relatednessFID2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>relatednessRelatedness</span> <span class='kw'>=</span> <span class='st'>"PI_HAT"</span>,
+  <span class='kw'>otherCriterionIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>otherCriterionMeasure</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
