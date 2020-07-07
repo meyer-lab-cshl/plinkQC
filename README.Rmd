@@ -64,5 +64,5 @@ A log of version changes can be found
 
 ## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
 Meyer HV (2018) plinkQC: Genotype quality control in genetic association
-studies. \doi{10.5281/zenodo.3373798}
+studies.
 
