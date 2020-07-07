@@ -1,5 +1,7 @@
 # plinkQC 0.3.2
 ## minor changes
+* Add checks and tests in `evaluate_check_ancestry` for missing non-reference samples
+[5c03971](https://github.com/meyer-lab/plinkQC/commit/5c03971b92341b5a8cb26a1d5f2e37d637f5cbd7)
 * Clarified tutorials:
   * R internal file.copy instead of systems `cp` command to make run on windows: [6c91ef3](https://github.com/meyer-lab/plinkQC/commit/6c91ef3368f601658967f88bc20db94a28307fce),
   fixes [#26](https://github.com/meyer-lab/plinkQC/issues/26) 
