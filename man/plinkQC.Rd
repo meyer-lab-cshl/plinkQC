@@ -4,4 +4,7 @@
 \name{plinkQC}
 \alias{plinkQC}
 \title{plinkQC}
+\description{
+Genotype Quality Control with 'PLINK'
+}
 \keyword{internal}
