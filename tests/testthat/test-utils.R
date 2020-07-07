@@ -41,22 +41,17 @@ df_other$values <- 0.6
 test_that('relatednessFilter throws missing relatedness IID1 column error',{
     expect_error(relatednessFilter(df,relatednessIID1="IID1",
                                    relatednessIID2="ID2",
-                                   relatednessRelatedness="values"),
+                                   relatednessRelatedness="values",
+                                   relatednessTh = 0.185),
                  "Column IID1 for relatedness not found")
 })
 
 test_that('relatednessFilter throws missing relatedness IID2 column error',{
     expect_error(relatednessFilter(df,relatednessIID1="ID1",
                                    relatednessIID2="IID2",
-                                   relatednessRelatedness="values"),
+                                   relatednessRelatedness="values",
+                                   relatednessTh = 0.185),
                  "Column ID1 for relatedness not found")
-})
-
-test_that('relatednessFilter throws missing relatednessTh error',{
-    expect_error(relatednessFilter(df,relatednessIID1="ID1",
-                                   relatednessIID2="ID2",
-                                   relatednessRelatedness="values"),
-                 "argument \"relatednessTh\" is missing, with no default")
 })
 
 
@@ -65,7 +60,8 @@ test_that('relatednessFilter throws missing relatedness FID1 column error',{
                                    relatednessIID2="ID2",
                                    relatednessFID1="FID1",
                                    relatednessFID2="FID2",
-                                   relatednessRelatedness="values"),
+                                   relatednessRelatedness="values",
+                                   relatednessTh = 0.185),
                  "Column FID1 for relatedness not found")
 })
 
@@ -95,7 +91,8 @@ test_that('relatednessFilter throws colname specification error',{
     expect_error(relatednessFilter(df, relatednessFID1="FID",
                                    relatednessIID1="ID1",
                                    relatednessIID2="ID2",
-                                   relatednessRelatedness="values"),
+                                   relatednessRelatedness="values",
+                                   relatednessTh = 0.1875),
                  "Either none or both, relatednessFID1 and relatednessFID2")
 })
 
