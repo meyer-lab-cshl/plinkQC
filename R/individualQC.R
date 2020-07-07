@@ -1882,6 +1882,14 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                   stringsAsFactors=FALSE, data.table=FALSE)
     colnames(pca_data) <- c("FID", "IID", paste("PC",1:(ncol(pca_data)-2),
                                                 sep=""))
+    if (!any(samples$IID %in% pca_data$IID)) {
+        stop("There are no ", prefix, ".fam samples in the prefixMergedDataset")
+    }
+    if (!all(samples$IID %in% pca_data$IID)) {
+        stop("Not all ", prefix, ".fam samples are present in the",
+             "prefixMergedDataset")
+    }
+
     #pca_data$IID <- as.character(pca_data$IID)
     #pca_data$FID <- as.character(pca_data$FID)
 

@@ -243,3 +243,16 @@ test_that('evaluate_check_ancestry returns correct fail IDs for example data',{
     expect_true(all(fail$fail_ancestry$IID %in% fail_ancestryIDs[,1]))
 })
 
+test_that('evaluate_check_ancestry fails with all missing sample error',{
+    expect_error(evaluate_check_ancestry(
+        qcdir, name, prefixMergedDataset="data.HapMapIII_no_samples",
+        refSamples=refSamples),
+        "There are no")
+})
+
+test_that('evaluate_check_ancestry fails with some missing sample error',{
+    expect_error(evaluate_check_ancestry(
+        qcdir, name, prefixMergedDataset="data.HapMapIII_some_samples",
+        refSamples=refSamples),
+        "Not all")
+})
