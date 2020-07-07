@@ -4,9 +4,17 @@
 \alias{check_maf}
 \title{Identification of SNPs with low minor allele frequency}
 \usage{
-check_maf(indir, name, qcdir = indir, macTh = 20, mafTh = NULL,
-  verbose = FALSE, interactive = FALSE, path2plink = NULL,
-  showPlinkOutput = TRUE)
+check_maf(
+  indir,
+  name,
+  qcdir = indir,
+  macTh = 20,
+  mafTh = NULL,
+  verbose = FALSE,
+  interactive = FALSE,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

@@ -4,13 +4,21 @@
 \alias{relatednessFilter}
 \title{Remove related individuals while keeping maximum number of individuals}
 \usage{
-relatednessFilter(relatedness, otherCriterion = NULL, relatednessTh,
-  otherCriterionTh = NULL, otherCriterionThDirection = c("gt", "ge",
-  "lt", "le", "eq"), relatednessIID1 = "IID1",
-  relatednessIID2 = "IID2", relatednessFID1 = NULL,
-  relatednessFID2 = NULL, relatednessRelatedness = "PI_HAT",
-  otherCriterionIID = "IID", otherCriterionMeasure = NULL,
-  verbose = FALSE)
+relatednessFilter(
+  relatedness,
+  otherCriterion = NULL,
+  relatednessTh,
+  otherCriterionTh = NULL,
+  otherCriterionThDirection = c("gt", "ge", "lt", "le", "eq"),
+  relatednessIID1 = "IID1",
+  relatednessIID2 = "IID2",
+  relatednessFID1 = NULL,
+  relatednessFID2 = NULL,
+  relatednessRelatedness = "PI_HAT",
+  otherCriterionIID = "IID",
+  otherCriterionMeasure = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{relatedness}{[data.frame] containing pair-wise relatedness estimates

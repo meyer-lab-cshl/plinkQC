@@ -4,8 +4,7 @@
 \alias{testNumerics}
 \title{Test lists for different properties of numerics}
 \usage{
-testNumerics(numbers, positives = NULL, integers = NULL,
-  proportions = NULL)
+testNumerics(numbers, positives = NULL, integers = NULL, proportions = NULL)
 }
 \arguments{
 \item{numbers}{[list] whose elements are tested for being numeric.}

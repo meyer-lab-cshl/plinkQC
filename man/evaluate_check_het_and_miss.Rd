@@ -4,8 +4,14 @@
 \alias{evaluate_check_het_and_miss}
 \title{Evaluate results from PLINK missing genotype and heterozygosity rate check.}
 \usage{
-evaluate_check_het_and_miss(qcdir, name, imissTh = 0.03, hetTh = 3,
-  label = TRUE, interactive = FALSE)
+evaluate_check_het_and_miss(
+  qcdir,
+  name,
+  imissTh = 0.03,
+  hetTh = 3,
+  label = TRUE,
+  interactive = FALSE
+)
 }
 \arguments{
 \item{qcdir}{[character] path/to/directory/with/QC/results containing

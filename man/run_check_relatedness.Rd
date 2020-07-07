@@ -4,9 +4,17 @@
 \alias{run_check_relatedness}
 \title{Run PLINK IBD estimation}
 \usage{
-run_check_relatedness(indir, name, qcdir = indir, highIBDTh = 0.185,
-  mafThRelatedness = 0.1, path2plink = NULL, genomebuild = "hg19",
-  showPlinkOutput = TRUE, verbose = FALSE)
+run_check_relatedness(
+  indir,
+  name,
+  qcdir = indir,
+  highIBDTh = 0.185,
+  mafThRelatedness = 0.1,
+  path2plink = NULL,
+  genomebuild = "hg19",
+  showPlinkOutput = TRUE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

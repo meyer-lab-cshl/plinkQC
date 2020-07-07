@@ -4,8 +4,14 @@
 \alias{evaluate_check_relatedness}
 \title{Evaluate results from PLINK IBD estimation.}
 \usage{
-evaluate_check_relatedness(qcdir, name, highIBDTh = 0.1875,
-  imissTh = 0.03, interactive = FALSE, verbose = FALSE)
+evaluate_check_relatedness(
+  qcdir,
+  name,
+  highIBDTh = 0.1875,
+  imissTh = 0.03,
+  interactive = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{qcdir}{[character] path/to/directory/with/QC/results containing

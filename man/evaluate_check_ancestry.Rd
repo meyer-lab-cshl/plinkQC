@@ -4,11 +4,25 @@
 \alias{evaluate_check_ancestry}
 \title{Evaluate results from PLINK PCA on combined study and reference data}
 \usage{
-evaluate_check_ancestry(indir, name, prefixMergedDataset, qcdir = indir,
-  europeanTh = 1.5, refSamples = NULL, refColors = NULL,
-  refSamplesFile = NULL, refColorsFile = NULL, refSamplesIID = "IID",
-  refSamplesPop = "Pop", refColorsColor = "Color",
-  refColorsPop = "Pop", studyColor = "#2c7bb6", interactive = FALSE)
+evaluate_check_ancestry(
+  indir,
+  name,
+  prefixMergedDataset,
+  qcdir = indir,
+  europeanTh = 1.5,
+  refSamples = NULL,
+  refColors = NULL,
+  refSamplesFile = NULL,
+  refColorsFile = NULL,
+  refSamplesIID = "IID",
+  refSamplesPop = "Pop",
+  refColorsColor = "Color",
+  refColorsPop = "Pop",
+  studyColor = "#2c7bb6",
+  refPopulation = c("CEU", "TSI"),
+  legend_labels_per_row = 6,
+  interactive = FALSE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
@@ -70,6 +84,12 @@ IDs in refColors/refColorsFile.}
 
 \item{studyColor}{[character] Colour to be used for study population if plot
 is TRUE.}
+
+\item{refPopulation}{[vector] Vector with population identifiers of European
+reference population. Identifiers have to be corresponding to population IDs
+[refColorsPop] in refColorsfile/refColors.}
+
+\item{legend_labels_per_row}{[integer] Number of population names per row in PCA plot.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface

@@ -916,11 +916,13 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 
 check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            europeanTh=1.5,
+                           refPopulation=c("CEU", "TSI"),
                            refSamples=NULL, refColors=NULL,
                            refSamplesFile=NULL, refColorsFile=NULL,
                            refSamplesIID="IID", refSamplesPop="Pop",
                            refColorsColor="Color", refColorsPop="Pop",
                            studyColor="#2c7bb6",
+                           legend_labels_per_row=6,
                            run.check_ancestry=TRUE,
                            interactive=FALSE, verbose=verbose,
                            path2plink=NULL, showPlinkOutput=TRUE) {
@@ -934,6 +936,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
         fail <- evaluate_check_ancestry(qcdir=qcdir, indir=indir, name=name,
                                         prefixMergedDataset=prefixMergedDataset,
                                         europeanTh=europeanTh,
+                                        refPopulation=refPopulation,
                                         refSamples=refSamples,
                                         refColors=refColors,
                                         refSamplesFile=refSamplesFile,
@@ -943,6 +946,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                                         refColorsColor=refColorsColor,
                                         refColorsPop=refColorsPop,
                                         studyColor=studyColor,
+                                        legend_labels_per_row=legend_labels_per_row,
                                         interactive=interactive)
         return(fail)
 }
@@ -1789,6 +1793,9 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' considered to be of European descent and samples outside this radius of
 #' non-European descent. The radius is computed as the maximum Euclidean distance
 #' of European reference samples to the centre of European reference samples.
+#' @param refPopulation [vector] Vector with population identifiers of European
+#' reference population. Identifiers have to be corresponding to population IDs
+#' [refColorsPop] in refColorsfile/refColors.
 #' @param refSamples [data.frame] Dataframe with sample identifiers
 #' [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
 #' population identifier [refSamplesPop] corresponding to population IDs
@@ -1820,6 +1827,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' IDs in refColors/refColorsFile.
 #' @param studyColor [character] Colour to be used for study population if plot
 #' is TRUE.
+#' @param legend_labels_per_row [integer] Number of population names per row in PCA plot.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -1849,6 +1857,8 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     refSamplesIID="IID", refSamplesPop="Pop",
                                     refColorsColor="Color", refColorsPop="Pop",
                                     studyColor="#2c7bb6",
+                                    refPopulation=c("CEU", "TSI"),
+                                    legend_labels_per_row=6,
                                     interactive=FALSE) {
 
     prefix <- makepath(indir, name)
@@ -1866,11 +1876,20 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     if (!file.exists(paste(out, ".eigenvec", sep=""))){
         stop("plink --pca output file: ", out, ".eigenvec does not exist.")
     }
-    testNumerics(numbers=europeanTh, positives=europeanTh)
+    testNumerics(numbers=c(europeanTh, legend_labels_per_row),
+                 positives=c(europeanTh, legend_labels_per_row))
     pca_data <- data.table::fread(paste(out, ".eigenvec", sep=""),
                                   stringsAsFactors=FALSE, data.table=FALSE)
     colnames(pca_data) <- c("FID", "IID", paste("PC",1:(ncol(pca_data)-2),
                                                 sep=""))
+    if (!any(samples$IID %in% pca_data$IID)) {
+        stop("There are no ", prefix, ".fam samples in the prefixMergedDataset")
+    }
+    if (!all(samples$IID %in% pca_data$IID)) {
+        stop("Not all ", prefix, ".fam samples are present in the",
+             "prefixMergedDataset")
+    }
+
     #pca_data$IID <- as.character(pca_data$IID)
     #pca_data$FID <- as.character(pca_data$FID)
 
@@ -1926,6 +1945,12 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
              refColors; missing population codes: ", paste(missing,
                                                            collapse=","))
     }
+    if (!all(refPopulation %in% refColors$Pop)) {
+        missing <- refPopulation[!refPopulation %in% refColors$Pop]
+        stop("Not all refPopulation populations found in population code of
+             refColors; missing population codes: ", paste(missing,
+                                                           collapse=","))
+    }
     refSamples <- merge(refSamples, refColors, by="Pop", all.X=TRUE)
 
     ## Combine pca data and population information ####
@@ -1936,14 +1961,15 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         stop("There are samples in the prefixMergedDataset that cannot be found
              in refSamples or ", prefix, ".fam")
     }
-    data_all <- data_all[order(data_all$Pop, decreasing=FALSE),]
 
-    refColors <- rbind(refColors, c(name, studyColor))
-    data_all$Color <- as.factor(data_all$Color)
-    data_all$Pop <- factor(data_all$Pop, levels=refColors$Pop)
+    colors <-  dplyr::select_(data_all, ~Pop, ~Color)
+    colors <- colors[!duplicated(colors$Pop),]
+    colors <- colors[order(colors$Color),]
+    colors$Pop <- factor(colors$Pop, levels=unique(colors$Pop))
+    data_all$Pop <- factor(data_all$Pop, levels=levels(colors$Pop))
 
     ## Find mean coordinates and distances of reference Europeans ####
-    all_european <- dplyr::filter_(data_all, ~Pop %in% c("CEU", "TSI"))
+    all_european <- dplyr::filter_(data_all, ~Pop %in% refPopulation)
     euro_pc1_mean <- mean(all_european$PC1)
     euro_pc2_mean <- mean(all_european$PC2)
 
@@ -1959,17 +1985,17 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     non_europeans <- dplyr::filter_(data_name, ~euclid_dist >
                                         (max_euclid_dist * europeanTh))
     fail_ancestry <- dplyr::select_(non_europeans, ~FID, ~IID)
+    legend_rows <- round(nrow(colors)/legend_labels_per_row)
     p_ancestry <- ggplot()
-    p_ancestry <- p_ancestry + geom_point(data=data_all,
-                                          aes_string(x='PC1', y='PC2',
-                                                     color='Pop')) +
+    p_ancestry <- p_ancestry +
+        geom_point(data=data_all,
+                   aes_string(x='PC1', y='PC2', color='Pop')) +
         geom_point(data=dplyr::filter_(data_all, ~Pop != name),
-                   aes_string(x='PC1', y='PC2',
-                              color='Pop'),
+                   aes_string(x='PC1', y='PC2', color='Pop'),
                    size=1) +
-        scale_color_manual(values=refColors$Color,
+        scale_color_manual(values=colors$Color,
                            name="Population") +
-        guides(color=guide_legend(nrow=2, byrow=TRUE)) +
+        guides(color=guide_legend(nrow=legend_rows, byrow=TRUE)) +
         ggforce::geom_circle(aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
                                  r=(max_euclid_dist * europeanTh))) +
         ggtitle("PCA on combined reference and study genotypes") +

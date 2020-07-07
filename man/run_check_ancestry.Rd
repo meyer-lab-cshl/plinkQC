@@ -4,8 +4,14 @@
 \alias{run_check_ancestry}
 \title{Run PLINK principal component analysis}
 \usage{
-run_check_ancestry(indir, prefixMergedDataset, qcdir = indir,
-  verbose = FALSE, path2plink = NULL, showPlinkOutput = TRUE)
+run_check_ancestry(
+  indir,
+  prefixMergedDataset,
+  qcdir = indir,
+  verbose = FALSE,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

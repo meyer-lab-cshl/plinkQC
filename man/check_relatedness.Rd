@@ -4,10 +4,20 @@
 \alias{check_relatedness}
 \title{Identification of related individuals}
 \usage{
-check_relatedness(indir, name, qcdir = indir, highIBDTh = 0.1875,
-  genomebuild = "hg19", imissTh = 0.03, run.check_relatedness = TRUE,
-  interactive = FALSE, verbose = FALSE, mafThRelatedness = 0.1,
-  path2plink = NULL, showPlinkOutput = TRUE)
+check_relatedness(
+  indir,
+  name,
+  qcdir = indir,
+  highIBDTh = 0.1875,
+  genomebuild = "hg19",
+  imissTh = 0.03,
+  run.check_relatedness = TRUE,
+  interactive = FALSE,
+  verbose = FALSE,
+  mafThRelatedness = 0.1,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data

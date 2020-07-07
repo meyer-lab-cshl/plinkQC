@@ -5,10 +5,19 @@
 \title{Identification of individuals with outlying missing genotype or
 heterozygosity rates}
 \usage{
-check_het_and_miss(indir, name, qcdir = indir, imissTh = 0.03,
-  hetTh = 3, run.check_het_and_miss = TRUE, label = TRUE,
-  interactive = FALSE, verbose = FALSE, path2plink = NULL,
-  showPlinkOutput = TRUE)
+check_het_and_miss(
+  indir,
+  name,
+  qcdir = indir,
+  imissTh = 0.03,
+  hetTh = 3,
+  run.check_het_and_miss = TRUE,
+  label = TRUE,
+  interactive = FALSE,
+  verbose = FALSE,
+  path2plink = NULL,
+  showPlinkOutput = TRUE
+)
 }
 \arguments{
 \item{indir}{[character] /path/to/directory containing the basic PLINK data
