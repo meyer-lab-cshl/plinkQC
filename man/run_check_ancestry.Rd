@@ -33,7 +33,7 @@ permission to qcdir. Per default qcdir=indir.}
 plink should be accesible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
-and PLINK will be found by \code{\link[sys]{exec_wait}}('plink').}
+and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}

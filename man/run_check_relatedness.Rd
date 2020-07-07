@@ -39,7 +39,7 @@ for selecting variants for IBD estimation.}
 plink should be accesible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
-and PLINK will be found by \code{\link[sys]{exec_wait}}('plink').}
+and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 
 \item{genomebuild}{[character] Name of the genome build of the PLINK file
 annotations, ie mappings in the name.bim file. Will be used to remove
