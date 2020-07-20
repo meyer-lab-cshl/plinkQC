@@ -90,7 +90,7 @@ the y-axis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -185,10 +185,19 @@ individuals' missingness rates on x-axis and their heterozygosity rates on
 the y-axis.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_het_and_miss</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
-  <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>run.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>check_het_and_miss</span>(
+  <span class='no'>indir</span>,
+  <span class='no'>name</span>,
+  <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
+  <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
+  <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>run.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -256,7 +265,7 @@ save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
 plink should be accesible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
-and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec_wait</a></code>('plink').</p></td>
+and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec</a></code>('plink').</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>

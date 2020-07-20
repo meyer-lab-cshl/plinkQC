@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
       <h1 data-toc-skip>Genotype quality control with plinkQC</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2020-06-29</h4>
+            <h4 class="date">2020-07-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/plinkQC.Rmd"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="hidden name"><code>plinkQC.Rmd</code></div>
@@ -157,8 +157,8 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <p>In addition to running each check, <code>perIndividualQC</code> writes a list of all fail individual IDs to the qcdir. These IDs will be removed in the computation of the <code>perMarkerQC</code>. If the list is not present, <code>perMarkerQC</code> will send a message about conducting the quality control on the entire dataset.</p>
 <p>NB: To reduce the data size of the example data in <code>plinkQC</code>, data.genome has already been reduced to the individuals that are related. Thus the relatedness plots in C only show counts for related individuals only.</p>
 <p>NB: To demonstrate the results of the ancestry check, the required eigenvector file of the combined study and reference datasets have been precomputed and for the purpose of this example will be copied to the <code>qcdir</code>. In practice, the <code>qcdir</code> will often be the same as the <code>indir</code> and this step will not be required.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"cp"</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="no">package.dir</span>, <span class="st">'extdata/data.HapMapIII.eigenvec'</span>),
-             <span class="no">qcdir</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/files.html">file.copy</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="no">package.dir</span>, <span class="st">'extdata/data.HapMapIII.eigenvec'</span>), <span class="no">qcdir</span>)
+<span class="co">#&gt; [1] TRUE</span></pre></body></html></div>
 <p><code>perIndividualQC</code> displays the results of the quality control steps in a multi-panel plot.</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">fail_individuals</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/perIndividualQC.html">perIndividualQC</a></span>(<span class="kw">indir</span><span class="kw">=</span><span class="no">indir</span>, <span class="kw">qcdir</span><span class="kw">=</span><span class="no">qcdir</span>, <span class="kw">name</span><span class="kw">=</span><span class="no">name</span>,
                             <span class="kw">refSamplesFile</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="no">indir</span>, <span class="st">"/HapMap_ID2Pop.txt"</span>,

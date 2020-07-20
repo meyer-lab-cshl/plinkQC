@@ -29,7 +29,7 @@ datasets is documented in detail
 Removal of individuals based on relationship status via **plinkQC** is
 optimised to retain as many individuals as possible in the study.
 
-<img src="docs/qc.png" width="744" />
+<img src="qc.png" width="744" />
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 

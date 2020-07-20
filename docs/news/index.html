@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -148,17 +148,51 @@
       <small>Source: <a href='https://github.com/meyer-lab-cshl/plinkQC/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="plinkqc-031" class="section level1">
-<h1 class="page-header" data-toc-text="0.3.1">
-<a href="#plinkqc-031" class="anchor"></a>plinkQC 0.3.1<small> Unreleased </small>
+    <div id="plinkqc-032" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.2">
+<a href="#plinkqc-032" class="anchor"></a>plinkQC 0.3.2<small> Unreleased </small>
 </h1>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>minor changes</h2>
 <ul>
-<li>Fixed dead links in vignettes (caused by migration of repository): da987d8f225aa6aca0596b9c4f6a2484b102bdb6</li>
-<li>Added note about chrY in Hapmap data (vignette): e8afbb9842ed9421461a8114ac0a00f7955cf0c0</li>
-<li>Added note about recommended use of plink1.9 (vs 2.0): b69d3d71d23e9b161176a635fcb2b5a2b524591f</li>
+<li>Add checks and tests in <code>evaluate_check_ancestry</code> for missing non-reference samples <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/5c03971b92341b5a8cb26a1d5f2e37d637f5cbd7">5c03971</a>
+</li>
+<li>Clarified tutorials:
+<ul>
+<li>R internal file.copy instead of systems <code>cp</code> command to make run on windows: <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/6c91ef3368f601658967f88bc20db94a28307fce">6c91ef3</a>, fixes <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/26"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/26'>#26</a></a>
+</li>
+<li>Add additional filter for A-&gt;T, C-&gt;G variants as suggested in <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/24"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/24'>#24</a></a>; <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/11e03756852215915310a836d2e73dbcedf12bfc">11e0375</a>
+</li>
+</ul>
+</li>
+<li>Fixed plotting issues in PCA plot of ancestry check:
+<ul>
+<li>allow for supplying names of European reference population <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/ae09e64ee2eaeb8337b60b24b126a9c049d6315f">ae09e64</a>
+</li>
+<li>provide argument to specify number of populations per legend row <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/c7fe85d555c256bf8be3843803ff1cc445f7898f">c7fe85d</a>
+</li>
+<li>Ensure correct ordering of population colors when reference population is not HapMap <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/86275b7c281835681f38ab16672db61c288cfed9">86275b7</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+    <div id="plinkqc-031" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.1">
+<a href="#plinkqc-031" class="anchor"></a>plinkQC 0.3.1<small> Unreleased </small>
+</h1>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>minor changes</h2>
+<ul>
+<li>Fixed dead links in vignettes (caused by migration of repository): <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/da987d8f225aa6aca0596b9c4f6a2484b102bdb6">da987d8</a>
+</li>
+<li>Added note about chrY in Hapmap data (vignette): <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/e8afbb9842ed9421461a8114ac0a00f7955cf0c0">e8afbb9</a>
+</li>
+<li>Added note about recommended use of plink1.9 (vs 2.0): <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/b69d3d71d23e9b161176a635fcb2b5a2b524591f">b69d3d7</a>
+</li>
 </ul>
 </div>
 </div>
@@ -170,7 +204,7 @@
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>major changes</h2>
 <ul>
-<li>Relationship filter can handle more complicated relationship scenarios as observed in plant genotype sets (fixed <a href='https://github.com/meyer-lab-cshl/plinkQC/issues/11'>#11</a>)</li>
+<li>Relationship filter can handle more complicated relationship scenarios as observed in plant genotype sets (fixed <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/11"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/11'>#11</a></a>)</li>
 <li>code moved to the meyer-lab repository: <a href="https://github.com/meyer-lab-cshl/plinkQC" class="uri">https://github.com/meyer-lab-cshl/plinkQC</a>
 </li>
 </ul>
@@ -184,29 +218,30 @@
 <h2 class="hasAnchor">
 <a href="#major-changes-1" class="anchor"></a>major changes</h2>
 <ul>
-<li>Enable return of overview plots as ggplot object (fixes <a href='https://github.com/meyer-lab-cshl/plinkQC/issues/6'>#6</a> in ab2e840f0f22ccdeb5317475698aa58e7eecd345 and 101e74e318752b2f8038330245d875f6afd5b57b)</li>
-<li>Relationship filter now deals with more complicated relationship scenarios as observed in plant genotype sets (fixed <a href='https://github.com/meyer-lab-cshl/plinkQC/issues/11'>#11</a>)</li>
+<li>Enable return of overview plots as ggplot object (fixes <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/6"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/6'>#6</a></a> in <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/ab2e840f0f22ccdeb5317475698aa58e7eecd345">ab2e840</a> and <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/101e74e318752b2f8038330245d875f6afd5b57b">101e74e</a>)</li>
+<li>Relationship filter now deals with more complicated relationship scenarios as observed in plant genotype sets (addresses <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/11"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/11'>#11</a></a>)</li>
 </ul>
 </div>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>minor changes</h2>
+<a href="#minor-changes-2" class="anchor"></a>minor changes</h2>
 <ul>
-<li>give user option to choose maf threshold for relatedness filtering (relates to
-<a href='https://github.com/meyer-lab-cshl/plinkQC/issues/3'>#3</a>)</li>
+<li>give user option to choose maf threshold for relatedness filtering (relates to <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/3"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/3'>#3</a></a>)</li>
 </ul>
 </div>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>bug fixes</h2>
 <ul>
-<li>Include check for zero related individuals fixing <a href='https://github.com/meyer-lab-cshl/plinkQC/issues/3'>#3</a> in 1445a88d41d985e73ffdd161144229683f8352cd</li>
-<li>Include check in case all samples fail perIndividual QC in 894acc1fa03dadfe0ad2028888142171bcc641eb and 04642246d18ed4eaac5b9d9a6931d1ecb08308e8)</li>
-<li>Include checks for diagonal derived relationship estimates, and estimate data containing only related individuals; fixes <a href='https://github.com/meyer-lab-cshl/plinkQC/issues/11'>#11</a></li>
-<li>Fix command for genotype conversion in 1000Genomes vignette, addressing issue
-<a href='https://github.com/meyer-lab-cshl/plinkQC/issues/10'>#10</a></li>
-<li>fix missing rownames error for overviewPerIndividualQC, when relatedness check was included (issue <a href='https://github.com/meyer-lab-cshl/plinkQC/issues/16'>#16</a>, fc7a38b1f2b345d9c6c5d69f5dcf0bc57a857f62)</li>
-<li>fix vignette mismatch (issue <a href='https://github.com/meyer-lab-cshl/plinkQC/issues/16'>#16</a>, 09dcd59e77178b35747aae81a5c1988712e20de9)</li>
+<li>Include check for zero related individuals fixing <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/3"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/3'>#3</a></a> in <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/1445a88d41d985e73ffdd161144229683f8352cd">1445a88</a>
+</li>
+<li>Include check in case all samples fail perIndividual QC in <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/894acc1fa03dadfe0ad2028888142171bcc641eb">894acc1</a> and <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/04642246d18ed4eaac5b9d9a6931d1ecb08308e8">0464224</a>)</li>
+<li>Include checks for diagonal derived relationship estimates, and estimate data containing only related individuals; addresses <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/11"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/11'>#11</a></a>
+</li>
+<li>Fix command for genotype conversion in 1000Genomes vignette, addressing issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/10"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/10'>#10</a></a>
+</li>
+<li>fix missing rownames error for overviewPerIndividualQC, when relatedness check was included (issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/16"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/16'>#16</a></a>, <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/fc7a38b1f2b345d9c6c5d69f5dcf0bc57a857f62">fc7a38b</a>)</li>
+<li>fix vignette mismatch (issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/16"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/16'>#16</a></a>, <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/09dcd59e77178b35747aae81a5c1988712e20de9">09dcd59</a>)</li>
 </ul>
 </div>
 </div>
@@ -214,11 +249,11 @@
 <h1 class="page-header" data-toc-text="0.2.2">
 <a href="#plinkqc-022" class="anchor"></a>plinkQC 0.2.2<small> 2019-06-19 </small>
 </h1>
-<div id="minor-changes-2" class="section level2">
+<div id="minor-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-2" class="anchor"></a>minor changes</h2>
+<a href="#minor-changes-3" class="anchor"></a>minor changes</h2>
 <ul>
-<li>Fix IDs written to fail.IDs file: previous versions wrote IID,IID, now fixed to FID, IID (fixes <a href='https://github.com/meyer-lab-cshl/plinkQC/issues/2'>#2</a>).</li>
+<li>Fix IDs written to fail.IDs file: previous versions wrote IID,IID, now fixed to FID, IID (fixes <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/2"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/2'>#2</a></a>).</li>
 </ul>
 </div>
 </div>
@@ -226,9 +261,9 @@
 <h1 class="page-header" data-toc-text="0.2.1">
 <a href="#plinkqc-021" class="anchor"></a>plinkQC 0.2.1<small> 2019-03-01 </small>
 </h1>
-<div id="minor-changes-3" class="section level2">
+<div id="minor-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-3" class="anchor"></a>minor changes</h2>
+<a href="#minor-changes-4" class="anchor"></a>minor changes</h2>
 <ul>
 <li>Fix path check bug in checkPlink</li>
 <li>Include test data in build!</li>
@@ -250,9 +285,9 @@
 <li>Fix bug in return of maf computation: if fail.IDs does not exist, set fail_samples to zero.</li>
 </ul>
 </div>
-<div id="minor-changes-4" class="section level2">
+<div id="minor-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-4" class="anchor"></a>minor changes</h2>
+<a href="#minor-changes-5" class="anchor"></a>minor changes</h2>
 <ul>
 <li>IBD-fail.IDs now saved without column names to be consistent with other xxx-fail.IDs files.</li>
 <li>Include additional progress messages in cleanData()</li>
@@ -272,9 +307,9 @@
 <li>run_check_relatedness will only save IBD estimates of individuals whose estimates are higher than the threshold.</li>
 </ul>
 </div>
-<div id="minor-changes-5" class="section level2">
+<div id="minor-changes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-5" class="anchor"></a>minor changes</h2>
+<a href="#minor-changes-6" class="anchor"></a>minor changes</h2>
 <ul>
 <li>Fix examples in vignettes 1000 Genomes and HapMap III reference.</li>
 <li>Change file access in function examples</li>

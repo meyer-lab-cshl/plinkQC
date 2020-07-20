@@ -86,7 +86,7 @@ for samples of the reference populations and the study population." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -178,13 +178,29 @@ ancestry check.
 for samples of the reference populations and the study population.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_ancestry</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>, <span class='no'>prefixMergedDataset</span>,
-  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
-  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>,
-  <span class='kw'>run.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>,
-  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>check_ancestry</span>(
+  <span class='no'>indir</span>,
+  <span class='no'>name</span>,
+  <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
+  <span class='no'>prefixMergedDataset</span>,
+  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
+  <span class='kw'>refPopulation</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CEU"</span>, <span class='st'>"TSI"</span>),
+  <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
+  <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
+  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
+  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>,
+  <span class='kw'>legend_labels_per_row</span> <span class='kw'>=</span> <span class='fl'>6</span>,
+  <span class='kw'>run.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>,
+  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -222,6 +238,12 @@ considered to be of European descent and samples outside this radius of
 non-European descent. The radius is computed as the maximum Euclidean
 distance of European reference samples to the centre of European reference
 samples.</p></td>
+    </tr>
+    <tr>
+      <th>refPopulation</th>
+      <td><p>[vector] Vector with population identifiers of European
+reference population. Identifiers have to be corresponding to population IDs
+[refColorsPop] in refColorsfile/refColors.</p></td>
     </tr>
     <tr>
       <th>refSamples</th>
@@ -278,6 +300,10 @@ IDs in refColors/refColorsFile.</p></td>
       <td><p>[character] Colour to be used for study population.</p></td>
     </tr>
     <tr>
+      <th>legend_labels_per_row</th>
+      <td><p>[integer] Number of population names per row in PCA plot.</p></td>
+    </tr>
+    <tr>
       <th>run.check_ancestry</th>
       <td><p>[logical] Should plink --pca be run to
 determine principal components of merged dataset; if FALSE, it is assumed
@@ -304,7 +330,7 @@ other_arguments) or pdf(outfile) print(p_ancestry) dev.off().</p></td>
 plink should be accesible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
-and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec_wait</a></code>('plink').</p></td>
+and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec</a></code>('plink').</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>

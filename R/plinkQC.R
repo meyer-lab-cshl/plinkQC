@@ -1,5 +1,7 @@
 #' plinkQC
 #'
+#' Genotype Quality Control with 'PLINK'
+#'
 #' @docType package
 #' @name plinkQC
 #' @import ggplot2

@@ -87,7 +87,7 @@ samples of the reference populations and the study population." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -180,11 +180,25 @@ check_ancestry creates a scatter plot of PC1 versus PC2 colour-coded for
 samples of the reference populations and the study population.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>evaluate_check_ancestry</span>(<span class='no'>indir</span>, <span class='no'>name</span>, <span class='no'>prefixMergedDataset</span>, <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
-  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
-  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>, <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>evaluate_check_ancestry</span>(
+  <span class='no'>indir</span>,
+  <span class='no'>name</span>,
+  <span class='no'>prefixMergedDataset</span>,
+  <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
+  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
+  <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
+  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
+  <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
+  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
+  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>,
+  <span class='kw'>refPopulation</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CEU"</span>, <span class='st'>"TSI"</span>),
+  <span class='kw'>legend_labels_per_row</span> <span class='kw'>=</span> <span class='fl'>6</span>,
+  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -276,6 +290,16 @@ IDs in refColors/refColorsFile.</p></td>
       <th>studyColor</th>
       <td><p>[character] Colour to be used for study population if plot
 is TRUE.</p></td>
+    </tr>
+    <tr>
+      <th>refPopulation</th>
+      <td><p>[vector] Vector with population identifiers of European
+reference population. Identifiers have to be corresponding to population IDs
+[refColorsPop] in refColorsfile/refColors.</p></td>
+    </tr>
+    <tr>
+      <th>legend_labels_per_row</th>
+      <td><p>[integer] Number of population names per row in PCA plot.</p></td>
     </tr>
     <tr>
       <th>interactive</th>
