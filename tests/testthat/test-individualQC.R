@@ -47,6 +47,11 @@ test_that('evaluate_check_sex returns correct fail IDs for example data',{
     expect_true(all(fail_sex$fail_sex$IID %in% fail_sexIDs[,1]))
 })
 
+test_that('evaluate_check_sex runs successfully if no sample fails',{
+    fail_sex <- evaluate_check_sex(qcdir, name="data_all_passing",
+                                   verbose=FALSE, interactive=TRUE)
+    expect_true(is.null(fail_sex$fail_sex))
+})
 
 context('Test evaluate_check_het_and_miss')
 test_that('evaluate_check_het_and_miss fails with hetTh numbers error',
@@ -80,6 +85,13 @@ test_that('evaluate_check_het_and_miss returns correct fail IDs',{
     fail_het_imiss <- evaluate_check_het_and_miss(qcdir, name)
     expect_true(all(fail_het_imiss$fail_het$IID %in% fail_hetIDs[,1]))
     expect_true(all(fail_het_imiss$fail_imiss$IID %in% fail_imissIDs[,1]))
+})
+
+test_that('evaluate_check_het_and_miss runs successfully if no sample fails',{
+    fail_check_het_and_miss <-
+        evaluate_check_het_and_miss(qcdir, name="data_all_passing",
+                                   verbose=FALSE, interactive=TRUE)
+    expect_true(is.null(fail_check_het_and_miss$fail_het_and_miss))
 })
 
 context('Test evaluate_check_relatedness')

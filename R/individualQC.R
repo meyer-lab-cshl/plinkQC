@@ -1193,7 +1193,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                      yend=femaleTh), lty=2,
                      aes_string(x='x', xend='xend', y='y', yend='yend'),
                      color="#e7298a")
-    if (label) {
+    if (!is.null(fail_sex) && label) {
         p_sexcheck <-
             p_sexcheck + ggrepel::geom_label_repel(data=data.frame(x=fail_sex$PEDSEX,
                                                   y=fail_sex$F,
@@ -1418,6 +1418,9 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
     het_imiss <- merge(imiss, het, by="IID")
     fail_het_imiss <- het_imiss[which(het_imiss$IID %in%
                                           union(fail_het$IID, fail_imiss$IID)),]
+    if (nrow(fail_het_imiss) == 0) {
+        fail_het_imiss <- NULL
+    }
     het_imiss$type <- 1
     het_imiss$type[het_imiss$IID %in% fail_het$IID] <- 2
     het_imiss$type[het_imiss$IID %in% fail_imiss$IID] <- 3
@@ -1446,7 +1449,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
         geom_hline(yintercept=mean(het_imiss$F) + (hetTh*sd(het_imiss$F)),
                    col="#e7298a", lty=2) +
         geom_vline(xintercept=log10(imissTh), col="#e7298a", lty=2)
-    if (label) {
+    if (!is.null(fail_het_imiss) && label) {
         p_het_imiss <-
             p_het_imiss + ggrepel::geom_label_repel(
                                 data=data.frame(x=fail_het_imiss$logF_MISS,
