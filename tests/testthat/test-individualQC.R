@@ -90,7 +90,7 @@ test_that('evaluate_check_het_and_miss returns correct fail IDs',{
 test_that('evaluate_check_het_and_miss runs successfully if no sample fails',{
     fail_check_het_and_miss <-
         evaluate_check_het_and_miss(qcdir, name="data_all_passing",
-                                   verbose=FALSE, interactive=TRUE)
+                                    interactive=TRUE)
     expect_true(is.null(fail_check_het_and_miss$fail_het_and_miss))
 })
 
