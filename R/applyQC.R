@@ -72,10 +72,12 @@
 #' fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
-#' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE)
+#' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
+#' path2plink=path2plink)
 #'
 #' # Run marker QC checks
-#' fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name)
+#' fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
+#' path2plink=path2plink)
 #'
 #' # Create new dataset of indiviudals and markers passing QC
 #' ids_all <- cleanData(indir=indir, qcdir=qcdir, name=name, macTh=15,
