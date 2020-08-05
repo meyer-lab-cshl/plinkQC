@@ -59,7 +59,4 @@ test_that('check_maf runs with no perIndividualQC fail IDs', {
                    "No individuals failed perIndividualQC")
 })
 
-
-context('Test perMarkerQC')
-fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name="data.clean",
-                            path2plink=path2plink)
+#fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name="data.clean", path2plink = path2plink)
