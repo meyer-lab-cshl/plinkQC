@@ -268,3 +268,18 @@ test_that('evaluate_check_ancestry fails with some missing sample error',{
         refSamples=refSamples),
         "Not all")
 })
+
+test_that('perIndividualQC works if all samples pass', {
+    fail_individuals <-
+        perIndividualQC(indir=indir,
+                        qcdir=qcdir, name="data.clean",
+                        refSamplesFile=paste0(qcdir, "/HapMap_ID2Pop.txt"),
+                        refColorsFile=paste0(qcdir, "/HapMap_PopColors.txt"),
+                        prefixMergedDataset="data.clean.HapMapIII",
+                        interactive=FALSE, verbose=FALSE,
+                        dont.check_ancestry = TRUE,
+                        do.run_check_sex = FALSE,
+                        do.run_check_relatedness = FALSE,
+                        do.run_check_het_and_miss = FALSE)
+    expect_equal(unlist(fail_individuals$fail_list), NULL)
+})
