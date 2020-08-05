@@ -36,6 +36,7 @@ Imports:
     sys
 Suggests:
     testthat,
+    mockery,
     knitr,
     rmarkdown
 License: MIT + file LICENSE
