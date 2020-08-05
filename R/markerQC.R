@@ -436,7 +436,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
         }
         suffix <- ""
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--hardy", "--out",
+                       args=c("--bfile", prefix, "--hardy midp", "--out",
                               paste(out, suffix, sep="")),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {

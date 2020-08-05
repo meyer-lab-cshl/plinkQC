@@ -266,7 +266,7 @@ cleanData <- function(indir, name, qcdir=indir,
         if (is.null(hweTh)) {
             stop("filterHWE is TRUE but hweTh not specified")
         } else {
-           hwe <- c("--hwe", hweTh)
+           hwe <- c("--hwe midp", hweTh)
         }
     }
     if (filterMAF) {
