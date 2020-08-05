@@ -242,7 +242,8 @@ cleanData <- function(indir, name, qcdir=indir,
             write.table(removeIDs, paste(out, ".remove.IDs", sep=""),
                         col.names=FALSE, row.names=FALSE, quote=FALSE)
             keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
-                                         data.table=FALSE, stringsAsFactors=FALSE,
+                                         data.table=FALSE,
+                                         stringsAsFactors=FALSE,
                                          header=FALSE)
             remove <- c("--remove", paste(out, ".remove.IDs", sep=""))
             fail_samples <- nrow(removeIDs)
