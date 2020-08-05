@@ -1,5 +1,11 @@
 # plinkQC 0.3.3
 ## minor changes
+* Output all IBD estimates in `run_check_relatedness` not just fail IBD
+estimates [43230a6c](https://github.com/meyer-lab/plinkQC/commit/43230a6ce5f079b46c85b1a7a526213177db1f1b)
+* Add checks in `cleanData` that can distinguish between miss-sepcified filters and non-failing samples [7432b1ee](https://github.com/meyer-lab/plinkQC/commit/7432b1ee880ad14c7a078f3a0379f7fdcff1684b); addresses issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
+* Add checks and tests in `check_snp_missingness`, `check_maf` and `check_hwe` 
+in cases where all samples pass `perIndividualQC`.
+[31ed6f65](https://github.com/meyer-lab/plinkQC/commit/31ed6f653902857a0a78ae723e786dd84d240b75); related to issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
 * Add checks and tests in `evaluate_check_sex` and `evaluate_check_het_imiss`
 for all passing samples and accordingly, no fail samples label in plot.
 [d071a43](https://github.com/meyer-lab/plinkQC/commit/d071a4341b0d4c40220b42f81c412da4d320b8ec)
