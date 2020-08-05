@@ -184,12 +184,12 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                            showPlinkOutput=showPlinkOutput,
                                            fixMixup=fixMixup,
                                            label=label, interactive=FALSE)
+            write.table(fail_sex$fail_sex[,1:2],
+                        file=paste(out, ".fail-sexcheck.IDs",
+                                   sep=""),
+                        quote=FALSE, row.names=FALSE, col.names=FALSE)
             if (!is.null(fail_sex$fail_sex) &&
                 nrow(fail_sex$fail_sex) != 0) {
-                write.table(fail_sex$fail_sex[,1:2],
-                            file=paste(out, ".fail-sexcheck.IDs",
-                                       sep=""),
-                            quote=FALSE, row.names=FALSE, col.names=FALSE)
                 mismatched_sex<- select_(fail_sex$fail_sex, "FID", "IID")
             }
             if (!is.null(fail_sex$mixup)) {
@@ -224,22 +224,22 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                             imissTh=imissTh,
                                             hetTh=hetTh, label=label,
                                             interactive=FALSE)
+            write.table(fail_het_imiss$fail_imiss[,1:2],
+                        file=paste(out, ".fail-imiss.IDs",
+                                   sep=""),
+                        quote=FALSE, row.names=FALSE, col.names=FALSE)
             if (!is.null(fail_het_imiss$fail_imiss) &&
                 nrow(fail_het_imiss$fail_imiss) != 0) {
-                write.table(fail_het_imiss$fail_imiss[,1:2],
-                            file=paste(out, ".fail-imiss.IDs",
-                                       sep=""),
-                            quote=FALSE, row.names=FALSE, col.names=FALSE)
                 missing_genotype <- select_(fail_het_imiss$fail_imiss,
                                             "FID", "IID")
             }
 
+            write.table(fail_het_imiss$fail_het[,1:2],
+                        file=paste(out, ".fail-het.IDs",
+                                   sep=""),
+                        quote=FALSE, row.names=FALSE, col.names=FALSE)
             if (!is.null(fail_het_imiss$fail_het) &&
                 nrow(fail_het_imiss$fail_het) != 0) {
-                write.table(fail_het_imiss$fail_het[,1:2],
-                            file=paste(out, ".fail-het.IDs",
-                                       sep=""),
-                            quote=FALSE, row.names=FALSE, col.names=FALSE)
                 outlying_heterozygosity <- select_(fail_het_imiss$fail_het,
                                                    "FID", "IID")
             } else {
@@ -264,12 +264,12 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                            imissTh=imissTh,
                                                            highIBDTh=highIBDTh,
                                                            interactive=FALSE)
+            write.table(fail_relatedness$failIDs,
+                        file=paste(out, ".fail-IBD.IDs", sep=""),
+                        row.names=FALSE, quote=FALSE, col.names=FALSE,
+                        sep="\t")
             if (!is.null(fail_relatedness$failIDs)  &&
                 nrow(fail_relatedness$failIDs) != 0) {
-               write.table(fail_relatedness$failIDs,
-                           file=paste(out, ".fail-IBD.IDs", sep=""),
-                           row.names=FALSE, quote=FALSE, col.names=FALSE,
-                           sep="\t")
                 highIBD <- select_(fail_relatedness$failIDs, "FID", "IID")
             }
             p_relatedness <- fail_relatedness$p_IBD
@@ -308,12 +308,12 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                          refColorsPop,
                                                      studyColor=studyColor,
                                                      interactive=FALSE)
+            write.table(fail_ancestry$fail_ancestry,
+                        file=paste(out, ".fail-ancestry.IDs",
+                                   sep=""),
+                        quote=FALSE, row.names=FALSE, col.names=FALSE)
             if (!is.null(fail_ancestry$fail_ancestry) &&
                 nrow(fail_ancestry$fail_ancestry) != 0) {
-                write.table(fail_ancestry$fail_ancestry,
-                            file=paste(out, ".fail-ancestry.IDs",
-                                       sep=""),
-                            quote=FALSE, row.names=FALSE, col.names=FALSE)
                 ancestry <- select_(fail_ancestry$fail_ancestry, "FID", "IID")
             }
             p_ancestry <- fail_ancestry$p_ancestry
