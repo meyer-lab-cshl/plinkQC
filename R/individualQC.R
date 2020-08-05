@@ -142,10 +142,16 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             studyColor="#2c7bb6", label=TRUE,
                             interactive=FALSE, verbose=TRUE,
                             path2plink=NULL, showPlinkOutput=TRUE) {
-    fail_sex <- NULL
-    fail_het_imiss <- NULL
-    fail_relatedness <- NULL
-    fail_ancestry <- NULL
+    #fail_sex <- NULL
+    #fail_het_imiss <- NULL
+    #fail_relatedness <- NULL
+    #fail_ancestry <- NULL
+
+    missing_genotype <- NULL
+    highIBD <- NULL
+    outlying_heterozygosity <- NULL
+    mismatched_sex <- NULL
+    ancestry <- NULL
 
     p_sexcheck <- NULL
     p_het_imiss <- NULL
@@ -178,11 +184,13 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                            showPlinkOutput=showPlinkOutput,
                                            fixMixup=fixMixup,
                                            label=label, interactive=FALSE)
-            if (!is.null(fail_sex$fail_sex)) {
+            if (!is.null(fail_sex$fail_sex) &&
+                nrow(fail_sex$fail_sex) != 0) {
                 write.table(fail_sex$fail_sex[,1:2],
                             file=paste(out, ".fail-sexcheck.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
+                mismatched_sex<- select_(fail_sex$fail_sex, "FID", "IID")
             }
             if (!is.null(fail_sex$mixup)) {
                 write.table(fail_sex$mixup[,1:2],
@@ -216,17 +224,26 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                             imissTh=imissTh,
                                             hetTh=hetTh, label=label,
                                             interactive=FALSE)
-            if (!is.null(fail_het_imiss$fail_imiss)) {
+            if (!is.null(fail_het_imiss$fail_imiss) &&
+                nrow(fail_het_imiss$fail_imiss) != 0) {
                 write.table(fail_het_imiss$fail_imiss[,1:2],
                             file=paste(out, ".fail-imiss.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
+                missing_genotype <- select_(fail_het_imiss$fail_imiss,
+                                            "FID", "IID")
             }
-            if (!is.null(fail_het_imiss$fail_het)) {
+
+            if (!is.null(fail_het_imiss$fail_het) &&
+                nrow(fail_het_imiss$fail_het) != 0) {
                 write.table(fail_het_imiss$fail_het[,1:2],
                             file=paste(out, ".fail-het.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
+                outlying_heterozygosity <- select_(fail_het_imiss$fail_het,
+                                                   "FID", "IID")
+            } else {
+                outlying_heterozygosity <- NULL
             }
             p_het_imiss <- fail_het_imiss$p_het_imiss
         }
@@ -247,11 +264,13 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                            imissTh=imissTh,
                                                            highIBDTh=highIBDTh,
                                                            interactive=FALSE)
-            if (!is.null(fail_relatedness$failIDs)) {
+            if (!is.null(fail_relatedness$failIDs)  &&
+                nrow(fail_relatedness$failIDs) != 0) {
                write.table(fail_relatedness$failIDs,
                            file=paste(out, ".fail-IBD.IDs", sep=""),
                            row.names=FALSE, quote=FALSE, col.names=FALSE,
                            sep="\t")
+                highIBD <- select_(fail_relatedness$failIDs, "FID", "IID")
             }
             p_relatedness <- fail_relatedness$p_IBD
         }
@@ -289,45 +308,16 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                          refColorsPop,
                                                      studyColor=studyColor,
                                                      interactive=FALSE)
-            if (!is.null(fail_ancestry$fail_ancestry)) {
+            if (!is.null(fail_ancestry$fail_ancestry) &&
+                nrow(fail_ancestry$fail_ancestry) != 0) {
                 write.table(fail_ancestry$fail_ancestry,
                             file=paste(out, ".fail-ancestry.IDs",
                                        sep=""),
                             quote=FALSE, row.names=FALSE, col.names=FALSE)
+                ancestry <- select_(fail_ancestry$fail_ancestry, "FID", "IID")
             }
             p_ancestry <- fail_ancestry$p_ancestry
         }
-    }
-
-    if(!is.null(fail_het_imiss$fail_imiss) &&
-       nrow(fail_het_imiss$fail_imiss) != 0) {
-        missing_genotype <- select_(fail_het_imiss$fail_imiss, "FID", "IID")
-        } else {
-        missing_genotype <- NULL
-    }
-    if(!is.null(fail_relatedness$failIDs) &&
-       nrow(fail_relatedness$failIDs) != 0) {
-        highIBD <- select_(fail_relatedness$failIDs, "FID", "IID")
-    } else {
-        highIBD <- NULL
-    }
-    if(!is.null(fail_het_imiss$fail_het) &&
-       nrow(fail_het_imiss$fail_het) != 0) {
-        outlying_heterozygosity <- select_(fail_het_imiss$fail_het, "FID", "IID")
-    } else {
-        outlying_heterozygosity <- NULL
-    }
-    if(!is.null(fail_sex$fail_sex) &&
-       nrow(fail_sex$fail_sex) != 0) {
-        mismatched_sex<- select_(fail_sex$fail_sex, "FID", "IID")
-    } else {
-        mismatched_sex <- NULL
-    }
-    if(!is.null(fail_ancestry$fail_ancestry) &&
-       nrow(fail_ancestry$fail_ancestry) != 0) {
-        ancestry <- select_(fail_ancestry$fail_ancestry, "FID", "IID")
-    } else {
-        ancestry <- NULL
     }
 
     fail_list <- list(missing_genotype=missing_genotype,
