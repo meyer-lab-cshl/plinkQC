@@ -1555,7 +1555,8 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--extract",
                           paste(out, ".prune.in", sep=""),
-                          maf, "--genome", "--min", highIBDTh,
+                          maf, "--genome",
+                          # "--min", highIBDTh,
                           "--out", out),
                  std_out=showPlinkOutput, std_err=showPlinkOutput)
     if (!file.exists(paste(prefix, ".imiss", sep=""))) {
