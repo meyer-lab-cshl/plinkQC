@@ -24,3 +24,4 @@ in cases where all samples pass `perIndividualQC`.
 * Add checks and tests in `evaluate_check_sex` and `evaluate_check_het_imiss`
 for all passing samples and accordingly, no fail samples label in plot.
 [d071a43](https://github.com/meyer-lab/plinkQC/commit/d071a4341b0d4c40220b42f81c412da4d320b8ec)
+* Update dropbox links and add note to vignette [9bae988](https://github.com/meyer-lab/plinkQC/commit/9bae9886dc637569698d883654fcf71486b6634e)
