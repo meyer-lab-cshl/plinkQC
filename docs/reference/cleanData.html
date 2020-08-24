@@ -77,7 +77,7 @@ qcdir/name.clean.bim/.bed/.fam." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
       </span>
     </div>
 
@@ -318,10 +318,12 @@ samples that fail the QC.</p>
 <span class='no'>fail_individuals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='perIndividualQC.html'>perIndividualQC</a></span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
 <span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
 <span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
-<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+<span class='kw'>path2plink</span><span class='kw'>=</span><span class='no'>path2plink</span>)
 
 <span class='co'># Run marker QC checks</span>
-<span class='no'>fail_markers</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='perMarkerQC.html'>perMarkerQC</a></span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>)
+<span class='no'>fail_markers</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='perMarkerQC.html'>perMarkerQC</a></span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
+<span class='kw'>path2plink</span><span class='kw'>=</span><span class='no'>path2plink</span>)
 
 <span class='co'># Create new dataset of indiviudals and markers passing QC</span>
 <span class='no'>ids_all</span> <span class='kw'>&lt;-</span> <span class='fu'>cleanData</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>, <span class='kw'>macTh</span><span class='kw'>=</span><span class='fl'>15</span>,

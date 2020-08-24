@@ -36,7 +36,7 @@ optimised to retain as many individuals as possible in the study.
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC** is: 0.3.2 and can be installed
+The current github version of **plinkQC** is: 0.3.3 and can be installed
 via
 
 ``` r
@@ -58,4 +58,4 @@ A log of version changes can be found
 ## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
 
 Meyer HV (2018) plinkQC: Genotype quality control in genetic association
-studies. 10.5281/zenodo.3373798
+studies.
