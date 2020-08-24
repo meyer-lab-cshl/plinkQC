@@ -263,31 +263,43 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
 
-    if (!file.exists(paste(out, ".fail.IDs",sep=""))){
-        message("File with individuals that failed perIndividual QC: ",
-                out, ".fail.IDs does not exist. Continue ",
-                "check_SNP_missingness for all samples in ", prefix,
-                ".fam")
+    failids <- paste0(out, ".fail.IDs")
+
+    if (!file.exists(failids) | file.size(failids) == 0){
+        if (!file.exists(failids)) {
+            message("File with individuals that failed perIndividualQC: ",
+                    failids, " does not exist. Continue ",
+                    "check_SNP_missingness for all samples in ", prefix,
+                    ".fam")
+        } else {
+            message("No individuals failed perIndividualQC (",
+                    failids, " is empty). Continue ",
+                    "check_SNP_missingness for all samples in ", prefix,
+                    ".fam")
+        }
         suffix <- ""
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--missing", "--freq",
                               "--out",
                               paste(out, suffix, sep="")),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
+
     } else {
         allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
                                         data.table=FALSE,
                                         stringsAsFactors=FALSE,
                                         header=FALSE)
-        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+
+        failsamples <-  data.table::fread(failids,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
         if(all(allsamples[,2] %in% failsamples[,2])) {
-            stop("All samples are contained in the .fail.IDs file ",
+            stop("All samples are contained in the", failids, "file ",
                  "from perIndividualQC, no samples remaining for ",
                  "check_SNP_missingness")
         }
+
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove",
@@ -408,14 +420,23 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
 
-    if (!file.exists(paste(out, ".fail.IDs",sep=""))){
-        message("File with individuals that failed perIndividualQC: ",
-                out, ".fail.IDs does not exist. Continue ",
-                "check_HWE for all samples in ", prefix,
-                ".fam")
+    failids <- paste0(out, ".fail.IDs")
+
+    if (!file.exists(failids) | file.size(failids) == 0){
+        if (!file.exists(failids)) {
+            message("File with individuals that failed perIndividualQC: ",
+                    failids, " does not exist. Continue ",
+                    "check_HWE for all samples in ", prefix,
+                    ".fam")
+        } else {
+            message("No individuals failed perIndividualQC (",
+                    failids, " is empty). Continue ",
+                    "check_HWE for all samples in ", prefix,
+                    ".fam")
+        }
         suffix <- ""
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--hardy", "--out",
+                       args=c("--bfile", prefix, "--hardy midp", "--out",
                               paste(out, suffix, sep="")),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
@@ -423,18 +444,17 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                                         data.table=FALSE,
                                         stringsAsFactors=FALSE,
                                         header=FALSE)
-        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+        failsamples <-  data.table::fread(failids,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
         if(all(allsamples[,2] %in% failsamples[,2])) {
-            stop("All samples are contained in the .fail.IDs file ",
+            stop("All samples are contained in the", failids, "file ",
                  "from perIndividualQC, no samples remaining for check_hwe")
         }
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--remove",
-                              paste(out, ".fail.IDs", sep=""),
+                       args=c("--bfile", prefix, "--remove", failids,
                               "--hardy", "--out", paste(out, suffix, sep="")),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
@@ -540,11 +560,20 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
 
-    if (!file.exists(paste(out, ".fail.IDs",sep=""))){
-        message("File with individuals that failed perIndividualQC: ",
-                out, ".fail.IDs does not exist. Continue ",
-                "check_maf for all samples in ", prefix,
-                ".fam")
+    failids <- paste0(out, ".fail.IDs")
+
+    if (!file.exists(failids) | file.size(failids) == 0){
+        if (!file.exists(failids)) {
+            message("File with individuals that failed perIndividualQC: ",
+                    failids, " does not exist. Continue ",
+                    "check_maf for all samples in ", prefix,
+                    ".fam")
+        } else {
+            message("No individuals failed perIndividualQC (",
+                    failids, " is empty). Continue ",
+                    "check_maf for all samples in ", prefix,
+                    ".fam")
+        }
         suffix <- ""
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--freq", "--out",
@@ -556,18 +585,17 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                                         data.table=FALSE,
                                         stringsAsFactors=FALSE,
                                         header=FALSE)
-        failsamples <-  data.table::fread(paste(out, ".fail.IDs", sep=""),
+        failsamples <-  data.table::fread(failids,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
         if(all(allsamples[,2] %in% failsamples[,2])) {
-            stop("All samples are contained in the .fail.IDs file ",
+            stop("All samples are contained in the", failids, "file ",
                  "from perIndividualQC, no samples remaining for check_maf")
         }
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--remove",
-                              paste(out, ".fail.IDs", sep=""),
+                       args=c("--bfile", prefix, "--remove", failids,
                               "--freq", "--out", paste(out, suffix, sep="")),
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
         fail_samples <-  R.utils::countLines(paste(out, ".fail.IDs",
