@@ -51,11 +51,9 @@ via
 install.packages("plinkQC")
 ```
 
-A log of version changes can be found
-
-[here](https://github.com/meyer-lab-cshl/plinkQC/blob/master/NEWS.md).
+A log of version changes can be found [here](news/index.html).
 
 ## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
 
 Meyer HV (2018) plinkQC: Genotype quality control in genetic association
-studies.
+studies. <doi:10.5281/zenodo.3373798>
