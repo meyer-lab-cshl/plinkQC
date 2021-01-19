@@ -51,7 +51,7 @@ via
 install.packages("plinkQC")
 ```
 
-A log of version changes can be found [here](news/index.html).
+A log of version changes can be found [here](https://meyer-lab-cshl.github.io/plinkQC/news/index.html).
 
 ## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
 
