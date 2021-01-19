@@ -40,13 +40,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file"></span>
+    <span class="fas fa-file"></span>
      
     documentation
      
@@ -71,21 +71,21 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
+    <span class="fas fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
+    <span class="fas fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
     github
   </a>
@@ -106,7 +106,7 @@
       <h1 data-toc-skip>Ancestry estimation based on reference samples of known ethnicities</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2020-08-24</h4>
+            <h4 class="date">2021-01-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/AncestryCheck.Rmd"><code>vignettes/AncestryCheck.Rmd</code></a></small>
       <div class="hidden name"><code>AncestryCheck.Rmd</code></div>
@@ -280,20 +280,21 @@
 <h2 class="hasAnchor">
 <a href="#check-ancestry" class="anchor"></a>Check ancestry</h2>
 <p>We can use the .eigenvec file to estimate the ancestry of the study samples. Identifying individuals of divergent ancestry is implemented in <code>check_ancestry</code>. Currently, check ancestry only supports automatic selection of individuals of European descent. It uses principal components 1 and 2 to find the center of the known European reference samples. All study samples whose Euclidean distance from the centre falls outside the radius specified by the maximum Euclidean distance of the reference samples multiplied by the chosen <code>europeanTh</code> are considered non-European. <code>check_ancestry</code> shows the result of the ancestry analysis in a scatter plot of PC1 versus PC2 colour-coded for samples of the reference populations and the study population. From within R, run the following command to the ancestry check:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">plinkQC</span>)
-<span class="no">indir</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="kw">package</span><span class="kw">=</span><span class="st">"plinkQC"</span>)
-<span class="no">name</span> <span class="kw">&lt;-</span> <span class="st">'data'</span>
-<span class="no">refname</span> <span class="kw">&lt;-</span> <span class="st">'HapMapIII'</span>
-<span class="no">prefixMergedDataset</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="no">name</span>, <span class="st">"."</span>, <span class="no">refname</span>, <span class="kw">sep</span><span class="kw">=</span><span class="st">""</span>)
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://meyer-lab-cshl.github.io/plinkQC">plinkQC</a></span><span class="op">)</span>
+<span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package<span class="op">=</span><span class="st">"plinkQC"</span><span class="op">)</span>
+<span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data'</span>
+<span class="va">refname</span> <span class="op">&lt;-</span> <span class="st">'HapMapIII'</span>
+<span class="va">prefixMergedDataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"."</span>, <span class="va">refname</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>
 
-<span class="no">exclude_ancestry</span> <span class="kw">&lt;-</span>
-    <span class="fu"><a href="../reference/evaluate_check_ancestry.html">evaluate_check_ancestry</a></span>(<span class="kw">indir</span><span class="kw">=</span><span class="no">indir</span>, <span class="kw">name</span><span class="kw">=</span><span class="no">name</span>,
-                            <span class="kw">prefixMergedDataset</span><span class="kw">=</span><span class="no">prefixMergedDataset</span>,
-                            <span class="kw">refSamplesFile</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="no">indir</span>, <span class="st">"/HapMap_ID2Pop.txt"</span>,
-                                                 <span class="kw">sep</span><span class="kw">=</span><span class="st">""</span>),
-                            <span class="kw">refColorsFile</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="no">indir</span>, <span class="st">"/HapMap_PopColors.txt"</span>,
-                                                <span class="kw">sep</span><span class="kw">=</span><span class="st">""</span>),
-                            <span class="kw">interactive</span><span class="kw">=</span><span class="fl">TRUE</span>)</pre></body></html></div>
+<span class="va">exclude_ancestry</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="../reference/evaluate_check_ancestry.html">evaluate_check_ancestry</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, name<span class="op">=</span><span class="va">name</span>,
+                            prefixMergedDataset<span class="op">=</span><span class="va">prefixMergedDataset</span>,
+                            refSamplesFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">indir</span>, <span class="st">"/HapMap_ID2Pop.txt"</span>,
+                                                 sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>, 
+                            refColorsFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">indir</span>, <span class="st">"/HapMap_PopColors.txt"</span>,
+                                                sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>,
+                            interactive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="checkAncestry.png" width="500px" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -338,7 +339,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

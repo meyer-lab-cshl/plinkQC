@@ -81,13 +81,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file"></span>
+    <span class="fas fa-file"></span>
      
     documentation
      
@@ -112,21 +112,21 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
+    <span class="fas fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
+    <span class="fas fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
     github
   </a>
@@ -156,9 +156,9 @@
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>major changes</h2>
 <ul>
-<li>Output all IBD estimates in <code>run_check_relatedness</code> not just fail IBD estimates <a href="https://github.com/meyer-lab/plinkQC/commit/d009da90434a83cb4867881e3772b518d17dc2dd">d009da90</a>
+<li>Output all IBD estimates in <code>run_check_relatedness</code> not just fail IBD estimates <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/d009da90434a83cb4867881e3772b518d17dc2dd">d009da90</a>
 </li>
-<li>Add midp modifier for –hwe and –hardy as recommended on <a href="https://www.cog-genomics.org/plink/1.9/filter#hwe">plink hwe documentation</a> and discussed in issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/27"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/27'>#27</a></a>; <a href="https://github.com/meyer-lab/plinkQC/commit/43230a6ce5f079b46c85b1a7a526213177db1f1b">43230a6c</a>
+<li>Add midp modifier for –hwe and –hardy as recommended on <a href="https://www.cog-genomics.org/plink/1.9/filter#hwe">plink hwe documentation</a> and discussed in issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/27"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/27'>#27</a></a>; <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/43230a6ce5f079b46c85b1a7a526213177db1f1b">43230a6c</a>
 </li>
 </ul>
 </div>
@@ -166,13 +166,13 @@
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>minor changes</h2>
 <ul>
-<li>Add checks in <code>cleanData</code> that can distinguish between miss-sepcified filters and non-failing samples <a href="https://github.com/meyer-lab/plinkQC/commit/7432b1ee880ad14c7a078f3a0379f7fdcff1684b">7432b1ee</a>; addresses issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/31"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/31'>#31</a></a>
+<li>Add checks in <code>cleanData</code> that can distinguish between miss-sepcified filters and non-failing samples <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/7432b1ee880ad14c7a078f3a0379f7fdcff1684b">7432b1ee</a>; addresses issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/31"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/31'>#31</a></a>
 </li>
-<li>Add checks and tests in <code>check_snp_missingness</code>, <code>check_maf</code> and <code>check_hwe</code> in cases where all samples pass <code>perIndividualQC</code>. <a href="https://github.com/meyer-lab/plinkQC/commit/31ed6f653902857a0a78ae723e786dd84d240b75">31ed6f65</a>; related to issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/31"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/31'>#31</a></a>
+<li>Add checks and tests in <code>check_snp_missingness</code>, <code>check_maf</code> and <code>check_hwe</code> in cases where all samples pass <code>perIndividualQC</code>. <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/31ed6f653902857a0a78ae723e786dd84d240b75">31ed6f65</a>; related to issue <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/31"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/31'>#31</a></a>
 </li>
-<li>Add checks and tests in <code>evaluate_check_sex</code> and <code>evaluate_check_het_imiss</code> for all passing samples and accordingly, no fail samples label in plot. <a href="https://github.com/meyer-lab/plinkQC/commit/d071a4341b0d4c40220b42f81c412da4d320b8ec">d071a43</a>
+<li>Add checks and tests in <code>evaluate_check_sex</code> and <code>evaluate_check_het_imiss</code> for all passing samples and accordingly, no fail samples label in plot. <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/d071a4341b0d4c40220b42f81c412da4d320b8ec">d071a43</a>
 </li>
-<li>Update dropbox links and add note to vignette <a href="https://github.com/meyer-lab/plinkQC/commit/9bae9886dc637569698d883654fcf71486b6634e">9bae988</a>
+<li>Update dropbox links and add note to vignette <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/9bae9886dc637569698d883654fcf71486b6634e">9bae988</a>
 </li>
 </ul>
 </div>
@@ -371,7 +371,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -96,13 +96,13 @@ of the samples split by their (PEDSEX)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file"></span>
+    <span class="fas fa-file"></span>
      
     documentation
      
@@ -127,21 +127,21 @@ of the samples split by their (PEDSEX)." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
+    <span class="fas fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
+    <span class="fas fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
     github
   </a>
@@ -182,24 +182,24 @@ updated (fixMixup=TRUE).
 of the samples split by their (PEDSEX).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>evaluate_check_sex</span>(
-  <span class='no'>qcdir</span>,
-  <span class='no'>name</span>,
-  <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
-  <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>indir</span> <span class='kw'>=</span> <span class='no'>qcdir</span>,
-  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>,
-  <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>,
-  <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>,
-  <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>evaluate_check_sex</span><span class='op'>(</span>
+  <span class='va'>qcdir</span>,
+  <span class='va'>name</span>,
+  maleTh <span class='op'>=</span> <span class='fl'>0.8</span>,
+  femaleTh <span class='op'>=</span> <span class='fl'>0.2</span>,
+  externalSex <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fixMixup <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  indir <span class='op'>=</span> <span class='va'>qcdir</span>,
+  externalFemale <span class='op'>=</span> <span class='st'>"F"</span>,
+  externalMale <span class='op'>=</span> <span class='st'>"M"</span>,
+  externalSexSex <span class='op'>=</span> <span class='st'>"Sex"</span>,
+  externalSexID <span class='op'>=</span> <span class='st'>"IID"</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  label <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  path2plink <span class='op'>=</span> <span class='cn'>NULL</span>,
+  showPlinkOutput <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  interactive <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -312,12 +312,13 @@ description on the PLINK output format page:
 <a href='https://www.cog-genomics.org/plink/1.9/formats#sexcheck'>https://www.cog-genomics.org/plink/1.9/formats#sexcheck</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
-<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>fail_sex</span> <span class='kw'>&lt;-</span> <span class='fu'>evaluate_check_sex</span>(<span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>qcdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span>
+<span class='va'>name</span> <span class='op'>&lt;-</span> <span class='st'>"data"</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>fail_sex</span> <span class='op'>&lt;-</span> <span class='fu'>evaluate_check_sex</span><span class='op'>(</span>qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>, interactive<span class='op'>=</span><span class='cn'>FALSE</span>,
+verbose<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -333,7 +334,7 @@ description on the PLINK output format page:
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

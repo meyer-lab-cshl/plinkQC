@@ -85,13 +85,13 @@ genetic ancestry." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file"></span>
+    <span class="fas fa-file"></span>
      
     documentation
      
@@ -116,21 +116,21 @@ genetic ancestry." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
+    <span class="fas fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
+    <span class="fas fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
   <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
     github
   </a>
@@ -160,52 +160,52 @@ to their SNP sex, their relatedness to other study individuals and their
 genetic ancestry.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>perIndividualQC</span>(
-  <span class='no'>indir</span>,
-  <span class='no'>name</span>,
-  <span class='kw'>qcdir</span> <span class='kw'>=</span> <span class='no'>indir</span>,
-  <span class='kw'>dont.check_sex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>do.run_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_sex</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>maleTh</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
-  <span class='kw'>femaleTh</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>externalSex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>externalMale</span> <span class='kw'>=</span> <span class='st'>"M"</span>,
-  <span class='kw'>externalSexSex</span> <span class='kw'>=</span> <span class='st'>"Sex"</span>,
-  <span class='kw'>externalSexID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>externalFemale</span> <span class='kw'>=</span> <span class='st'>"F"</span>,
-  <span class='kw'>fixMixup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>dont.check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>do.run_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_het_and_miss</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>imissTh</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
-  <span class='kw'>hetTh</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>dont.check_relatedness</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>do.run_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_relatedness</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>highIBDTh</span> <span class='kw'>=</span> <span class='fl'>0.1875</span>,
-  <span class='kw'>mafThRelatedness</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-  <span class='kw'>genomebuild</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
-  <span class='kw'>dont.check_ancestry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>do.run_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do.evaluate_check_ancestry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>prefixMergedDataset</span>,
-  <span class='kw'>europeanTh</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
-  <span class='kw'>refSamples</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refColors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refSamplesFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refColorsFile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>refSamplesIID</span> <span class='kw'>=</span> <span class='st'>"IID"</span>,
-  <span class='kw'>refSamplesPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
-  <span class='kw'>refColorsColor</span> <span class='kw'>=</span> <span class='st'>"Color"</span>,
-  <span class='kw'>refColorsPop</span> <span class='kw'>=</span> <span class='st'>"Pop"</span>,
-  <span class='kw'>studyColor</span> <span class='kw'>=</span> <span class='st'>"#2c7bb6"</span>,
-  <span class='kw'>label</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>path2plink</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>showPlinkOutput</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>perIndividualQC</span><span class='op'>(</span>
+  <span class='va'>indir</span>,
+  <span class='va'>name</span>,
+  qcdir <span class='op'>=</span> <span class='va'>indir</span>,
+  dont.check_sex <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  do.run_check_sex <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  do.evaluate_check_sex <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  maleTh <span class='op'>=</span> <span class='fl'>0.8</span>,
+  femaleTh <span class='op'>=</span> <span class='fl'>0.2</span>,
+  externalSex <span class='op'>=</span> <span class='cn'>NULL</span>,
+  externalMale <span class='op'>=</span> <span class='st'>"M"</span>,
+  externalSexSex <span class='op'>=</span> <span class='st'>"Sex"</span>,
+  externalSexID <span class='op'>=</span> <span class='st'>"IID"</span>,
+  externalFemale <span class='op'>=</span> <span class='st'>"F"</span>,
+  fixMixup <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  dont.check_het_and_miss <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  do.run_check_het_and_miss <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  do.evaluate_check_het_and_miss <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  imissTh <span class='op'>=</span> <span class='fl'>0.03</span>,
+  hetTh <span class='op'>=</span> <span class='fl'>3</span>,
+  dont.check_relatedness <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  do.run_check_relatedness <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  do.evaluate_check_relatedness <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  highIBDTh <span class='op'>=</span> <span class='fl'>0.1875</span>,
+  mafThRelatedness <span class='op'>=</span> <span class='fl'>0.1</span>,
+  genomebuild <span class='op'>=</span> <span class='st'>"hg19"</span>,
+  dont.check_ancestry <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  do.run_check_ancestry <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  do.evaluate_check_ancestry <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>prefixMergedDataset</span>,
+  europeanTh <span class='op'>=</span> <span class='fl'>1.5</span>,
+  refSamples <span class='op'>=</span> <span class='cn'>NULL</span>,
+  refColors <span class='op'>=</span> <span class='cn'>NULL</span>,
+  refSamplesFile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  refColorsFile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  refSamplesIID <span class='op'>=</span> <span class='st'>"IID"</span>,
+  refSamplesPop <span class='op'>=</span> <span class='st'>"Pop"</span>,
+  refColorsColor <span class='op'>=</span> <span class='st'>"Color"</span>,
+  refColorsPop <span class='op'>=</span> <span class='st'>"Pop"</span>,
+  studyColor <span class='op'>=</span> <span class='st'>"#2c7bb6"</span>,
+  label <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  interactive <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  path2plink <span class='op'>=</span> <span class='cn'>NULL</span>,
+  showPlinkOutput <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -511,23 +511,24 @@ detailed output for fail IIDs (instead of simple IID lists), run each
 function individually.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>indir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"plinkQC"</span>)
-<span class='no'>qcdir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
-<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='st'>"data"</span>
+    <pre class="examples"><div class='input'><span class='va'>indir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span>
+<span class='va'>qcdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>name</span> <span class='op'>&lt;-</span> <span class='st'>"data"</span>
 <span class='co'># All quality control checks</span>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>fail_individuals</span> <span class='kw'>&lt;-</span> <span class='fu'>perIndividualQC</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
-<span class='kw'>refSamplesFile</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,<span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
-<span class='kw'>refColorsFile</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>""</span>),
-<span class='kw'>prefixMergedDataset</span><span class='kw'>=</span><span class='st'>"data.HapMapIII"</span>, <span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>do.run_check_het_and_miss</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_relatedness</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
-<span class='kw'>do.run_check_sex</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>do.run_check_ancestry</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>fail_individuals</span> <span class='op'>&lt;-</span> <span class='fu'>perIndividualQC</span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
+refSamplesFile<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>,
+refColorsFile<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>,
+prefixMergedDataset<span class='op'>=</span><span class='st'>"data.HapMapIII"</span>, interactive<span class='op'>=</span><span class='cn'>FALSE</span>, verbose<span class='op'>=</span><span class='cn'>FALSE</span>,
+do.run_check_het_and_miss<span class='op'>=</span><span class='cn'>FALSE</span>, do.run_check_relatedness<span class='op'>=</span><span class='cn'>FALSE</span>,
+do.run_check_sex<span class='op'>=</span><span class='cn'>FALSE</span>, do.run_check_ancestry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='co'># Only check sex and missingness/heterozygosity</span>
-<span class='no'>fail_sex_het_miss</span> <span class='kw'>&lt;-</span> <span class='fu'>perIndividualQC</span>(<span class='kw'>indir</span><span class='kw'>=</span><span class='no'>indir</span>, <span class='kw'>qcdir</span><span class='kw'>=</span><span class='no'>qcdir</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='no'>name</span>,
-<span class='kw'>dont.check_ancestry</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>dont.check_relatedness</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
-<span class='kw'>interactive</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-}</div></pre>
+<span class='va'>fail_sex_het_miss</span> <span class='op'>&lt;-</span> <span class='fu'>perIndividualQC</span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
+dont.check_ancestry<span class='op'>=</span><span class='cn'>TRUE</span>, dont.check_relatedness<span class='op'>=</span><span class='cn'>TRUE</span>,
+interactive<span class='op'>=</span><span class='cn'>FALSE</span>, verbose<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -543,7 +544,7 @@ function individually.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
