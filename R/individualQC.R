@@ -619,7 +619,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' If run.check_het_and_miss is TRUE, \code{\link{run_check_heterozygosity}} and
 #' \code{\link{run_check_missingness}} are executed ; otherwise it is assumed
 #' that plink --missing and plink --het have been run externally and
-#' qcdir/name.het and qcdir/name.imiss exist.  \code{\link{check_het_and_miss}}
+#' qcdir/name.het and qcdir/name.imiss exist. \code{\link{check_het_and_miss}}
 #' will fail with missing file error otherwise.
 #'
 #' For details on the output data.frame fail_imiss and fail_het, check the
@@ -1047,12 +1047,13 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return named list with i) fail_sex: dataframe with FID, IID, PEDSEX, SNPSEX
-#' and Sex (if externalSex was provided) of individuals failing sex check,
+#' and Sex (if externalSex was provided) of individuals failing sex check;
 #' ii) mixup: dataframe with FID, IID, PEDSEX, SNPSEX and Sex (if externalSex
-#' was provided) of individuals whose PEDSEX != Sex and Sex == SNPSEX and iii)
+#' was provided) of individuals whose PEDSEX != Sex and Sex == SNPSEX; iii)
 #' p_sexcheck, a ggplot2-object 'containing' a scatter plot of the X-chromosomal
 #' heterozygosity (SNPSEX) of the individuals split by their (PEDSEX), which can
-#' be shown by print(p_sexcheck).
+#' be shown by print(p_sexcheck) and iv) plot_data, a data.frame with the data
+#' visualised in p_sexcheck (iii).
 #' @export
 #' @examples
 #' qcdir <- system.file("extdata", package="plinkQC")
@@ -1204,7 +1205,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
     }
     if (interactive) print(p_sexcheck)
     return(list(fail_sex=fail_sex, mixup=mixup_geno_pheno,
-                p_sexcheck=p_sexcheck))
+                p_sexcheck=p_sexcheck, plot_data=sexcheck))
 }
 
 #' Run PLINK heterozygosity rate calculation
@@ -1357,10 +1358,11 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' containing FID (Family ID), IID (Within-family ID), O(HOM) (Observed number
 #' of homozygotes), E(HOM) (Expected number of homozygotes), N(NM) (Number of
 #' non-missing autosomal genotypes), F (Method-of-moments F coefficient
-#' estimate) of individuals failing  outlying heterozygosity check and iii)
+#' estimate) of individuals failing  outlying heterozygosity check; iii)
 #' p_het_imiss, a ggplot2-object 'containing' a scatter plot with the samples'
 #' missingness rates on x-axis and their heterozygosity rates on the y-axis,
-#' which can be shown by print(p_het_imiss).
+#' which can be shown by print(p_het_imiss) and iv) plot_data, a data.frame with
+#' the data visualised in p_het_imiss (iii).
 #' @export
 #' @examples
 #' qcdir <- system.file("extdata", package="plinkQC")
@@ -1450,7 +1452,8 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
     p_het_imiss <- p_het_imiss + theme_bw()
     if (interactive) print(p_het_imiss)
     return(list(fail_imiss=fail_imiss, fail_het=fail_het,
-                p_het_imiss=p_het_imiss))
+                p_het_imiss=p_het_imiss,
+                plot_data = het_imiss))
 }
 
 #' Run PLINK IBD estimation
@@ -1620,10 +1623,10 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
 #' DST (IBS distance, i.e. (IBS2 + 0.5*IBS1) / (IBS0 + IBS1 + IBS2)), PPC (IBS
 #' binomial test), RATIO (HETHET : IBS0 SNP ratio (expected value 2)).
 #' and ii) failIDs containing a [data.frame] with individual IDs [IID] and
-#' family IDs [FID] of individuals failing the highIBDTh iii) p_IBD, a
+#' family IDs [FID] of individuals failing the highIBDTh; iii) p_IBD, a
 #' ggplot2-object 'containing' all pair-wise IBD-estimates as histograms
-#' stratified by value of PI_HAT, which can be
-#' shown by print(p_IBD).
+#' stratified by value of PI_HAT, which can be shown by print(p_IBD and iv)
+#' plot_data, a data.frame with the data visualised in p_IBD (iii).
 #' @export
 #' @examples
 #' qcdir <- system.file("extdata", package="plinkQC")
@@ -1698,7 +1701,8 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                                 rel_heights = c(0.1, 1))
     if (interactive) print(p_IBD)
     return(list(fail_highIBD=fail_highIBD$relatednessFails,
-                failIDs=fail_highIBD$failIDs, p_IBD=p_IBD))
+                failIDs=fail_highIBD$failIDs, p_IBD=p_IBD,
+                plot_data = genome))
 }
 
 #' Run PLINK principal component analysis
@@ -1844,7 +1848,8 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
 #' 'containing' a scatter plot of PC1 versus PC2 colour-coded for samples of the
 #' reference populations and the study population, which can be shown by
-#' print(p_ancestry).
+#' print(p_ancestry) and iii) plot_data, a data.frame with the data
+#' visualised in p_ancestry (ii).
 #' @details 1000 Genomes samples were downloaded from \url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3 samples were downloaded from \url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
 #' @export
 #' @examples
@@ -2033,7 +2038,8 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         theme_bw() +
         theme(legend.position='bottom')
     if (interactive) print(p_ancestry)
-    return(list(fail_ancestry=fail_ancestry, p_ancestry=p_ancestry))
+    return(list(fail_ancestry=fail_ancestry, p_ancestry=p_ancestry,
+                plot_data=data_all))
 }
 
 

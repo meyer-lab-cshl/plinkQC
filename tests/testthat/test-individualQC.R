@@ -34,12 +34,13 @@ test_that('evaluate_check_sex returns correct output type',{
 
 test_that('evaluate_check_sex returns correct output length',{
     fail_sex <- evaluate_check_sex(qcdir, name, verbose=FALSE)
-    expect_equal(length(fail_sex), 3)
+    expect_equal(length(fail_sex), 4)
 })
 
 test_that('evaluate_check_sex returns correct output names',{
     fail_sex <- evaluate_check_sex(qcdir, name, verbose=FALSE)
-    expect_equal(names(fail_sex), c("fail_sex", "mixup", "p_sexcheck"))
+    expect_equal(names(fail_sex), c("fail_sex", "mixup", "p_sexcheck",
+                                    "plot_data"))
 })
 
 test_that('evaluate_check_sex returns correct fail IDs for example data',{
@@ -72,13 +73,13 @@ test_that('evaluate_check_het_and_miss returns correct output type',{
 
 test_that('evaluate_check_het_and_miss returns correct output length',{
     fail_het_imiss <- evaluate_check_het_and_miss(qcdir, name)
-    expect_equal(length(fail_het_imiss), 3)
+    expect_equal(length(fail_het_imiss), 4)
 })
 
 test_that('evaluate_check_het_and_miss returns correct output names',{
     fail_het_imiss <- evaluate_check_het_and_miss(qcdir, name)
     expect_equal(names(fail_het_imiss), c("fail_imiss", "fail_het",
-                                          "p_het_imiss"))
+                                          "p_het_imiss", "plot_data"))
 })
 
 test_that('evaluate_check_het_and_miss returns correct fail IDs',{
@@ -112,12 +113,13 @@ test_that('evaluate_check_relatedness returns correct output type',{
 
 test_that('evaluate_check_relatedness returns correct output length',{
     fail_relatedness <- evaluate_check_relatedness(qcdir, name, verbose=FALSE)
-    expect_equal(length(fail_relatedness), 3)
+    expect_equal(length(fail_relatedness), 4)
 })
 
 test_that('evaluate_check_relatedness returns correct output names',{
     fail_relatedness <- evaluate_check_relatedness(qcdir, name, verbose=FALSE)
-    expect_equal(names(fail_relatedness), c("fail_highIBD", "failIDs", "p_IBD"))
+    expect_equal(names(fail_relatedness), c("fail_highIBD", "failIDs", "p_IBD",
+                                            "plot_data"))
 })
 
 test_that('evaluate_check_relatedness returns correct fail IDs for example data',{
@@ -249,13 +251,13 @@ test_that('evaluate_check_ancestry returns correct output type',{
 test_that('evaluate_check_ancestry returns correct output length',{
     fail <- evaluate_check_ancestry(qcdir, name, prefixMergedDataset=prefix,
                                         refSamples=refSamples)
-    expect_equal(length(fail), 2)
+    expect_equal(length(fail), 3)
 })
 
 test_that('evaluate_check_ancestry returns correct output names',{
     fail <- evaluate_check_ancestry(qcdir, name, prefixMergedDataset=prefix,
                                refSamples=refSamples)
-    expect_equal(names(fail), c("fail_ancestry", "p_ancestry"))
+    expect_equal(names(fail), c("fail_ancestry", "p_ancestry", "plot_data"))
 })
 
 test_that('evaluate_check_ancestry returns correct fail IDs for example data',{
