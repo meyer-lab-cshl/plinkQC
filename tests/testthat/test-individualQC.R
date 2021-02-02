@@ -17,6 +17,8 @@ refSamples <- read.table(paste(qcdir, '/', refSamplesFile, sep=""), header=TRUE,
 refColors <- read.table(paste(qcdir, '/', refColorsFile, sep=""), header=TRUE,
                          stringsAsFactors=FALSE)
 
+highlight_samples <- paste0("ID_", 1:10)
+
 context('Test evaluate_check_sex')
 test_that('check_sex throws file error',{
     expect_error(evaluate_check_sex(qcdir, "nodata", verbose=FALSE),
@@ -52,6 +54,23 @@ test_that('evaluate_check_sex runs successfully if no sample fails',{
     fail_sex <- evaluate_check_sex(qcdir, name="data_all_passing",
                                    verbose=FALSE, interactive=TRUE)
     expect_true(is.null(fail_sex$fail_sex))
+})
+
+test_that('evaluate_check_sex fails with additional sample in highlighting',{
+    expect_error(evaluate_check_sex(qcdir, name=name,
+                                    highlight_samples = "XBC",
+                                    verbose=FALSE, interactive=FALSE
+                                    ),
+    "Not all samples to be highlighted")
+})
+
+test_that('evaluate_check_sex fails with text and label highlighting',{
+    expect_error(evaluate_check_sex(qcdir, name=name,
+                                    highlight_samples = highlight_samples,
+                                    highlight_type = c("text", "label"),
+                                    verbose=FALSE, interactive=FALSE
+    ),
+    "Only one of text or label")
 })
 
 context('Test evaluate_check_het_and_miss')
@@ -93,6 +112,22 @@ test_that('evaluate_check_het_and_miss runs successfully if no sample fails',{
         evaluate_check_het_and_miss(qcdir, name="data_all_passing",
                                     interactive=TRUE)
     expect_true(is.null(fail_check_het_and_miss$fail_het_and_miss))
+})
+
+test_that('evaluate_check_het_and_miss fails with additional sample in highlighting',{
+    expect_error(evaluate_check_het_and_miss(qcdir, name=name,
+                                    highlight_samples = "XBC", interactive=FALSE
+    ),
+    "Not all samples to be highlighted")
+})
+
+test_that('evaluate_check_het_and_miss fails with text and label highlighting',{
+    expect_error(evaluate_check_het_and_miss(qcdir, name=name,
+                                    highlight_samples = highlight_samples,
+                                    highlight_type = c("text", "label"),
+                                    interactive=FALSE
+    ),
+    "Only one of text or label")
 })
 
 context('Test evaluate_check_relatedness')
@@ -279,6 +314,28 @@ test_that('evaluate_check_ancestry fails with some missing sample error',{
         refSamples=refSamples),
         "Not all")
 })
+
+test_that('evaluate_check_ancestry fails with additional sample in highlighting',{
+    expect_error(evaluate_check_ancestry(qcdir, name=name,
+                                         highlight_samples = "XBC",
+                                         interactive=FALSE,
+                                         prefixMergedDataset=prefix,
+                                         refSamples=refSamples
+    ),
+    "Not all samples to be highlighted")
+})
+
+test_that('evaluate_check_ancestry fails with text and label highlighting',{
+    expect_error(evaluate_check_ancestry(qcdir, name=name,
+                                         prefixMergedDataset=prefix,
+                                         refSamples=refSamples,
+                                         highlight_samples = highlight_samples,
+                                         highlight_type = c("text", "label"),
+                                         interactive=FALSE
+    ),
+    "Only one of text or label")
+})
+
 
 test_that('perIndividualQC works if all samples pass', {
     fail_individuals <-

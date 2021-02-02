@@ -53,6 +53,6 @@ qcdir <- tempdir()
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
-run <- run_check_missingnessness(indir=indir, qcdir=qcdir, name=name)
+run <- run_check_missingness(indir=indir, qcdir=qcdir, name=name)
 }
 }

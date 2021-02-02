@@ -140,7 +140,14 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             refSamplesFile=NULL, refColorsFile=NULL,
                             refSamplesIID="IID", refSamplesPop="Pop",
                             refColorsColor="Color", refColorsPop="Pop",
-                            studyColor="#2c7bb6", label=TRUE,
+                            studyColor="#2c7bb6", label_fail=TRUE,
+                            highlight_samples = NULL,
+                            highlight_type =
+                                c("text", "label", "color", "shape"),
+                            highlight_text_size = 3,
+                            highlight_color = "#c51b8a",
+                            highlight_shape = 17,
+                            highlight_legend = FALSE,
                             interactive=FALSE, verbose=TRUE,
                             path2plink=NULL, showPlinkOutput=TRUE) {
 
@@ -180,7 +187,16 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                            path2plink=path2plink,
                                            showPlinkOutput=showPlinkOutput,
                                            fixMixup=fixMixup,
-                                           label=label, interactive=FALSE)
+                                           label_fail=label_fail,
+                                           highlight_samples =
+                                               highlight_samples,
+                                           highlight_type = highlight_type,
+                                           highlight_text_size =
+                                               highlight_text_size,
+                                           highlight_color = highlight_color,
+                                           highlight_shape = highlight_shape,
+                                           highlight_legend = highlight_legend,
+                                           interactive=FALSE)
             write.table(fail_sex$fail_sex[,1:2],
                         file=paste(out, ".fail-sexcheck.IDs",
                                    sep=""),
@@ -219,7 +235,15 @@ perIndividualQC <- function(indir, name, qcdir=indir,
             fail_het_imiss <-
                 evaluate_check_het_and_miss(qcdir=qcdir, name=name,
                                             imissTh=imissTh,
-                                            hetTh=hetTh, label=label,
+                                            hetTh=hetTh, label_fail=label_fail,
+                                            highlight_samples =
+                                                highlight_samples,
+                                            highlight_type = highlight_type,
+                                            highlight_text_size =
+                                                highlight_text_size,
+                                            highlight_color = highlight_color,
+                                            highlight_shape = highlight_shape,
+                                            highlight_legend = highlight_legend,
                                             interactive=FALSE)
             write.table(fail_het_imiss$fail_imiss[,1:2],
                         file=paste(out, ".fail-imiss.IDs",
@@ -306,6 +330,18 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                      refColorsPop=
                                                          refColorsPop,
                                                      studyColor=studyColor,
+                                                     highlight_samples =
+                                                         highlight_samples,
+                                                     highlight_type =
+                                                         highlight_type,
+                                                     highlight_text_size =
+                                                         highlight_text_size,
+                                                     highlight_color =
+                                                         highlight_color,
+                                                     highlight_shape =
+                                                         highlight_shape,
+                                                     highlight_legend =
+                                                         highlight_legend,
                                                      interactive=FALSE)
             write.table(fail_ancestry$fail_ancestry,
                         file=paste(out, ".fail-ancestry.IDs",
@@ -570,7 +606,14 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                       externalSexSex="Sex", externalSexID="IID",
                       fixMixup=FALSE,
                       interactive=FALSE, verbose=FALSE,
-                      label=TRUE,
+                      label_fail=TRUE,
+                      highlight_samples = NULL,
+                      highlight_type =
+                          c("text", "label", "color", "shape"),
+                      highlight_text_size = 3,
+                      highlight_color = "#c51b8a",
+                      highlight_shape = 17,
+                      highlight_legend = FALSE,
                       path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_sex) {
         run_sex <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
@@ -582,12 +625,18 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                                maleTh=maleTh, femaleTh=femaleTh,
                                interactive=interactive, fixMixup=fixMixup,
                                indir=indir,
-                               label=label,
+                               label_fail=label_fail,
                                externalFemale=externalFemale,
                                externalMale=externalMale,
                                externalSexSex=externalSexSex,
                                externalSexID=externalSexID,
                                verbose=verbose, path2plink=path2plink,
+                               highlight_samples = highlight_samples,
+                               highlight_type = highlight_type,
+                               highlight_text_size = highlight_text_size,
+                               highlight_color = highlight_color,
+                               highlight_shape = highlight_shape,
+                               highlight_legend = highlight_legend,
                                showPlinkOutput=showPlinkOutput)
     return(fail)
 }
@@ -682,7 +731,14 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' }
 check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                run.check_het_and_miss=TRUE,
-                               label=TRUE,
+                               label_fail=TRUE,
+                               highlight_samples = NULL,
+                               highlight_type =
+                                   c("text", "label", "color", "shape"),
+                               highlight_text_size = 3,
+                               highlight_color = "#c51b8a",
+                               highlight_shape = 17,
+                               highlight_legend = FALSE,
                                interactive=FALSE, verbose=FALSE,
                                path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_het_and_miss) {
@@ -697,7 +753,13 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
     }
     fail <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,  hetTh=hetTh,
                                  imissTh=imissTh, interactive=interactive,
-                                 label=label)
+                                 label_fail=label_fail,
+                                 highlight_samples = highlight_samples,
+                                 highlight_type = highlight_type,
+                                 highlight_text_size = highlight_text_size,
+                                 highlight_color = highlight_color,
+                                 highlight_shape = highlight_shape,
+                                 highlight_legend = highlight_legend)
     return(fail)
 }
 
@@ -914,6 +976,13 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            legend_labels_per_row=6,
                            run.check_ancestry=TRUE,
                            interactive=FALSE, verbose=verbose,
+                           highlight_samples = NULL,
+                           highlight_type =
+                               c("text", "label", "color", "shape"),
+                           highlight_text_size = 3,
+                           highlight_color = "#c51b8a",
+                           highlight_shape = 17,
+                           highlight_legend = FALSE,
                            path2plink=NULL, showPlinkOutput=TRUE) {
         if (run.check_ancestry) {
             run <- run_check_ancestry(indir=indir, qcdir=qcdir,
@@ -935,7 +1004,15 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                                         refColorsColor=refColorsColor,
                                         refColorsPop=refColorsPop,
                                         studyColor=studyColor,
-                                        legend_labels_per_row=legend_labels_per_row,
+                                        legend_labels_per_row=
+                                            legend_labels_per_row,
+                                        highlight_samples = highlight_samples,
+                                        highlight_type = highlight_type,
+                                        highlight_text_size =
+                                            highlight_text_size,
+                                        highlight_color = highlight_color,
+                                        highlight_shape = highlight_shape,
+                                        highlight_legend = highlight_legend,
                                         interactive=interactive)
         return(fail)
 }
@@ -1035,8 +1112,29 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' information in externalSex.
 #' @param externalSexID [character] Column identifier for column containing ID
 #' information in externalSex.
-#' @param label [logical] Set TRUE, to add fail IDs as text labels in scatter
-#' plot.
+#' @param label_fail [logical] Set TRUE, to add fail IDs as text labels in
+#' scatter plot.
+#' @param highlight_samples [character vector] Vector of sample IIDs to
+#' highlight in the plot (p_sexcheck); all highlight_samples IIDs have to
+#' be present in the IIDs of the name.fam file.
+#' @param highlight_type [character]  Type of sample highlight, labeling
+#' by IID ("text"/"label") and/or highlighting data points in different "color"
+#' and/or "shape". "text" and "label" use ggrepel for minimal
+#' overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+#' and "label" can be specified. Text/Label size can be specified with
+#' highlight_text_size, highlight color with highlight_color,
+#' or highlight shape with highlight_shape.
+#' @param highlight_text_size [integer] Text/Label size for samples specified to
+#' be highlighted (highlight_samples) by "text" or "label" (highlight_type).
+#' @param highlight_color [character] Color for samples specified to
+#' be highlighted (highlight_samples) by "color" (highlight_type).
+#' @param highlight_shape [integer] Shape for samples specified to
+#' be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+#' shapes and their encoding can be found at:
+#' \url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}
+#' @param highlight_legend [logical] Should a separate legend for the
+#' highlighted samples be provided; only relevant for highlight_type == "color"
+#' or highlight_type == "shape".
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -1067,7 +1165,14 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                fixMixup=FALSE, indir=qcdir,
                                externalFemale="F", externalMale="M",
                                externalSexSex="Sex", externalSexID="IID",
-                               verbose=FALSE, label=TRUE,
+                               verbose=FALSE, label_fail=TRUE,
+                               highlight_samples = NULL,
+                               highlight_type =
+                                   c("text", "label", "color", "shape"),
+                               highlight_text_size = 3,
+                               highlight_color = "#c51b8a",
+                               highlight_shape = 17,
+                               highlight_legend = FALSE,
                                path2plink=NULL,
                                showPlinkOutput=TRUE,
                                interactive=FALSE) {
@@ -1167,14 +1272,54 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
             }
         }
     }
+
+    sexcheck$LABELSEX <- "Unassigned"
+    sexcheck$LABELSEX[sexcheck$PEDSEX == 1] <- "Male"
+    sexcheck$LABELSEX[sexcheck$PEDSEX == 2] <- "Female"
+
+    colors <- c("#999999", "#377eb8", "#e41a1c")
+    names(colors) <- c("Unassigned", "Male", "Female")
+
+    sexcheck$shape <- "general"
+    shape_guide <- FALSE
+
+    if(!is.null(highlight_samples)) {
+        if (!all(highlight_samples %in% sexcheck$IID)) {
+            stop("Not all samples to be highlighted are present in the",
+                 "name.fam file")
+        }
+        highlight_type <- match.arg(highlight_type, several.ok = TRUE)
+        if (all(c("text", "label") %in% highlight_type)) {
+            stop("Only one of text or label highlighting possible; either ",
+                 "can be combined with shape and color highlighting")
+        }
+
+        if ("shape" %in% highlight_type) {
+            sexcheck$shape[sexcheck$IID %in% highlight_samples] <- "highlight"
+            shape_guide <- highlight_legend
+        }
+        if ("color"  %in% highlight_type && highlight_legend) {
+            sexcheck$LABELSEX[sexcheck$IID %in% highlight_samples] <- "highlight"
+            colors <- c(colors,  highlight_color)
+            names(colors)[length(colors)] <- "highlight"
+        }
+    }
+
+
+    sexcheck$LABELSEX <- factor(sexcheck$LABELSEX, levels=names(colors))
     sexcheck$PEDSEX <- as.factor(sexcheck$PEDSEX)
+    sexcheck$shape <- as.factor(sexcheck$shape)
+
     p_sexcheck <- ggplot()
     p_sexcheck <- p_sexcheck + geom_point(data=sexcheck,
                                           aes_string(x='PEDSEX', y='F',
-                                                     color='PEDSEX')) +
-        ggtitle("Check assigned sex versus SNP sex") +
-        xlab("Reported Sex (PEDSEX)") +
-        ylab("ChrX heterozygosity") +
+                                                     color='LABELSEX',
+                                                     shape='shape')) +
+        scale_shape_manual(values=c(16, highlight_shape), guide="none") +
+        scale_color_manual(values=colors, name="Sex") +
+        labs(title="Check assigned sex versus SNP sex",
+             x="Reported Sex (PEDSEX)",
+             y="ChrX heterozygosity") +
         geom_segment(data=data.frame(x=0.8, xend=1.2, y=maleTh,
                                      yend=maleTh),
                      aes_string(x='x', xend='xend', y='y', yend='yend'), lty=2,
@@ -1183,26 +1328,49 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                      yend=femaleTh), lty=2,
                      aes_string(x='x', xend='xend', y='y', yend='yend'),
                      color="#e7298a")
-    if (!is.null(fail_sex) && label) {
-        p_sexcheck <-
-            p_sexcheck + ggrepel::geom_label_repel(data=data.frame(x=fail_sex$PEDSEX,
-                                                  y=fail_sex$F,
-                                                  label=fail_sex$IID),
-                                  aes_string(x='x',y='y', label='label'),
-                                  size=2)
+    if (!is.null(fail_sex) && label_fail) {
+        p_sexcheck <- p_sexcheck +
+            ggrepel::geom_label_repel(
+                data=dplyr::filter_(sexcheck, ~IID %in% fail_sex$IID),
+                aes_string(x='PEDSEX',
+                           y='F',
+                           label='IID'),
+                size=highlight_text_size)
+    }
+
+    if (!is.null(highlight_samples)) {
+        highlight_data <- dplyr::filter_(sexcheck, ~IID %in% highlight_samples)
+        if ("text"  %in% highlight_type) {
+            p_sexcheck <- p_sexcheck +
+                ggrepel::geom_text_repel(data=highlight_data,
+                                         aes_string(x='PEDSEX', y='F',
+                                                    label="IID"),
+                                         size=highlight_text_size)
+        }
+        if ("label"  %in% highlight_type) {
+            p_sexcheck <- p_sexcheck +
+                ggrepel::geom_label_repel(data=highlight_data,
+                                          aes_string(x='PEDSEX', y='F',
+                                                     label='IID'),
+                                          size=highlight_text_size)
+        }
+
+        if ("color"  %in% highlight_type && !highlight_legend) {
+            p_sexcheck <- p_sexcheck +
+                geom_point(data=highlight_data,
+                           aes_string(x='PEDSEX', y='F', shape='shape'),
+                                      color=highlight_color)
+
+        }
+        if ("shape"  %in% highlight_type && highlight_legend) {
+            p_sexcheck <- p_sexcheck +
+                guides(shape = "legend") +
+                labs(shape = "Individual")
+        }
     }
     p_sexcheck <- p_sexcheck + theme_bw()
-    if (length(unique(sexcheck$PEDSEX)) == 2) {
-        p_sexcheck <- p_sexcheck +
-            scale_color_manual(values=c("#377eb8", "#e41a1c"),
-                               guide=FALSE) +
-            scale_x_discrete(labels=c("Male", "Female"))
-    } else if (length(unique(sexcheck$PEDSEX)) == 3 ) {
-        p_sexcheck <- p_sexcheck +
-            scale_color_manual(values=c("#999999", "#377eb8", "#e41a1c"),
-                               guide=FALSE) +
-            scale_x_discrete(labels=c("Unassigned", "Male", "Female"))
-    }
+
+
     if (interactive) print(p_sexcheck)
     return(list(fail_sex=fail_sex, mixup=mixup_geno_pheno,
                 p_sexcheck=p_sexcheck, plot_data=sexcheck))
@@ -1283,7 +1451,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_missingnessness(indir=indir, qcdir=qcdir, name=name)
+#' run <- run_check_missingness(indir=indir, qcdir=qcdir, name=name)
 #' }
 run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
                                   path2plink=NULL,
@@ -1348,8 +1516,29 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
 #' , other_arguments) or pdf(outfile) print(p_het_imiss) dev.off().
-#' @param label [logical] Set TRUE, to add fail IDs as text labels in scatter
-#' plot.
+#' @param label_fail [logical] Set TRUE, to add fail IDs as text labels in
+#' scatter plot.
+#' @param highlight_samples [character vector] Vector of sample IIDs to
+#' highlight in the plot (p_het_imiss); all highlight_samples IIDs have to
+#' be present in the IIDs of the name.fam file.
+#' @param highlight_type [character]  Type of sample highlight, labeling
+#' by IID ("text"/"label") and/or highlighting data points in different "color"
+#' and/or "shape". "text" and "label" use ggrepel for minimal
+#' overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+#' and "label" can be specified.Text/Label size can be specified with
+#' highlight_text_size, highlight color with highlight_color,
+#' or highlight shape with highlight_shape.
+#' @param highlight_text_size [integer] Text/Label size for samples specified to
+#' be highlighted (highlight_samples) by "text" or "label" (highlight_type).
+#' @param highlight_color [character] Color for samples specified to
+#' be highlighted (highlight_samples) by "color" (highlight_type).
+#' @param highlight_shape [integer] Shape for samples specified to
+#' be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+#' shapes and their encoding can be found at:
+#' \url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}
+#' @param highlight_legend [logical] Should a separate legend for the
+#' highlighted samples be provided; only relevant for highlight_type == "color"
+#' or highlight_type == "shape".
 #' @return named [list] with i) fail_imiss dataframe containing FID (Family ID),
 #' IID (Within-family ID), MISS_PHENO (Phenotype missing? (Y/N)), N_MISS (Number
 #' of missing genotype call(s), not including obligatory missings), N_GENO (
@@ -1372,7 +1561,15 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' interactive=FALSE)
 #' }
 evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
-                                  hetTh=3, label=TRUE, interactive=FALSE) {
+                                  hetTh=3, label_fail=TRUE,
+                                  highlight_samples = NULL,
+                                  highlight_type =
+                                      c("text", "label", "color", "shape"),
+                                  highlight_text_size = 3,
+                                  highlight_color = "#c51b8a",
+                                  highlight_shape = 17,
+                                  highlight_legend = FALSE,
+                                  interactive=FALSE) {
 
     prefix <- makepath(qcdir, name)
 
@@ -1404,6 +1601,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
     fail_het <- het[het$F < (mean(het$F)  - hetTh*sd(het$F)) |
                         het$F > (mean(het$F) + hetTh*sd(het$F)),]
 
+
     nr_samples <- nrow(imiss)
     imiss$logF_MISS <- log10(imiss$F_MISS)
     het_imiss <- merge(imiss, het, by="IID")
@@ -1412,23 +1610,57 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
     if (nrow(fail_het_imiss) == 0) {
         fail_het_imiss <- NULL
     }
-    het_imiss$type <- 1
-    het_imiss$type[het_imiss$IID %in% fail_het$IID] <- 2
-    het_imiss$type[het_imiss$IID %in% fail_imiss$IID] <- 3
+    het_imiss$type <- "pass"
+    het_imiss$type[het_imiss$IID %in% fail_het$IID] <- "fail het"
+    het_imiss$type[het_imiss$IID %in% fail_imiss$IID] <- "fail miss"
     het_imiss$type[het_imiss$IID %in%
-                       intersect(fail_het$IID, fail_imiss$IID)] <- 4
-    het_imiss$type <- as.factor(het_imiss$type)
+                       intersect(fail_het$IID, fail_imiss$IID)] <- "fail het + miss"
+
     minus_sd <- mean(het_imiss$F) - 1:5*(sd(het_imiss$F))
     plus_sd <- mean(het_imiss$F) + 1:5*(sd(het_imiss$F))
+
+    colors <- c("#666666", "#1b9e77", "#d95f02", "#7570b3")
+    names(colors) <- c("pass", "fail het", "fail miss", "fail het + miss" )
+
+    het_imiss$shape <- "general"
+    shape_guide <- FALSE
+
+    if(!is.null(highlight_samples)) {
+        if (!all(highlight_samples %in% het_imiss$IID)) {
+            stop("Not all samples to be highlighted are present in the",
+                 "prefixMergedDataset")
+        }
+        highlight_type <- match.arg(highlight_type, several.ok = TRUE)
+        if (all(c("text", "label") %in% highlight_type)) {
+            stop("Only one of text or label highlighting possible; either ",
+                 "can be combined with shape and color highlighting")
+        }
+
+        if ("shape" %in% highlight_type) {
+            het_imiss$shape[het_imiss$IID %in% highlight_samples] <- "highlight"
+            shape_guide <- highlight_legend
+        }
+        if ("color"  %in% highlight_type && highlight_legend) {
+            het_imiss$type[het_imiss$IID %in% highlight_samples] <- "highlight"
+            colors <- c(colors,  highlight_color)
+            names(colors)[length(colors)] <- "highlight"
+        }
+    }
+
+    het_imiss$type <- factor(het_imiss$type, levels=names(colors))
+    het_imiss$shape <- as.factor(het_imiss$shape)
+
     p_het_imiss <- ggplot()
     p_het_imiss <- p_het_imiss + geom_point(data=het_imiss,
                                             aes_string(x='logF_MISS', y='F',
-                                                       color='type')) +
-        scale_color_manual(values=c("#666666", "#1b9e77", "#d95f02",
-                                    "#7570b3"), guide=FALSE) +
-        xlab("Proportion of missing SNPs") +
-        ylab("heterozygosity rate (and sd)") +
-        ggtitle("heterozygosity by Missingness across samples") +
+                                                       color='type',
+                                                       shape="shape")) +
+        scale_shape_manual(values=c(16, highlight_shape), guide="none") +
+        scale_color_manual(values=colors) +
+        labs(x = "Proportion of missing SNPs",
+             y = "heterozygosity rate (and sd)",
+             color = "Marker",
+             title = "heterozygosity by Missingness across samples") +
         geom_hline(yintercept=c(minus_sd[1:3], plus_sd[1:3]), lty=2,
                    col="azure4") +
         scale_y_continuous(labels=c("-5", "-4", "-3" ,"+3", "+4", "+5"),
@@ -1440,14 +1672,44 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
         geom_hline(yintercept=mean(het_imiss$F) + (hetTh*sd(het_imiss$F)),
                    col="#e7298a", lty=2) +
         geom_vline(xintercept=log10(imissTh), col="#e7298a", lty=2)
-    if (!is.null(fail_het_imiss) && label) {
+
+    if (!is.null(fail_het_imiss) && label_fail) {
         p_het_imiss <-
             p_het_imiss + ggrepel::geom_label_repel(
                                 data=data.frame(x=fail_het_imiss$logF_MISS,
                                                 y=fail_het_imiss$F,
                                                 label=fail_het_imiss$IID),
-                                  aes_string(x='x',y='y', label='label'),
-                                  size=2)
+                                  aes_string(x='x', y='y', label='label'),
+                                  size=highlight_text_size)
+    }
+    highlight_data <- dplyr::filter_(het_imiss, ~IID %in% highlight_samples)
+    if (!is.null(highlight_samples)) {
+        if ("text"  %in% highlight_type) {
+            p_het_imiss <- p_het_imiss +
+                ggrepel::geom_text_repel(data=highlight_data,
+                                         aes_string(x='logF_MISS', y='F',
+                                                    label="IID"),
+                                         size=highlight_text_size)
+        }
+        if ("label"  %in% highlight_type) {
+            p_het_imiss <- p_het_imiss +
+                ggrepel::geom_label_repel(data=highlight_data,
+                                          aes_string(x='logF_MISS', y='F',
+                                                     label="IID"),
+                                          size=highlight_text_size)
+        }
+
+        if ("color"  %in% highlight_type && !highlight_legend) {
+            p_het_imiss <- p_het_imiss +
+                geom_point(data=highlight_data,
+                           aes_string(x='logF_MISS', y='F', shape='shape'),
+                           color=highlight_color,
+                           show.legend=highlight_legend)
+        }
+        if ("shape"  %in% highlight_type && highlight_legend) {
+            p_het_imiss <- p_het_imiss +
+                guides(shape = "legend")
+        }
     }
     p_het_imiss <- p_het_imiss + theme_bw()
     if (interactive) print(p_het_imiss)
@@ -1837,7 +2099,29 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' IDs in refColors/refColorsFile.
 #' @param studyColor [character] Colour to be used for study population if plot
 #' is TRUE.
-#' @param legend_labels_per_row [integer] Number of population names per row in PCA plot.
+#' @param highlight_samples [character vector] Vector of sample IIDs to
+#' highlight in the plot (p_ancestry); all highlight_samples IIDs have to
+#' be present in the IIDs of the prefixMergedDataset.fam file.
+#' @param highlight_type [character]  Type of sample highlight, labeling
+#' by IID ("text"/"label") and/or highlighting data points in different "color"
+#' and/or "shape". "text" and "label" use ggrepel for minimal
+#' overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+#' and "label" can be specified.Text/Label size can be specified with
+#' highlight_text_size, highlight color with highlight_color,
+#' or highlight shape with highlight_shape.
+#' @param highlight_text_size [integer] Text/Label size for samples specified to
+#' be highlighted (highlight_samples) by "text" or "label" (highlight_type).
+#' @param highlight_color [character] Color for samples specified to
+#' be highlighted (highlight_samples) by "color" (highlight_type).
+#' @param highlight_shape [integer] Shape for samples specified to
+#' be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+#' shapes and their encoding can be found at:
+#' \url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}
+#' @param highlight_legend [logical] Should a separate legend for the
+#' highlighted samples be provided; only relevant for highlight_type == "color"
+#' or highlight_type == "shape".
+#' @param legend_labels_per_row [integer] Number of population names per row in
+#' PCA plot.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
@@ -1850,7 +2134,10 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' reference populations and the study population, which can be shown by
 #' print(p_ancestry) and iii) plot_data, a data.frame with the data
 #' visualised in p_ancestry (ii).
-#' @details 1000 Genomes samples were downloaded from \url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3 samples were downloaded from \url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
+#' @details 1000 Genomes samples were downloaded from
+#' \url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3
+#' samples were downloaded from
+#' \url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
 #' @export
 #' @examples
 #' \dontrun{
@@ -1865,7 +2152,8 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     qcdir=indir,
                                     europeanTh=1.5,
-                                    defaultRefSamples = c("HapMap","1000Genomes"),
+                                    defaultRefSamples =
+                                        c("HapMap","1000Genomes"),
                                     refSamples=NULL, refColors=NULL,
                                     refSamplesFile=NULL, refColorsFile=NULL,
                                     refSamplesIID="IID", refSamplesPop="Pop",
@@ -1873,6 +2161,13 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     studyColor="#2c7bb6",
                                     refPopulation=c("CEU", "TSI"),
                                     legend_labels_per_row=6,
+                                    highlight_samples = NULL,
+                                    highlight_type =
+                                        c("text", "label", "color", "shape"),
+                                    highlight_text_size = 3,
+                                    highlight_color = "#c51b8a",
+                                    highlight_shape = 17,
+                                    highlight_legend = FALSE,
                                     interactive=FALSE,
                                     verbose=FALSE) {
 
@@ -1905,7 +2200,6 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     }
 
     if (is.null(refSamples) && is.null(refSamplesFile)) {
-        #stop("Neither refSamples nor refSamplesFile are specified")
         if (any(!defaultRefSamples %in% c("1000Genomes", "HapMap"))){
             stop("defaultRefSamples should be one of 'HapMap' or '1000Genomes'",
                  " but ", defaultRefSamples," provided")
@@ -2001,8 +2295,6 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     colors <-  dplyr::select_(data_all, ~Pop, ~Color)
     colors <- colors[!duplicated(colors$Pop),]
     colors <- colors[order(colors$Color),]
-    colors$Pop <- factor(colors$Pop, levels=unique(colors$Pop))
-    data_all$Pop <- factor(data_all$Pop, levels=levels(colors$Pop))
 
     ## Find mean coordinates and distances of reference Europeans ####
     all_european <- dplyr::filter_(data_all, ~Pop %in% refPopulation)
@@ -2022,21 +2314,77 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                         (max_euclid_dist * europeanTh))
     fail_ancestry <- dplyr::select_(non_europeans, ~FID, ~IID)
     legend_rows <- round(nrow(colors)/legend_labels_per_row)
+
+    data_all$shape <- "general"
+    shape_guide <- FALSE
+    if(!is.null(highlight_samples)) {
+        if (!all(highlight_samples %in% pca_data$IID)) {
+            stop("Not all samples to be highlighted are present in the",
+                 "prefixMergedDataset")
+        }
+        highlight_type <- match.arg(highlight_type, several.ok = TRUE)
+        if (all(c("text", "label") %in% highlight_type)) {
+            stop("Only one of text or label highlighting possible; either ",
+                 "can be combined with shape and color highlighting")
+        }
+        if ("shape" %in% highlight_type) {
+            data_all$shape[data_all$IID %in% highlight_samples] <- "highlight"
+            shape_guide <- highlight_legend
+        }
+        if ("color" %in% highlight_type && highlight_legend) {
+            data_all$Pop[data_all$IID %in% highlight_samples] <- "highlight"
+            colors <- rbind(colors, c("highlight", highlight_color))
+        }
+    }
+    colors$Pop <- factor(colors$Pop, levels=unique(colors$Pop))
+    data_all$Pop <- factor(data_all$Pop, levels=levels(colors$Pop))
+
     p_ancestry <- ggplot()
     p_ancestry <- p_ancestry +
         geom_point(data=data_all,
-                   aes_string(x='PC1', y='PC2', color='Pop')) +
+                   aes_string(x='PC1', y='PC2', color='Pop', shape="shape")) +
         geom_point(data=dplyr::filter_(data_all, ~Pop != name),
-                   aes_string(x='PC1', y='PC2', color='Pop'),
+                   aes_string(x='PC1', y='PC2', color='Pop', shape="shape"),
                    size=1) +
         scale_color_manual(values=colors$Color,
                            name="Population") +
+        scale_shape_manual(values=c(16, highlight_shape), guide="none") +
         guides(color=guide_legend(nrow=legend_rows, byrow=TRUE)) +
         ggforce::geom_circle(aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
                                  r=(max_euclid_dist * europeanTh))) +
         ggtitle("PCA on combined reference and study genotypes") +
         theme_bw() +
-        theme(legend.position='bottom')
+        theme(legend.position='bottom',
+              legend.direction = 'vertical',
+              legend.box = "vertical")
+
+    if (!is.null(highlight_samples)) {
+        highlight_data <- dplyr::filter_(data_all, ~IID %in% highlight_samples)
+        if ("text" %in% highlight_type) {
+            p_ancestry <- p_ancestry +
+                ggrepel::geom_text_repel(data=highlight_data,
+                           aes_string(x='PC1', y='PC2', label="IID"),
+                           size=highlight_text_size)
+        }
+        if ("label" %in% highlight_type) {
+            p_ancestry <- p_ancestry +
+                ggrepel::geom_label_repel(data=highlight_data,
+                                         aes_string(x='PC1', y='PC2', label="IID"),
+                                         size=highlight_text_size)
+        }
+        if ("color" %in% highlight_type && !highlight_legend) {
+            p_ancestry <- p_ancestry +
+                geom_point(data=highlight_data,
+                           aes_string(x='PC1', y='PC2', shape='shape'),
+                           color=highlight_color,
+                           show.legend=highlight_legend)
+        }
+        if ("shape"  %in% highlight_type && highlight_legend) {
+            p_ancestry <- p_ancestry +
+                labs(shape = "Individual") +
+                guides(shape = "legend")
+        }
+    }
     if (interactive) print(p_ancestry)
     return(list(fail_ancestry=fail_ancestry, p_ancestry=p_ancestry,
                 plot_data=data_all))

@@ -19,7 +19,13 @@ check_sex(
   fixMixup = FALSE,
   interactive = FALSE,
   verbose = FALSE,
-  label = TRUE,
+  label_fail = TRUE,
+  highlight_samples = NULL,
+  highlight_type = c("text", "label", "color", "shape"),
+  highlight_text_size = 3,
+  highlight_color = "#c51b8a",
+  highlight_shape = 17,
+  highlight_legend = FALSE,
   path2plink = NULL,
   showPlinkOutput = TRUE
 )
@@ -74,8 +80,35 @@ other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
-\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
-plot.}
+\item{label_fail}{[logical] Set TRUE, to add fail IDs as text labels in
+scatter plot.}
+
+\item{highlight_samples}{[character vector] Vector of sample IIDs to
+highlight in the plot (p_sexcheck); all highlight_samples IIDs have to
+be present in the IIDs of the name.fam file.}
+
+\item{highlight_type}{[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified. Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.}
+
+\item{highlight_text_size}{[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).}
+
+\item{highlight_color}{[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).}
+
+\item{highlight_shape}{[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+\url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}}
+
+\item{highlight_legend}{[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.

@@ -207,9 +207,6 @@ IDs in refColors/refColorsFile.}
 
 \item{studyColor}{[character] Colour to be used for study population.}
 
-\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
-plot.}
-
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and

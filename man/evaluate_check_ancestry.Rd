@@ -22,6 +22,12 @@ evaluate_check_ancestry(
   studyColor = "#2c7bb6",
   refPopulation = c("CEU", "TSI"),
   legend_labels_per_row = 6,
+  highlight_samples = NULL,
+  highlight_type = c("text", "label", "color", "shape"),
+  highlight_text_size = 3,
+  highlight_color = "#c51b8a",
+  highlight_shape = 17,
+  highlight_legend = FALSE,
   interactive = FALSE,
   verbose = FALSE
 )
@@ -105,7 +111,35 @@ is TRUE.}
 reference population. Identifiers have to be corresponding to population IDs
 [refColorsPop] in refColorsfile/refColors.}
 
-\item{legend_labels_per_row}{[integer] Number of population names per row in PCA plot.}
+\item{legend_labels_per_row}{[integer] Number of population names per row in
+PCA plot.}
+
+\item{highlight_samples}{[character vector] Vector of sample IIDs to
+highlight in the plot (p_ancestry); all highlight_samples IIDs have to
+be present in the IIDs of the prefixMergedDataset.fam file.}
+
+\item{highlight_type}{[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified.Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.}
+
+\item{highlight_text_size}{[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).}
+
+\item{highlight_color}{[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).}
+
+\item{highlight_shape}{[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+\url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}}
+
+\item{highlight_legend}{[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -120,7 +154,8 @@ Named [list] with i) fail_ancestry, containing a [data.frame] with
 FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
 'containing' a scatter plot of PC1 versus PC2 colour-coded for samples of the
 reference populations and the study population, which can be shown by
-print(p_ancestry).
+print(p_ancestry) and iii) plot_data, a data.frame with the data
+visualised in p_ancestry (ii).
 }
 \description{
 Evaluates and depicts results of plink --pca (via
@@ -143,7 +178,10 @@ Both \code{\link{run_check_ancestry}} and
 \code{\link{evaluate_check_ancestry}} can simply be invoked by
 \code{\link{check_ancestry}}.
 
-1000 Genomes samples were downloaded from \url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3 samples were downloaded from \url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
+1000 Genomes samples were downloaded from
+\url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3
+samples were downloaded from
+\url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
 }
 \examples{
 \dontrun{
