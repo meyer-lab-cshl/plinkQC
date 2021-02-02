@@ -135,6 +135,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             do.run_check_ancestry=TRUE,
                             do.evaluate_check_ancestry=TRUE,
                             prefixMergedDataset, europeanTh=1.5,
+                            defaultRefSamples = c("HapMap", "1000Genomes"),
                             refSamples=NULL, refColors=NULL,
                             refSamplesFile=NULL, refColorsFile=NULL,
                             refSamplesIID="IID", refSamplesPop="Pop",
@@ -142,10 +143,6 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             studyColor="#2c7bb6", label=TRUE,
                             interactive=FALSE, verbose=TRUE,
                             path2plink=NULL, showPlinkOutput=TRUE) {
-    #fail_sex <- NULL
-    #fail_het_imiss <- NULL
-    #fail_relatedness <- NULL
-    #fail_ancestry <- NULL
 
     missing_genotype <- NULL
     highIBD <- NULL
@@ -292,6 +289,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                      prefixMergedDataset=
                                                         prefixMergedDataset,
                                                      europeanTh=europeanTh,
+                                                     defaultRefSamples =
+                                                         defaultRefSamples,
                                                      refSamples=refSamples,
                                                      refColors=refColors,
                                                      refSamplesFile=

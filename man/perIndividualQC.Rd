@@ -35,6 +35,7 @@ perIndividualQC(
   do.evaluate_check_ancestry = TRUE,
   prefixMergedDataset,
   europeanTh = 1.5,
+  defaultRefSamples = c("HapMap", "1000Genomes"),
   refSamples = NULL,
   refColors = NULL,
   refSamplesFile = NULL,
