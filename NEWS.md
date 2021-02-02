@@ -5,7 +5,7 @@ estimates [d009da90](https://github.com/meyer-lab-cshl/plinkQC/commit/d009da9043
 * Add midp modifier for --hwe and --hardy as recommended on [plink hwe documentation](https://www.cog-genomics.org/plink/1.9/filter#hwe) and discussed in issue [#27](https://github.com/meyer-lab-cshl/plinkQC/issues/27); [43230a6c](https://github.com/meyer-lab-cshl/plinkQC/commit/43230a6ce5f079b46c85b1a7a526213177db1f1b)
 
 ## minor changes
-* Add checks in `cleanData` that can distinguish between miss-sepcified filters and non-failing samples [7432b1ee](https://github.com/meyer-lab-cshl/plinkQC/commit/7432b1ee880ad14c7a078f3a0379f7fdcff1684b); addresses issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
+* Add checks in `cleanData` that can distinguish between miss-specified filters and non-failing samples [7432b1ee](https://github.com/meyer-lab-cshl/plinkQC/commit/7432b1ee880ad14c7a078f3a0379f7fdcff1684b); addresses issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
 * Add checks and tests in `check_snp_missingness`, `check_maf` and `check_hwe` 
 in cases where all samples pass `perIndividualQC`.
 [31ed6f65](https://github.com/meyer-lab-cshl/plinkQC/commit/31ed6f653902857a0a78ae723e786dd84d240b75); related to issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
@@ -80,7 +80,7 @@ to FID, IID (fixes [#2](https://github.com/meyer-lab-cshl/plinkQC/issues/2)).
 # plinkQC 0.2.0
 ## major changes
 * All system calls to plink are conducted with sys::exec_wait - this should
-solve platform dependent issues, mainly comptatibility with windows.
+solve platform dependent issues, mainly compatibility with windows.
 * Make path construction compatible with windows.
 * path2plink now requires full path to plink executable, no tilde expansion or
 simple pointer to directory supported.

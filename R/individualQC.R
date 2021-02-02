@@ -1426,8 +1426,8 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
         scale_color_manual(values=c("#666666", "#1b9e77", "#d95f02",
                                     "#7570b3"), guide=FALSE) +
         xlab("Proportion of missing SNPs") +
-        ylab("Heterozygosity rate (and sd)") +
-        ggtitle("Heterozygosity by Missingness across samples") +
+        ylab("heterozygosity rate (and sd)") +
+        ggtitle("heterozygosity by Missingness across samples") +
         geom_hline(yintercept=c(minus_sd[1:3], plus_sd[1:3]), lty=2,
                    col="azure4") +
         scale_y_continuous(labels=c("-5", "-4", "-3" ,"+3", "+4", "+5"),
