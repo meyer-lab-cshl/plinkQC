@@ -3,6 +3,9 @@
 * Output all IBD estimates in `run_check_relatedness` not just fail IBD
 estimates [d009da90](https://github.com/meyer-lab-cshl/plinkQC/commit/d009da90434a83cb4867881e3772b518d17dc2dd)
 * Add midp modifier for --hwe and --hardy as recommended on [plink hwe documentation](https://www.cog-genomics.org/plink/1.9/filter#hwe) and discussed in issue [#27](https://github.com/meyer-lab-cshl/plinkQC/issues/27); [43230a6c](https://github.com/meyer-lab-cshl/plinkQC/commit/43230a6ce5f079b46c85b1a7a526213177db1f1b)
+* Provide HapMap and 1000Genomes individual and population identifiers as default
+for ancestry check functions; include optional color mapping for these reference
+populations; raised in [#37](https://github.com/meyer-lab-cshl/plinkQC/issues/37), incorporated in [65cfcba](https://github.com/meyer-lab-cshl/plinkQC/commit/65cfcbaf5b0af3b1d3d4b710a8710331a39e0f6e)
 
 ## minor changes
 * Add checks in `cleanData` that can distinguish between miss-specified filters and non-failing samples [7432b1ee](https://github.com/meyer-lab-cshl/plinkQC/commit/7432b1ee880ad14c7a078f3a0379f7fdcff1684b); addresses issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
@@ -13,6 +16,7 @@ in cases where all samples pass `perIndividualQC`.
 for all passing samples and accordingly, no fail samples label in plot.
 [d071a43](https://github.com/meyer-lab-cshl/plinkQC/commit/d071a4341b0d4c40220b42f81c412da4d320b8ec)
 * Update dropbox links and add note to vignette [9bae988](https://github.com/meyer-lab-cshl/plinkQC/commit/9bae9886dc637569698d883654fcf71486b6634e)
+
 
 # plinkQC 0.3.2
 ## minor changes
