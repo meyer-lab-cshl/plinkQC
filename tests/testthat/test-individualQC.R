@@ -141,10 +141,19 @@ test_that('evaluate_check_ancestry throws input file error',{
                  "plink --pca output file:")
 })
 
-test_that('evaluate_check_ancestry throws refSamples missing error',{
+test_that('evaluate_check_ancestry uses HapMap as default reference',{
+    expect_message(evaluate_check_ancestry(qcdir, name,
+                                         prefixMergedDataset=prefix,
+                                         verbose=TRUE),
+                   "Using HapMap as reference samples.")
+})
+
+test_that('evaluate_check_ancestry uses HapMap as default reference',{
     expect_error(evaluate_check_ancestry(qcdir, name,
-                                         prefixMergedDataset=prefix),
-                 "Neither refSamples nor refSamplesFile are specified")
+                                           prefixMergedDataset=prefix,
+                                           verbose=TRUE,
+                                           defaultRefSamples = "Genomes"),
+                   "defaultRefSamples should be one of 'HapMap'.")
 })
 
 test_that('evaluate_check_ancestry throws refSamples file error',{

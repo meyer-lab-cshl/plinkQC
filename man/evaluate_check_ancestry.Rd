@@ -10,6 +10,7 @@ evaluate_check_ancestry(
   prefixMergedDataset,
   qcdir = indir,
   europeanTh = 1.5,
+  defaultRefSamples = c("HapMap", "1000Genomes"),
   refSamples = NULL,
   refColors = NULL,
   refSamplesFile = NULL,
@@ -21,7 +22,8 @@ evaluate_check_ancestry(
   studyColor = "#2c7bb6",
   refPopulation = c("CEU", "TSI"),
   legend_labels_per_row = 6,
-  interactive = FALSE
+  interactive = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -45,30 +47,44 @@ considered to be of European descent and samples outside this radius of
 non-European descent. The radius is computed as the maximum Euclidean distance
 of European reference samples to the centre of European reference samples.}
 
+\item{defaultRefSamples}{[character] Option to use pre-downloaded individual
+and population identifiers from either the 1000Genomes or HapMap project.
+If refSamples and refSamplesFile are not provided, the HapMap identifiers (or
+1000Genomes is specified) will be used as default and the function will fail
+if the reference samples in the prefixMergedDataset do not match these
+reference samples. If refColors and refColorsFile are not provided, this also
+sets default colors for the reference populations.}
+
 \item{refSamples}{[data.frame] Dataframe with sample identifiers
 [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
 population identifier [refSamplesPop] corresponding to population IDs
-[refColorsPop] in refColorsfile/refColors. Either refSamples or
-refSamplesFile have to be specified.}
+[refColorsPop] in refColorsfile/refColors. If refSamples and
+refSamplesFile are not specified, defaultRefSamples will be used as
+reference.}
 
 \item{refColors}{[data.frame, optional] Dataframe with population IDs in
 column [refColorsPop] and corresponding colour-code for PCA plot in column
-[refColorsColor]. If not provided and is.null(refColorsFile) default colors
-are used.}
+[refColorsColor].  If refColors and refColorsFile are not specified and
+refSamples and refSamplesFile are not specified, default colors will be
+determined from the defaultRefSamples option. If refColors and refColorsFile
+are not specified and but refSamples or refSamplesFile are given, ggplot
+default colors will be used.}
 
 \item{refSamplesFile}{[character] /path/to/File/with/reference samples. Needs
 columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 corresponding to population IDs [refColorsPop] in refColorsfile/refColors. If
-both refSamplesFile and refSamples are not NULL, refSamplesFile information
+both refSamplesFile and refSamples are not NULL, defaultRefSamples information
 is used.}
 
 \item{refColorsFile}{[character, optional]
 /path/to/File/with/Population/Colors containing population IDs in column
 [refColorsPop] and corresponding colour-code for PCA plot in column
-[refColorsColor].If not provided and is.null(refColors) default colors for
-are used. If both refColorsFile and refColors are not NULL, refColorsFile
-information is used.}
+[refColorsColor]. If refColors and refColorsFile are not specified and
+refSamples and refSamplesFile are not specified, default colors will be
+determined from the defaultRefSamples option. If refColors and refColorsFile
+are not specified and but refSamples or refSamplesFile are given, ggplot
+default colors will be used.}
 
 \item{refSamplesIID}{[character] Column name of reference sample IDs in
 refSamples/refSamplesFile.}
@@ -96,6 +112,8 @@ choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 other_arguments) or pdf(outfile) print(p_ancestry) dev.off().}
+
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \value{
 Named [list] with i) fail_ancestry, containing a [data.frame] with
@@ -124,6 +142,8 @@ samples of the reference populations and the study population.
 Both \code{\link{run_check_ancestry}} and
 \code{\link{evaluate_check_ancestry}} can simply be invoked by
 \code{\link{check_ancestry}}.
+
+1000 Genomes samples were downloaded from \url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3 samples were downloaded from \url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
 }
 \examples{
 \dontrun{

@@ -1790,27 +1790,40 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' @param refPopulation [vector] Vector with population identifiers of European
 #' reference population. Identifiers have to be corresponding to population IDs
 #' [refColorsPop] in refColorsfile/refColors.
+#' @param defaultRefSamples [character] Option to use pre-downloaded individual
+#' and population identifiers from either the 1000Genomes or HapMap project.
+#' If refSamples and refSamplesFile are not provided, the HapMap identifiers (or
+#' 1000Genomes is specified) will be used as default and the function will fail
+#' if the reference samples in the prefixMergedDataset do not match these
+#' reference samples. If refColors and refColorsFile are not provided, this also
+#' sets default colors for the reference populations.
 #' @param refSamples [data.frame] Dataframe with sample identifiers
 #' [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
 #' population identifier [refSamplesPop] corresponding to population IDs
-#' [refColorsPop] in refColorsfile/refColors. Either refSamples or
-#' refSamplesFile have to be specified.
+#' [refColorsPop] in refColorsfile/refColors. If refSamples and
+#' refSamplesFile are not specified, defaultRefSamples will be used as
+#' reference.
 #' @param refColors [data.frame, optional] Dataframe with population IDs in
 #' column [refColorsPop] and corresponding colour-code for PCA plot in column
-#' [refColorsColor]. If not provided and is.null(refColorsFile) default colors
-#' are used.
+#' [refColorsColor].  If refColors and refColorsFile are not specified and
+#' refSamples and refSamplesFile are not specified, default colors will be
+#' determined from the defaultRefSamples option. If refColors and refColorsFile
+#' are not specified and but refSamples or refSamplesFile are given, ggplot
+#' default colors will be used.
 #' @param refSamplesFile [character] /path/to/File/with/reference samples. Needs
 #' columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 #' prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 #' corresponding to population IDs [refColorsPop] in refColorsfile/refColors. If
-#' both refSamplesFile and refSamples are not NULL, refSamplesFile information
+#' both refSamplesFile and refSamples are not NULL, defaultRefSamples information
 #' is used.
 #' @param refColorsFile [character, optional]
 #' /path/to/File/with/Population/Colors containing population IDs in column
 #' [refColorsPop] and corresponding colour-code for PCA plot in column
-#' [refColorsColor].If not provided and is.null(refColors) default colors for
-#' are used. If both refColorsFile and refColors are not NULL, refColorsFile
-#' information is used.
+#' [refColorsColor]. If refColors and refColorsFile are not specified and
+#' refSamples and refSamplesFile are not specified, default colors will be
+#' determined from the defaultRefSamples option. If refColors and refColorsFile
+#' are not specified and but refSamples or refSamplesFile are given, ggplot
+#' default colors will be used.
 #' @param refSamplesIID [character] Column name of reference sample IDs in
 #' refSamples/refSamplesFile.
 #' @param refSamplesPop [character] Column name of reference sample population
@@ -1822,6 +1835,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' @param studyColor [character] Colour to be used for study population if plot
 #' is TRUE.
 #' @param legend_labels_per_row [integer] Number of population names per row in PCA plot.
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -1832,6 +1846,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' 'containing' a scatter plot of PC1 versus PC2 colour-coded for samples of the
 #' reference populations and the study population, which can be shown by
 #' print(p_ancestry).
+#' @details 1000 Genomes samples were downloaded from \url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3 samples were downloaded from \url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
 #' @export
 #' @examples
 #' \dontrun{
@@ -1846,6 +1861,7 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     qcdir=indir,
                                     europeanTh=1.5,
+                                    defaultRefSamples = c("HapMap","1000Genomes"),
                                     refSamples=NULL, refColors=NULL,
                                     refSamplesFile=NULL, refColorsFile=NULL,
                                     refSamplesIID="IID", refSamplesPop="Pop",
@@ -1853,7 +1869,8 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     studyColor="#2c7bb6",
                                     refPopulation=c("CEU", "TSI"),
                                     legend_labels_per_row=6,
-                                    interactive=FALSE) {
+                                    interactive=FALSE,
+                                    verbose=FALSE) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, prefixMergedDataset)
@@ -1865,8 +1882,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                  header=FALSE, stringsAsFactors=FALSE,
                                  data.table=FALSE)[,1:2]
     colnames(samples) <- c("FID", "IID")
-    #samples$IID <- as.character(samples$IID)
-    #samples$FID <- as.character(samples$FID)
+
     if (!file.exists(paste(out, ".eigenvec", sep=""))){
         stop("plink --pca output file: ", out, ".eigenvec does not exist.")
     }
@@ -1884,11 +1900,33 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
              "prefixMergedDataset")
     }
 
-    #pca_data$IID <- as.character(pca_data$IID)
-    #pca_data$FID <- as.character(pca_data$FID)
-
     if (is.null(refSamples) && is.null(refSamplesFile)) {
-        stop("Neither refSamples nor refSamplesFile are specified")
+        #stop("Neither refSamples nor refSamplesFile are specified")
+        if (any(!defaultRefSamples %in% c("1000Genomes", "HapMap"))){
+            stop("defaultRefSamples should be one of 'HapMap' or '1000Genomes'",
+                 " but ", defaultRefSamples," provided")
+        }
+        defaultRefSamples <- match.arg(defaultRefSamples)
+        if (defaultRefSamples == "HapMap") {
+            refSamplesFile <- system.file("extdata", "HapMap_ID2Pop.txt",
+                                        package="plinkQC")
+            if(is.null(refColorsFile) && is.null(refColors)) {
+                refColorsFile <-  system.file("extdata", "HapMap_PopColors.txt",
+                                              package="plinkQC")
+            }
+        } else  {
+            refSamplesFile <- system.file("extdata", "Genomes1000_ID2Pop.txt",
+                                        package="plinkQC")
+            if(is.null(refColorsFile) && is.null(refColors)) {
+                refColorsFile <-  system.file("extdata",
+                                              "Genomes1000_PopColors.txt",
+                                          package="plinkQC")
+            }
+        }
+
+        if (verbose) {
+            message("Using ", defaultRefSamples, " as reference samples.")
+        }
     }
     if (!is.null(refSamplesFile) && !file.exists(refSamplesFile)) {
         stop("refSamplesFile file", refSamplesFile, "does not exist.")
