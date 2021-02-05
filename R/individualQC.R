@@ -169,6 +169,10 @@ perIndividualQC <- function(indir, name, qcdir=indir,
             run <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
                                  path2plink=path2plink,
                                  showPlinkOutput=showPlinkOutput,
+                                 keep_individuals=keep_individuals,
+                                 remove_individuals=remove_individuals,
+                                 keep_markers=keep_markers,
+                                 extract_markers=extract_markers,
                                  verbose=verbose)
         }
         if (do.evaluate_check_sex) {
@@ -220,11 +224,19 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                               name=name,
                                               path2plink=path2plink,
                                               showPlinkOutput=showPlinkOutput,
+                                              keep_individuals=keep_individuals,
+                                              remove_individuals=remove_individuals,
+                                              keep_markers=keep_markers,
+                                              extract_markers=extract_markers,
                                               verbose=verbose)
             run_het <- run_check_heterozygosity(qcdir=qcdir, indir=indir,
                                                 name=name,
                                                 path2plink=path2plink,
                                                 showPlinkOutput=showPlinkOutput,
+                                                keep_individuals=keep_individuals,
+                                                remove_individuals=remove_individuals,
+                                                keep_markers=keep_markers,
+                                                extract_markers=extract_markers,
                                                 verbose=verbose)
         }
         if (do.evaluate_check_het_and_miss) {
@@ -276,6 +288,10 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                          mafThRelatedness=mafThRelatedness,
                                          genomebuild=genomebuild,
                                          showPlinkOutput=showPlinkOutput,
+                                         keep_individuals=keep_individuals,
+                                         remove_individuals=remove_individuals,
+                                         keep_markers=keep_markers,
+                                         extract_markers=extract_markers,
                                          verbose=verbose)
         }
         if (do.evaluate_check_relatedness) {
@@ -302,6 +318,10 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                       prefixMergedDataset=prefixMergedDataset,
                                       path2plink=path2plink,
                                       showPlinkOutput=showPlinkOutput,
+                                      keep_individuals=keep_individuals,
+                                      remove_individuals=remove_individuals,
+                                      keep_markers=keep_markers,
+                                      extract_markers=extract_markers,
                                       verbose=verbose)
         }
         if (do.evaluate_check_ancestry) {
@@ -614,11 +634,20 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                       highlight_color = "#c51b8a",
                       highlight_shape = 17,
                       highlight_legend = FALSE,
-                      path2plink=NULL, showPlinkOutput=TRUE) {
+                      path2plink=NULL,
+                      keep_individuals=NULL,
+                      remove_individuals=NULL,
+                      keep_markers=NULL,
+                      extract_markers=NULL,
+                      showPlinkOutput=TRUE) {
     if (run.check_sex) {
         run_sex <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
                                  verbose=verbose,
                                  path2plink=path2plink,
+                                 keep_individuals=keep_individuals,
+                                 remove_individuals=remove_individuals,
+                                 keep_markers=keep_markers,
+                                 extract_markers=extract_markers,
                                  showPlinkOutput=showPlinkOutput)
     }
     fail <- evaluate_check_sex(qcdir=qcdir, name=name, externalSex=externalSex,
@@ -637,6 +666,10 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                                highlight_color = highlight_color,
                                highlight_shape = highlight_shape,
                                highlight_legend = highlight_legend,
+                               keep_individuals=keep_individuals,
+                               remove_individuals=remove_individuals,
+                               keep_markers=keep_markers,
+                               extract_markers=extract_markers,
                                showPlinkOutput=showPlinkOutput)
     return(fail)
 }
@@ -740,15 +773,27 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                highlight_shape = 17,
                                highlight_legend = FALSE,
                                interactive=FALSE, verbose=FALSE,
+                               keep_individuals=NULL,
+                               remove_individuals=NULL,
+                               keep_markers=NULL,
+                               extract_markers=NULL,
                                path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_het_and_miss) {
         run_het <- run_check_heterozygosity(indir=indir,qcdir=qcdir, name=name,
                                             verbose=verbose,
                                             path2plink=path2plink,
+                                            keep_individuals=keep_individuals,
+                                            remove_individuals=remove_individuals,
+                                            keep_markers=keep_markers,
+                                            extract_markers=extract_markers,
                                             showPlinkOutput=showPlinkOutput)
         run_miss <- run_check_missingness(indir=indir, qcdir=qcdir, name=name,
                                           verbose=verbose,
                                           path2plink=path2plink,
+                                          keep_individuals=keep_individuals,
+                                          remove_individuals=remove_individuals,
+                                          keep_markers=keep_markers,
+                                          extract_markers=extract_markers,
                                           showPlinkOutput=showPlinkOutput)
     }
     fail <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,  hetTh=hetTh,
@@ -852,6 +897,10 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                               run.check_relatedness=TRUE,
                               interactive=FALSE, verbose=FALSE,
                               mafThRelatedness=0.1, path2plink=NULL,
+                              keep_individuals=NULL,
+                              remove_individuals=NULL,
+                              keep_markers=NULL,
+                              extract_markers=NULL,
                               showPlinkOutput=TRUE) {
     if (run.check_relatedness) {
         run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name,
@@ -859,6 +908,10 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                                      mafThRelatedness=mafThRelatedness,
                                      path2plink=path2plink,
                                      highIBDTh=highIBDTh,
+                                     keep_individuals=keep_individuals,
+                                     remove_individuals=remove_individuals,
+                                     keep_markers=keep_markers,
+                                     extract_markers=extract_markers,
                                      showPlinkOutput=showPlinkOutput)
     }
     fail <- evaluate_check_relatedness(qcdir=qcdir, name=name,
@@ -983,12 +1036,20 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            highlight_color = "#c51b8a",
                            highlight_shape = 17,
                            highlight_legend = FALSE,
+                           keep_individuals=NULL,
+                           remove_individuals=NULL,
+                           keep_markers=NULL,
+                           extract_markers=NULL,
                            path2plink=NULL, showPlinkOutput=TRUE) {
         if (run.check_ancestry) {
             run <- run_check_ancestry(indir=indir, qcdir=qcdir,
                                       prefixMergedDataset=prefixMergedDataset,
                                       verbose=verbose,
                                       path2plink=path2plink,
+                                      keep_individuals=keep_individuals,
+                                      remove_individuals=remove_individuals,
+                                      keep_markers=keep_markers,
+                                      extract_markers=extract_markers,
                                       showPlinkOutput=showPlinkOutput)
         }
         fail <- evaluate_check_ancestry(qcdir=qcdir, indir=indir, name=name,
