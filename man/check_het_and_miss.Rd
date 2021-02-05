@@ -21,6 +21,10 @@ check_het_and_miss(
   highlight_legend = FALSE,
   interactive = FALSE,
   verbose = FALSE,
+  keep_individuals = NULL,
+  remove_individuals = NULL,
+  exclude_markers = NULL,
+  extract_markers = NULL,
   path2plink = NULL,
   showPlinkOutput = TRUE
 )
@@ -90,6 +94,34 @@ save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
 , other_arguments) or pdf(outfile) print(p_het_imiss) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+
+\item{keep_individuals}{[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{remove_individuals}{[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{exclude_markers}{[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{extract_markers}{[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.

@@ -447,3 +447,72 @@ checkFormat <- function(prefix) {
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
 }
+
+#' Check and construct PLINK sample and marker filters
+#'
+#' checkFiltering checks that the file names with the individuals and markers to
+#' be filtered can be found. If so, it constructs the command for filtering
+#'
+#' @param keep_individuals [character] Path to file with individuals to be
+#' retained in the analysis. The file has to be a space/tab-delimited text file
+#' with family IDs in the first column and within-family IDs in the second
+#' column. All samples not listed in this file will be removed from the current
+#' analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+#' Default: NULL, i.e. no filtering on individuals.
+#' @param remove_individuals [character] Path to file with individuals to be
+#' removed from the analysis. The file has to be a space/tab-delimited text file
+#' with family IDs in the first column and within-family IDs in the second
+#' column. All samples listed in this file will be removed from the current
+#' analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+#' Default: NULL, i.e. no filtering on individuals.
+#' @param extract_markers [character] Path to file with makers to be
+#' included in the analysis. The file has to be a text file with a list of
+#' variant IDs (usually one per line, but it's okay for them to just be
+#' separated by spaces). All unlisted variants will be removed from the current
+#' analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+#' Default: NULL, i.e. no filtering on markers.
+#' @param exclude_markers [character] Path to file with makers to be
+#' removed from the analysis. The file has to be a text file with a list of
+#' variant IDs (usually one per line, but it's okay for them to just be
+#' separated by spaces). All listed variants will be removed from the current
+#' analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+#' Default: NULL, i.e. no filtering on markers.
+#' @return Vector containing args in sys::exec_wait format to enable filtering
+#' on individuals and/or markers.
+#' @export
+checkFiltering <- function(keep_individuals=NULL,
+                           remove_individuals=NULL,
+                           extract_markers=NULL,
+                           exclude_markers=NULL
+                           ) {
+    args <- NULL
+    if (!is.null(keep_individuals)) {
+        if (!file.exists(keep_individuals)) {
+            stop("File with individuals to keep in analysis does not exist: ",
+                 keep_individuals)
+        }
+        args = c(args, "--keep", keep_individuals)
+    }
+    if (!is.null(remove_individuals)) {
+        if (!file.exists(remove_individuals)) {
+            stop("File with individuals to remove from analysis does not exist: ",
+                 remove_individuals)
+        }
+        args = c(args, "--remove", remove_individuals)
+    }
+    if (!is.null(extract_markers)) {
+        if (!file.exists(extract_markers)) {
+            stop("File with markers to extract for analysis does not exist: ",
+                 extract_markers)
+        }
+        args = c(args, "--extract", extract_markers)
+    }
+    if (!is.null(exclude_markers)) {
+        if (!file.exists(exclude_markers)) {
+            stop("File with markers to exclude from analysis does not exist: ",
+                 exclude_markers)
+        }
+        args = c(args, "--exclude", exclude_markers)
+    }
+    return(args)
+}

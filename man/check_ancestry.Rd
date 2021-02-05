@@ -10,6 +10,7 @@ check_ancestry(
   qcdir = indir,
   prefixMergedDataset,
   europeanTh = 1.5,
+  defaultRefSamples = c("HapMap", "1000Genomes"),
   refPopulation = c("CEU", "TSI"),
   refSamples = NULL,
   refColors = NULL,
@@ -30,6 +31,10 @@ check_ancestry(
   highlight_color = "#c51b8a",
   highlight_shape = 17,
   highlight_legend = FALSE,
+  keep_individuals = NULL,
+  remove_individuals = NULL,
+  exclude_markers = NULL,
+  extract_markers = NULL,
   path2plink = NULL,
   showPlinkOutput = TRUE
 )
@@ -58,6 +63,14 @@ considered to be of European descent and samples outside this radius of
 non-European descent. The radius is computed as the maximum Euclidean
 distance of European reference samples to the centre of European reference
 samples.}
+
+\item{defaultRefSamples}{[character] Option to use pre-downloaded individual
+and population identifiers from either the 1000Genomes or HapMap project.
+If refSamples and refSamplesFile are not provided, the HapMap identifiers (or
+1000Genomes is specified) will be used as default and the function will fail
+if the reference samples in the prefixMergedDataset do not match these
+reference samples. If refColors and refColorsFile are not provided, this also
+sets default colors for the reference populations.}
 
 \item{refPopulation}{[vector] Vector with population identifiers of European
 reference population. Identifiers have to be corresponding to population IDs
@@ -142,6 +155,34 @@ shapes and their encoding can be found at:
 \item{highlight_legend}{[logical] Should a separate legend for the
 highlighted samples be provided; only relevant for highlight_type == "color"
 or highlight_type == "shape".}
+
+\item{keep_individuals}{[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{remove_individuals}{[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{exclude_markers}{[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{extract_markers}{[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.

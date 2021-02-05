@@ -25,6 +25,10 @@ evaluate_check_sex(
   highlight_shape = 17,
   highlight_legend = FALSE,
   path2plink = NULL,
+  keep_individuals = NULL,
+  remove_individuals = NULL,
+  exclude_markers = NULL,
+  extract_markers = NULL,
   showPlinkOutput = TRUE,
   interactive = FALSE
 )
@@ -104,6 +108,34 @@ should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 
+\item{keep_individuals}{[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{remove_individuals}{[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{exclude_markers}{[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{extract_markers}{[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
 
@@ -151,8 +183,9 @@ description on the PLINK output format page:
 \examples{
 qcdir <- system.file("extdata", package="plinkQC")
 name <- "data"
+path2plink <- '/path/to/plink'
 \dontrun{
 fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
-verbose=FALSE)
+verbose=FALSE, path2plink=path2plink)
 }
 }

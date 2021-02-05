@@ -71,6 +71,7 @@
 #' TRUE).
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @inheritParams check_sex
 #' @inheritParams check_ancestry
 #' @inheritParams check_relatedness
@@ -149,6 +150,10 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             highlight_shape = 17,
                             highlight_legend = FALSE,
                             interactive=FALSE, verbose=TRUE,
+                            keep_individuals=NULL,
+                            remove_individuals=NULL,
+                            exclude_markers=NULL,
+                            extract_markers=NULL,
                             path2plink=NULL, showPlinkOutput=TRUE) {
 
     missing_genotype <- NULL
@@ -331,7 +336,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
             fail_ancestry <- evaluate_check_ancestry(qcdir=qcdir, indir=indir,
                                                      name=name,
                                                      prefixMergedDataset=
-                                                        prefixMergedDataset,
+                                                         prefixMergedDataset,
                                                      europeanTh=europeanTh,
                                                      defaultRefSamples =
                                                          defaultRefSamples,
@@ -399,7 +404,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                      labels=subplotLabels,
                                      rel_heights=c(rep(1,
                                                        length(plots_sampleQC)),
-                                                       1.5))
+                                                   1.5))
     if (interactive) {
         print(p_sampleQC)
     }
@@ -496,36 +501,36 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
     if ("ancestry" %in% names(fail_list) && !is.null(fail_list$ancestry)) {
         # b) overview of QC and ancestry fails
         fail_all <- list(QC_fail=unique_samples_fail_wo_ancestry,
-                    Ancestry_fail=fail_list$ancestry$IID)
+                         Ancestry_fail=fail_list$ancestry$IID)
 
         unique_samples_fail_all <- unique(unlist(fail_all))
         fail_counts_all <- UpSetR::fromList(fail_all)
         rownames(fail_counts_all) <- unique_samples_fail_all
 
         m <- UpSetR::upset(fail_counts_all,
-                      order.by = "freq",
-                      # Include when UpSetR v1.4.1 is released
-                      # title=
-                      # "Intersection between QC and ancestry failures",
-                      mainbar.y.label=
-                          "Samples failing QC and ancestry checks",
-                                  sets.x.label="Sample fails per QC check",
-                      empty.intersections = "on", text.scale=1.2,
-                      main.bar.color="#7570b3", matrix.color="#7570b3",
-                      sets.bar.color="#e7298a" )
+                           order.by = "freq",
+                           # Include when UpSetR v1.4.1 is released
+                           # title=
+                           # "Intersection between QC and ancestry failures",
+                           mainbar.y.label=
+                               "Samples failing QC and ancestry checks",
+                           sets.x.label="Sample fails per QC check",
+                           empty.intersections = "on", text.scale=1.2,
+                           main.bar.color="#7570b3", matrix.color="#7570b3",
+                           sets.bar.color="#e7298a" )
         p_all <- cowplot::plot_grid(NULL, m$Main_bar, m$Sizes, m$Matrix,
-                                   nrow=2, align='v', rel_heights = c(3,1),
-                                   rel_widths = c(2,3))
+                                    nrow=2, align='v', rel_heights = c(3,1),
+                                    rel_widths = c(2,3))
         if (interactive) {
             print(p_all)
         }
         fail_counts_all <- merge(samples_fail_all, fail_counts_all,
-                                         by.x=2, by.y=0)
+                                 by.x=2, by.y=0)
 
         p_overview <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
                                          NULL, m$Main_bar, m$Sizes, m$Matrix,
-                                   nrow=4, align='v', rel_heights = c(3,1,3,1),
-                                   rel_widths = c(2,3))
+                                         nrow=4, align='v', rel_heights = c(3,1,3,1),
+                                         rel_widths = c(2,3))
     } else {
         p_overview <- p_qc
         fail_counts_all <- NULL
@@ -797,14 +802,14 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                           showPlinkOutput=showPlinkOutput)
     }
     fail <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,  hetTh=hetTh,
-                                 imissTh=imissTh, interactive=interactive,
-                                 label_fail=label_fail,
-                                 highlight_samples = highlight_samples,
-                                 highlight_type = highlight_type,
-                                 highlight_text_size = highlight_text_size,
-                                 highlight_color = highlight_color,
-                                 highlight_shape = highlight_shape,
-                                 highlight_legend = highlight_legend)
+                                        imissTh=imissTh, interactive=interactive,
+                                        label_fail=label_fail,
+                                        highlight_samples = highlight_samples,
+                                        highlight_type = highlight_type,
+                                        highlight_text_size = highlight_text_size,
+                                        highlight_color = highlight_color,
+                                        highlight_shape = highlight_shape,
+                                        highlight_legend = highlight_legend)
     return(fail)
 }
 
@@ -1020,6 +1025,8 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 
 check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            europeanTh=1.5,
+                           defaultRefSamples =
+                               c("HapMap","1000Genomes"),
                            refPopulation=c("CEU", "TSI"),
                            refSamples=NULL, refColors=NULL,
                            refSamplesFile=NULL, refColorsFile=NULL,
@@ -1041,41 +1048,42 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            exclude_markers=NULL,
                            extract_markers=NULL,
                            path2plink=NULL, showPlinkOutput=TRUE) {
-        if (run.check_ancestry) {
-            run <- run_check_ancestry(indir=indir, qcdir=qcdir,
-                                      prefixMergedDataset=prefixMergedDataset,
-                                      verbose=verbose,
-                                      path2plink=path2plink,
-                                      keep_individuals=keep_individuals,
-                                      remove_individuals=remove_individuals,
-                                      exclude_markers=exclude_markers,
-                                      extract_markers=extract_markers,
-                                      showPlinkOutput=showPlinkOutput)
-        }
-        fail <- evaluate_check_ancestry(qcdir=qcdir, indir=indir, name=name,
-                                        prefixMergedDataset=prefixMergedDataset,
-                                        europeanTh=europeanTh,
-                                        refPopulation=refPopulation,
-                                        refSamples=refSamples,
-                                        refColors=refColors,
-                                        refSamplesFile=refSamplesFile,
-                                        refColorsFile=refColorsFile,
-                                        refSamplesIID=refSamplesIID,
-                                        refSamplesPop=refSamplesPop,
-                                        refColorsColor=refColorsColor,
-                                        refColorsPop=refColorsPop,
-                                        studyColor=studyColor,
-                                        legend_labels_per_row=
-                                            legend_labels_per_row,
-                                        highlight_samples = highlight_samples,
-                                        highlight_type = highlight_type,
-                                        highlight_text_size =
-                                            highlight_text_size,
-                                        highlight_color = highlight_color,
-                                        highlight_shape = highlight_shape,
-                                        highlight_legend = highlight_legend,
-                                        interactive=interactive)
-        return(fail)
+    if (run.check_ancestry) {
+        run <- run_check_ancestry(indir=indir, qcdir=qcdir,
+                                  prefixMergedDataset=prefixMergedDataset,
+                                  verbose=verbose,
+                                  path2plink=path2plink,
+                                  keep_individuals=keep_individuals,
+                                  remove_individuals=remove_individuals,
+                                  exclude_markers=exclude_markers,
+                                  extract_markers=extract_markers,
+                                  showPlinkOutput=showPlinkOutput)
+    }
+    fail <- evaluate_check_ancestry(qcdir=qcdir, indir=indir, name=name,
+                                    prefixMergedDataset=prefixMergedDataset,
+                                    europeanTh=europeanTh,
+                                    refPopulation=refPopulation,
+                                    refSamples=refSamples,
+                                    refColors=refColors,
+                                    refSamplesFile=refSamplesFile,
+                                    refColorsFile=refColorsFile,
+                                    refSamplesIID=refSamplesIID,
+                                    refSamplesPop=refSamplesPop,
+                                    refColorsColor=refColorsColor,
+                                    refColorsPop=refColorsPop,
+                                    studyColor=studyColor,
+                                    legend_labels_per_row=
+                                        legend_labels_per_row,
+                                    highlight_samples = highlight_samples,
+                                    highlight_type = highlight_type,
+                                    highlight_text_size =
+                                        highlight_text_size,
+                                    highlight_color = highlight_color,
+                                    highlight_shape = highlight_shape,
+                                    highlight_legend = highlight_legend,
+                                    defaultRefSamples = defaultRefSamples,
+                                    interactive=interactive)
+    return(fail)
 }
 
 
@@ -1096,6 +1104,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1104,24 +1113,40 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
 #' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
 #' qcdir <- tempdir()
+#' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
+#' # simple sexcheck on all individuals in dataset
 #' run <- run_check_sex(indir=indir, qcdir=qcdir, name=name)
+#'
+#' # sexcheck on subset of dataset
+#' keep_individuals_file <- system.file("extdata", "keep_individuals",
+#' package="plinkQC")
+#' run <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
+#' keep_individuals=keep_individuals_file, path2plink=path2plink)
 #' }
 run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
-                          path2plink=NULL, showPlinkOutput=TRUE) {
+                          path2plink=NULL,
+                          keep_individuals=NULL,
+                          remove_individuals=NULL,
+                          exclude_markers=NULL,
+                          extract_markers=NULL,
+                          showPlinkOutput=TRUE) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                  extract_markers, exclude_markers)
 
     if (verbose) message("Run check_sex via plink --check-sex")
     sys::exec_wait(path2plink,
-                   args=c("--bfile", prefix, "--check-sex", "--out", out),
-                std_out=showPlinkOutput, std_err=showPlinkOutput)
+                   args=c("--bfile", prefix, "--check-sex", "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
 }
 
 #' Evaluate results from PLINK sex check.
@@ -1202,6 +1227,7 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 #' other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1217,9 +1243,10 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @examples
 #' qcdir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
+#' path2plink <- '/path/to/plink'
 #' \dontrun{
 #' fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
-#' verbose=FALSE)
+#' verbose=FALSE, path2plink=path2plink)
 #' }
 evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                femaleTh=0.2, externalSex=NULL,
@@ -1235,6 +1262,10 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                highlight_shape = 17,
                                highlight_legend = FALSE,
                                path2plink=NULL,
+                               keep_individuals=NULL,
+                               remove_individuals=NULL,
+                               exclude_markers=NULL,
+                               extract_markers=NULL,
                                showPlinkOutput=TRUE,
                                interactive=FALSE) {
 
@@ -1304,6 +1335,9 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
             if (fixMixup) {
                 checkFormat(prefix)
                 path2plink <- checkPlink(path2plink)
+                args_filter <- checkFiltering(keep_individuals,
+                                              remove_individuals,
+                                              extract_markers, exclude_markers)
                 if (nrow(mixup_geno_pheno) != 0) {
                     file_mixup <- paste(out, ".mismatched_sex_geno_pheno",
                                         sep="")
@@ -1312,10 +1346,11 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                 file=file_mixup,
                                 row.names=FALSE, quote=FALSE, col.names=FALSE)
                     sys::exec_wait(path2plink, args=c("--bfile", prefix,
-                                 "--update-sex", file_mixup,
-                                 "--make-bed",
-                                 "--out", prefix),
-                            std_out=showPlinkOutput, std_err=showPlinkOutput)
+                                                      "--update-sex", file_mixup,
+                                                      "--make-bed",
+                                                      "--out", prefix,
+                                                      args_filter),
+                                   std_out=showPlinkOutput, std_err=showPlinkOutput)
                 } else {
                     if (verbose) {
                         message("All assigned genotype sexes (PEDSEX) match",
@@ -1420,7 +1455,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
             p_sexcheck <- p_sexcheck +
                 geom_point(data=highlight_data,
                            aes_string(x='PEDSEX', y='F', shape='shape'),
-                                      color=highlight_color)
+                           color=highlight_color)
 
         }
         if ("shape"  %in% highlight_type && highlight_legend) {
@@ -1454,6 +1489,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1462,13 +1498,27 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 #' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
 #' qcdir <- tempdir()
+#' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_heterozygosity(indir=indir, qcdir=qcdir, name=name)
+#' # heterozygosity check on all individuals in dataset
+#' run <- run_check_heterozygosity(indir=indir, qcdir=qcdir, name=name,
+#' path2plink=path2plink)
+#'
+#' #' # heterozygosity on subset of dataset
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' run <- run_check_heterozygosity(indir=indir, qcdir=qcdir, name=name,
+#' remove_individuals=remove_individuals_file,path2plink=path2plink)
+
 #' }
 run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
                                      path2plink=NULL,
+                                     keep_individuals=NULL,
+                                     remove_individuals=NULL,
+                                     exclude_markers=NULL,
+                                     extract_markers=NULL,
                                      showPlinkOutput=TRUE) {
 
     prefix <- makepath(indir, name)
@@ -1476,11 +1526,14 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                  extract_markers, exclude_markers)
 
     if (verbose) message("Run check_heterozygosity via plink --het")
     sys::exec_wait(path2plink,
-                   args=c("--bfile", prefix, "--het", "--out", out),
-                std_out=showPlinkOutput, std_err=showPlinkOutput)
+                   args=c("--bfile", prefix, "--het", "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
 }
 
 #' Run PLINK missingness rate calculation
@@ -1501,6 +1554,7 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -1509,13 +1563,26 @@ run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
 #' qcdir <- tempdir()
+#' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_missingness(indir=indir, qcdir=qcdir, name=name)
+#' # missingness check on all individuals in dataset
+#' run <- run_check_missingness(indir=indir, qcdir=qcdir, name=name,
+#' path2plink=path2plink)
+#'
+#' # missingness on subset of dataset
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' run <- run_check_missingness(indir=indir, qcdir=qcdir, name=name,
+#' remove_individuals=remove_individuals_file, path2plink=path2plink)
 #' }
 run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
                                   path2plink=NULL,
+                                  keep_individuals=NULL,
+                                  remove_individuals=NULL,
+                                  exclude_markers=NULL,
+                                  extract_markers=NULL,
                                   showPlinkOutput=TRUE) {
 
     prefix <- makepath(indir, name)
@@ -1523,11 +1590,14 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                  extract_markers, exclude_markers)
 
     if (verbose) message("Run check_missingness via plink --missing")
     sys::exec_wait(path2plink,
-                   args=c("--bfile", prefix, "--missing", "--out", out),
-                std_out=showPlinkOutput, std_err=showPlinkOutput)
+                   args=c("--bfile", prefix, "--missing", "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
 }
 
 #' Evaluate results from PLINK missing genotype and heterozygosity rate check.
@@ -1622,15 +1692,15 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' interactive=FALSE)
 #' }
 evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
-                                  hetTh=3, label_fail=TRUE,
-                                  highlight_samples = NULL,
-                                  highlight_type =
-                                      c("text", "label", "color", "shape"),
-                                  highlight_text_size = 3,
-                                  highlight_color = "#c51b8a",
-                                  highlight_shape = 17,
-                                  highlight_legend = FALSE,
-                                  interactive=FALSE) {
+                                        hetTh=3, label_fail=TRUE,
+                                        highlight_samples = NULL,
+                                        highlight_type =
+                                            c("text", "label", "color", "shape"),
+                                        highlight_text_size = 3,
+                                        highlight_color = "#c51b8a",
+                                        highlight_shape = 17,
+                                        highlight_legend = FALSE,
+                                        interactive=FALSE) {
 
     prefix <- makepath(qcdir, name)
 
@@ -1737,11 +1807,11 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
     if (!is.null(fail_het_imiss) && label_fail) {
         p_het_imiss <-
             p_het_imiss + ggrepel::geom_label_repel(
-                                data=data.frame(x=fail_het_imiss$logF_MISS,
-                                                y=fail_het_imiss$F,
-                                                label=fail_het_imiss$IID),
-                                  aes_string(x='x', y='y', label='label'),
-                                  size=highlight_text_size)
+                data=data.frame(x=fail_het_imiss$logF_MISS,
+                                y=fail_het_imiss$F,
+                                label=fail_het_imiss$IID),
+                aes_string(x='x', y='y', label='label'),
+                size=highlight_text_size)
     }
     highlight_data <- dplyr::filter_(het_imiss, ~IID %in% highlight_samples)
     if (!is.null(highlight_samples)) {
@@ -1811,6 +1881,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' annotations, ie mappings in the name.bim file. Will be used to remove
 #' high-LD regions based on the coordinates of the respective build. Options
 #' are hg18, hg19 and hg38. See @details.
+#' @inheritParams checkFiltering
 #' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -1831,25 +1902,41 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
 #' qcdir <- tempdir()
+#' path2plink <- '/path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name)
+#' # Relatedness estimation based in all markers in dataset
+#' run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name,
+#' path2plink=path2plink)
+#'
+#' # relatedness estimation on subset of dataset
+#' keep_individuals_file <- system.file("extdata", "keep_individuals",
+#' package="plinkQC")
+#' run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name,
+#' keep_individuals=keep_individuals_file, path2plink=path2plink)
 #' }
 run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                                   mafThRelatedness=0.1,
                                   path2plink=NULL, genomebuild='hg19',
-                                  showPlinkOutput=TRUE, verbose=FALSE) {
+                                  showPlinkOutput=TRUE,
+                                  keep_individuals=NULL,
+                                  remove_individuals=NULL,
+                                  exclude_markers=NULL,
+                                  extract_markers=NULL,
+                                  verbose=FALSE) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                  extract_markers, exclude_markers)
 
     if (tolower(genomebuild) == 'hg18' || tolower(genomebuild) == 'NCBI36') {
         highld <- system.file("extdata", 'high-LD-regions-hg18-NCBI36.txt',
-                               package="plinkQC")
+                              package="plinkQC")
     } else if (tolower(genomebuild) == 'hg19' ||
                tolower(genomebuild) == 'grch37') {
         highld <- system.file("extdata", 'high-LD-regions-hg19-GRCh37.txt',
@@ -1868,8 +1955,9 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
     if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, "--exclude", "range", highld,
-                          "--indep-pairwise", 50, 5, 0.2, "--out", out),
-                std_out=showPlinkOutput, std_err=showPlinkOutput)
+                          "--indep-pairwise", 50, 5, 0.2, "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
 
     if (verbose) message("Run check_relatedness via plink --genome")
     if (!is.null(mafThRelatedness)) {
@@ -1882,12 +1970,15 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                           paste(out, ".prune.in", sep=""),
                           maf, "--genome",
                           # "--min", highIBDTh,
-                          "--out", out),
-                 std_out=showPlinkOutput, std_err=showPlinkOutput)
+                          "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
     if (!file.exists(paste(prefix, ".imiss", sep=""))) {
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--missing", "--out", out),
-        std_out=showPlinkOutput, std_err=showPlinkOutput)
+                       args=c("--bfile", prefix, "--missing", "--out", out,
+                              args_filter
+                              ),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
 }
 
@@ -2046,6 +2137,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
 #' @param prefixMergedDataset [character] Prefix of merged study and
 #' reference data files, i.e. prefixMergedDataset.bed, prefixMergedDataset.bim,
 #' prefixMergedDataset.fam.
+#' @inheritParams checkFiltering
 #' @inheritParams checkPlink
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -2055,14 +2147,27 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
 #' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' prefixMergedDataset <- 'data.HapMapIII'
+#' path2plink <- 'path/to/plink'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' run <- run_check_ancestry(indir=indir, qcdir=qcdir, prefixMergedDataset)
+#' # ancestry check on all individuals in dataset
+#' run <- run_check_ancestry(indir=indir, qcdir=qcdir, prefixMergedDataset,
+#' path2plink=path2plink)
+#'
+#' # ancestry check on subset of dataset
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' run <- run_check_ancestry(indir=indir, qcdir=qcdir, name=name,
+#' remove_individuals=remove_individuals_file, path2plink=path2plink)
 #' }
 run_check_ancestry <- function(indir, prefixMergedDataset,
                                qcdir=indir,
                                verbose=FALSE, path2plink=NULL,
+                               keep_individuals=NULL,
+                               remove_individuals=NULL,
+                               exclude_markers=NULL,
+                               extract_markers=NULL,
                                showPlinkOutput=TRUE) {
 
     prefix <- makepath(indir, prefixMergedDataset)
@@ -2070,10 +2175,13 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                  extract_markers, exclude_markers)
 
     if (verbose) message("Run check_ancestry via plink --pca")
     sys::exec_wait(path2plink,
-                   args=c("--bfile", prefix, "--pca", "--out", out),
+                   args=c("--bfile", prefix, "--pca", "--out", out,
+                          args_filter),
                    std_out=showPlinkOutput, std_err=showPlinkOutput)
 }
 
@@ -2268,18 +2376,18 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         defaultRefSamples <- match.arg(defaultRefSamples)
         if (defaultRefSamples == "HapMap") {
             refSamplesFile <- system.file("extdata", "HapMap_ID2Pop.txt",
-                                        package="plinkQC")
+                                          package="plinkQC")
             if(is.null(refColorsFile) && is.null(refColors)) {
                 refColorsFile <-  system.file("extdata", "HapMap_PopColors.txt",
                                               package="plinkQC")
             }
         } else  {
             refSamplesFile <- system.file("extdata", "Genomes1000_ID2Pop.txt",
-                                        package="plinkQC")
+                                          package="plinkQC")
             if(is.null(refColorsFile) && is.null(refColors)) {
                 refColorsFile <-  system.file("extdata",
                                               "Genomes1000_PopColors.txt",
-                                          package="plinkQC")
+                                              package="plinkQC")
             }
         }
 
@@ -2370,7 +2478,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     ## Find samples' distances to reference Europeans ####
     data_name <- dplyr::filter_(data_all, ~Pop == name)
     data_name$euclid_dist <- sqrt((data_name$PC1 - euro_pc1_mean)^2 +
-                                     (data_name$PC2 - euro_pc2_mean)^2)
+                                      (data_name$PC2 - euro_pc2_mean)^2)
     non_europeans <- dplyr::filter_(data_name, ~euclid_dist >
                                         (max_euclid_dist * europeanTh))
     fail_ancestry <- dplyr::select_(non_europeans, ~FID, ~IID)
@@ -2424,14 +2532,14 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         if ("text" %in% highlight_type) {
             p_ancestry <- p_ancestry +
                 ggrepel::geom_text_repel(data=highlight_data,
-                           aes_string(x='PC1', y='PC2', label="IID"),
-                           size=highlight_text_size)
+                                         aes_string(x='PC1', y='PC2', label="IID"),
+                                         size=highlight_text_size)
         }
         if ("label" %in% highlight_type) {
             p_ancestry <- p_ancestry +
                 ggrepel::geom_label_repel(data=highlight_data,
-                                         aes_string(x='PC1', y='PC2', label="IID"),
-                                         size=highlight_text_size)
+                                          aes_string(x='PC1', y='PC2', label="IID"),
+                                          size=highlight_text_size)
         }
         if ("color" %in% highlight_type && !highlight_legend) {
             p_ancestry <- p_ancestry +
