@@ -171,7 +171,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                  showPlinkOutput=showPlinkOutput,
                                  keep_individuals=keep_individuals,
                                  remove_individuals=remove_individuals,
-                                 keep_markers=keep_markers,
+                                 extract_markers=extract_markers,
                                  extract_markers=extract_markers,
                                  verbose=verbose)
         }
@@ -226,7 +226,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                               showPlinkOutput=showPlinkOutput,
                                               keep_individuals=keep_individuals,
                                               remove_individuals=remove_individuals,
-                                              keep_markers=keep_markers,
+                                              extract_markers=extract_markers,
                                               extract_markers=extract_markers,
                                               verbose=verbose)
             run_het <- run_check_heterozygosity(qcdir=qcdir, indir=indir,
@@ -235,7 +235,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                 showPlinkOutput=showPlinkOutput,
                                                 keep_individuals=keep_individuals,
                                                 remove_individuals=remove_individuals,
-                                                keep_markers=keep_markers,
+                                                extract_markers=extract_markers,
                                                 extract_markers=extract_markers,
                                                 verbose=verbose)
         }
@@ -290,7 +290,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                          showPlinkOutput=showPlinkOutput,
                                          keep_individuals=keep_individuals,
                                          remove_individuals=remove_individuals,
-                                         keep_markers=keep_markers,
+                                         extract_markers=extract_markers,
                                          extract_markers=extract_markers,
                                          verbose=verbose)
         }
@@ -320,7 +320,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                       showPlinkOutput=showPlinkOutput,
                                       keep_individuals=keep_individuals,
                                       remove_individuals=remove_individuals,
-                                      keep_markers=keep_markers,
+                                      extract_markers=extract_markers,
                                       extract_markers=extract_markers,
                                       verbose=verbose)
         }
@@ -637,7 +637,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                       path2plink=NULL,
                       keep_individuals=NULL,
                       remove_individuals=NULL,
-                      keep_markers=NULL,
+                      extract_markers=NULL,
                       extract_markers=NULL,
                       showPlinkOutput=TRUE) {
     if (run.check_sex) {
@@ -646,7 +646,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                                  path2plink=path2plink,
                                  keep_individuals=keep_individuals,
                                  remove_individuals=remove_individuals,
-                                 keep_markers=keep_markers,
+                                 extract_markers=extract_markers,
                                  extract_markers=extract_markers,
                                  showPlinkOutput=showPlinkOutput)
     }
@@ -668,7 +668,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                                highlight_legend = highlight_legend,
                                keep_individuals=keep_individuals,
                                remove_individuals=remove_individuals,
-                               keep_markers=keep_markers,
+                               extract_markers=extract_markers,
                                extract_markers=extract_markers,
                                showPlinkOutput=showPlinkOutput)
     return(fail)
@@ -775,7 +775,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                interactive=FALSE, verbose=FALSE,
                                keep_individuals=NULL,
                                remove_individuals=NULL,
-                               keep_markers=NULL,
+                               extract_markers=NULL,
                                extract_markers=NULL,
                                path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_het_and_miss) {
@@ -784,7 +784,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                             path2plink=path2plink,
                                             keep_individuals=keep_individuals,
                                             remove_individuals=remove_individuals,
-                                            keep_markers=keep_markers,
+                                            extract_markers=extract_markers,
                                             extract_markers=extract_markers,
                                             showPlinkOutput=showPlinkOutput)
         run_miss <- run_check_missingness(indir=indir, qcdir=qcdir, name=name,
@@ -792,7 +792,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                           path2plink=path2plink,
                                           keep_individuals=keep_individuals,
                                           remove_individuals=remove_individuals,
-                                          keep_markers=keep_markers,
+                                          extract_markers=extract_markers,
                                           extract_markers=extract_markers,
                                           showPlinkOutput=showPlinkOutput)
     }
@@ -899,7 +899,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                               mafThRelatedness=0.1, path2plink=NULL,
                               keep_individuals=NULL,
                               remove_individuals=NULL,
-                              keep_markers=NULL,
+                              extract_markers=NULL,
                               extract_markers=NULL,
                               showPlinkOutput=TRUE) {
     if (run.check_relatedness) {
@@ -910,7 +910,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                                      highIBDTh=highIBDTh,
                                      keep_individuals=keep_individuals,
                                      remove_individuals=remove_individuals,
-                                     keep_markers=keep_markers,
+                                     extract_markers=extract_markers,
                                      extract_markers=extract_markers,
                                      showPlinkOutput=showPlinkOutput)
     }
@@ -1038,7 +1038,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            highlight_legend = FALSE,
                            keep_individuals=NULL,
                            remove_individuals=NULL,
-                           keep_markers=NULL,
+                           extract_markers=NULL,
                            extract_markers=NULL,
                            path2plink=NULL, showPlinkOutput=TRUE) {
         if (run.check_ancestry) {
@@ -1048,7 +1048,7 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                                       path2plink=path2plink,
                                       keep_individuals=keep_individuals,
                                       remove_individuals=remove_individuals,
-                                      keep_markers=keep_markers,
+                                      extract_markers=extract_markers,
                                       extract_markers=extract_markers,
                                       showPlinkOutput=showPlinkOutput)
         }
