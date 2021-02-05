@@ -29,6 +29,7 @@
 #' @inheritParams check_maf
 #' @inheritParams check_hwe
 #' @inheritParams check_snp_missingness
+#' @inheritParams checkFiltering
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -60,14 +61,28 @@
 #' # user system is not known.
 #' # All quality control checks
 #' \dontrun{
+#' # run on all markers and individuals
 #' fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
 #' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+#'
+#' # run on subset of individuals and markers
+#' keep_individuals_file <- system.file("extdata", "keep_individuals",
+#' package="plinkQC")
+#' extract_markers_file <- system.file("extdata", "extract_markers",
+#' package="plinkQC")
+#' fail_markers <- perMarkerQC(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink,
+#' keep_individuals=keep_individuals_file, extract_markers=extract_markers_file)
 #' }
 perMarkerQC <- function(indir, qcdir=indir, name,
                         do.check_snp_missingness=TRUE, lmissTh=0.01,
                         do.check_hwe=TRUE, hweTh=1e-5,
                         do.check_maf=TRUE, macTh=20, mafTh=NULL,
                         interactive=FALSE, verbose=TRUE,
+                        keep_individuals=NULL,
+                        remove_individuals=NULL,
+                        exclude_markers=NULL,
+                        extract_markers=NULL,
                         path2plink=NULL, showPlinkOutput=TRUE
                         ) {
     if (do.check_snp_missingness) {
@@ -78,8 +93,16 @@ perMarkerQC <- function(indir, qcdir=indir, name,
                                                       lmissTh=lmissTh,
                                                       path2plink=path2plink,
                                                       verbose=verbose,
+                                                      keep_individuals=
+                                                          keep_individuals,
+                                                      remove_individuals=
+                                                          remove_individuals,
+                                                      exclude_markers=
+                                                          exclude_markers,
+                                                      extract_markers=
+                                                          extract_markers,
                                                       showPlinkOutput=
-                                                        showPlinkOutput)
+                                                          showPlinkOutput)
         p_missingness <- fail_snp_missingness$p_lmiss
     } else {
         fail_snp_missingness <- NULL
@@ -89,6 +112,14 @@ perMarkerQC <- function(indir, qcdir=indir, name,
         if (verbose) message("Identification of SNPs with deviation from HWE")
         fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, hweTh=hweTh,
                               path2plink=path2plink, verbose=verbose,
+                              keep_individuals=
+                                  keep_individuals,
+                              remove_individuals=
+                                  remove_individuals,
+                              exclude_markers=
+                                  exclude_markers,
+                              extract_markers=
+                                  extract_markers,
                               showPlinkOutput=showPlinkOutput)
         p_hwe <- fail_hwe$p_hwe
     } else {
@@ -100,6 +131,14 @@ perMarkerQC <- function(indir, qcdir=indir, name,
         fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, mafTh=mafTh,
                               macTh=macTh,
                               path2plink=path2plink, verbose=verbose,
+                              keep_individuals=
+                                  keep_individuals,
+                              remove_individuals=
+                                  remove_individuals,
+                              exclude_markers=
+                                  exclude_markers,
+                              extract_markers=
+                                  extract_markers,
                               showPlinkOutput=showPlinkOutput)
         p_maf <- fail_maf$p_maf
     } else {
@@ -229,6 +268,7 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' save the returned plot object (p_lmiss) via ggplot2::ggsave(p=p_lmiss,
 #' other_arguments) or pdf(outfile) print(p_lmiss) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -250,18 +290,34 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
+#' # run on all individuals and markers
 #' fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, indir=indir,
 #' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+#'
+#' # run on subset of individuals and markers
+#' keep_individuals_file <- system.file("extdata", "keep_individuals",
+#' package="plinkQC")
+#' extract_markers_file <- system.file("extdata", "extract_markers",
+#' package="plinkQC")
+#' fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink,
+#' keep_individuals=keep_individuals_file, extract_markers=extract_markers_file)
 #' }
 check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                                   interactive=FALSE, path2plink=NULL,
-                                  verbose=FALSE, showPlinkOutput=TRUE) {
+                                  verbose=FALSE, showPlinkOutput=TRUE,
+                                  keep_individuals=NULL,
+                                  remove_individuals=NULL,
+                                  exclude_markers=NULL,
+                                  extract_markers=NULL) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                  extract_markers, exclude_markers)
 
     failids <- paste0(out, ".fail.IDs")
 
@@ -281,7 +337,8 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--missing", "--freq",
                               "--out",
-                              paste(out, suffix, sep="")),
+                              paste(out, suffix, sep=""),
+                              args_filter),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
 
     } else {
@@ -305,7 +362,8 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                        args=c("--bfile", prefix, "--remove",
                               paste(out, ".fail.IDs", sep=""),
                               "--missing", "--freq", "--out",
-                              paste(out, suffix, sep="")),
+                              paste(out, suffix, sep=""),
+                              args_filter),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
 
@@ -386,6 +444,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_hwe,
 #' other_arguments) or pdf(outfile) print(p_hwe) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -408,17 +467,34 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
+#' # run on all individuals and markers
 #' fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, interactive=FALSE,
 #' verbose=TRUE, path2plink=path2plink)
+#'
+#' # run on subset of individuals and markers
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' extract_markers_file <- system.file("extdata", "extract_markers",
+#' package="plinkQC")
+#' fail_hwe <- check_hwe(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink,
+#' remove_individuals=remove_individuals_file,
+#' extract_markers=extract_markers_file)
 #' }
 check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
-                      path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE) {
+                      path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE,
+                      keep_individuals=NULL,
+                      remove_individuals=NULL,
+                      exclude_markers=NULL,
+                      extract_markers=NULL) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                  extract_markers, exclude_markers)
 
     failids <- paste0(out, ".fail.IDs")
 
@@ -437,7 +513,8 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
         suffix <- ""
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--hardy midp", "--out",
-                              paste(out, suffix, sep="")),
+                              paste(out, suffix, sep=""),
+                              args_filter),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
         allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
@@ -455,7 +532,8 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove", failids,
-                              "--hardy", "--out", paste(out, suffix, sep="")),
+                              "--hardy", "--out", paste(out, suffix, sep=""),
+                              args_filter),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
     hwe <- read.table(paste(out, suffix, ".hwe", sep=""), header=TRUE,
@@ -528,6 +606,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_maf,
 #' other_arguments) or pdf(outfile) print(p_maf) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -547,18 +626,34 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
+#' # run on all individuals and markers
 #' fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, macTh=15,
 #' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+#'
+#' # run on subset of individuals and markers
+#' keep_individuals_file <- system.file("extdata", "keep_individuals",
+#' package="plinkQC")
+#' exclude_markers_file <- system.file("extdata", "exclude_markers",
+#' package="plinkQC")
+#' fail_maf <- check_maf(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink,
+#' keep_individuals=keep_individuals_file, exclude_markers=exclude_markers_file)
 #' }
 check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                       verbose=FALSE, interactive=FALSE, path2plink=NULL,
-                      showPlinkOutput=TRUE) {
+                      showPlinkOutput=TRUE,
+                      keep_individuals=NULL,
+                      remove_individuals=NULL,
+                      exclude_markers=NULL,
+                      extract_markers=NULL) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                  extract_markers, exclude_markers)
 
     failids <- paste0(out, ".fail.IDs")
 
@@ -577,7 +672,8 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
         suffix <- ""
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--freq", "--out",
-                              paste(out, suffix, sep="")),
+                              paste(out, suffix, sep=""),
+                              args_filter),
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
         fail_samples <- 0
     } else {
@@ -596,7 +692,8 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--remove", failids,
-                              "--freq", "--out", paste(out, suffix, sep="")),
+                              "--freq", "--out", paste(out, suffix, sep=""),
+                              args_filter),
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
         fail_samples <-  R.utils::countLines(paste(out, ".fail.IDs",
                                                sep=""))
