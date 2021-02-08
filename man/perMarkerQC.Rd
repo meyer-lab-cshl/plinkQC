@@ -21,6 +21,12 @@ perMarkerQC(
   remove_individuals = NULL,
   exclude_markers = NULL,
   extract_markers = NULL,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
+  subplot_label_size = 9,
   path2plink = NULL,
   showPlinkOutput = TRUE
 )
@@ -90,6 +96,18 @@ variant IDs (usually one per line, but it's okay for them to just be
 separated by spaces). All unlisted variants will be removed from the current
 analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
 Default: NULL, i.e. no filtering on markers.}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
+\item{subplot_label_size}{[integer] Size of the subplot labeling.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
