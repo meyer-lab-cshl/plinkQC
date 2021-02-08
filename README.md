@@ -17,7 +17,7 @@ genetic marker) and relationship functions easily accessible from within
 R and allows for automatic evaluation of the results.
 
 Full documentation is available at
-<http://meyer-lab-cshl.github.io/plinkQC/>.
+<https://meyer-lab-cshl.github.io/plinkQC/>.
 
 **plinkQC** generates a per-individual and per-marker quality control
 report. A step-by-step guide on how to run these analyses can be found
@@ -51,11 +51,11 @@ via
 install.packages("plinkQC")
 ```
 
-A log of version changes can be found [here](https://meyer-lab-cshl.github.io/plinkQC/news/index.html).
+A log of version changes can be found
+[here](https://meyer-lab-cshl.github.io/plinkQC/news/index.html).
 
 ## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
 
 Meyer HV (2020) plinkQC: Genotype quality control in genetic association
-studies. [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3934294.svg)](https://doi.org/10.5281/zenodo.3934294)
-
-
+studies.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3934294.svg)](https://doi.org/10.5281/zenodo.3934294)

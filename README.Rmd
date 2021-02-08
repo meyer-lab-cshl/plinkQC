@@ -26,7 +26,7 @@ functions easily accessible from within R and allows for automatic evaluation
 of the results.
 
 
-Full documentation is available at http://meyer-lab-cshl.github.io/plinkQC/.
+Full documentation is available at https://meyer-lab-cshl.github.io/plinkQC/.
 
 
 **plinkQC** generates a per-individual and per-marker quality control report.
