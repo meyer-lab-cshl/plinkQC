@@ -516,3 +516,61 @@ checkFiltering <- function(keep_individuals=NULL,
     }
     return(args)
 }
+
+
+#' Check and construct individual IDs to be removed
+#'
+#' checkRemoveIDs checks that the file names with the individuals to be filtered
+#' can be found. It reads the corresponding files, combines the selected
+#' individuals into one data.frame and compares these to all individuals in
+#' the analysis.
+#' @param prefix [character] Prefix of PLINK files, i.e. path/2/name.bed,
+#' path/2/name.bim and path/2/name.fam.
+#' @param keep_individuals [character] Path to file with individuals to be
+#' retained in the analysis. The file has to be a space/tab-delimited text file
+#' with family IDs in the first column and within-family IDs in the second
+#' column. All samples not listed in this file will be removed from the current
+#' analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+#' Default: NULL, i.e. no filtering on individuals.
+#' @param remove_individuals [character] Path to file with individuals to be
+#' removed from the analysis. The file has to be a space/tab-delimited text file
+#' with family IDs in the first column and within-family IDs in the second
+#' column. All samples listed in this file will be removed from the current
+#' analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+#' Default: NULL, i.e. no filtering on individuals.
+#' @return data.frame containing family (FID) and individual (IID) IDs of
+#' individuals to be removed from analysis.
+#' @export
+checkRemoveIDs <- function(prefix, remove_individuals=NULL, keep_individuals) {
+    removeIDs <- NULL
+    allIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                data.table=FALSE, stringsAsFactors=FALSE,
+                                header=FALSE)
+    allIDs <- allIDs[,1:2]
+
+    if (!is.null(remove_individuals)) {
+        if (!file.exists(remove_individuals)) {
+            stop("File with individuals to remove from analysis does not exist: ",
+                 remove_individuals)
+        }
+        removeIDs <- data.table::fread(remove_individuals, data.table=FALSE,
+                                       stringsAsFactors=FALSE,
+                                       header=FALSE)
+    }
+    if (!is.null(keep_individuals)) {
+        if (!file.exists(keep_individuals)) {
+            stop("File with individuals to keep in analysis does not exist: ",
+                 keep_individuals)
+        }
+        pre_keepIDs <- data.table::fread(keep_individuals, data.table=FALSE,
+                                         stringsAsFactors=FALSE,
+                                         header=FALSE)
+        if(ncol(pre_keepIDs) != 2) {
+            stop("File keep_individual is not in the right format; should be ",
+                 "two columns separated by space/tab.")
+        }
+        removeIDs <- rbind(removeIDs,
+                           allIDs[!allIDs[,2] %in% pre_keepIDs[,2],])
+    }
+    return(removeIDs)
+}

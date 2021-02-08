@@ -2,6 +2,7 @@
 
 export(checkFiltering)
 export(checkPlink)
+export(checkRemoveIDs)
 export(check_ancestry)
 export(check_het_and_miss)
 export(check_hwe)
