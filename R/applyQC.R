@@ -48,6 +48,7 @@
 #' \code{\link{check_snp_missingness}} or \code{\link{perMarkerQC}}). Requires
 #' lmissTh to be set.
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @inheritParams check_maf
 #' @inheritParams check_hwe
 #' @inheritParams check_snp_missingness
@@ -68,21 +69,42 @@
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' # Run individual QC checks
+#' # Run qc on all samples and markers in the dataset
+#' ## Run individual QC checks
 #' fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 #' path2plink=path2plink)
 #'
-#' # Run marker QC checks
+#' ## Run marker QC checks
 #' fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
 #' path2plink=path2plink)
 #'
-#' # Create new dataset of indiviudals and markers passing QC
+#' ## Create new dataset of individuals and markers passing QC
 #' ids_all <- cleanData(indir=indir, qcdir=qcdir, name=name, macTh=15,
 #' verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
 #' filterRelated=TRUE)
+#'
+#' # Run qc on subset of samples and markers in the dataset
+#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+#' package="plinkQC"))
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#'
+#' fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
+#' dont.check_ancestry = TRUE, interactive=FALSE, verbose=FALSE,
+#' highlight_samples = highlight_samples[,2], highlight_type = "label",
+#' remove_individuals = remove_individuals_file, path2plink=path2plink)
+#'
+#' ## Run marker QC checks
+#' fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
+#' path2plink=path2plink)
+#'
+#' ## Create new dataset of individuals and markers passing QC
+#' ids_all <- cleanData(indir=indir, qcdir=qcdir, name=name, macTh=15,
+#' verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
+#' remove_individuals = remove_individuals_file)
 #' }
 
 cleanData <- function(indir, name, qcdir=indir,
@@ -93,6 +115,10 @@ cleanData <- function(indir, name, qcdir=indir,
                       filterHWE=TRUE, hweTh=1e-5,
                       filterMAF=TRUE, macTh=20, mafTh=NULL,
                       path2plink=NULL, verbose=FALSE,
+                      keep_individuals=NULL,
+                      remove_individuals=NULL,
+                      exclude_markers=NULL,
+                      extract_markers=NULL,
                       showPlinkOutput=TRUE) {
     sampleFilter <- c(filterAncestry, filterRelated, filterSex,
                       filterHeterozygosity, filterSampleMissingness)
@@ -114,11 +140,38 @@ cleanData <- function(indir, name, qcdir=indir,
     }
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
-
+    args_filter <- checkFiltering( extract_markers, exclude_markers)
     removeIDs <- NULL
-    IDs <- data.table::fread(paste(prefix, ".fam", sep=""),
-                                   data.table=FALSE, stringsAsFactors=FALSE,
-                                   header=FALSE)
+    allIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
+                                 data.table=FALSE, stringsAsFactors=FALSE,
+                                 header=FALSE)
+    allIDs <- allIDs[,1:2]
+
+    if (!is.null(remove_individuals)) {
+        if (!file.exists(remove_individuals)) {
+            stop("File with individuals to remove from analysis does not exist: ",
+                 remove_individuals)
+        }
+        removeIDs <- data.table::fread(remove_individuals, data.table=FALSE,
+                                       stringsAsFactors=FALSE,
+                                       header=FALSE)
+    }
+    if (!is.null(keep_individuals)) {
+        if (!file.exists(keep_individuals)) {
+            stop("File with individuals to keep in analysis does not exist: ",
+                 keep_individuals)
+        }
+        pre_keepIDs <- data.table::fread(keep_individuals, data.table=FALSE,
+                                         stringsAsFactors=FALSE,
+                                         header=FALSE)
+        if(ncol(pre_keepIDs) == 2) {
+            stop("File keep_individual is not in the right format; should be ",
+                 "two columns separated by space/tab.")
+        }
+        removeIDs <- rbind(removeIDs,
+                           allIDs[!allIDs[,2] %in% pre_keepIDs[,2],])
+    }
+
     if (any(sampleFilter)) {
         if (filterRelated) {
             fail_ibd_ids <- paste0(out, ".fail-IBD.IDs")
@@ -234,26 +287,20 @@ cleanData <- function(indir, name, qcdir=indir,
         # ensure unique IDs in remove.IDs
         if (!is.null(removeIDs)) {
             removeIDs <- removeIDs[!duplicated(removeIDs),]
-            if (nrow(removeIDs) == nrow(IDs)) {
+            if (nrow(removeIDs) == nrow(allIDs)) {
                     stop("All samples are flagged as .fail.IDs ",
                          "no samples remaining to generate the QCed dataset.")
             }
             if (verbose) message("Write file with remove IDs")
             write.table(removeIDs, paste(out, ".remove.IDs", sep=""),
                         col.names=FALSE, row.names=FALSE, quote=FALSE)
-            keepIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
-                                         data.table=FALSE,
-                                         stringsAsFactors=FALSE,
-                                         header=FALSE)
             remove <- c("--remove", paste(out, ".remove.IDs", sep=""))
             fail_samples <- nrow(removeIDs)
         } else {
-            keepIDs <- IDs
             remove <- NULL
             fail_samples <- 0
         }
     } else {
-        keepIDs <- IDs
         remove <- NULL
         fail_samples <- 0
     }
@@ -307,7 +354,14 @@ cleanData <- function(indir, name, qcdir=indir,
     if (verbose) message("Remove individual IDs and markers IDs that failed QC")
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix, remove, maf, hwe, missing,
-                          "--make-bed", "--out", paste(out, ".clean", sep="")),
+                          "--make-bed", "--out", paste(out, ".clean", sep=""),
+                          args_filter),
            std_out=showPlinkOutput, std_err=showPlinkOutput)
+    keepIDs <- data.table::fread(paste0(out, ".clean.fam"), data.table=FALSE,
+                                     stringsAsFactors=FALSE,
+                                     header=FALSE)
+    keepIDs <- keepIDs[, 1:2]
+    colnames(keepIDs) <- c("FID", "IID")
+    colnames(removeIDs) <- c("FID", "IID")
     return(list(passIDs=keepIDs, failIDs=removeIDs))
 }
