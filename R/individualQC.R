@@ -395,16 +395,67 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     write.table(uniqueFails, file=paste(out, ".fail.IDs",sep=""),
                 quote=FALSE, row.names=FALSE, col.names=FALSE)
 
-    plots_sampleQC <- list(p_sexcheck, p_het_imiss, p_relatedness, p_ancestry)
+    plots_sampleQC <- list(p_sexcheck=p_sexcheck,
+                           p_het_imiss=p_het_imiss,
+                           p_relatedness=p_relatedness,
+                           p_ancestry=p_ancestry)
     plots_sampleQC <- plots_sampleQC[sapply(plots_sampleQC,
                                             function(x) !is.null(x))]
     subplotLabels <- LETTERS[1:length(plots_sampleQC)]
+
+    if (!is.null(p_ancestry)) {
+        ancestry_legend <- cowplot::get_legend(p_ancestry)
+        plots_sampleQC$p_ancestry <-  plots_sampleQC$p_ancestry +
+            theme(legend.position = "None")
+        plots_sampleQC$ancestry_legend <- ancestry_legend
+        subplotLabels <- c(subplotLabels, "")
+    }
+
+    if (!is.null(p_sexcheck) && !is.null(p_het_imiss)) {
+        first_plots <- cowplot::plot_grid(plotlist=plots_sampleQC[1:2],
+                           nrow=2,
+                           align = "v",
+                           axis = "lr",
+                           labels=subplotLabels[1:2])
+        if (!is.null(p_ancestry)) {
+            if (!is.null(p_relatedness)) {
+                rel_heights <- c(2, 1, 1, 0.3)
+                plots_sampleQC <- list(first_plots,
+                                       plots_sampleQC[[3]],
+                                       plots_sampleQC[[4]],
+                                       plots_sampleQC[[5]]
+                                       )
+                subplotLabels <- c("", subplotLabels[3:5])
+            } else {
+                rel_heights <- c(2, 1, 0.3)
+                plots_sampleQC <- list(first_plots,
+                                       plots_sampleQC[[3]],
+                                       plots_sampleQC[[4]]
+                                       )
+                subplotLabels <- c("", subplotLabels[3:4])
+            }
+        } else {
+            if (!is.null(p_relatedness)) {
+                rel_heights <- c(2, 1)
+                plots_sampleQC <- list(first_plots, plots_sampleQC[[3]])
+                subplotLabels <- c("", subplotLabels[3])
+            } else {
+                rel_heights <- 1
+                plots_sampleQC <- first_plots
+                subplotLabels <- ""
+            }
+        }
+    } else {
+        if (!is.null(p_ancestry)) {
+            rel_heights <- c(rep(1, length(plots_sampleQC) -1), 0.3)
+        } else {
+            rel_heights <- c(rep(1, length(plots_sampleQC)))
+        }
+    }
     p_sampleQC <- cowplot::plot_grid(plotlist=plots_sampleQC,
                                      nrow=length(plots_sampleQC),
                                      labels=subplotLabels,
-                                     rel_heights=c(rep(1,
-                                                       length(plots_sampleQC)),
-                                                   1.5))
+                                     rel_heights=rel_heights)
     if (interactive) {
         print(p_sampleQC)
     }
@@ -529,7 +580,8 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
 
         p_overview <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
                                          NULL, m$Main_bar, m$Sizes, m$Matrix,
-                                         nrow=4, align='v', rel_heights = c(3,1,3,1),
+                                         nrow=4, align='v',
+                                         rel_heights = c(3,1,3,1),
                                          rel_widths = c(2,3))
     } else {
         p_overview <- p_qc
