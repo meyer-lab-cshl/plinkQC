@@ -241,7 +241,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
             if (!is.null(fail_sex$fail_sex) &&
                 nrow(fail_sex$fail_sex) != 0) {
-                mismatched_sex<- select_(fail_sex$fail_sex, "FID", "IID")
+                mismatched_sex<- select(fail_sex$fail_sex,
+                                        .data$FID, .data$IID)
             }
             if (!is.null(fail_sex$mixup)) {
                 write.table(fail_sex$mixup[,1:2],
@@ -303,8 +304,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
             if (!is.null(fail_het_imiss$fail_imiss) &&
                 nrow(fail_het_imiss$fail_imiss) != 0) {
-                missing_genotype <- select_(fail_het_imiss$fail_imiss,
-                                            "FID", "IID")
+                missing_genotype <- select(fail_het_imiss$fail_imiss,
+                                            .data$FID, .data$IID)
             }
 
             write.table(fail_het_imiss$fail_het[,1:2],
@@ -313,8 +314,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
             if (!is.null(fail_het_imiss$fail_het) &&
                 nrow(fail_het_imiss$fail_het) != 0) {
-                outlying_heterozygosity <- select_(fail_het_imiss$fail_het,
-                                                   "FID", "IID")
+                outlying_heterozygosity <- select(fail_het_imiss$fail_het,
+                                                  .data$FID, .data$IID)
             } else {
                 outlying_heterozygosity <- NULL
             }
@@ -357,7 +358,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                         sep="\t")
             if (!is.null(fail_relatedness$failIDs)  &&
                 nrow(fail_relatedness$failIDs) != 0) {
-                highIBD <- select_(fail_relatedness$failIDs, "FID", "IID")
+                highIBD <- select(fail_relatedness$failIDs,
+                                   .data$FID, .data$IID)
             }
             p_relatedness <- fail_relatedness$p_IBD
         }
@@ -428,7 +430,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                         quote=FALSE, row.names=FALSE, col.names=FALSE)
             if (!is.null(fail_ancestry$fail_ancestry) &&
                 nrow(fail_ancestry$fail_ancestry) != 0) {
-                ancestry <- select_(fail_ancestry$fail_ancestry, "FID", "IID")
+                ancestry <- select(fail_ancestry$fail_ancestry,
+                                   .data$FID, .data$IID)
             }
             p_ancestry <- fail_ancestry$p_ancestry
         }
@@ -1514,7 +1517,8 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
 
         sexcheck_fuse <- merge(sexcheck, externalSex, by="IID")
         sex_mismatch <-
-            apply(dplyr::select_(sexcheck_fuse, ~Sex, ~PEDSEX, ~SNPSEX), 1,
+            apply(dplyr::select(sexcheck_fuse, .data$Sex, .data$PEDSEX,
+                                .data$SNPSEX), 1,
                   function(ind) {
                       # Mismatch Sex in pheno and geno files
                       if (ind[1] == externalFemale && ind[2] %in% c(0, 1)) {
@@ -1533,16 +1537,16 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                   })
         # SNPSEX != (Sex in pheno file, PEDSEX)
         fail_sex <-
-            dplyr::select_(sexcheck_fuse, ~FID, ~IID, ~Sex, ~PEDSEX,
-                           ~SNPSEX, ~F)[which(sex_mismatch),]
+            dplyr::select(sexcheck_fuse, .data$FID, .data$IID, .data$Sex,
+                          .data$PEDSEX, .data$SNPSEX, .data$F)[which(sex_mismatch),]
         if (nrow(fail_sex) == 0) {
             fail_sex <- NULL
             mixup_geno_pheno <- NULL
         } else {
             # SNPSEX == Sex in pheno file and PEDSEX != (SNPSEX, Sex)
             mixup_geno_pheno <-
-                dplyr::select_(sexcheck_fuse, ~FID, ~IID, ~Sex, ~PEDSEX,
-                               ~SNPSEX, ~F)[which(!sex_mismatch),]
+                dplyr::select(sexcheck_fuse, .data$FID, .data$IID, .data$Sex,
+                              .data$PEDSEX, .data$SNPSEX, .data$F)[which(!sex_mismatch),]
             # Fix mismatch between PEDSEX and sex
             if (fixMixup) {
                 checkFormat(prefix)
@@ -1553,8 +1557,8 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                 if (nrow(mixup_geno_pheno) != 0) {
                     file_mixup <- paste(out, ".mismatched_sex_geno_pheno",
                                         sep="")
-                    write.table(dplyr::select_(mixup_geno_pheno, ~FID, ~IID,
-                                               ~SNPSEX),
+                    write.table(dplyr::select(mixup_geno_pheno, .data$FID,
+                                              .data$IID, .data$SNPSEX),
                                 file=file_mixup,
                                 row.names=FALSE, quote=FALSE, col.names=FALSE)
                     sys::exec_wait(path2plink, args=c("--bfile", prefix,
@@ -1639,7 +1643,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
     if (!is.null(fail_sex) && label_fail) {
         p_sexcheck <- p_sexcheck +
             ggrepel::geom_label_repel(
-                data=dplyr::filter_(sexcheck, ~IID %in% fail_sex$IID),
+                data=dplyr::filter(sexcheck, .data$IID %in% fail_sex$IID),
                 aes_string(x='PEDSEX',
                            y='F',
                            label='IID'),
@@ -1647,7 +1651,7 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
     }
 
     if (!is.null(highlight_samples)) {
-        highlight_data <- dplyr::filter_(sexcheck, ~IID %in% highlight_samples)
+        highlight_data <- dplyr::filter(sexcheck, .data$IID %in% highlight_samples)
         if ("text"  %in% highlight_type) {
             p_sexcheck <- p_sexcheck +
                 ggrepel::geom_text_repel(data=highlight_data,
@@ -2047,7 +2051,7 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                 aes_string(x='x', y='y', label='label'),
                 size=highlight_text_size)
     }
-    highlight_data <- dplyr::filter_(het_imiss, ~IID %in% highlight_samples)
+    highlight_data <- dplyr::filter(het_imiss, .data$IID %in% highlight_samples)
     if (!is.null(highlight_samples)) {
         if ("text"  %in% highlight_type) {
             p_het_imiss <- p_het_imiss +
@@ -2352,7 +2356,7 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
               title = element_text(size = legend_text_size),
               axis.text = element_text(size = axis_text_size),
               axis.title = element_text(size = axis_title_size))
-    p_highPI_HAT <- ggplot(dplyr::filter_(genome, ~PI_HAT_bin == 0),
+    p_highPI_HAT <- ggplot(dplyr::filter(genome, .data$PI_HAT_bin == 0),
                            aes_string('PI_HAT'))
     p_highPI_HAT <- p_highPI_HAT + geom_histogram(binwidth = 0.005,
                                                   fill="#e6ab02") +
@@ -2691,7 +2695,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     }
     names(refSamples)[names(refSamples) == refSamplesIID] <- "IID"
     names(refSamples)[names(refSamples) == refSamplesPop] <- "Pop"
-    refSamples <- dplyr::select_(refSamples, ~IID, ~Pop)
+    refSamples <- dplyr::select(refSamples, .data$IID, .data$Pop)
     refSamples$IID <- as.character(refSamples$IID)
     refSamples$Pop <- as.character(refSamples$Pop)
 
@@ -2711,7 +2715,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         }
         names(refColors)[names(refColors) == refColorsColor] <- "Color"
         names(refColors)[names(refColors) == refColorsPop] <- "Pop"
-        refColors <- dplyr::select_(refColors, ~Pop, ~Color)
+        refColors <- dplyr::select(refColors, .data$Pop, .data$Color)
         refColors$Color <- as.character(refColors$Color)
         refColors$Pop <- as.character(refColors$Pop)
     } else {
@@ -2742,12 +2746,12 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
              in refSamples or ", prefix, ".fam")
     }
 
-    colors <-  dplyr::select_(data_all, ~Pop, ~Color)
+    colors <-  dplyr::select(data_all, .data$Pop, .data$Color)
     colors <- colors[!duplicated(colors$Pop),]
     colors <- colors[order(colors$Color),]
 
     ## Find mean coordinates and distances of reference Europeans ####
-    all_european <- dplyr::filter_(data_all, ~Pop %in% refPopulation)
+    all_european <- dplyr::filter(data_all, .data$Pop %in% refPopulation)
     euro_pc1_mean <- mean(all_european$PC1)
     euro_pc2_mean <- mean(all_european$PC2)
 
@@ -2757,12 +2761,12 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     max_euclid_dist <- max(all_european$euclid_dist)
 
     ## Find samples' distances to reference Europeans ####
-    data_name <- dplyr::filter_(data_all, ~Pop == name)
+    data_name <- dplyr::filter(data_all, .data$Pop == name)
     data_name$euclid_dist <- sqrt((data_name$PC1 - euro_pc1_mean)^2 +
                                       (data_name$PC2 - euro_pc2_mean)^2)
-    non_europeans <- dplyr::filter_(data_name, ~euclid_dist >
+    non_europeans <- dplyr::filter(data_name, .data$euclid_dist >
                                         (max_euclid_dist * europeanTh))
-    fail_ancestry <- dplyr::select_(non_europeans, ~FID, ~IID)
+    fail_ancestry <- dplyr::select(non_europeans, .data$FID, .data$IID)
     legend_rows <- round(nrow(colors)/legend_labels_per_row)
 
     data_all$shape <- "general"
@@ -2793,7 +2797,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
     p_ancestry <- p_ancestry +
         geom_point(data=data_all,
                    aes_string(x='PC1', y='PC2', color='Pop', shape="shape")) +
-        geom_point(data=dplyr::filter_(data_all, ~Pop != name),
+        geom_point(data=dplyr::filter(data_all, .data$Pop != name),
                    aes_string(x='PC1', y='PC2', color='Pop', shape="shape"),
                    size=1) +
         scale_color_manual(values=colors$Color,
@@ -2814,7 +2818,7 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
               axis.title = element_text(size = axis_title_size))
 
     if (!is.null(highlight_samples)) {
-        highlight_data <- dplyr::filter_(data_all, ~IID %in% highlight_samples)
+        highlight_data <- dplyr::filter(data_all, .data$IID %in% highlight_samples)
         if ("text" %in% highlight_type) {
             p_ancestry <- p_ancestry +
                 ggrepel::geom_text_repel(data=highlight_data,

@@ -407,7 +407,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                       as.is=TRUE)
     lmiss_frq <- merge(lmiss, frq)
     lmiss_frq$MAF_bin <- ifelse(lmiss_frq$MAF < 0.05, 1, 0)
-    p_highMAF <- ggplot(dplyr::filter_(lmiss_frq, ~MAF_bin == 0),
+    p_highMAF <- ggplot(dplyr::filter(lmiss_frq, .data$MAF_bin == 0),
                         aes_string('F_MISS'))
     p_highMAF <- p_highMAF + geom_histogram(binwidth = 0.005,
                                             fill="#66a61e") +
@@ -421,7 +421,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
               title = element_text(size = legend_title_size),
               axis.text = element_text(size = axis_text_size),
               axis.title = element_text(size = axis_title_size))
-    p_lowMAF <- ggplot(dplyr::filter_(lmiss_frq, ~MAF_bin == 1),
+    p_lowMAF <- ggplot(dplyr::filter(lmiss_frq, .data$MAF_bin == 1),
                        aes_string('F_MISS'))
     p_lowMAF <- p_lowMAF + geom_histogram(binwidth = 0.005,
                                           fill="#e6ab02") +
@@ -614,7 +614,7 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
               title = element_text(size = legend_title_size),
               axis.text = element_text(size = axis_text_size),
               axis.title = element_text(size = axis_title_size))
-    p_lowP <- ggplot(dplyr::filter_(hwe, ~P_bin == 1),
+    p_lowP <- ggplot(dplyr::filter(hwe, .data$P_bin == 1),
                      aes_string('minus_log10P'))
     p_lowP <- p_lowP + geom_histogram(binwidth = 0.5,
                                             fill="#e6ab02") +
