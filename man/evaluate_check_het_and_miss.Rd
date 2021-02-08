@@ -15,6 +15,11 @@ evaluate_check_het_and_miss(
   highlight_text_size = 3,
   highlight_color = "#c51b8a",
   highlight_shape = 17,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   highlight_legend = FALSE,
   interactive = FALSE
 )
@@ -61,6 +66,16 @@ be highlighted (highlight_samples) by "color" (highlight_type).}
 be highlighted (highlight_samples) by "shape" (highlight_type). Possible
 shapes and their encoding can be found at:
 \url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
 
 \item{highlight_legend}{[logical] Should a separate legend for the
 highlighted samples be provided; only relevant for highlight_type == "color"
@@ -123,5 +138,12 @@ name <- "data"
 \dontrun{
 fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
 interactive=FALSE)
+
+#' # highlight samples
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
+interactive=FALSE, highlight_samples = highlight_samples[,2],
+highlight_type = c("text", "color"))
 }
 }

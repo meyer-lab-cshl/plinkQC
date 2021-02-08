@@ -58,6 +58,12 @@ perIndividualQC(
   remove_individuals = NULL,
   exclude_markers = NULL,
   extract_markers = NULL,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  subplot_label_size = 9,
+  title_size = 9,
   path2plink = NULL,
   showPlinkOutput = TRUE
 )
@@ -301,6 +307,18 @@ separated by spaces). All unlisted variants will be removed from the current
 analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
 Default: NULL, i.e. no filtering on markers.}
 
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{subplot_label_size}{[integer] Size of the subplot labeling.}
+
+\item{title_size}{[integer] Size for plot title.}
+
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
 plink should be accessible as path2plink -h. The full name of the executable
@@ -347,6 +365,7 @@ qcdir <- tempdir()
 name <- "data"
 # All quality control checks
 \dontrun{
+# whole dataset
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
@@ -358,5 +377,20 @@ do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
 fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
 interactive=FALSE, verbose=FALSE)
+
+# subset of dataset with sample highlighting
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+remove_individuals_file <- system.file("extdata", "remove_individuals",
+package="plinkQC")
+individual_qc <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
+refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
+do.run_check_ancestry=FALSE, do.evaluate_check_ancestry=TRUE,
+path2plink=path2plink,
+remove_individuals=remove_individuals_file,
+highlight_samples=highlight_samples[,2],
+highlight_type = c("text", "color"), highlight_color="goldenrod")
 }
 }

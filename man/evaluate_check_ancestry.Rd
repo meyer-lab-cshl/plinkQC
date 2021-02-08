@@ -22,6 +22,11 @@ evaluate_check_ancestry(
   studyColor = "#2c7bb6",
   refPopulation = c("CEU", "TSI"),
   legend_labels_per_row = 6,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   highlight_samples = NULL,
   highlight_type = c("text", "label", "color", "shape"),
   highlight_text_size = 3,
@@ -114,6 +119,16 @@ reference population. Identifiers have to be corresponding to population IDs
 \item{legend_labels_per_row}{[integer] Number of population names per row in
 PCA plot.}
 
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
 \item{highlight_samples}{[character vector] Vector of sample IIDs to
 highlight in the plot (p_ancestry); all highlight_samples IIDs have to
 be present in the IIDs of the prefixMergedDataset.fam file.}
@@ -187,9 +202,21 @@ samples were downloaded from
 \dontrun{
 qcdir <- system.file("extdata", package="plinkQC")
 name <- "data"
+
+# whole dataset
 fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE)
+
+# highlight samples
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
+refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+prefixMergedDataset="data.HapMapIII", interactive=FALSE,
+highlight_samples = highlight_samples[,2],
+highlight_type = c("text", "shape"))
 }
 }

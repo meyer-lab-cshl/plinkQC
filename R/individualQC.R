@@ -52,6 +52,7 @@
 #' \code{\link{evaluate_check_relatedness}}.
 #' @param do.evaluate_check_ancestry [logical] If TRUE, run
 #' \code{\link{evaluate_check_ancestry}}.
+#' @param subplot_label_size [integer] Size of the subplot labeling.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
@@ -170,6 +171,12 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             remove_individuals=NULL,
                             exclude_markers=NULL,
                             extract_markers=NULL,
+                            legend_text_size = 5,
+                            legend_title_size = 7,
+                            axis_text_size = 5,
+                            axis_title_size = 7,
+                            subplot_label_size = 9,
+                            title_size = 9,
                             path2plink=NULL, showPlinkOutput=TRUE) {
 
     missing_genotype <- NULL
@@ -221,6 +228,12 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                            highlight_color = highlight_color,
                                            highlight_shape = highlight_shape,
                                            highlight_legend = highlight_legend,
+                                           legend_text_size = legend_text_size,
+                                           legend_title_size =
+                                               legend_title_size,
+                                           axis_text_size = axis_text_size,
+                                           axis_title_size = axis_title_size,
+                                           title_size = title_size,
                                            interactive=FALSE)
             write.table(fail_sex$fail_sex[,1:2],
                         file=paste(out, ".fail-sexcheck.IDs",
@@ -277,6 +290,12 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                             highlight_color = highlight_color,
                                             highlight_shape = highlight_shape,
                                             highlight_legend = highlight_legend,
+                                            legend_text_size = legend_text_size,
+                                            legend_title_size =
+                                                legend_title_size,
+                                            axis_text_size = axis_text_size,
+                                            axis_title_size = axis_title_size,
+                                            title_size = title_size,
                                             interactive=FALSE)
             write.table(fail_het_imiss$fail_imiss[,1:2],
                         file=paste(out, ".fail-imiss.IDs",
@@ -321,6 +340,16 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                            name=name,
                                                            imissTh=imissTh,
                                                            highIBDTh=highIBDTh,
+                                                           legend_text_size =
+                                                               legend_text_size,
+                                                           legend_title_size =
+                                                               legend_title_size,
+                                                           axis_text_size =
+                                                               axis_text_size,
+                                                           axis_title_size =
+                                                               axis_title_size,
+                                                           title_size =
+                                                               title_size,
                                                            interactive=FALSE)
             write.table(fail_relatedness$failIDs,
                         file=paste(out, ".fail-IBD.IDs", sep=""),
@@ -383,6 +412,15 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                          highlight_shape,
                                                      highlight_legend =
                                                          highlight_legend,
+                                                     legend_text_size =
+                                                         legend_text_size,
+                                                     legend_title_size =
+                                                         legend_title_size,
+                                                     axis_text_size =
+                                                         axis_text_size,
+                                                     axis_title_size =
+                                                         axis_title_size,
+                                                     title_size = title_size,
                                                      interactive=FALSE)
             write.table(fail_ancestry$fail_ancestry,
                         file=paste(out, ".fail-ancestry.IDs",
@@ -432,7 +470,9 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                            nrow=2,
                            align = "v",
                            axis = "lr",
-                           labels=subplotLabels[1:2])
+                           labels=subplotLabels[1:2],
+                           label_size = subplot_label_size
+                            )
         if (!is.null(p_ancestry)) {
             if (!is.null(p_relatedness)) {
                 rel_heights <- c(2, 1, 1, 0.3)
@@ -471,6 +511,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     p_sampleQC <- cowplot::plot_grid(plotlist=plots_sampleQC,
                                      nrow=length(plots_sampleQC),
                                      labels=subplotLabels,
+                                     label_size = subplot_label_size,
                                      rel_heights=rel_heights)
     if (interactive) {
         print(p_sampleQC)
@@ -724,6 +765,11 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                       remove_individuals=NULL,
                       exclude_markers=NULL,
                       extract_markers=NULL,
+                      legend_text_size = 5,
+                      legend_title_size = 7,
+                      axis_text_size = 5,
+                      axis_title_size = 7,
+                      title_size = 9,
                       showPlinkOutput=TRUE) {
     if (run.check_sex) {
         run_sex <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
@@ -755,6 +801,11 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                                remove_individuals=remove_individuals,
                                exclude_markers=exclude_markers,
                                extract_markers=extract_markers,
+                               legend_text_size = legend_text_size,
+                               legend_title_size = legend_title_size,
+                               axis_text_size = axis_text_size,
+                               axis_title_size = axis_title_size,
+                               title_size = title_size,
                                showPlinkOutput=showPlinkOutput)
     return(fail)
 }
@@ -875,6 +926,11 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                remove_individuals=NULL,
                                exclude_markers=NULL,
                                extract_markers=NULL,
+                               legend_text_size = 5,
+                               legend_title_size = 7,
+                               axis_text_size = 5,
+                               axis_title_size = 7,
+                               title_size = 9,
                                path2plink=NULL, showPlinkOutput=TRUE) {
     if (run.check_het_and_miss) {
         run_het <- run_check_heterozygosity(indir=indir,qcdir=qcdir, name=name,
@@ -902,7 +958,12 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                         highlight_text_size = highlight_text_size,
                                         highlight_color = highlight_color,
                                         highlight_shape = highlight_shape,
-                                        highlight_legend = highlight_legend)
+                                        highlight_legend = highlight_legend,
+                                        legend_text_size = legend_text_size,
+                                        legend_title_size = legend_title_size,
+                                        title_size = title_size,
+                                        axis_text_size = axis_text_size,
+                                        axis_title_size = axis_title_size)
     return(fail)
 }
 
@@ -1008,6 +1069,11 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                               remove_individuals=NULL,
                               exclude_markers=NULL,
                               extract_markers=NULL,
+                              legend_text_size = 5,
+                              legend_title_size = 7,
+                              axis_text_size = 5,
+                              axis_title_size = 7,
+                              title_size = 9,
                               showPlinkOutput=TRUE) {
     if (run.check_relatedness) {
         run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name,
@@ -1024,6 +1090,11 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
     fail <- evaluate_check_relatedness(qcdir=qcdir, name=name,
                                        highIBDTh=highIBDTh,
                                        imissTh=imissTh, interactive=interactive,
+                                       legend_text_size = legend_text_size,
+                                       legend_title_size = legend_title_size,
+                                       axis_text_size = axis_text_size,
+                                       axis_title_size = axis_title_size,
+                                       title_size = title_size,
                                        verbose=verbose)
     return(fail)
 }
@@ -1156,6 +1227,11 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                            highlight_color = "#c51b8a",
                            highlight_shape = 17,
                            highlight_legend = FALSE,
+                           legend_text_size = 5,
+                           legend_title_size = 7,
+                           axis_text_size = 5,
+                           axis_title_size = 7,
+                           title_size = 9,
                            keep_individuals=NULL,
                            remove_individuals=NULL,
                            exclude_markers=NULL,
@@ -1195,6 +1271,11 @@ check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
                                     highlight_shape = highlight_shape,
                                     highlight_legend = highlight_legend,
                                     defaultRefSamples = defaultRefSamples,
+                                    legend_text_size = legend_text_size,
+                                    legend_title_size = legend_title_size,
+                                    title_size = title_size,
+                                    axis_text_size = axis_text_size,
+                                    axis_title_size = axis_title_size,
                                     interactive=interactive)
     return(fail)
 }
@@ -1334,6 +1415,11 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param highlight_legend [logical] Should a separate legend for the
 #' highlighted samples be provided; only relevant for highlight_type == "color"
 #' or highlight_type == "shape".
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
+#' @param title_size [integer] Size for plot title.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -1384,6 +1470,11 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                highlight_color = "#c51b8a",
                                highlight_shape = 17,
                                highlight_legend = FALSE,
+                               legend_text_size = 5,
+                               legend_title_size = 7,
+                               axis_text_size = 5,
+                               axis_title_size = 7,
+                               title_size = 9,
                                path2plink=NULL,
                                keep_individuals=NULL,
                                remove_individuals=NULL,
@@ -1587,7 +1678,13 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                 labs(shape = "Individual")
         }
     }
-    p_sexcheck <- p_sexcheck + theme_bw()
+    p_sexcheck <- p_sexcheck +
+        theme_bw() +
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = title_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
 
     if (interactive) print(p_sexcheck)
     return(list(fail_sex=fail_sex, mixup=mixup_geno_pheno,
@@ -1792,6 +1889,11 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param highlight_legend [logical] Should a separate legend for the
 #' highlighted samples be provided; only relevant for highlight_type == "color"
 #' or highlight_type == "shape".
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
+#' @param title_size [integer] Size for plot title.
 #' @return named [list] with i) fail_imiss dataframe containing FID (Family ID),
 #' IID (Within-family ID), MISS_PHENO (Phenotype missing? (Y/N)), N_MISS (Number
 #' of missing genotype call(s), not including obligatory missings), N_GENO (
@@ -1828,6 +1930,11 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                                         highlight_text_size = 3,
                                         highlight_color = "#c51b8a",
                                         highlight_shape = 17,
+                                        legend_text_size = 5,
+                                        legend_title_size = 7,
+                                        axis_text_size = 5,
+                                        axis_title_size = 7,
+                                        title_size = 9,
                                         highlight_legend = FALSE,
                                         interactive=FALSE) {
 
@@ -1971,7 +2078,13 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                 guides(shape = "legend")
         }
     }
-    p_het_imiss <- p_het_imiss + theme_bw()
+    p_het_imiss <- p_het_imiss +
+        theme_bw() +
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              axis.text = element_text(size = axis_text_size),
+              title = element_text(size = title_size),
+              axis.title = element_text(size = axis_title_size))
     if (interactive) print(p_het_imiss)
     return(list(fail_imiss=fail_imiss, fail_het=fail_het,
                 p_het_imiss=p_het_imiss,
@@ -2153,6 +2266,11 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
 #' other_arguments) or pdf(outfile) print(p_IBD) dev.off().
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
+#' @param title_size [integer] Size for plot title.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return a named [list] with i) fail_high_IBD containing a [data.frame] of
 #' IIDs and FIDs of individuals who fail the IBDTh in columns
@@ -2180,6 +2298,11 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
 #' }
 evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                                        imissTh=0.03, interactive=FALSE,
+                                       legend_text_size = 5,
+                                       legend_title_size = 7,
+                                       axis_text_size = 5,
+                                       axis_title_size = 7,
+                                       title_size = 9,
                                        verbose=FALSE) {
 
     prefix <- makepath(qcdir, name)
@@ -2226,7 +2349,11 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
         ggtitle("IBD for all sample pairs") +
         geom_vline(xintercept=highIBDTh, lty=2, col="#e7298a") +
         theme_bw() +
-        theme(title=element_text(size=8))
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = legend_text_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
     p_highPI_HAT <- ggplot(dplyr::filter_(genome, ~PI_HAT_bin == 0),
                            aes_string('PI_HAT'))
     p_highPI_HAT <- p_highPI_HAT + geom_histogram(binwidth = 0.005,
@@ -2236,10 +2363,15 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
         ggtitle("IBD for sample pairs with PI_HAT >0.1") +
         geom_vline(xintercept=highIBDTh, lty=2, col="#e7298a") +
         theme_bw() +
-        theme(title=element_text(size=8))
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = legend_text_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
     p_histo <- cowplot::plot_grid(p_allPI_HAT, p_highPI_HAT)
     title <- cowplot::ggdraw() +
-        cowplot::draw_label("Relatedness estimated as pairwise IBD (PI_HAT)")
+        cowplot::draw_label("Relatedness estimated as pairwise IBD (PI_HAT)",
+                            size=title_size)
     p_IBD <- cowplot::plot_grid(title, p_histo, ncol = 1,
                                 rel_heights = c(0.1, 1))
     if (interactive) print(p_IBD)
@@ -2420,6 +2552,11 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' or highlight_type == "shape".
 #' @param legend_labels_per_row [integer] Number of population names per row in
 #' PCA plot.
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
+#' @param title_size [integer] Size for plot title.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
@@ -2471,6 +2608,11 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
                                     studyColor="#2c7bb6",
                                     refPopulation=c("CEU", "TSI"),
                                     legend_labels_per_row=6,
+                                    legend_text_size = 5,
+                                    legend_title_size = 7,
+                                    axis_text_size = 5,
+                                    axis_title_size = 7,
+                                    title_size = 9,
                                     highlight_samples = NULL,
                                     highlight_type =
                                         c("text", "label", "color", "shape"),
@@ -2666,20 +2808,27 @@ evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
         theme_bw() +
         theme(legend.position='bottom',
               legend.direction = 'vertical',
-              legend.box = "vertical")
+              legend.box = "vertical",
+              legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = title_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
 
     if (!is.null(highlight_samples)) {
         highlight_data <- dplyr::filter_(data_all, ~IID %in% highlight_samples)
         if ("text" %in% highlight_type) {
             p_ancestry <- p_ancestry +
                 ggrepel::geom_text_repel(data=highlight_data,
-                                         aes_string(x='PC1', y='PC2', label="IID"),
+                                         aes_string(x='PC1', y='PC2',
+                                                    label="IID"),
                                          size=highlight_text_size)
         }
         if ("label" %in% highlight_type) {
             p_ancestry <- p_ancestry +
                 ggrepel::geom_label_repel(data=highlight_data,
-                                          aes_string(x='PC1', y='PC2', label="IID"),
+                                          aes_string(x='PC1', y='PC2',
+                                                     label="IID"),
                                           size=highlight_text_size)
         }
         if ("color" %in% highlight_type && !highlight_legend) {

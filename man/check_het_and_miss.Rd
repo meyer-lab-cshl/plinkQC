@@ -25,6 +25,11 @@ check_het_and_miss(
   remove_individuals = NULL,
   exclude_markers = NULL,
   extract_markers = NULL,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   path2plink = NULL,
   showPlinkOutput = TRUE
 )
@@ -123,6 +128,16 @@ separated by spaces). All unlisted variants will be removed from the current
 analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
 Default: NULL, i.e. no filtering on markers.}
 
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
 plink should be accessible as path2plink -h. The full name of the executable
@@ -184,7 +199,20 @@ original description on the PLINK output format page:
  \dontrun{
 indir <- system.file("extdata", package="plinkQC")
 name <- "data"
+path2plink <- "path/to/plink"
+
+# whole dataset
 fail_het_miss <- check_het_and_miss(indir=indir, name=name,
-run.check_het_and_miss=FALSE, interactive=FALSE)
+interactive=FALSE,path2plink=path2plink)
+
+# subset of dataset with sample highlighting
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+remove_individuals_file <- system.file("extdata", "remove_individuals",
+package="plinkQC")
+fail_het_miss <- check_het_and_miss(indir=indir, name=name,
+interactive=FALSE,path2plink=path2plink,
+remove_individuals=remove_individuals_file,
+highlight_samples=highlight_samples[,2], highlight_type = c("text", "shape"))
 }
 }

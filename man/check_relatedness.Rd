@@ -20,6 +20,11 @@ check_relatedness(
   remove_individuals = NULL,
   exclude_markers = NULL,
   extract_markers = NULL,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   showPlinkOutput = TRUE
 )
 }
@@ -99,6 +104,16 @@ separated by spaces). All unlisted variants will be removed from the current
 analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
 Default: NULL, i.e. no filtering on markers.}
 
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
 }
@@ -154,7 +169,16 @@ description on the PLINK output format page:
 \dontrun{
 indir <- system.file("extdata", package="plinkQC")
 name <- 'data'
+path2plink <- "path/to/plink"
+
+# whole dataset
 relatednessQC <- check_relatedness(indir=indir, name=name, interactive=FALSE,
-run.check_relatedness=FALSE)
+run.check_relatedness=FALSE, path2plink=path2plink)
+
+# subset of dataset
+remove_individuals_file <- system.file("extdata", "remove_individuals",
+package="plinkQC")
+fail_relatedness <- check_relatedness(indir=qcdir, name=name,
+remove_individuals=remove_individuals_file, path2plink=path2plink)
 }
 }

@@ -10,6 +10,11 @@ evaluate_check_relatedness(
   highIBDTh = 0.1875,
   imissTh = 0.03,
   interactive = FALSE,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   verbose = FALSE
 )
 }
@@ -32,6 +37,16 @@ choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
 other_arguments) or pdf(outfile) print(p_IBD) dev.off().}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }

@@ -24,6 +24,11 @@ evaluate_check_sex(
   highlight_color = "#c51b8a",
   highlight_shape = 17,
   highlight_legend = FALSE,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   path2plink = NULL,
   keep_individuals = NULL,
   remove_individuals = NULL,
@@ -100,6 +105,16 @@ shapes and their encoding can be found at:
 \item{highlight_legend}{[logical] Should a separate legend for the
 highlighted samples be provided; only relevant for highlight_type == "color"
 or highlight_type == "shape".}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
@@ -179,13 +194,4 @@ simply be invoked by \code{\link{check_sex}}.
 For details on the output data.frame fail_sex, check the original
 description on the PLINK output format page:
 \url{https://www.cog-genomics.org/plink/1.9/formats#sexcheck}.
-}
-\examples{
-qcdir <- system.file("extdata", package="plinkQC")
-name <- "data"
-path2plink <- '/path/to/plink'
-\dontrun{
-fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
-verbose=FALSE, path2plink=path2plink)
-}
 }

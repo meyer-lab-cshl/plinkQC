@@ -31,6 +31,11 @@ check_ancestry(
   highlight_color = "#c51b8a",
   highlight_shape = 17,
   highlight_legend = FALSE,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   keep_individuals = NULL,
   remove_individuals = NULL,
   exclude_markers = NULL,
@@ -156,6 +161,16 @@ shapes and their encoding can be found at:
 highlighted samples be provided; only relevant for highlight_type == "color"
 or highlight_type == "shape".}
 
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
 \item{keep_individuals}{[character] Path to file with individuals to be
 retained in the analysis. The file has to be a space/tab-delimited text file
 with family IDs in the first column and within-family IDs in the second
@@ -225,5 +240,16 @@ refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE,
 run.check_ancestry=FALSE)
+
+# highlight samples
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+fail_ancestry <- check_ancestry(indir=qcdir, name=name,
+refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+prefixMergedDataset="data.HapMapIII", interactive=FALSE,
+highlight_samples = highlight_samples[,2],
+run.check_ancestry=FALSE,
+highlight_type = c("text", "shape"))
 }
 }
