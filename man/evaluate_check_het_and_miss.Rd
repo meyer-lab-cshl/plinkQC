@@ -9,7 +9,18 @@ evaluate_check_het_and_miss(
   name,
   imissTh = 0.03,
   hetTh = 3,
-  label = TRUE,
+  label_fail = TRUE,
+  highlight_samples = NULL,
+  highlight_type = c("text", "label", "color", "shape"),
+  highlight_text_size = 3,
+  highlight_color = "#c51b8a",
+  highlight_shape = 17,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
+  highlight_legend = FALSE,
   interactive = FALSE
 )
 }
@@ -30,8 +41,45 @@ deviation of heterozygosity (het), i.e. individuals outside mean(het) +/-
 hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 larger than 0.}
 
-\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
-plot.}
+\item{label_fail}{[logical] Set TRUE, to add fail IDs as text labels in
+scatter plot.}
+
+\item{highlight_samples}{[character vector] Vector of sample IIDs to
+highlight in the plot (p_het_imiss); all highlight_samples IIDs have to
+be present in the IIDs of the name.fam file.}
+
+\item{highlight_type}{[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified.Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.}
+
+\item{highlight_text_size}{[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).}
+
+\item{highlight_color}{[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).}
+
+\item{highlight_shape}{[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+\url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
+\item{highlight_legend}{[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -48,10 +96,11 @@ individuals failing missing genotype check and ii) fail_het dataframe
 containing FID (Family ID), IID (Within-family ID), O(HOM) (Observed number
 of homozygotes), E(HOM) (Expected number of homozygotes), N(NM) (Number of
 non-missing autosomal genotypes), F (Method-of-moments F coefficient
-estimate) of individuals failing  outlying heterozygosity check and iii)
+estimate) of individuals failing  outlying heterozygosity check; iii)
 p_het_imiss, a ggplot2-object 'containing' a scatter plot with the samples'
 missingness rates on x-axis and their heterozygosity rates on the y-axis,
-which can be shown by print(p_het_imiss).
+which can be shown by print(p_het_imiss) and iv) plot_data, a data.frame with
+the data visualised in p_het_imiss (iii).
 }
 \description{
 Evaluates and depicts results from plink --missing (missing genotype rates
@@ -89,5 +138,12 @@ name <- "data"
 \dontrun{
 fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
 interactive=FALSE)
+
+#' # highlight samples
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
+interactive=FALSE, highlight_samples = highlight_samples[,2],
+highlight_type = c("text", "color"))
 }
 }

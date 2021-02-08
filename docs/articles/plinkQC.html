@@ -40,13 +40,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -71,21 +71,21 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -100,13 +100,14 @@
 
       
 
-      </header><script src="plinkQC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="plinkQC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="plinkQC_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="plinkQC_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Genotype quality control with plinkQC</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2021-01-19</h4>
+            <h4 class="date">2021-02-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/plinkQC.Rmd"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="hidden name"><code>plinkQC.Rmd</code></div>
@@ -218,7 +219,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <div id="individuals-with-outlying-missing-genotype-andor-heterozygosity-rates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#individuals-with-outlying-missing-genotype-andor-heterozygosity-rates" class="anchor"></a>Individuals with outlying missing genotype and/or heterozygosity rates</h2>
-<p>The identification of individuals with outlying missing genotype and/or heterozygosity rates helps to detect samples with poor DNA quality and/or concentration that should be excluded from the study. Typically, individuals with more than 3-7% of their genotype calles missing are removed. Outlying heterozygosity rates are judged relative to the overall heterozygosity rates in the study, and individuals whose rates are more than a few standard deviations (sd) from the mean heterozygosity rate are removed. A typical quality control for outlying heterozygoisty rates would remove individuals who are three sd away from the mean rate. Identifying related individuals with outlying missing genotype and/or heterozygosity rates is implemented in <code>check_het_and_miss</code>. It finds individuals that have genotyping and heterozygosity rates that fail the set thresholds and depicts the results as a scatter plot with the samples’ missingness rates on x-axis and their heterozygosity rates on the y-axis.</p>
+<p>The identification of individuals with outlying missing genotype and/or heterozygosity rates helps to detect samples with poor DNA quality and/or concentration that should be excluded from the study. Typically, individuals with more than 3-7% of their genotype calls missing are removed. Outlying heterozygosity rates are judged relative to the overall heterozygosity rates in the study, and individuals whose rates are more than a few standard deviations (sd) from the mean heterozygosity rate are removed. A typical quality control for outlying heterozygosity rates would remove individuals who are three sd away from the mean rate. Identifying related individuals with outlying missing genotype and/or heterozygosity rates is implemented in <code>check_het_and_miss</code>. It finds individuals that have genotyping and heterozygosity rates that fail the set thresholds and depicts the results as a scatter plot with the samples’ missingness rates on x-axis and their heterozygosity rates on the y-axis.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fail_het_imiss</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_het_and_miss.html">check_het_and_miss</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,
                                      interactive<span class="op">=</span><span class="cn">TRUE</span>, path2plink<span class="op">=</span><span class="va">path2plink</span><span class="op">)</span></code></pre></div>
@@ -227,7 +228,7 @@ Integration with R is achieved through its R plugin or PLINK/SEQ R Package <span
 <div id="related-individuals" class="section level2">
 <h2 class="hasAnchor">
 <a href="#related-individuals" class="anchor"></a>Related individuals</h2>
-<p>Depending on the future use of the genotypes, it might required to remove any related individuals from the study. Related individuals can be identified by their proporting of shared alleles at the genotyped markers (identity by descend, IBD). Standardly, individuals with second-degree relatedness or higher will be excluded. Identifying related individuals is implemented in <code>check_relatedness</code>. It finds pairs of samples whose proportion of IBD is larger than the specified highIBDTh. Subsequently, for pairs of individual that do not have additional relatives in the dataset, the individual with the greater genotype missingness rate is selected and returned as the individual failing the relatedness check. For more complex family structures, the unrelated individuals per family are selected (e.g. in a parents-offspring trio, the offspring will be marked as fail, while the parents will be kept in the analysis).</p>
+<p>Depending on the future use of the genotypes, it might required to remove any related individuals from the study. Related individuals can be identified by their proportion of shared alleles at the genotyped markers (identity by descend, IBD). Standardly, individuals with second-degree relatedness or higher will be excluded. Identifying related individuals is implemented in <code>check_relatedness</code>. It finds pairs of samples whose proportion of IBD is larger than the specified highIBDTh. Subsequently, for pairs of individual that do not have additional relatives in the dataset, the individual with the greater genotype missingness rate is selected and returned as the individual failing the relatedness check. For more complex family structures, the unrelated individuals per family are selected (e.g. in a parents-offspring trio, the offspring will be marked as fail, while the parents will be kept in the analysis).</p>
 <p>NB: To reduce the data size of the example data in <code>plinkQC</code>, data.genome has already been reduced to the individuals that are related. Thus the relatedness plots in C only show counts for related individuals only.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">exclude_relatedness</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_relatedness.html">check_relatedness</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,

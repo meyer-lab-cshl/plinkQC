@@ -96,13 +96,13 @@ of the samples split by their (PEDSEX)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -127,21 +127,21 @@ of the samples split by their (PEDSEX)." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -195,8 +195,23 @@ of the samples split by their (PEDSEX).</p>
   externalSexSex <span class='op'>=</span> <span class='st'>"Sex"</span>,
   externalSexID <span class='op'>=</span> <span class='st'>"IID"</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  label <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  label_fail <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  highlight_samples <span class='op'>=</span> <span class='cn'>NULL</span>,
+  highlight_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"text"</span>, <span class='st'>"label"</span>, <span class='st'>"color"</span>, <span class='st'>"shape"</span><span class='op'>)</span>,
+  highlight_text_size <span class='op'>=</span> <span class='fl'>3</span>,
+  highlight_color <span class='op'>=</span> <span class='st'>"#c51b8a"</span>,
+  highlight_shape <span class='op'>=</span> <span class='fl'>17</span>,
+  highlight_legend <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  legend_text_size <span class='op'>=</span> <span class='fl'>5</span>,
+  legend_title_size <span class='op'>=</span> <span class='fl'>7</span>,
+  axis_text_size <span class='op'>=</span> <span class='fl'>5</span>,
+  axis_title_size <span class='op'>=</span> <span class='fl'>7</span>,
+  title_size <span class='op'>=</span> <span class='fl'>9</span>,
   path2plink <span class='op'>=</span> <span class='cn'>NULL</span>,
+  keep_individuals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  remove_individuals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exclude_markers <span class='op'>=</span> <span class='cn'>NULL</span>,
+  extract_markers <span class='op'>=</span> <span class='cn'>NULL</span>,
   showPlinkOutput <span class='op'>=</span> <span class='cn'>TRUE</span>,
   interactive <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
@@ -266,18 +281,113 @@ information in externalSex.</p></td>
       <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
     </tr>
     <tr>
-      <th>label</th>
-      <td><p>[logical] Set TRUE, to add fail IDs as text labels in scatter
-plot.</p></td>
+      <th>label_fail</th>
+      <td><p>[logical] Set TRUE, to add fail IDs as text labels in
+scatter plot.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_samples</th>
+      <td><p>[character vector] Vector of sample IIDs to
+highlight in the plot (p_sexcheck); all highlight_samples IIDs have to
+be present in the IIDs of the name.fam file.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_type</th>
+      <td><p>[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified. Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_text_size</th>
+      <td><p>[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).</p></td>
+    </tr>
+    <tr>
+      <th>highlight_color</th>
+      <td><p>[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).</p></td>
+    </tr>
+    <tr>
+      <th>highlight_shape</th>
+      <td><p>[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+<a href='https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec'>https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec</a></p></td>
+    </tr>
+    <tr>
+      <th>highlight_legend</th>
+      <td><p>[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".</p></td>
+    </tr>
+    <tr>
+      <th>legend_text_size</th>
+      <td><p>[integer] Size for legend text.</p></td>
+    </tr>
+    <tr>
+      <th>legend_title_size</th>
+      <td><p>[integer] Size for legend title.</p></td>
+    </tr>
+    <tr>
+      <th>axis_text_size</th>
+      <td><p>[integer] Size for axis text.</p></td>
+    </tr>
+    <tr>
+      <th>axis_title_size</th>
+      <td><p>[integer] Size for axis title.</p></td>
+    </tr>
+    <tr>
+      <th>title_size</th>
+      <td><p>[integer] Size for plot title.</p></td>
     </tr>
     <tr>
       <th>path2plink</th>
       <td><p>[character] Absolute path to PLINK executable
 (<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a>) i.e.
-plink should be accesible as path2plink -h. The full name of the executable
+plink should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec</a></code>('plink').</p></td>
+    </tr>
+    <tr>
+      <th>keep_individuals</th>
+      <td><p>[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#indiv'>https://www.cog-genomics.org/plink/1.9/filter#indiv</a>.
+Default: NULL, i.e. no filtering on individuals.</p></td>
+    </tr>
+    <tr>
+      <th>remove_individuals</th>
+      <td><p>[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#indiv'>https://www.cog-genomics.org/plink/1.9/filter#indiv</a>.
+Default: NULL, i.e. no filtering on individuals.</p></td>
+    </tr>
+    <tr>
+      <th>exclude_markers</th>
+      <td><p>[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#snp'>https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
+Default: NULL, i.e. no filtering on markers.</p></td>
+    </tr>
+    <tr>
+      <th>extract_markers</th>
+      <td><p>[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#snp'>https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
+Default: NULL, i.e. no filtering on markers.</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>
@@ -297,12 +407,13 @@ other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>named list with i) fail_sex: dataframe with FID, IID, PEDSEX, SNPSEX
-and Sex (if externalSex was provided) of individuals failing sex check,
+and Sex (if externalSex was provided) of individuals failing sex check;
 ii) mixup: dataframe with FID, IID, PEDSEX, SNPSEX and Sex (if externalSex
-was provided) of individuals whose PEDSEX != Sex and Sex == SNPSEX and iii)
+was provided) of individuals whose PEDSEX != Sex and Sex == SNPSEX; iii)
 p_sexcheck, a ggplot2-object 'containing' a scatter plot of the X-chromosomal
 heterozygosity (SNPSEX) of the individuals split by their (PEDSEX), which can
-be shown by print(p_sexcheck).</p>
+be shown by print(p_sexcheck) and iv) plot_data, a data.frame with the data
+visualised in p_sexcheck (iii).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Both <code><a href='run_check_sex.html'>run_check_sex</a></code> and <code>evaluate_check_sex</code> can
@@ -314,9 +425,18 @@ description on the PLINK output format page:
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>qcdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span>
 <span class='va'>name</span> <span class='op'>&lt;-</span> <span class='st'>"data"</span>
+<span class='va'>path2plink</span> <span class='op'>&lt;-</span> <span class='st'>'/path/to/plink'</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>fail_sex</span> <span class='op'>&lt;-</span> <span class='fu'>evaluate_check_sex</span><span class='op'>(</span>qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>, interactive<span class='op'>=</span><span class='cn'>FALSE</span>,
-verbose<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+verbose<span class='op'>=</span><span class='cn'>FALSE</span>, path2plink<span class='op'>=</span><span class='va'>path2plink</span><span class='op'>)</span>
+
+<span class='co'># highlight samples</span>
+<span class='va'>highlight_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"keep_individuals"</span>,
+package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fail_sex</span> <span class='op'>&lt;-</span> <span class='fu'>evaluate_check_sex</span><span class='op'>(</span>qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>, interactive<span class='op'>=</span><span class='cn'>FALSE</span>,
+verbose<span class='op'>=</span><span class='cn'>FALSE</span>, path2plink<span class='op'>=</span><span class='va'>path2plink</span>,
+highlight_samples <span class='op'>=</span> <span class='va'>highlight_samples</span><span class='op'>[</span>,<span class='fl'>2</span><span class='op'>]</span>,
+highlight_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"label"</span>, <span class='st'>"color"</span><span class='op'>)</span>, highlight_color <span class='op'>=</span> <span class='st'>"darkgreen"</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>

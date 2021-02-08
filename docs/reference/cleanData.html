@@ -85,13 +85,13 @@ qcdir/name.clean.bim/.bed/.fam." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -116,21 +116,21 @@ qcdir/name.clean.bim/.bed/.fam." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -178,6 +178,10 @@ qcdir/name.clean.bim/.bed/.fam.</p>
   mafTh <span class='op'>=</span> <span class='cn'>NULL</span>,
   path2plink <span class='op'>=</span> <span class='cn'>NULL</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  keep_individuals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  remove_individuals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exclude_markers <span class='op'>=</span> <span class='cn'>NULL</span>,
+  extract_markers <span class='op'>=</span> <span class='cn'>NULL</span>,
   showPlinkOutput <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
@@ -282,7 +286,7 @@ and macTh are specified, macTh is used (macTh = mafTh\*2\*NrSamples).</p></td>
       <th>path2plink</th>
       <td><p>[character] Absolute path to PLINK executable
 (<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a>) i.e.
-plink should be accesible as path2plink -h. The full name of the executable
+plink should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec</a></code>('plink').</p></td>
@@ -290,6 +294,42 @@ and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'
     <tr>
       <th>verbose</th>
       <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
+    </tr>
+    <tr>
+      <th>keep_individuals</th>
+      <td><p>[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#indiv'>https://www.cog-genomics.org/plink/1.9/filter#indiv</a>.
+Default: NULL, i.e. no filtering on individuals.</p></td>
+    </tr>
+    <tr>
+      <th>remove_individuals</th>
+      <td><p>[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#indiv'>https://www.cog-genomics.org/plink/1.9/filter#indiv</a>.
+Default: NULL, i.e. no filtering on individuals.</p></td>
+    </tr>
+    <tr>
+      <th>exclude_markers</th>
+      <td><p>[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#snp'>https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
+Default: NULL, i.e. no filtering on markers.</p></td>
+    </tr>
+    <tr>
+      <th>extract_markers</th>
+      <td><p>[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#snp'>https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
+Default: NULL, i.e. no filtering on markers.</p></td>
     </tr>
     <tr>
       <th>showPlinkOutput</th>
@@ -314,21 +354,42 @@ samples that fail the QC.</p>
 <span class='co'># the following code is not run on package build, as the path2plink on the</span>
 <span class='co'># user system is not known.</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Run individual QC checks</span>
+<span class='co'># Run qc on all samples and markers in the dataset</span>
+<span class='co'>## Run individual QC checks</span>
 <span class='va'>fail_individuals</span> <span class='op'>&lt;-</span> <span class='fu'><a href='perIndividualQC.html'>perIndividualQC</a></span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
 refSamplesFile<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>,
 refColorsFile<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>,
 prefixMergedDataset<span class='op'>=</span><span class='st'>"data.HapMapIII"</span>, interactive<span class='op'>=</span><span class='cn'>FALSE</span>, verbose<span class='op'>=</span><span class='cn'>FALSE</span>,
 path2plink<span class='op'>=</span><span class='va'>path2plink</span><span class='op'>)</span>
 
-<span class='co'># Run marker QC checks</span>
+<span class='co'>## Run marker QC checks</span>
 <span class='va'>fail_markers</span> <span class='op'>&lt;-</span> <span class='fu'><a href='perMarkerQC.html'>perMarkerQC</a></span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
 path2plink<span class='op'>=</span><span class='va'>path2plink</span><span class='op'>)</span>
 
-<span class='co'># Create new dataset of indiviudals and markers passing QC</span>
+<span class='co'>## Create new dataset of individuals and markers passing QC</span>
 <span class='va'>ids_all</span> <span class='op'>&lt;-</span> <span class='fu'>cleanData</span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>, macTh<span class='op'>=</span><span class='fl'>15</span>,
 verbose<span class='op'>=</span><span class='cn'>TRUE</span>, path2plink<span class='op'>=</span><span class='va'>path2plink</span>, filterAncestry<span class='op'>=</span><span class='cn'>FALSE</span>,
 filterRelated<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+
+<span class='co'># Run qc on subset of samples and markers in the dataset</span>
+<span class='va'>highlight_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"keep_individuals"</span>,
+package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>remove_individuals_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"remove_individuals"</span>,
+package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span>
+
+<span class='va'>fail_individuals</span> <span class='op'>&lt;-</span> <span class='fu'><a href='perIndividualQC.html'>perIndividualQC</a></span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
+dont.check_ancestry <span class='op'>=</span> <span class='cn'>TRUE</span>, interactive<span class='op'>=</span><span class='cn'>FALSE</span>, verbose<span class='op'>=</span><span class='cn'>FALSE</span>,
+highlight_samples <span class='op'>=</span> <span class='va'>highlight_samples</span><span class='op'>[</span>,<span class='fl'>2</span><span class='op'>]</span>, highlight_type <span class='op'>=</span> <span class='st'>"label"</span>,
+remove_individuals <span class='op'>=</span> <span class='va'>remove_individuals_file</span>, path2plink<span class='op'>=</span><span class='va'>path2plink</span><span class='op'>)</span>
+
+<span class='co'>## Run marker QC checks</span>
+<span class='va'>fail_markers</span> <span class='op'>&lt;-</span> <span class='fu'><a href='perMarkerQC.html'>perMarkerQC</a></span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
+path2plink<span class='op'>=</span><span class='va'>path2plink</span><span class='op'>)</span>
+
+<span class='co'>## Create new dataset of individuals and markers passing QC</span>
+<span class='va'>ids_all</span> <span class='op'>&lt;-</span> <span class='fu'>cleanData</span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>, macTh<span class='op'>=</span><span class='fl'>15</span>,
+verbose<span class='op'>=</span><span class='cn'>TRUE</span>, path2plink<span class='op'>=</span><span class='va'>path2plink</span>, filterAncestry<span class='op'>=</span><span class='cn'>FALSE</span>,
+remove_individuals <span class='op'>=</span> <span class='va'>remove_individuals_file</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>

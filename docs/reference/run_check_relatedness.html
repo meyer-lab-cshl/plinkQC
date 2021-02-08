@@ -90,13 +90,13 @@ genome-wide IBS. The proportion of IBD between two individuals is returned by
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -121,21 +121,21 @@ genome-wide IBS. The proportion of IBD between two individuals is returned by
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -179,6 +179,10 @@ genome-wide IBS. The proportion of IBD between two individuals is returned by
   path2plink <span class='op'>=</span> <span class='cn'>NULL</span>,
   genomebuild <span class='op'>=</span> <span class='st'>"hg19"</span>,
   showPlinkOutput <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  keep_individuals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  remove_individuals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exclude_markers <span class='op'>=</span> <span class='cn'>NULL</span>,
+  extract_markers <span class='op'>=</span> <span class='cn'>NULL</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -216,7 +220,7 @@ for selecting variants for IBD estimation.</p></td>
       <th>path2plink</th>
       <td><p>[character] Absolute path to PLINK executable
 (<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a>) i.e.
-plink should be accesible as path2plink -h. The full name of the executable
+plink should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec</a></code>('plink').</p></td>
@@ -232,6 +236,42 @@ are hg18, hg19 and hg38. See @details.</p></td>
       <th>showPlinkOutput</th>
       <td><p>[logical] If TRUE, plink log and error messages are
 printed to standard out.</p></td>
+    </tr>
+    <tr>
+      <th>keep_individuals</th>
+      <td><p>[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#indiv'>https://www.cog-genomics.org/plink/1.9/filter#indiv</a>.
+Default: NULL, i.e. no filtering on individuals.</p></td>
+    </tr>
+    <tr>
+      <th>remove_individuals</th>
+      <td><p>[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#indiv'>https://www.cog-genomics.org/plink/1.9/filter#indiv</a>.
+Default: NULL, i.e. no filtering on individuals.</p></td>
+    </tr>
+    <tr>
+      <th>exclude_markers</th>
+      <td><p>[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#snp'>https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
+Default: NULL, i.e. no filtering on markers.</p></td>
+    </tr>
+    <tr>
+      <th>extract_markers</th>
+      <td><p>[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#snp'>https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
+Default: NULL, i.e. no filtering on markers.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -260,10 +300,19 @@ package="plinkQC").</p>
     <pre class="examples"><div class='input'><span class='va'>indir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span>
 <span class='va'>name</span> <span class='op'>&lt;-</span> <span class='st'>'data'</span>
 <span class='va'>qcdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>path2plink</span> <span class='op'>&lt;-</span> <span class='st'>'/path/to/plink'</span>
 <span class='co'># the following code is not run on package build, as the path2plink on the</span>
 <span class='co'># user system is not known.</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>run</span> <span class='op'>&lt;-</span> <span class='fu'>run_check_relatedness</span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span><span class='op'>)</span>
+<span class='co'># Relatedness estimation based in all markers in dataset</span>
+<span class='va'>run</span> <span class='op'>&lt;-</span> <span class='fu'>run_check_relatedness</span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
+path2plink<span class='op'>=</span><span class='va'>path2plink</span><span class='op'>)</span>
+
+<span class='co'># relatedness estimation on subset of dataset</span>
+<span class='va'>keep_individuals_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"keep_individuals"</span>,
+package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span>
+<span class='va'>run</span> <span class='op'>&lt;-</span> <span class='fu'>run_check_relatedness</span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>indir</span>, qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
+keep_individuals<span class='op'>=</span><span class='va'>keep_individuals_file</span>, path2plink<span class='op'>=</span><span class='va'>path2plink</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>

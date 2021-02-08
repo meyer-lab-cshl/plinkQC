@@ -17,6 +17,8 @@ refSamples <- read.table(paste(qcdir, '/', refSamplesFile, sep=""), header=TRUE,
 refColors <- read.table(paste(qcdir, '/', refColorsFile, sep=""), header=TRUE,
                          stringsAsFactors=FALSE)
 
+highlight_samples <- paste0("ID_", 1:10)
+
 context('Test evaluate_check_sex')
 test_that('check_sex throws file error',{
     expect_error(evaluate_check_sex(qcdir, "nodata", verbose=FALSE),
@@ -34,12 +36,13 @@ test_that('evaluate_check_sex returns correct output type',{
 
 test_that('evaluate_check_sex returns correct output length',{
     fail_sex <- evaluate_check_sex(qcdir, name, verbose=FALSE)
-    expect_equal(length(fail_sex), 3)
+    expect_equal(length(fail_sex), 4)
 })
 
 test_that('evaluate_check_sex returns correct output names',{
     fail_sex <- evaluate_check_sex(qcdir, name, verbose=FALSE)
-    expect_equal(names(fail_sex), c("fail_sex", "mixup", "p_sexcheck"))
+    expect_equal(names(fail_sex), c("fail_sex", "mixup", "p_sexcheck",
+                                    "plot_data"))
 })
 
 test_that('evaluate_check_sex returns correct fail IDs for example data',{
@@ -51,6 +54,23 @@ test_that('evaluate_check_sex runs successfully if no sample fails',{
     fail_sex <- evaluate_check_sex(qcdir, name="data_all_passing",
                                    verbose=FALSE, interactive=TRUE)
     expect_true(is.null(fail_sex$fail_sex))
+})
+
+test_that('evaluate_check_sex fails with additional sample in highlighting',{
+    expect_error(evaluate_check_sex(qcdir, name=name,
+                                    highlight_samples = "XBC",
+                                    verbose=FALSE, interactive=FALSE
+                                    ),
+    "Not all samples to be highlighted")
+})
+
+test_that('evaluate_check_sex fails with text and label highlighting',{
+    expect_error(evaluate_check_sex(qcdir, name=name,
+                                    highlight_samples = highlight_samples,
+                                    highlight_type = c("text", "label"),
+                                    verbose=FALSE, interactive=FALSE
+    ),
+    "Only one of text or label")
 })
 
 context('Test evaluate_check_het_and_miss')
@@ -72,13 +92,13 @@ test_that('evaluate_check_het_and_miss returns correct output type',{
 
 test_that('evaluate_check_het_and_miss returns correct output length',{
     fail_het_imiss <- evaluate_check_het_and_miss(qcdir, name)
-    expect_equal(length(fail_het_imiss), 3)
+    expect_equal(length(fail_het_imiss), 4)
 })
 
 test_that('evaluate_check_het_and_miss returns correct output names',{
     fail_het_imiss <- evaluate_check_het_and_miss(qcdir, name)
     expect_equal(names(fail_het_imiss), c("fail_imiss", "fail_het",
-                                          "p_het_imiss"))
+                                          "p_het_imiss", "plot_data"))
 })
 
 test_that('evaluate_check_het_and_miss returns correct fail IDs',{
@@ -92,6 +112,22 @@ test_that('evaluate_check_het_and_miss runs successfully if no sample fails',{
         evaluate_check_het_and_miss(qcdir, name="data_all_passing",
                                     interactive=TRUE)
     expect_true(is.null(fail_check_het_and_miss$fail_het_and_miss))
+})
+
+test_that('evaluate_check_het_and_miss fails with additional sample in highlighting',{
+    expect_error(evaluate_check_het_and_miss(qcdir, name=name,
+                                    highlight_samples = "XBC", interactive=FALSE
+    ),
+    "Not all samples to be highlighted")
+})
+
+test_that('evaluate_check_het_and_miss fails with text and label highlighting',{
+    expect_error(evaluate_check_het_and_miss(qcdir, name=name,
+                                    highlight_samples = highlight_samples,
+                                    highlight_type = c("text", "label"),
+                                    interactive=FALSE
+    ),
+    "Only one of text or label")
 })
 
 context('Test evaluate_check_relatedness')
@@ -112,12 +148,13 @@ test_that('evaluate_check_relatedness returns correct output type',{
 
 test_that('evaluate_check_relatedness returns correct output length',{
     fail_relatedness <- evaluate_check_relatedness(qcdir, name, verbose=FALSE)
-    expect_equal(length(fail_relatedness), 3)
+    expect_equal(length(fail_relatedness), 4)
 })
 
 test_that('evaluate_check_relatedness returns correct output names',{
     fail_relatedness <- evaluate_check_relatedness(qcdir, name, verbose=FALSE)
-    expect_equal(names(fail_relatedness), c("fail_highIBD", "failIDs", "p_IBD"))
+    expect_equal(names(fail_relatedness), c("fail_highIBD", "failIDs", "p_IBD",
+                                            "plot_data"))
 })
 
 test_that('evaluate_check_relatedness returns correct fail IDs for example data',{
@@ -141,10 +178,19 @@ test_that('evaluate_check_ancestry throws input file error',{
                  "plink --pca output file:")
 })
 
-test_that('evaluate_check_ancestry throws refSamples missing error',{
+test_that('evaluate_check_ancestry uses HapMap as default reference',{
+    expect_message(evaluate_check_ancestry(qcdir, name,
+                                         prefixMergedDataset=prefix,
+                                         verbose=TRUE),
+                   "Using HapMap as reference samples.")
+})
+
+test_that('evaluate_check_ancestry uses HapMap as default reference',{
     expect_error(evaluate_check_ancestry(qcdir, name,
-                                         prefixMergedDataset=prefix),
-                 "Neither refSamples nor refSamplesFile are specified")
+                                           prefixMergedDataset=prefix,
+                                           verbose=TRUE,
+                                           defaultRefSamples = "Genomes"),
+                   "defaultRefSamples should be one of 'HapMap'.")
 })
 
 test_that('evaluate_check_ancestry throws refSamples file error',{
@@ -240,13 +286,13 @@ test_that('evaluate_check_ancestry returns correct output type',{
 test_that('evaluate_check_ancestry returns correct output length',{
     fail <- evaluate_check_ancestry(qcdir, name, prefixMergedDataset=prefix,
                                         refSamples=refSamples)
-    expect_equal(length(fail), 2)
+    expect_equal(length(fail), 3)
 })
 
 test_that('evaluate_check_ancestry returns correct output names',{
     fail <- evaluate_check_ancestry(qcdir, name, prefixMergedDataset=prefix,
                                refSamples=refSamples)
-    expect_equal(names(fail), c("fail_ancestry", "p_ancestry"))
+    expect_equal(names(fail), c("fail_ancestry", "p_ancestry", "plot_data"))
 })
 
 test_that('evaluate_check_ancestry returns correct fail IDs for example data',{
@@ -268,6 +314,28 @@ test_that('evaluate_check_ancestry fails with some missing sample error',{
         refSamples=refSamples),
         "Not all")
 })
+
+test_that('evaluate_check_ancestry fails with additional sample in highlighting',{
+    expect_error(evaluate_check_ancestry(qcdir, name=name,
+                                         highlight_samples = "XBC",
+                                         interactive=FALSE,
+                                         prefixMergedDataset=prefix,
+                                         refSamples=refSamples
+    ),
+    "Not all samples to be highlighted")
+})
+
+test_that('evaluate_check_ancestry fails with text and label highlighting',{
+    expect_error(evaluate_check_ancestry(qcdir, name=name,
+                                         prefixMergedDataset=prefix,
+                                         refSamples=refSamples,
+                                         highlight_samples = highlight_samples,
+                                         highlight_type = c("text", "label"),
+                                         interactive=FALSE
+    ),
+    "Only one of text or label")
+})
+
 
 test_that('perIndividualQC works if all samples pass', {
     fail_individuals <-

@@ -246,11 +246,11 @@ knitr::include_graphics("checkSex.png")
 The identification of individuals with outlying missing genotype and/or
 heterozygosity rates helps to detect samples with poor DNA quality and/or
 concentration that should be excluded from the study. Typically, individuals
-with more than 3-7\% of their genotype calles missing are removed. Outlying
+with more than 3-7\% of their genotype calls missing are removed. Outlying
 heterozygosity rates are judged relative to the overall heterozygosity rates in
 the study, and individuals whose rates are more than a few standard deviations
 (sd) from the mean heterozygosity rate are removed. A typical quality control
-for outlying heterozygoisty rates would remove individuals who are three sd away
+for outlying heterozygosity rates would remove individuals who are three sd away
 from the mean rate.
 Identifying related individuals with outlying missing genotype and/or
 heterozygosity rates is implemented in `check_het_and_miss`.
@@ -271,7 +271,7 @@ knitr::include_graphics("checkHetImiss.png")
 ## Related individuals
 Depending on the future use of the genotypes, it might required to remove any
 related individuals from the study. Related individuals can be identified by
-their proporting of shared alleles at the genotyped markers (identity by
+their proportion of shared alleles at the genotyped markers (identity by
 descend, IBD). Standardly, individuals with second-degree relatedness or higher
 will be excluded. 
 Identifying related individuals is implemented in `check_relatedness`. It finds

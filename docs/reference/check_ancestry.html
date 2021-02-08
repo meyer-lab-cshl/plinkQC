@@ -94,13 +94,13 @@ for samples of the reference populations and the study population." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -125,21 +125,21 @@ for samples of the reference populations and the study population." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -184,6 +184,7 @@ for samples of the reference populations and the study population.</p>
   qcdir <span class='op'>=</span> <span class='va'>indir</span>,
   <span class='va'>prefixMergedDataset</span>,
   europeanTh <span class='op'>=</span> <span class='fl'>1.5</span>,
+  defaultRefSamples <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"HapMap"</span>, <span class='st'>"1000Genomes"</span><span class='op'>)</span>,
   refPopulation <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CEU"</span>, <span class='st'>"TSI"</span><span class='op'>)</span>,
   refSamples <span class='op'>=</span> <span class='cn'>NULL</span>,
   refColors <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -198,6 +199,21 @@ for samples of the reference populations and the study population.</p>
   run.check_ancestry <span class='op'>=</span> <span class='cn'>TRUE</span>,
   interactive <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='va'>verbose</span>,
+  highlight_samples <span class='op'>=</span> <span class='cn'>NULL</span>,
+  highlight_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"text"</span>, <span class='st'>"label"</span>, <span class='st'>"color"</span>, <span class='st'>"shape"</span><span class='op'>)</span>,
+  highlight_text_size <span class='op'>=</span> <span class='fl'>3</span>,
+  highlight_color <span class='op'>=</span> <span class='st'>"#c51b8a"</span>,
+  highlight_shape <span class='op'>=</span> <span class='fl'>17</span>,
+  highlight_legend <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  legend_text_size <span class='op'>=</span> <span class='fl'>5</span>,
+  legend_title_size <span class='op'>=</span> <span class='fl'>7</span>,
+  axis_text_size <span class='op'>=</span> <span class='fl'>5</span>,
+  axis_title_size <span class='op'>=</span> <span class='fl'>7</span>,
+  title_size <span class='op'>=</span> <span class='fl'>9</span>,
+  keep_individuals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  remove_individuals <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exclude_markers <span class='op'>=</span> <span class='cn'>NULL</span>,
+  extract_markers <span class='op'>=</span> <span class='cn'>NULL</span>,
   path2plink <span class='op'>=</span> <span class='cn'>NULL</span>,
   showPlinkOutput <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
@@ -238,6 +254,16 @@ considered to be of European descent and samples outside this radius of
 non-European descent. The radius is computed as the maximum Euclidean
 distance of European reference samples to the centre of European reference
 samples.</p></td>
+    </tr>
+    <tr>
+      <th>defaultRefSamples</th>
+      <td><p>[character] Option to use pre-downloaded individual
+and population identifiers from either the 1000Genomes or HapMap project.
+If refSamples and refSamplesFile are not provided, the HapMap identifiers (or
+1000Genomes is specified) will be used as default and the function will fail
+if the reference samples in the prefixMergedDataset do not match these
+reference samples. If refColors and refColorsFile are not provided, this also
+sets default colors for the reference populations.</p></td>
     </tr>
     <tr>
       <th>refPopulation</th>
@@ -301,7 +327,8 @@ IDs in refColors/refColorsFile.</p></td>
     </tr>
     <tr>
       <th>legend_labels_per_row</th>
-      <td><p>[integer] Number of population names per row in PCA plot.</p></td>
+      <td><p>[integer] Number of population names per row in
+PCA plot.</p></td>
     </tr>
     <tr>
       <th>run.check_ancestry</th>
@@ -324,10 +351,105 @@ other_arguments) or pdf(outfile) print(p_ancestry) dev.off().</p></td>
       <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
     </tr>
     <tr>
+      <th>highlight_samples</th>
+      <td><p>[character vector] Vector of sample IIDs to
+highlight in the plot (p_ancestry); all highlight_samples IIDs have to
+be present in the IIDs of the prefixMergedDataset.fam file.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_type</th>
+      <td><p>[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified.Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_text_size</th>
+      <td><p>[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).</p></td>
+    </tr>
+    <tr>
+      <th>highlight_color</th>
+      <td><p>[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).</p></td>
+    </tr>
+    <tr>
+      <th>highlight_shape</th>
+      <td><p>[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+<a href='https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec'>https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec</a></p></td>
+    </tr>
+    <tr>
+      <th>highlight_legend</th>
+      <td><p>[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".</p></td>
+    </tr>
+    <tr>
+      <th>legend_text_size</th>
+      <td><p>[integer] Size for legend text.</p></td>
+    </tr>
+    <tr>
+      <th>legend_title_size</th>
+      <td><p>[integer] Size for legend title.</p></td>
+    </tr>
+    <tr>
+      <th>axis_text_size</th>
+      <td><p>[integer] Size for axis text.</p></td>
+    </tr>
+    <tr>
+      <th>axis_title_size</th>
+      <td><p>[integer] Size for axis title.</p></td>
+    </tr>
+    <tr>
+      <th>title_size</th>
+      <td><p>[integer] Size for plot title.</p></td>
+    </tr>
+    <tr>
+      <th>keep_individuals</th>
+      <td><p>[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#indiv'>https://www.cog-genomics.org/plink/1.9/filter#indiv</a>.
+Default: NULL, i.e. no filtering on individuals.</p></td>
+    </tr>
+    <tr>
+      <th>remove_individuals</th>
+      <td><p>[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#indiv'>https://www.cog-genomics.org/plink/1.9/filter#indiv</a>.
+Default: NULL, i.e. no filtering on individuals.</p></td>
+    </tr>
+    <tr>
+      <th>exclude_markers</th>
+      <td><p>[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#snp'>https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
+Default: NULL, i.e. no filtering on markers.</p></td>
+    </tr>
+    <tr>
+      <th>extract_markers</th>
+      <td><p>[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See <a href='https://www.cog-genomics.org/plink/1.9/filter#snp'>https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
+Default: NULL, i.e. no filtering on markers.</p></td>
+    </tr>
+    <tr>
       <th>path2plink</th>
       <td><p>[character] Absolute path to PLINK executable
 (<a href='https://www.cog-genomics.org/plink/1.9/'>https://www.cog-genomics.org/plink/1.9/</a>) i.e.
-plink should be accesible as path2plink -h. The full name of the executable
+plink should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href='https://rdrr.io/pkg/sys/man/exec.html'>exec</a></code>('plink').</p></td>
@@ -356,6 +478,17 @@ refSamplesFile<span class='op'>=</span><span class='fu'><a href='https://rdrr.io
 refColorsFile<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>indir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>,
 prefixMergedDataset<span class='op'>=</span><span class='st'>"data.HapMapIII"</span>, interactive<span class='op'>=</span><span class='cn'>FALSE</span>,
 run.check_ancestry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='co'># highlight samples</span>
+<span class='va'>highlight_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"keep_individuals"</span>,
+package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fail_ancestry</span> <span class='op'>&lt;-</span> <span class='fu'>check_ancestry</span><span class='op'>(</span>indir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
+refSamplesFile<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>qcdir</span>, <span class='st'>"/HapMap_ID2Pop.txt"</span>,sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>,
+refColorsFile<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>qcdir</span>, <span class='st'>"/HapMap_PopColors.txt"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>,
+prefixMergedDataset<span class='op'>=</span><span class='st'>"data.HapMapIII"</span>, interactive<span class='op'>=</span><span class='cn'>FALSE</span>,
+highlight_samples <span class='op'>=</span> <span class='va'>highlight_samples</span><span class='op'>[</span>,<span class='fl'>2</span><span class='op'>]</span>,
+run.check_ancestry<span class='op'>=</span><span class='cn'>FALSE</span>,
+highlight_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"text"</span>, <span class='st'>"shape"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>

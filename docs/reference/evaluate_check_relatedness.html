@@ -98,13 +98,13 @@ histograms stratified by value of PI_HAT." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -129,21 +129,21 @@ histograms stratified by value of PI_HAT." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -192,6 +192,11 @@ histograms stratified by value of PI_HAT.</p>
   highIBDTh <span class='op'>=</span> <span class='fl'>0.1875</span>,
   imissTh <span class='op'>=</span> <span class='fl'>0.03</span>,
   interactive <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  legend_text_size <span class='op'>=</span> <span class='fl'>5</span>,
+  legend_title_size <span class='op'>=</span> <span class='fl'>7</span>,
+  axis_text_size <span class='op'>=</span> <span class='fl'>5</span>,
+  axis_title_size <span class='op'>=</span> <span class='fl'>7</span>,
+  title_size <span class='op'>=</span> <span class='fl'>9</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -228,6 +233,26 @@ save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
 other_arguments) or pdf(outfile) print(p_IBD) dev.off().</p></td>
     </tr>
     <tr>
+      <th>legend_text_size</th>
+      <td><p>[integer] Size for legend text.</p></td>
+    </tr>
+    <tr>
+      <th>legend_title_size</th>
+      <td><p>[integer] Size for legend title.</p></td>
+    </tr>
+    <tr>
+      <th>axis_text_size</th>
+      <td><p>[integer] Size for axis text.</p></td>
+    </tr>
+    <tr>
+      <th>axis_title_size</th>
+      <td><p>[integer] Size for axis title.</p></td>
+    </tr>
+    <tr>
+      <th>title_size</th>
+      <td><p>[integer] Size for plot title.</p></td>
+    </tr>
+    <tr>
       <th>verbose</th>
       <td><p>[logical] If TRUE, progress info is printed to standard out.</p></td>
     </tr>
@@ -247,10 +272,10 @@ Z2 (P(IBD=2)), PI_HAT (Proportion IBD, i.e. P(IBD=2) + 0.5*P(IBD=1)), PHE
 DST (IBS distance, i.e. (IBS2 + 0.5*IBS1) / (IBS0 + IBS1 + IBS2)), PPC (IBS
 binomial test), RATIO (HETHET : IBS0 SNP ratio (expected value 2)).
 and ii) failIDs containing a [data.frame] with individual IDs [IID] and
-family IDs [FID] of individuals failing the highIBDTh iii) p_IBD, a
+family IDs [FID] of individuals failing the highIBDTh; iii) p_IBD, a
 ggplot2-object 'containing' all pair-wise IBD-estimates as histograms
-stratified by value of PI_HAT, which can be
-shown by print(p_IBD).</p>
+stratified by value of PI_HAT, which can be shown by print(p_IBD and iv)
+plot_data, a data.frame with the data visualised in p_IBD (iii).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Both <code><a href='run_check_relatedness.html'>run_check_relatedness</a></code> and

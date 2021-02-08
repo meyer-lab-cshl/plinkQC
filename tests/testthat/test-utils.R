@@ -170,3 +170,20 @@ test_that('relatednessFilter only returns one fail ID for 4-way relatedness',{
                                  verbose=TRUE)
     expect_true(sum(!oneoffail %in% failIDs$failIDs$IID) == 1)
 })
+
+test_that('checkFiltering fails with missing keep_individuals file', {
+    expect_error(checkFiltering(keep_individuals = "file/to/nowhere"),
+                 "File with individuals to keep")
+})
+test_that('checkFiltering fails with missing remove_individuals file', {
+    expect_error(checkFiltering(remove_individuals = "file/to/nowhere"),
+                 "File with individuals to remove")
+})
+test_that('checkFiltering fails with missing extract_marker file', {
+    expect_error(checkFiltering(extract_marker = "file/to/nowhere"),
+                 "File with markers to extract")
+})
+test_that('checkFiltering fails with missing exclude_marker file', {
+    expect_error(checkFiltering(exclude_marker = "file/to/nowhere"),
+                 "File with markers to exclude")
+})

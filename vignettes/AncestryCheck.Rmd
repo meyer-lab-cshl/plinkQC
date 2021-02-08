@@ -44,7 +44,7 @@ into PLINK format. Vignettes
 ['Processing HapMap III reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html) and 
 ['Processing 1000Genomes  reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/1000Genomes.html),
 show the download and processing of the HapMap phase III and 1000Genomes phase
-III dataset, respectively. In this example, we will use the HammapIII data as
+III dataset, respectively. In this example, we will use the HapmapIII data as
 the reference dataset.
 
 ## Set-up
@@ -74,7 +74,7 @@ filter matching variants.
 
 ### Filter reference and study data for non A-T or G-C SNPs
 We will use an awk script to find A→T and C→G SNPs. As these SNPs are more
-difficult to align and only a subset of SNPs is required for the anlysis, we
+difficult to align and only a subset of SNPs is required for the analysis, we
 will remove them from both the reference and study data set.
 
 ```{bash filter at and gc snps, eval=FALSE}
@@ -104,7 +104,7 @@ mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 
 ### Prune study data
 We will conduct principle component analysis on genetic variants that are
-pruned for variants in linkage disequlibrium (LD) with an $r^2 >0.2$ in a 50kb
+pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
 window. The LD-pruned dataset is generated below, using plink --indep-pairwise
 to compute the LD-variants; additionally exclude range is used to remove genomic
 ranges of known high-LD structure. This file was originally provided by
@@ -143,7 +143,7 @@ For computing the genetic PC, the annotation is not important, however, merging
 the files via PLINK will only work for variants with perfectly
 matching attributes. For simplicity, we update the pruned reference dataset.
 Note, that sex chromosomes are often encoded differently and might make the
-matching more difficult. Again, for simplicty and since not crucial to the final
+matching more difficult. Again, for simplicity and since not crucial to the final
 task, we will ignore XY-encoded sex chromosomes (via `sed -n '/^[XY]/!p'`).
 
 ```{bash chromosome mismatch, eval=FALSE}

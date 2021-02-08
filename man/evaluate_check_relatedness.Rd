@@ -10,6 +10,11 @@ evaluate_check_relatedness(
   highIBDTh = 0.1875,
   imissTh = 0.03,
   interactive = FALSE,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   verbose = FALSE
 )
 }
@@ -33,6 +38,16 @@ available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
 other_arguments) or pdf(outfile) print(p_IBD) dev.off().}
 
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \value{
@@ -48,10 +63,10 @@ Z2 (P(IBD=2)), PI_HAT (Proportion IBD, i.e. P(IBD=2) + 0.5*P(IBD=1)), PHE
 DST (IBS distance, i.e. (IBS2 + 0.5*IBS1) / (IBS0 + IBS1 + IBS2)), PPC (IBS
 binomial test), RATIO (HETHET : IBS0 SNP ratio (expected value 2)).
 and ii) failIDs containing a [data.frame] with individual IDs [IID] and
-family IDs [FID] of individuals failing the highIBDTh iii) p_IBD, a
+family IDs [FID] of individuals failing the highIBDTh; iii) p_IBD, a
 ggplot2-object 'containing' all pair-wise IBD-estimates as histograms
-stratified by value of PI_HAT, which can be
-shown by print(p_IBD).
+stratified by value of PI_HAT, which can be shown by print(p_IBD and iv)
+plot_data, a data.frame with the data visualised in p_IBD (iii).
 }
 \description{
 Evaluates and depicts results from plink --genome on the LD pruned dataset
