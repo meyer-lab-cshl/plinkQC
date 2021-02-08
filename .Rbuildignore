@@ -13,6 +13,8 @@ README\.html
 INDEX\.Rmd
 INDEX\.md
 inst/extdata/createData
+inst/extdata/Genomes1000_sample_info.txt
+inst/extdata/HapMapIII_sample_info.txt
 inst/extdata/plink_log
 _pkgdown.yml
 Check-list-Joss.md
