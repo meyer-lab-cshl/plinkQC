@@ -10,6 +10,10 @@ run_check_sex(
   qcdir = indir,
   verbose = FALSE,
   path2plink = NULL,
+  keep_individuals = NULL,
+  remove_individuals = NULL,
+  exclude_markers = NULL,
+  extract_markers = NULL,
   showPlinkOutput = TRUE
 )
 }
@@ -28,10 +32,38 @@ qcdir=indir.}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
-plink should be accesible as path2plink -h. The full name of the executable
+plink should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
+
+\item{keep_individuals}{[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{remove_individuals}{[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{exclude_markers}{[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{extract_markers}{[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
@@ -49,9 +81,17 @@ Both \code{\link{run_check_sex}} and its evaluation
 indir <- system.file("extdata", package="plinkQC")
 name <- 'data'
 qcdir <- tempdir()
+path2plink <- '/path/to/plink'
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
 \dontrun{
+# simple sexcheck on all individuals in dataset
 run <- run_check_sex(indir=indir, qcdir=qcdir, name=name)
+
+# sexcheck on subset of dataset
+keep_individuals_file <- system.file("extdata", "keep_individuals",
+package="plinkQC")
+run <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
+keep_individuals=keep_individuals_file, path2plink=path2plink)
 }
 }

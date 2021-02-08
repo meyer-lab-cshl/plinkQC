@@ -40,13 +40,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -71,21 +71,21 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -100,13 +100,14 @@
 
       
 
-      </header><script src="AncestryCheck_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="AncestryCheck_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="AncestryCheck_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="AncestryCheck_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Ancestry estimation based on reference samples of known ethnicities</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2021-01-19</h4>
+            <h4 class="date">2021-02-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/AncestryCheck.Rmd"><code>vignettes/AncestryCheck.Rmd</code></a></small>
       <div class="hidden name"><code>AncestryCheck.Rmd</code></div>
@@ -127,7 +128,7 @@
 <div id="download-reference-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#download-reference-data" class="anchor"></a>Download reference data</h2>
-<p>A suitable reference dataset should be downloaded and if necessary, re-formated into PLINK format. Vignettes <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html">‘Processing HapMap III reference data for ancestry estimation’</a> and <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/1000Genomes.html">‘Processing 1000Genomes reference data for ancestry estimation’</a>, show the download and processing of the HapMap phase III and 1000Genomes phase III dataset, respectively. In this example, we will use the HammapIII data as the reference dataset.</p>
+<p>A suitable reference dataset should be downloaded and if necessary, re-formated into PLINK format. Vignettes <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html">‘Processing HapMap III reference data for ancestry estimation’</a> and <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/1000Genomes.html">‘Processing 1000Genomes reference data for ancestry estimation’</a>, show the download and processing of the HapMap phase III and 1000Genomes phase III dataset, respectively. In this example, we will use the HapmapIII data as the reference dataset.</p>
 </div>
 <div id="set-up" class="section level2">
 <h2 class="hasAnchor">
@@ -147,7 +148,7 @@
 <div id="filter-reference-and-study-data-for-non-a-t-or-g-c-snps" class="section level3">
 <h3 class="hasAnchor">
 <a href="#filter-reference-and-study-data-for-non-a-t-or-g-c-snps" class="anchor"></a>Filter reference and study data for non A-T or G-C SNPs</h3>
-<p>We will use an awk script to find A→T and C→G SNPs. As these SNPs are more difficult to align and only a subset of SNPs is required for the anlysis, we will remove them from both the reference and study data set.</p>
+<p>We will use an awk script to find A→T and C→G SNPs. As these SNPs are more difficult to align and only a subset of SNPs is required for the analysis, we will remove them from both the reference and study data set.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> \</span>
 <span id="cb2-3"><a href="#cb2-3"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.bim  <span class="op">&gt;</span> \</span>
@@ -173,7 +174,7 @@
 <div id="prune-study-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#prune-study-data" class="anchor"></a>Prune study data</h3>
-<p>We will conduct principle component analysis on genetic variants that are pruned for variants in linkage disequlibrium (LD) with an <span class="math inline">\(r^2 &gt;0.2\)</span> in a 50kb window. The LD-pruned dataset is generated below, using plink –indep-pairwise to compute the LD-variants; additionally exclude range is used to remove genomic ranges of known high-LD structure. This file was originally provided by <span class="citation">[6]</span> and is available in <code><a href="https://rdrr.io/r/base/file.path.html">file.path(find.package('plinkQC'),'extdata','high-LD-regions.txt')</a></code>.</p>
+<p>We will conduct principle component analysis on genetic variants that are pruned for variants in linkage disequilibrium (LD) with an <span class="math inline">\(r^2 &gt;0.2\)</span> in a 50kb window. The LD-pruned dataset is generated below, using plink –indep-pairwise to compute the LD-variants; additionally exclude range is used to remove genomic ranges of known high-LD structure. This file was originally provided by <span class="citation">[6]</span> and is available in <code><a href="https://rdrr.io/r/base/file.path.html">file.path(find.package('plinkQC'),'extdata','high-LD-regions.txt')</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">plink</span> --bfile  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps \</span>
 <span id="cb3-2"><a href="#cb3-2"></a>      --exclude range  <span class="va">$refdir</span>/<span class="va">$highld</span> \</span>
 <span id="cb3-3"><a href="#cb3-3"></a>      --indep-pairwise 50 5 0.2 \</span>
@@ -199,7 +200,7 @@
 <div id="check-and-correct-chromosome-mismatch" class="section level3">
 <h3 class="hasAnchor">
 <a href="#check-and-correct-chromosome-mismatch" class="anchor"></a>Check and correct chromosome mismatch</h3>
-<p>The following section uses an awk-script to check that the variant IDs of the reference data have the same chromosome ID as the study data. For computing the genetic PC, the annotation is not important, however, merging the files via PLINK will only work for variants with perfectly matching attributes. For simplicity, we update the pruned reference dataset. Note, that sex chromosomes are often encoded differently and might make the matching more difficult. Again, for simplicty and since not crucial to the final task, we will ignore XY-encoded sex chromosomes (via <code>sed -n '/^[XY]/!p'</code>).</p>
+<p>The following section uses an awk-script to check that the variant IDs of the reference data have the same chromosome ID as the study data. For computing the genetic PC, the annotation is not important, however, merging the files via PLINK will only work for variants with perfectly matching attributes. For simplicity, we update the pruned reference dataset. Note, that sex chromosomes are often encoded differently and might make the matching more difficult. Again, for simplicity and since not crucial to the final task, we will ignore XY-encoded sex chromosomes (via <code>sed -n '/^[XY]/!p'</code>).</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$2]=$1; next} \</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="st">    ($2 in a &amp;&amp; a[$2] != $1)  {print a[$2],$2}'</span> \</span>
 <span id="cb5-3"><a href="#cb5-3"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="kw">|</span> <span class="kw">\</span></span>

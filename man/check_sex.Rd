@@ -19,8 +19,23 @@ check_sex(
   fixMixup = FALSE,
   interactive = FALSE,
   verbose = FALSE,
-  label = TRUE,
+  label_fail = TRUE,
+  highlight_samples = NULL,
+  highlight_type = c("text", "label", "color", "shape"),
+  highlight_text_size = 3,
+  highlight_color = "#c51b8a",
+  highlight_shape = 17,
+  highlight_legend = FALSE,
   path2plink = NULL,
+  keep_individuals = NULL,
+  remove_individuals = NULL,
+  exclude_markers = NULL,
+  extract_markers = NULL,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   showPlinkOutput = TRUE
 )
 }
@@ -74,15 +89,80 @@ other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
-\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
-plot.}
+\item{label_fail}{[logical] Set TRUE, to add fail IDs as text labels in
+scatter plot.}
+
+\item{highlight_samples}{[character vector] Vector of sample IIDs to
+highlight in the plot (p_sexcheck); all highlight_samples IIDs have to
+be present in the IIDs of the name.fam file.}
+
+\item{highlight_type}{[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified. Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.}
+
+\item{highlight_text_size}{[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).}
+
+\item{highlight_color}{[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).}
+
+\item{highlight_shape}{[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+\url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}}
+
+\item{highlight_legend}{[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".}
 
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
-plink should be accesible as path2plink -h. The full name of the executable
+plink should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
+
+\item{keep_individuals}{[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{remove_individuals}{[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{exclude_markers}{[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{extract_markers}{[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
@@ -127,7 +207,19 @@ description on the PLINK output format page:
  \dontrun{
 indir <- system.file("extdata", package="plinkQC")
 name <- "data"
+
+# whole dataset
 fail_sex <- check_sex(indir=indir, name=name, run.check_sex=FALSE,
 interactive=FALSE, verbose=FALSE)
+
+# subset of dataset with sample highlighting
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+remove_individuals_file <- system.file("extdata", "remove_individuals",
+package="plinkQC")
+fail_sex <- check_sex(indir=indir, name=name,
+interactive=FALSE, path2plink=path2plink,
+remove_individuals=remove_individuals_file,
+highlight_samples=highlight_samples[,2], highlight_type = c("text", "shape"))
 }
 }

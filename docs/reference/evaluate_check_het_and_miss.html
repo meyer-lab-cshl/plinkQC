@@ -98,13 +98,13 @@ the y-axis." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -129,21 +129,21 @@ the y-axis." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -191,7 +191,18 @@ the y-axis.</p>
   <span class='va'>name</span>,
   imissTh <span class='op'>=</span> <span class='fl'>0.03</span>,
   hetTh <span class='op'>=</span> <span class='fl'>3</span>,
-  label <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  label_fail <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  highlight_samples <span class='op'>=</span> <span class='cn'>NULL</span>,
+  highlight_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"text"</span>, <span class='st'>"label"</span>, <span class='st'>"color"</span>, <span class='st'>"shape"</span><span class='op'>)</span>,
+  highlight_text_size <span class='op'>=</span> <span class='fl'>3</span>,
+  highlight_color <span class='op'>=</span> <span class='st'>"#c51b8a"</span>,
+  highlight_shape <span class='op'>=</span> <span class='fl'>17</span>,
+  legend_text_size <span class='op'>=</span> <span class='fl'>5</span>,
+  legend_title_size <span class='op'>=</span> <span class='fl'>7</span>,
+  axis_text_size <span class='op'>=</span> <span class='fl'>5</span>,
+  axis_title_size <span class='op'>=</span> <span class='fl'>7</span>,
+  title_size <span class='op'>=</span> <span class='fl'>9</span>,
+  highlight_legend <span class='op'>=</span> <span class='cn'>FALSE</span>,
   interactive <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -223,9 +234,68 @@ hetTh*sd(het) will be returned as failing heterozygosity check; has to be
 larger than 0.</p></td>
     </tr>
     <tr>
-      <th>label</th>
-      <td><p>[logical] Set TRUE, to add fail IDs as text labels in scatter
-plot.</p></td>
+      <th>label_fail</th>
+      <td><p>[logical] Set TRUE, to add fail IDs as text labels in
+scatter plot.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_samples</th>
+      <td><p>[character vector] Vector of sample IIDs to
+highlight in the plot (p_het_imiss); all highlight_samples IIDs have to
+be present in the IIDs of the name.fam file.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_type</th>
+      <td><p>[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified.Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_text_size</th>
+      <td><p>[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).</p></td>
+    </tr>
+    <tr>
+      <th>highlight_color</th>
+      <td><p>[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).</p></td>
+    </tr>
+    <tr>
+      <th>highlight_shape</th>
+      <td><p>[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+<a href='https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec'>https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec</a></p></td>
+    </tr>
+    <tr>
+      <th>legend_text_size</th>
+      <td><p>[integer] Size for legend text.</p></td>
+    </tr>
+    <tr>
+      <th>legend_title_size</th>
+      <td><p>[integer] Size for legend title.</p></td>
+    </tr>
+    <tr>
+      <th>axis_text_size</th>
+      <td><p>[integer] Size for axis text.</p></td>
+    </tr>
+    <tr>
+      <th>axis_title_size</th>
+      <td><p>[integer] Size for axis title.</p></td>
+    </tr>
+    <tr>
+      <th>title_size</th>
+      <td><p>[integer] Size for plot title.</p></td>
+    </tr>
+    <tr>
+      <th>highlight_legend</th>
+      <td><p>[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".</p></td>
     </tr>
     <tr>
       <th>interactive</th>
@@ -247,10 +317,11 @@ individuals failing missing genotype check and ii) fail_het dataframe
 containing FID (Family ID), IID (Within-family ID), O(HOM) (Observed number
 of homozygotes), E(HOM) (Expected number of homozygotes), N(NM) (Number of
 non-missing autosomal genotypes), F (Method-of-moments F coefficient
-estimate) of individuals failing  outlying heterozygosity check and iii)
+estimate) of individuals failing  outlying heterozygosity check; iii)
 p_het_imiss, a ggplot2-object 'containing' a scatter plot with the samples'
 missingness rates on x-axis and their heterozygosity rates on the y-axis,
-which can be shown by print(p_het_imiss).</p>
+which can be shown by print(p_het_imiss) and iv) plot_data, a data.frame with
+the data visualised in p_het_imiss (iii).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>All, <code><a href='run_check_heterozygosity.html'>run_check_heterozygosity</a></code>,
@@ -268,6 +339,13 @@ original description on the PLINK output format page:
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>fail_het_miss</span> <span class='op'>&lt;-</span> <span class='fu'>evaluate_check_het_and_miss</span><span class='op'>(</span>qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
 interactive<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='co'>#' # highlight samples</span>
+<span class='va'>highlight_samples</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"keep_individuals"</span>,
+package<span class='op'>=</span><span class='st'>"plinkQC"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fail_het_miss</span> <span class='op'>&lt;-</span> <span class='fu'>evaluate_check_het_and_miss</span><span class='op'>(</span>qcdir<span class='op'>=</span><span class='va'>qcdir</span>, name<span class='op'>=</span><span class='va'>name</span>,
+interactive<span class='op'>=</span><span class='cn'>FALSE</span>, highlight_samples <span class='op'>=</span> <span class='va'>highlight_samples</span><span class='op'>[</span>,<span class='fl'>2</span><span class='op'>]</span>,
+highlight_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"text"</span>, <span class='st'>"color"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>

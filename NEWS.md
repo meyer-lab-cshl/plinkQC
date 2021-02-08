@@ -3,9 +3,20 @@
 * Output all IBD estimates in `run_check_relatedness` not just fail IBD
 estimates [d009da90](https://github.com/meyer-lab-cshl/plinkQC/commit/d009da90434a83cb4867881e3772b518d17dc2dd)
 * Add midp modifier for --hwe and --hardy as recommended on [plink hwe documentation](https://www.cog-genomics.org/plink/1.9/filter#hwe) and discussed in issue [#27](https://github.com/meyer-lab-cshl/plinkQC/issues/27); [43230a6c](https://github.com/meyer-lab-cshl/plinkQC/commit/43230a6ce5f079b46c85b1a7a526213177db1f1b)
+* Provide HapMap and 1000Genomes individual and population identifiers as default
+for ancestry check functions; include optional color mapping for these reference
+populations; raised in [#37](https://github.com/meyer-lab-cshl/plinkQC/issues/37), incorporated in [65cfcba](https://github.com/meyer-lab-cshl/plinkQC/commit/65cfcbaf5b0af3b1d3d4b710a8710331a39e0f6e)
+* for all individual QC functions return data.frame with FID, IID and measure
+used for filtering [#5](https://github.com/meyer-lab-cshl/plinkQC/issues/5)
+incorporated in [295505b](295505bc2d2a6278539e1d078c338bcf3a128338)
+* allow for user-supplied individual and marker filtering in perIndividualQC,
+perMarkerQC and cleanData [#33](https://github.com/meyer-lab-cshl/plinkQC/issues/33)
+* individual highlighting in perIndividualQC plots; several highlight modalities
+(text/label, shape, color) [#38](https://github.com/meyer-lab-cshl/plinkQC/issues/38)
+
 
 ## minor changes
-* Add checks in `cleanData` that can distinguish between miss-sepcified filters and non-failing samples [7432b1ee](https://github.com/meyer-lab-cshl/plinkQC/commit/7432b1ee880ad14c7a078f3a0379f7fdcff1684b); addresses issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
+* Add checks in `cleanData` that can distinguish between miss-specified filters and non-failing samples [7432b1ee](https://github.com/meyer-lab-cshl/plinkQC/commit/7432b1ee880ad14c7a078f3a0379f7fdcff1684b); addresses issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
 * Add checks and tests in `check_snp_missingness`, `check_maf` and `check_hwe` 
 in cases where all samples pass `perIndividualQC`.
 [31ed6f65](https://github.com/meyer-lab-cshl/plinkQC/commit/31ed6f653902857a0a78ae723e786dd84d240b75); related to issue [#31](https://github.com/meyer-lab-cshl/plinkQC/issues/31) 
@@ -13,6 +24,10 @@ in cases where all samples pass `perIndividualQC`.
 for all passing samples and accordingly, no fail samples label in plot.
 [d071a43](https://github.com/meyer-lab-cshl/plinkQC/commit/d071a4341b0d4c40220b42f81c412da4d320b8ec)
 * Update dropbox links and add note to vignette [9bae988](https://github.com/meyer-lab-cshl/plinkQC/commit/9bae9886dc637569698d883654fcf71486b6634e)
+* additional plotting parameters for `evaluate_*` functions, controlling 
+text and title sizes ([b38a348](b38a348da0a4dd60860543b2d53c4de1df058a54),
+[f25b8d0](f25b8d05bc3462228afb26bb1caec8d829bf7fca))
+
 
 # plinkQC 0.3.2
 ## minor changes
@@ -80,7 +95,7 @@ to FID, IID (fixes [#2](https://github.com/meyer-lab-cshl/plinkQC/issues/2)).
 # plinkQC 0.2.0
 ## major changes
 * All system calls to plink are conducted with sys::exec_wait - this should
-solve platform dependent issues, mainly comptatibility with windows.
+solve platform dependent issues, mainly compatibility with windows.
 * Make path construction compatible with windows.
 * path2plink now requires full path to plink executable, no tilde expansion or
 simple pointer to directory supported.

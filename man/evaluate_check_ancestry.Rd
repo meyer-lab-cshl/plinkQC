@@ -10,6 +10,7 @@ evaluate_check_ancestry(
   prefixMergedDataset,
   qcdir = indir,
   europeanTh = 1.5,
+  defaultRefSamples = c("HapMap", "1000Genomes"),
   refSamples = NULL,
   refColors = NULL,
   refSamplesFile = NULL,
@@ -21,7 +22,19 @@ evaluate_check_ancestry(
   studyColor = "#2c7bb6",
   refPopulation = c("CEU", "TSI"),
   legend_labels_per_row = 6,
-  interactive = FALSE
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
+  highlight_samples = NULL,
+  highlight_type = c("text", "label", "color", "shape"),
+  highlight_text_size = 3,
+  highlight_color = "#c51b8a",
+  highlight_shape = 17,
+  highlight_legend = FALSE,
+  interactive = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -45,30 +58,44 @@ considered to be of European descent and samples outside this radius of
 non-European descent. The radius is computed as the maximum Euclidean distance
 of European reference samples to the centre of European reference samples.}
 
+\item{defaultRefSamples}{[character] Option to use pre-downloaded individual
+and population identifiers from either the 1000Genomes or HapMap project.
+If refSamples and refSamplesFile are not provided, the HapMap identifiers (or
+1000Genomes is specified) will be used as default and the function will fail
+if the reference samples in the prefixMergedDataset do not match these
+reference samples. If refColors and refColorsFile are not provided, this also
+sets default colors for the reference populations.}
+
 \item{refSamples}{[data.frame] Dataframe with sample identifiers
 [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
 population identifier [refSamplesPop] corresponding to population IDs
-[refColorsPop] in refColorsfile/refColors. Either refSamples or
-refSamplesFile have to be specified.}
+[refColorsPop] in refColorsfile/refColors. If refSamples and
+refSamplesFile are not specified, defaultRefSamples will be used as
+reference.}
 
 \item{refColors}{[data.frame, optional] Dataframe with population IDs in
 column [refColorsPop] and corresponding colour-code for PCA plot in column
-[refColorsColor]. If not provided and is.null(refColorsFile) default colors
-are used.}
+[refColorsColor].  If refColors and refColorsFile are not specified and
+refSamples and refSamplesFile are not specified, default colors will be
+determined from the defaultRefSamples option. If refColors and refColorsFile
+are not specified and but refSamples or refSamplesFile are given, ggplot
+default colors will be used.}
 
 \item{refSamplesFile}{[character] /path/to/File/with/reference samples. Needs
 columns with sample identifiers [refSamplesIID] corresponding to IIDs in
 prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
 corresponding to population IDs [refColorsPop] in refColorsfile/refColors. If
-both refSamplesFile and refSamples are not NULL, refSamplesFile information
+both refSamplesFile and refSamples are not NULL, defaultRefSamples information
 is used.}
 
 \item{refColorsFile}{[character, optional]
 /path/to/File/with/Population/Colors containing population IDs in column
 [refColorsPop] and corresponding colour-code for PCA plot in column
-[refColorsColor].If not provided and is.null(refColors) default colors for
-are used. If both refColorsFile and refColors are not NULL, refColorsFile
-information is used.}
+[refColorsColor]. If refColors and refColorsFile are not specified and
+refSamples and refSamplesFile are not specified, default colors will be
+determined from the defaultRefSamples option. If refColors and refColorsFile
+are not specified and but refSamples or refSamplesFile are given, ggplot
+default colors will be used.}
 
 \item{refSamplesIID}{[character] Column name of reference sample IDs in
 refSamples/refSamplesFile.}
@@ -89,20 +116,61 @@ is TRUE.}
 reference population. Identifiers have to be corresponding to population IDs
 [refColorsPop] in refColorsfile/refColors.}
 
-\item{legend_labels_per_row}{[integer] Number of population names per row in PCA plot.}
+\item{legend_labels_per_row}{[integer] Number of population names per row in
+PCA plot.}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
+\item{highlight_samples}{[character vector] Vector of sample IIDs to
+highlight in the plot (p_ancestry); all highlight_samples IIDs have to
+be present in the IIDs of the prefixMergedDataset.fam file.}
+
+\item{highlight_type}{[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified.Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.}
+
+\item{highlight_text_size}{[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).}
+
+\item{highlight_color}{[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).}
+
+\item{highlight_shape}{[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+\url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}}
+
+\item{highlight_legend}{[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 other_arguments) or pdf(outfile) print(p_ancestry) dev.off().}
+
+\item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 }
 \value{
 Named [list] with i) fail_ancestry, containing a [data.frame] with
 FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
 'containing' a scatter plot of PC1 versus PC2 colour-coded for samples of the
 reference populations and the study population, which can be shown by
-print(p_ancestry).
+print(p_ancestry) and iii) plot_data, a data.frame with the data
+visualised in p_ancestry (ii).
 }
 \description{
 Evaluates and depicts results of plink --pca (via
@@ -124,14 +192,31 @@ samples of the reference populations and the study population.
 Both \code{\link{run_check_ancestry}} and
 \code{\link{evaluate_check_ancestry}} can simply be invoked by
 \code{\link{check_ancestry}}.
+
+1000 Genomes samples were downloaded from
+\url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3
+samples were downloaded from
+\url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
 }
 \examples{
 \dontrun{
 qcdir <- system.file("extdata", package="plinkQC")
 name <- "data"
+
+# whole dataset
 fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE)
+
+# highlight samples
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
+refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+prefixMergedDataset="data.HapMapIII", interactive=FALSE,
+highlight_samples = highlight_samples[,2],
+highlight_type = c("text", "shape"))
 }
 }

@@ -36,7 +36,8 @@ The following vignette shows the processing steps required to use samples of the
 HapMap study [@HapMap2005][@HapMap2007][@HapMap2010] as a reference dataset. 
 Using this reference, population structure down to large-scale continental
 ancestry can be detected. A step-by-step instruction on how to conduct this
-analysis is described in this [vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+analysis is described in this
+[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
 
 
 # Workflow
@@ -57,7 +58,7 @@ mkdir -r $qcdir/plink_log
 Hapmap phase 3 data (HapMapIII) is available in
 [PLINK text format](https://www.cog-genomics.org/plink/1.9/input#ped) at ncbi.
 In addition, a sample file with information about the individuals' ancestry
-is available and shoud be downloaded as in input for `plinkQC::chec_Ancestry()`.
+is available and should be downloaded as in input for `plinkQC::chec_Ancestry()`.
 The following code chunk downloads and unzips the data.
 ```{bash download, eval=FALSE}
 cd $refdir
@@ -118,7 +119,7 @@ awk '{print "chr" $1, $4 -1, $4, $2 }' $refdir/HapMapIII_NCBI36.bim | \
 ```
 
 [Note: In the official HapMap release, chromosome codes described above, however
-in the orignal download files (link above), no chr24 detected. I will keep this
+in the original download files (link above), no chr24 detected. I will keep this
 line in for completeness, but note, when inspecting file that no chr24/chrY are
 present.]
 
@@ -143,7 +144,7 @@ awk '{print $4, $3}' $refdir/HapMapIII_CGRCh37 > $refdir/HapMapIII_CGRCh37.pos
 ## Update the reference data
 We can now use PLINK to extract the mappable variants from the old build and
 update their position. After these steps, the HapMap III dataset can be used 
-for infering study ancestry as described in the corresponding [vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+for inferring study ancestry as described in the corresponding [Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
 ```{bash update annotation, eval=FALSE}
 plink --bfile $refdir/HapMapIII_NCBI36 \
     --extract $refdir/HapMapIII_CGRCh37.snps \

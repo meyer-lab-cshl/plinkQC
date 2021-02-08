@@ -29,6 +29,8 @@
 #' @inheritParams check_maf
 #' @inheritParams check_hwe
 #' @inheritParams check_snp_missingness
+#' @inheritParams checkFiltering
+#' @param subplot_label_size [integer] Size of the subplot labeling.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -60,14 +62,34 @@
 #' # user system is not known.
 #' # All quality control checks
 #' \dontrun{
+#' # run on all markers and individuals
 #' fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
 #' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+#'
+#' # run on subset of individuals and markers
+#' keep_individuals_file <- system.file("extdata", "keep_individuals",
+#' package="plinkQC")
+#' extract_markers_file <- system.file("extdata", "extract_markers",
+#' package="plinkQC")
+#' fail_markers <- perMarkerQC(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink,
+#' keep_individuals=keep_individuals_file, extract_markers=extract_markers_file)
 #' }
 perMarkerQC <- function(indir, qcdir=indir, name,
                         do.check_snp_missingness=TRUE, lmissTh=0.01,
                         do.check_hwe=TRUE, hweTh=1e-5,
                         do.check_maf=TRUE, macTh=20, mafTh=NULL,
                         interactive=FALSE, verbose=TRUE,
+                        keep_individuals=NULL,
+                        remove_individuals=NULL,
+                        exclude_markers=NULL,
+                        extract_markers=NULL,
+                        legend_text_size = 5,
+                        legend_title_size = 7,
+                        axis_text_size = 5,
+                        axis_title_size = 7,
+                        title_size = 9,
+                        subplot_label_size = 9,
                         path2plink=NULL, showPlinkOutput=TRUE
                         ) {
     if (do.check_snp_missingness) {
@@ -78,8 +100,25 @@ perMarkerQC <- function(indir, qcdir=indir, name,
                                                       lmissTh=lmissTh,
                                                       path2plink=path2plink,
                                                       verbose=verbose,
+                                                      keep_individuals=
+                                                          keep_individuals,
+                                                      remove_individuals=
+                                                          remove_individuals,
+                                                      exclude_markers=
+                                                          exclude_markers,
+                                                      extract_markers=
+                                                          extract_markers,
                                                       showPlinkOutput=
-                                                        showPlinkOutput)
+                                                          showPlinkOutput,
+                                                      legend_text_size =
+                                                          legend_text_size,
+                                                      legend_title_size =
+                                                          legend_title_size,
+                                                      axis_text_size =
+                                                          axis_text_size,
+                                                      axis_title_size =
+                                                          axis_title_size,
+                                                      title_size = title_size,)
         p_missingness <- fail_snp_missingness$p_lmiss
     } else {
         fail_snp_missingness <- NULL
@@ -89,7 +128,16 @@ perMarkerQC <- function(indir, qcdir=indir, name,
         if (verbose) message("Identification of SNPs with deviation from HWE")
         fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, hweTh=hweTh,
                               path2plink=path2plink, verbose=verbose,
-                              showPlinkOutput=showPlinkOutput)
+                              keep_individuals=keep_individuals,
+                              remove_individuals=remove_individuals,
+                              exclude_markers=exclude_markers,
+                              extract_markers=extract_markers,
+                              showPlinkOutput=showPlinkOutput,
+                              legend_text_size = legend_text_size,
+                              legend_title_size =legend_title_size,
+                              axis_text_size = axis_text_size,
+                              axis_title_size = axis_title_size,
+                              title_size = title_size,)
         p_hwe <- fail_hwe$p_hwe
     } else {
         fail_hwe <- NULL
@@ -100,7 +148,16 @@ perMarkerQC <- function(indir, qcdir=indir, name,
         fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, mafTh=mafTh,
                               macTh=macTh,
                               path2plink=path2plink, verbose=verbose,
-                              showPlinkOutput=showPlinkOutput)
+                              keep_individuals=keep_individuals,
+                              remove_individuals=remove_individuals,
+                              exclude_markers=exclude_markers,
+                              extract_markers=extract_markers,
+                              showPlinkOutput=showPlinkOutput,
+                              legend_text_size = legend_text_size,
+                              legend_title_size =legend_title_size,
+                              axis_text_size = axis_text_size,
+                              axis_title_size = axis_title_size,
+                              title_size = title_size,)
         p_maf <- fail_maf$p_maf
     } else {
         fail_maf <- NULL
@@ -118,7 +175,8 @@ perMarkerQC <- function(indir, qcdir=indir, name,
                                      labels=subplotLabels,
                                      rel_heights=c(rep(1,
                                                        length(plots_markerQC)),
-                                                       1.5))
+                                                       1.5),
+                                     label_size = subplot_label_size)
     if(interactive) print(p_markerQC)
     return(list(fail_list=fail_list, p_markerQC=p_markerQC))
 }
@@ -229,10 +287,16 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' save the returned plot object (p_lmiss) via ggplot2::ggsave(p=p_lmiss,
 #' other_arguments) or pdf(outfile) print(p_lmiss) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
 #' and specifically, if TRUE, plink log will be displayed.
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
+#' @param title_size [integer] Size for plot title.
 #' @return Named list with i) fail_missingness containing a [data.frame] with
 #' CHR (Chromosome code), SNP (Variant identifier), CLST (Cluster identifier.
 #' Only present with --within/--family), N_MISS (Number of missing genotype
@@ -250,18 +314,42 @@ overviewPerMarkerQC <- function(results_perMarkerQC, interactive=FALSE) {
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
+#' # run on all individuals and markers
 #' fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, indir=indir,
 #' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+#'
+#' # run on subset of individuals and markers
+#' keep_individuals_file <- system.file("extdata", "keep_individuals",
+#' package="plinkQC")
+#' extract_markers_file <- system.file("extdata", "extract_markers",
+#' package="plinkQC")
+#' fail_snp_missingness <- check_snp_missingness(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink,
+#' keep_individuals=keep_individuals_file, extract_markers=extract_markers_file)
 #' }
 check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                                   interactive=FALSE, path2plink=NULL,
-                                  verbose=FALSE, showPlinkOutput=TRUE) {
+                                  verbose=FALSE, showPlinkOutput=TRUE,
+                                  keep_individuals=NULL,
+                                  remove_individuals=NULL,
+                                  exclude_markers=NULL,
+                                  extract_markers=NULL,
+                                  legend_text_size = 5,
+                                  legend_title_size = 7,
+                                  axis_text_size = 5,
+                                  axis_title_size = 7,
+                                  title_size = 9) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(extract_markers=extract_markers,
+                                  exclude_markers=exclude_markers)
+    removeIDs <- checkRemoveIDs(prefix=prefix,
+                                remove_individuals= remove_individuals,
+                                keep_individuals=keep_individuals)
 
     failids <- paste0(out, ".fail.IDs")
 
@@ -281,7 +369,8 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--missing", "--freq",
                               "--out",
-                              paste(out, suffix, sep="")),
+                              paste(out, suffix, sep=""),
+                              args_filter),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
 
     } else {
@@ -294,19 +383,21 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
-        if(all(allsamples[,2] %in% failsamples[,2])) {
+        removeIDs <- rbind(failsamples, removeIDs)
+        removeIDs <- removeIDs[!duplicated(removeIDs),]
+        if(all(allsamples[,2] %in% removeIDs[,2])) {
             stop("All samples are contained in the", failids, "file ",
-                 "from perIndividualQC, no samples remaining for ",
-                 "check_SNP_missingness")
+                 "from perIndividualQC, no samples remaining for check_maf")
         }
-
+        removeIDs_file <- paste0(out, ".lmiss.remove.IDs")
+        write.table(removeIDs, removeIDs_file,
+                    col.names=FALSE, row.names=FALSE, quote=FALSE)
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--remove",
-                              paste(out, ".fail.IDs", sep=""),
-                              "--missing", "--freq", "--out",
-                              paste(out, suffix, sep="")),
-                    std_out=showPlinkOutput, std_err=showPlinkOutput)
+                       args=c("--bfile", prefix, "--remove", removeIDs_file,
+                              "--freq", "--out", paste(out, suffix, sep=""),
+                              args_filter),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
 
     lmiss <- read.table(paste(out, suffix, ".lmiss",sep=""), as.is=TRUE,
@@ -316,7 +407,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                       as.is=TRUE)
     lmiss_frq <- merge(lmiss, frq)
     lmiss_frq$MAF_bin <- ifelse(lmiss_frq$MAF < 0.05, 1, 0)
-    p_highMAF <- ggplot(dplyr::filter_(lmiss_frq, ~MAF_bin == 0),
+    p_highMAF <- ggplot(dplyr::filter(lmiss_frq, .data$MAF_bin == 0),
                         aes_string('F_MISS'))
     p_highMAF <- p_highMAF + geom_histogram(binwidth = 0.005,
                                             fill="#66a61e") +
@@ -325,8 +416,12 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
         ggtitle("SNPs with MAF > 0.05") +
         geom_vline(xintercept=lmissTh, lty=2, col="red") +
         theme_bw() +
-        theme(title=element_text(size=10))
-    p_lowMAF <- ggplot(dplyr::filter_(lmiss_frq, ~MAF_bin == 1),
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = legend_title_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
+    p_lowMAF <- ggplot(dplyr::filter(lmiss_frq, .data$MAF_bin == 1),
                        aes_string('F_MISS'))
     p_lowMAF <- p_lowMAF + geom_histogram(binwidth = 0.005,
                                           fill="#e6ab02") +
@@ -335,10 +430,14 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
         ggtitle("SNPs with MAF < 0.05") +
         geom_vline(xintercept=lmissTh, lty=2, col="red") +
         theme_bw() +
-        theme(title=element_text(size=10))
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = legend_title_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
     p_histo <- cowplot::plot_grid(p_lowMAF, p_highMAF)
     title <- cowplot::ggdraw() +
-        cowplot::draw_label("Marker missingness rate")
+        cowplot::draw_label("Marker missingness rate", size=title_size)
     p_lmiss <- cowplot::plot_grid(title, p_histo, ncol = 1,
                                 rel_heights = c(0.1, 1))
     if (interactive) {
@@ -380,12 +479,18 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam.
 #' @param hweTh [double] Significance threshold for deviation from HWE.
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
+#' @param title_size [integer] Size for plot title.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_hwe,
 #' other_arguments) or pdf(outfile) print(p_hwe) dev.off().
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -408,17 +513,43 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
+#' # run on all individuals and markers
 #' fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, interactive=FALSE,
 #' verbose=TRUE, path2plink=path2plink)
+#'
+#' # run on subset of individuals and markers
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' extract_markers_file <- system.file("extdata", "extract_markers",
+#' package="plinkQC")
+#' fail_hwe <- check_hwe(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink,
+#' remove_individuals=remove_individuals_file,
+#' extract_markers=extract_markers_file)
 #' }
 check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
-                      path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE) {
+                      path2plink=NULL, verbose=FALSE, showPlinkOutput=TRUE,
+                      keep_individuals=NULL,
+                      remove_individuals=NULL,
+                      exclude_markers=NULL,
+                      extract_markers=NULL,
+                      legend_text_size = 5,
+                      legend_title_size = 7,
+                      axis_text_size = 5,
+                      axis_title_size = 7,
+                      title_size = 9) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(extract_markers=extract_markers,
+                                  exclude_markers=exclude_markers)
+    removeIDs <- checkRemoveIDs(prefix=prefix,
+                                remove_individuals= remove_individuals,
+                                keep_individuals=keep_individuals)
+
 
     failids <- paste0(out, ".fail.IDs")
 
@@ -437,7 +568,8 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
         suffix <- ""
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--hardy midp", "--out",
-                              paste(out, suffix, sep="")),
+                              paste(out, suffix, sep=""),
+                              args_filter),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
         allsamples <- data.table::fread(paste(prefix, ".fam", sep=""),
@@ -448,15 +580,21 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
-        if(all(allsamples[,2] %in% failsamples[,2])) {
+        removeIDs <- rbind(failsamples, removeIDs)
+        removeIDs <- removeIDs[!duplicated(removeIDs),]
+        if(all(allsamples[,2] %in% removeIDs[,2])) {
             stop("All samples are contained in the", failids, "file ",
-                 "from perIndividualQC, no samples remaining for check_hwe")
+                 "from perIndividualQC, no samples remaining for check_maf")
         }
+        removeIDs_file <- paste0(out, ".hwe.remove.IDs")
+        write.table(removeIDs, removeIDs_file,
+                    col.names=FALSE, row.names=FALSE, quote=FALSE)
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--remove", failids,
-                              "--hardy", "--out", paste(out, suffix, sep="")),
-                    std_out=showPlinkOutput, std_err=showPlinkOutput)
+                       args=c("--bfile", prefix, "--remove", removeIDs_file,
+                              "--hardy", "--out", paste(out, suffix, sep=""),
+                              args_filter),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
     hwe <- read.table(paste(out, suffix, ".hwe", sep=""), header=TRUE,
                       as.is=TRUE)
@@ -471,8 +609,12 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
         ggtitle(expression(All~p-value[HWE])) +
         geom_vline(xintercept=-log10(hweTh), lty=2, col="red") +
         theme_bw() +
-        theme(title=element_text(size=10))
-    p_lowP <- ggplot(dplyr::filter_(hwe, ~P_bin == 1),
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = legend_title_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
+    p_lowP <- ggplot(dplyr::filter(hwe, .data$P_bin == 1),
                      aes_string('minus_log10P'))
     p_lowP <- p_lowP + geom_histogram(binwidth = 0.5,
                                             fill="#e6ab02") +
@@ -481,10 +623,15 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
         ggtitle(expression(p-value[HWE]<0.01)) +
         geom_vline(xintercept=-log10(hweTh), lty=2, col="red") +
         theme_bw() +
-        theme(title=element_text(size=10))
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = legend_title_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
     p_histo <- cowplot::plot_grid(p_allP, p_lowP)
     title <- cowplot::ggdraw() +
-        cowplot::draw_label(expression(Distribution~of~-log[10](p-value[HWE])))
+        cowplot::draw_label(expression(Distribution~of~-log[10](p-value[HWE])),
+                            size=title_size)
     p_hwe <- cowplot::plot_grid(title, p_histo, ncol = 1,
                                   rel_heights = c(0.1, 1))
     if (interactive) {
@@ -527,7 +674,13 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_hwe) via ggplot2::ggsave(p=p_maf,
 #' other_arguments) or pdf(outfile) print(p_maf) dev.off().
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
+#' @param title_size [integer] Size for plot title.
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
@@ -547,18 +700,42 @@ check_hwe <- function(indir, name, qcdir=indir, hweTh=1e-5, interactive=FALSE,
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
+#' # run on all individuals and markers
 #' fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, macTh=15,
 #' interactive=FALSE, verbose=TRUE, path2plink=path2plink)
+#'
+#' # run on subset of individuals and markers
+#' keep_individuals_file <- system.file("extdata", "keep_individuals",
+#' package="plinkQC")
+#' exclude_markers_file <- system.file("extdata", "exclude_markers",
+#' package="plinkQC")
+#' fail_maf <- check_maf(qcdir=qcdir, indir=indir,
+#' name=name, interactive=FALSE, verbose=TRUE, path2plink=path2plink,
+#' keep_individuals=keep_individuals_file, exclude_markers=exclude_markers_file)
 #' }
 check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                       verbose=FALSE, interactive=FALSE, path2plink=NULL,
-                      showPlinkOutput=TRUE) {
+                      showPlinkOutput=TRUE,
+                      keep_individuals=NULL,
+                      remove_individuals=NULL,
+                      exclude_markers=NULL,
+                      extract_markers=NULL,
+                      legend_text_size = 5,
+                      legend_title_size = 7,
+                      axis_text_size = 5,
+                      axis_title_size = 7,
+                      title_size = 9) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
 
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
+    args_filter <- checkFiltering(extract_markers=extract_markers,
+                                  exclude_markers=exclude_markers)
+    removeIDs <- checkRemoveIDs(prefix=prefix,
+                                remove_individuals= remove_individuals,
+                                keep_individuals=keep_individuals)
 
     failids <- paste0(out, ".fail.IDs")
 
@@ -577,7 +754,8 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
         suffix <- ""
         sys::exec_wait(path2plink,
                        args=c("--bfile", prefix, "--freq", "--out",
-                              paste(out, suffix, sep="")),
+                              paste(out, suffix, sep=""),
+                              args_filter),
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
         fail_samples <- 0
     } else {
@@ -589,14 +767,20 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
                                           data.table=FALSE,
                                           stringsAsFactors=FALSE,
                                           header=FALSE)
-        if(all(allsamples[,2] %in% failsamples[,2])) {
+        removeIDs <- rbind(failsamples, removeIDs)
+        removeIDs <- removeIDs[!duplicated(removeIDs),]
+        if(all(allsamples[,2] %in% removeIDs[,2])) {
             stop("All samples are contained in the", failids, "file ",
                  "from perIndividualQC, no samples remaining for check_maf")
         }
+        removeIDs_file <- paste0(out, ".maf.remove.IDs")
+        write.table(removeIDs, removeIDs_file,
+                    col.names=FALSE, row.names=FALSE, quote=FALSE)
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--remove", failids,
-                              "--freq", "--out", paste(out, suffix, sep="")),
+                       args=c("--bfile", prefix, "--remove", removeIDs_file,
+                              "--freq", "--out", paste(out, suffix, sep=""),
+                              args_filter),
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
         fail_samples <-  R.utils::countLines(paste(out, ".fail.IDs",
                                                sep=""))
@@ -637,7 +821,11 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
         ggtitle("Minor allele frequency distribution") +
         geom_vline(xintercept=mafTh, lty=2, col="red") +
         theme_bw() +
-        theme(title=element_text(size=10))
+        theme(legend.text = element_text(size = legend_text_size),
+              legend.title = element_text(size = legend_title_size),
+              title = element_text(size = title_size),
+              axis.text = element_text(size = axis_text_size),
+              axis.title = element_text(size = axis_title_size))
     if (interactive) {
         print(p_maf)
     }

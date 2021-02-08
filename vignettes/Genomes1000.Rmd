@@ -36,7 +36,8 @@ The following vignette shows the processing steps required to use samples of the
 1000 Genomes study [@a1000Genomes2015],[@b1000Genomes2015] as a reference
 dataset. Using the 1000 Genomes reference, population structure down to
 large-scale continental ancestry can be detected. A step-by-step instruction on
-how to conduct this ancestry analysis is described in this [vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+how to conduct this ancestry analysis is described in this
+[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
 
 
 # Workflow
@@ -64,7 +65,7 @@ corresponds to v1.9, whereas `plink2` corresponds to v2.
 1000 Genomes phase III (1000GenomesIII) is available in
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) at https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3.
 In addition, a sample file with information about the individuals' ancestry
-is available and shoud be downloaded as in input for `plinkQC::check_ancestry()`.
+is available and should be downloaded as in input for `plinkQC::check_ancestry()`.
 The following code chunk downloads and decompresses the data.
 The genome build of
 these files is the same as the original release of the 1000GenomesIII, namely
@@ -111,4 +112,10 @@ plink2 --pfile $refdir/all_phase3 vzs\
 mv $refdir/all_phase3.log $refdir/log
 ```
 
+ 
+After these steps, the 1000 Genomes dataset can be used 
+for inferring study ancestry as described in the corresponding
+[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+
 # References
+

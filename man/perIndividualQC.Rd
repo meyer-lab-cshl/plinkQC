@@ -35,6 +35,7 @@ perIndividualQC(
   do.evaluate_check_ancestry = TRUE,
   prefixMergedDataset,
   europeanTh = 1.5,
+  defaultRefSamples = c("HapMap", "1000Genomes"),
   refSamples = NULL,
   refColors = NULL,
   refSamplesFile = NULL,
@@ -44,9 +45,25 @@ perIndividualQC(
   refColorsColor = "Color",
   refColorsPop = "Pop",
   studyColor = "#2c7bb6",
-  label = TRUE,
+  label_fail = TRUE,
+  highlight_samples = NULL,
+  highlight_type = c("text", "label", "color", "shape"),
+  highlight_text_size = 3,
+  highlight_color = "#c51b8a",
+  highlight_shape = 17,
+  highlight_legend = FALSE,
   interactive = FALSE,
   verbose = TRUE,
+  keep_individuals = NULL,
+  remove_individuals = NULL,
+  exclude_markers = NULL,
+  extract_markers = NULL,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  subplot_label_size = 9,
+  title_size = 9,
   path2plink = NULL,
   showPlinkOutput = TRUE
 )
@@ -170,6 +187,14 @@ non-European descent. The radius is computed as the maximum Euclidean
 distance of European reference samples to the centre of European reference
 samples.}
 
+\item{defaultRefSamples}{[character] Option to use pre-downloaded individual
+and population identifiers from either the 1000Genomes or HapMap project.
+If refSamples and refSamplesFile are not provided, the HapMap identifiers (or
+1000Genomes is specified) will be used as default and the function will fail
+if the reference samples in the prefixMergedDataset do not match these
+reference samples. If refColors and refColorsFile are not provided, this also
+sets default colors for the reference populations.}
+
 \item{refSamples}{[data.frame] Dataframe with sample identifiers
 [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
 population identifier [refSamplesPop] corresponding to population IDs
@@ -206,8 +231,35 @@ IDs in refColors/refColorsFile.}
 
 \item{studyColor}{[character] Colour to be used for study population.}
 
-\item{label}{[logical] Set TRUE, to add fail IDs as text labels in scatter
-plot.}
+\item{label_fail}{[logical] Set TRUE, to add fail IDs as text labels in
+scatter plot.}
+
+\item{highlight_samples}{[character vector] Vector of sample IIDs to
+highlight in the plot (p_sexcheck); all highlight_samples IIDs have to
+be present in the IIDs of the name.fam file.}
+
+\item{highlight_type}{[character]  Type of sample highlight, labeling
+by IID ("text"/"label") and/or highlighting data points in different "color"
+and/or "shape". "text" and "label" use ggrepel for minimal
+overlap of text labels ("text) or label boxes ("label").  Only one of "text"
+and "label" can be specified. Text/Label size can be specified with
+highlight_text_size, highlight color with highlight_color,
+or highlight shape with highlight_shape.}
+
+\item{highlight_text_size}{[integer] Text/Label size for samples specified to
+be highlighted (highlight_samples) by "text" or "label" (highlight_type).}
+
+\item{highlight_color}{[character] Color for samples specified to
+be highlighted (highlight_samples) by "color" (highlight_type).}
+
+\item{highlight_shape}{[integer] Shape for samples specified to
+be highlighted (highlight_samples) by "shape" (highlight_type). Possible
+shapes and their encoding can be found at:
+\url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}}
+
+\item{highlight_legend}{[logical] Should a separate legend for the
+highlighted samples be provided; only relevant for highlight_type == "color"
+or highlight_type == "shape".}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -227,9 +279,49 @@ TRUE).}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
+\item{keep_individuals}{[character] Path to file with individuals to be
+retained in the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples not listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{remove_individuals}{[character] Path to file with individuals to be
+removed from the analysis. The file has to be a space/tab-delimited text file
+with family IDs in the first column and within-family IDs in the second
+column. All samples listed in this file will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
+Default: NULL, i.e. no filtering on individuals.}
+
+\item{exclude_markers}{[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{extract_markers}{[character] Path to file with makers to be
+included in the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All unlisted variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{subplot_label_size}{[integer] Size of the subplot labeling.}
+
+\item{title_size}{[integer] Size for plot title.}
+
 \item{path2plink}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/1.9/}) i.e.
-plink should be accesible as path2plink -h. The full name of the executable
+plink should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
@@ -273,6 +365,7 @@ qcdir <- tempdir()
 name <- "data"
 # All quality control checks
 \dontrun{
+# whole dataset
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
@@ -284,5 +377,20 @@ do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
 fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
 interactive=FALSE, verbose=FALSE)
+
+# subset of dataset with sample highlighting
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+remove_individuals_file <- system.file("extdata", "remove_individuals",
+package="plinkQC")
+individual_qc <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
+refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
+do.run_check_ancestry=FALSE, do.evaluate_check_ancestry=TRUE,
+path2plink=path2plink,
+remove_individuals=remove_individuals_file,
+highlight_samples=highlight_samples[,2],
+highlight_type = c("text", "color"), highlight_color="goldenrod")
 }
 }
