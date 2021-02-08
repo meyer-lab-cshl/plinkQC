@@ -173,12 +173,15 @@ verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
 filterRelated=TRUE)
 
 # Run qc on subset of samples and markers in the dataset
-## Run individual QC checks
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+remove_individuals_file <- system.file("extdata", "remove_individuals",
+package="plinkQC")
+
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
-refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
-refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
-prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
-path2plink=path2plink)
+dont.check_ancestry = TRUE, interactive=FALSE, verbose=FALSE,
+highlight_samples = highlight_samples[,2], highlight_type = "label",
+remove_individuals = remove_individuals_file, path2plink=path2plink)
 
 ## Run marker QC checks
 fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
@@ -187,6 +190,6 @@ path2plink=path2plink)
 ## Create new dataset of individuals and markers passing QC
 ids_all <- cleanData(indir=indir, qcdir=qcdir, name=name, macTh=15,
 verbose=TRUE, path2plink=path2plink, filterAncestry=FALSE,
-filterRelated=TRUE)
+remove_individuals = remove_individuals_file)
 }
 }

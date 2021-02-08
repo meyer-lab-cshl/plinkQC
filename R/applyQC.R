@@ -140,37 +140,15 @@ cleanData <- function(indir, name, qcdir=indir,
     }
     checkFormat(prefix)
     path2plink <- checkPlink(path2plink)
-    args_filter <- checkFiltering( extract_markers, exclude_markers)
-    removeIDs <- NULL
+    args_filter <- checkFiltering(extract_markers=extract_markers,
+                                  exclude_markers=exclude_markers)
+    removeIDs <- checkRemoveIDs(prefix=prefix,
+                                remove_individuals=remove_individuals,
+                                keep_individuals=keep_individuals)
     allIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
-                                 data.table=FALSE, stringsAsFactors=FALSE,
-                                 header=FALSE)
+                                data.table=FALSE, stringsAsFactors=FALSE,
+                                header=FALSE)
     allIDs <- allIDs[,1:2]
-
-    if (!is.null(remove_individuals)) {
-        if (!file.exists(remove_individuals)) {
-            stop("File with individuals to remove from analysis does not exist: ",
-                 remove_individuals)
-        }
-        removeIDs <- data.table::fread(remove_individuals, data.table=FALSE,
-                                       stringsAsFactors=FALSE,
-                                       header=FALSE)
-    }
-    if (!is.null(keep_individuals)) {
-        if (!file.exists(keep_individuals)) {
-            stop("File with individuals to keep in analysis does not exist: ",
-                 keep_individuals)
-        }
-        pre_keepIDs <- data.table::fread(keep_individuals, data.table=FALSE,
-                                         stringsAsFactors=FALSE,
-                                         header=FALSE)
-        if(ncol(pre_keepIDs) == 2) {
-            stop("File keep_individual is not in the right format; should be ",
-                 "two columns separated by space/tab.")
-        }
-        removeIDs <- rbind(removeIDs,
-                           allIDs[!allIDs[,2] %in% pre_keepIDs[,2],])
-    }
 
     if (any(sampleFilter)) {
         if (filterRelated) {
