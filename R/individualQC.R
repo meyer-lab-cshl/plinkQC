@@ -2312,10 +2312,22 @@ run_check_ancestry <- function(indir, prefixMergedDataset,
 #' \dontrun{
 #' qcdir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
+#'
+#' # whole dataset
 #' fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE)
+#'
+#' # highlight samples
+#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+#' package="plinkQC"))
+#' fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
+#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+#' prefixMergedDataset="data.HapMapIII", interactive=FALSE,
+#' highlight_samples = highlight_samples[,2],
+#' highlight_type = c("text", "shape"))
 #' }
 
 evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
