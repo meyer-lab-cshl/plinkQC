@@ -540,7 +540,6 @@ checkFiltering <- function(keep_individuals=NULL,
 #' Default: NULL, i.e. no filtering on individuals.
 #' @return data.frame containing family (FID) and individual (IID) IDs of
 #' individuals to be removed from analysis.
-#' @export
 checkRemoveIDs <- function(prefix, remove_individuals=NULL, keep_individuals) {
     removeIDs <- NULL
     allIDs <- data.table::fread(paste(prefix, ".fam", sep=""),
