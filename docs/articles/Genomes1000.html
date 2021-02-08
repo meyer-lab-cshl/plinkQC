@@ -40,13 +40,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
+    <span class="fa fa-file"></span>
      
     documentation
      
@@ -71,21 +71,21 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fa fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
+    <span class="fa fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC">
+    <span class="fa fa-github fa-lg"></span>
      
     github
   </a>
@@ -100,13 +100,14 @@
 
       
 
-      </header><script src="Genomes1000_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="Genomes1000_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="Genomes1000_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="Genomes1000_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Processing 1000 Genomes reference data for ancestry estimation</h1>
                         <h4 class="author">Hannah Meyer</h4>
             
-            <h4 class="date">2021-01-19</h4>
+            <h4 class="date">2021-02-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/Genomes1000.Rmd"><code>vignettes/Genomes1000.Rmd</code></a></small>
       <div class="hidden name"><code>Genomes1000.Rmd</code></div>
@@ -119,7 +120,7 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>Genotype quality control for genetic association studies often includes the need for selecting samples of the same ethnic background. To identify individuals of divergent ancestry based on genotypes, the genotypes of the study population can be combined with genotypes of a reference dataset consisting of individuals from known ethnicities. Principal component analysis (PCA) on this combined genotype panel can then be used to detect population structure down to the level of the reference dataset.</p>
-<p>The following vignette shows the processing steps required to use samples of the 1000 Genomes study <span class="citation">[1]</span>,<span class="citation">[2]</span> as a reference dataset. Using the 1000 Genomes reference, population structure down to large-scale continental ancestry can be detected. A step-by-step instruction on how to conduct this ancestry analysis is described in this <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">vignette</a>.</p>
+<p>The following vignette shows the processing steps required to use samples of the 1000 Genomes study <span class="citation">[1]</span>,<span class="citation">[2]</span> as a reference dataset. Using the 1000 Genomes reference, population structure down to large-scale continental ancestry can be detected. A step-by-step instruction on how to conduct this ancestry analysis is described in this <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry estimation vignette</a>.</p>
 </div>
 <div id="workflow" class="section level1">
 <h1 class="hasAnchor">
@@ -139,7 +140,7 @@
 <div id="download-and-decompress-1000-genomes-phase-3-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#download-and-decompress-1000-genomes-phase-3-data" class="anchor"></a>Download and decompress 1000 Genomes phase 3 data</h2>
-<p>1000 Genomes phase III (1000GenomesIII) is available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a> at <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>. In addition, a sample file with information about the individuals’ ancestry is available and shoud be downloaded as in input for <code><a href="../reference/check_ancestry.html">plinkQC::check_ancestry()</a></code>. The following code chunk downloads and decompresses the data. The genome build of these files is the same as the original release of the 1000GenomesIII, namely CGRCh37.</p>
+<p>1000 Genomes phase III (1000GenomesIII) is available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a> at <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>. In addition, a sample file with information about the individuals’ ancestry is available and should be downloaded as in input for <code><a href="../reference/check_ancestry.html">plinkQC::check_ancestry()</a></code>. The following code chunk downloads and decompresses the data. The genome build of these files is the same as the original release of the 1000GenomesIII, namely CGRCh37.</p>
 <p>NB: CGRCh38 positions in vcf format can be found <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/">here</a>. The remainder of this vignette will however look at the data processing required for the 1000GenomesIII available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a>.</p>
 <p>NB: the links to the files below are the three boldfaced links on this page: <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>. The dropbox links have been updated in the past, which means the links below where outdated. Please refer to the original site and open an issue on github if you notice a change. Thank you!</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="bu">cd</span> <span class="va">$refdir</span></span>
@@ -167,6 +168,7 @@
 <span id="cb3-3"><a href="#cb3-3"></a>      <span class="ex">--make-bed</span> \</span>
 <span id="cb3-4"><a href="#cb3-4"></a>      --out <span class="va">$refdir</span>/all_phase3</span>
 <span id="cb3-5"><a href="#cb3-5"></a><span class="fu">mv</span> <span class="va">$refdir</span>/all_phase3.log <span class="va">$refdir</span>/log</span></code></pre></div>
+<p>After these steps, the 1000 Genomes dataset can be used for inferring study ancestry as described in the corresponding <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry estimation vignette</a>.</p>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
