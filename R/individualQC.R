@@ -103,6 +103,7 @@
 #' name <- "data"
 #' # All quality control checks
 #' \dontrun{
+#' # whole dataset
 #' fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
@@ -114,6 +115,21 @@
 #' fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 #' dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
 #' interactive=FALSE, verbose=FALSE)
+#'
+#' # subset of dataset with sample highlighting
+#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+#' package="plinkQC"))
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' individual_qc <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
+#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+#' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
+#' do.run_check_ancestry=FALSE, do.evaluate_check_ancestry=TRUE,
+#' path2plink=path2plink,
+#' remove_individuals=remove_individuals_file,
+#' highlight_samples=highlight_samples[,2],
+#' highlight_type = c("text", "color"), highlight_color="goldenrod")
 #' }
 perIndividualQC <- function(indir, name, qcdir=indir,
                             dont.check_sex=FALSE,
@@ -673,8 +689,20 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
 #'  \dontrun{
 #' indir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
+#'
+#' # whole dataset
 #' fail_sex <- check_sex(indir=indir, name=name, run.check_sex=FALSE,
 #' interactive=FALSE, verbose=FALSE)
+#'
+#' # subset of dataset with sample highlighting
+#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+#' package="plinkQC"))
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' fail_sex <- check_sex(indir=indir, name=name,
+#' interactive=FALSE, path2plink=path2plink,
+#' remove_individuals=remove_individuals_file,
+#' highlight_samples=highlight_samples[,2], highlight_type = c("text", "shape"))
 #' }
 check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                       run.check_sex=TRUE,
@@ -816,8 +844,21 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #'  \dontrun{
 #' indir <- system.file("extdata", package="plinkQC")
 #' name <- "data"
+#' path2plink <- "path/to/plink"
+#'
+#' # whole dataset
 #' fail_het_miss <- check_het_and_miss(indir=indir, name=name,
-#' run.check_het_and_miss=FALSE, interactive=FALSE)
+#' interactive=FALSE,path2plink=path2plink)
+#'
+#' # subset of dataset with sample highlighting
+#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+#' package="plinkQC"))
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' fail_het_miss <- check_het_and_miss(indir=indir, name=name,
+#' interactive=FALSE,path2plink=path2plink,
+#' remove_individuals=remove_individuals_file,
+#' highlight_samples=highlight_samples[,2], highlight_type = c("text", "shape"))
 #' }
 check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                run.check_het_and_miss=TRUE,
@@ -946,8 +987,17 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' \dontrun{
 #' indir <- system.file("extdata", package="plinkQC")
 #' name <- 'data'
+#' path2plink <- "path/to/plink"
+#'
+#' # whole dataset
 #' relatednessQC <- check_relatedness(indir=indir, name=name, interactive=FALSE,
-#' run.check_relatedness=FALSE)
+#' run.check_relatedness=FALSE, path2plink=path2plink)
+#'
+#' # subset of dataset
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' fail_relatedness <- check_relatedness(indir=qcdir, name=name,
+#' remove_individuals=remove_individuals_file, path2plink=path2plink)
 #' }
 check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                               genomebuild='hg19', imissTh=0.03,
@@ -1073,6 +1123,17 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
 #' refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE,
 #' run.check_ancestry=FALSE)
+#'
+#' # highlight samples
+#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+#' package="plinkQC"))
+#' fail_ancestry <- check_ancestry(indir=qcdir, name=name,
+#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
+#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
+#' prefixMergedDataset="data.HapMapIII", interactive=FALSE,
+#' highlight_samples = highlight_samples[,2],
+#' run.check_ancestry=FALSE,
+#' highlight_type = c("text", "shape"))
 #' }
 
 check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
@@ -1299,6 +1360,16 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' \dontrun{
 #' fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
 #' verbose=FALSE, path2plink=path2plink)
+#'
+#' # highlight samples
+#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+#' package="plinkQC"))
+#' fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
+#' verbose=FALSE, path2plink=path2plink,
+#' highlight_samples = highlight_samples[,2],
+#' highlight_type = c("label", "color"), highlight_color = "darkgreen")
+#' }
+#'
 #' }
 evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                femaleTh=0.2, externalSex=NULL,
@@ -1517,7 +1588,6 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
         }
     }
     p_sexcheck <- p_sexcheck + theme_bw()
-
 
     if (interactive) print(p_sexcheck)
     return(list(fail_sex=fail_sex, mixup=mixup_geno_pheno,
@@ -1742,6 +1812,13 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' \dontrun{
 #' fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
 #' interactive=FALSE)
+#'
+#' #' # highlight samples
+#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+#' package="plinkQC"))
+#' fail_het_miss <- evaluate_check_het_and_miss(qcdir=qcdir, name=name,
+#' interactive=FALSE, highlight_samples = highlight_samples[,2],
+#' highlight_type = c("text", "color"))
 #' }
 evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                                         hetTh=3, label_fail=TRUE,
