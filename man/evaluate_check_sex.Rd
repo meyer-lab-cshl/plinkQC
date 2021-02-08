@@ -195,3 +195,20 @@ For details on the output data.frame fail_sex, check the original
 description on the PLINK output format page:
 \url{https://www.cog-genomics.org/plink/1.9/formats#sexcheck}.
 }
+\examples{
+qcdir <- system.file("extdata", package="plinkQC")
+name <- "data"
+path2plink <- '/path/to/plink'
+\dontrun{
+fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
+verbose=FALSE, path2plink=path2plink)
+
+# highlight samples
+highlight_samples <- read.table(system.file("extdata", "keep_individuals",
+package="plinkQC"))
+fail_sex <- evaluate_check_sex(qcdir=qcdir, name=name, interactive=FALSE,
+verbose=FALSE, path2plink=path2plink,
+highlight_samples = highlight_samples[,2],
+highlight_type = c("label", "color"), highlight_color = "darkgreen")
+}
+}

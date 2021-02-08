@@ -1455,8 +1455,6 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' highlight_samples = highlight_samples[,2],
 #' highlight_type = c("label", "color"), highlight_color = "darkgreen")
 #' }
-#'
-#' }
 evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                femaleTh=0.2, externalSex=NULL,
                                fixMixup=FALSE, indir=qcdir,
