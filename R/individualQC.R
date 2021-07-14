@@ -148,6 +148,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             do.evaluate_check_relatedness=TRUE,
                             highIBDTh=0.1875,
                             mafThRelatedness=0.1,
+                            filter_high_ldregion=TRUE,
+                            high_ldregion_file=NULL,
                             genomebuild='hg19',
                             dont.check_ancestry=FALSE,
                             do.run_check_ancestry=TRUE,
@@ -327,6 +329,9 @@ perIndividualQC <- function(indir, name, qcdir=indir,
             run <- run_check_relatedness(qcdir=qcdir, indir=indir, name=name,
                                          path2plink=path2plink,
                                          mafThRelatedness=mafThRelatedness,
+                                         filter_high_ldregion=
+                                             filter_high_ldregion,
+                                         high_ldregion_file=high_ldregion_file,
                                          genomebuild=genomebuild,
                                          showPlinkOutput=showPlinkOutput,
                                          keep_individuals=keep_individuals,
@@ -1064,6 +1069,8 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' remove_individuals=remove_individuals_file, path2plink=path2plink)
 #' }
 check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
+                              filter_high_ldregion=TRUE,
+                              high_ldregion_file=NULL,
                               genomebuild='hg19', imissTh=0.03,
                               run.check_relatedness=TRUE,
                               interactive=FALSE, verbose=FALSE,
@@ -1084,6 +1091,7 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                                      mafThRelatedness=mafThRelatedness,
                                      path2plink=path2plink,
                                      highIBDTh=highIBDTh,
+                                     genomebuild=genomebuild,
                                      keep_individuals=keep_individuals,
                                      remove_individuals=remove_individuals,
                                      exclude_markers=exclude_markers,
@@ -2121,6 +2129,20 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' threshold will be recorded.
 #' @param mafThRelatedness [double] Threshold of minor allele frequency filter
 #' for selecting variants for IBD estimation.
+#' @param filter_high_ldregion [logical] Should high LD regions be filtered
+#'   before IBD estimation; carried out per default with high LD regions for
+#'   hg19 provided as default via \code{genomebuild}. For alternative genome
+#'   builds not provided or non-human data, high LD regions files can be
+#'   provided via \code{high_ldregion_file}.
+#' @param high_ldregion_file [character] Path to file with high LD regions used
+#' for filtering before IBD estimation if \code{filter_high_ldregion} == TRUE,
+#' otherwise ignored; for human genome data, high LD region files are provided
+#' and can simply be chosen via \code{genomebuild}. Files have to be
+#' space-delimited, no column names with the following columns: chromosome,
+#' region-start, region-end, region number. Chromosomes are specified without
+#' 'chr' prefix. For instance:
+#' 1 48000000 52000000 1
+#' 2 86000000 100500000 2
 #' @param genomebuild [character] Name of the genome build of the PLINK file
 #' annotations, ie mappings in the name.bim file. Will be used to remove
 #' high-LD regions based on the coordinates of the respective build. Options
@@ -2162,7 +2184,10 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
 #' }
 run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
                                   mafThRelatedness=0.1,
-                                  path2plink=NULL, genomebuild='hg19',
+                                  path2plink=NULL,
+                                  filter_high_ldregion=TRUE,
+                                  high_ldregion_file=NULL,
+                                  genomebuild='hg19',
                                   showPlinkOutput=TRUE,
                                   keep_individuals=NULL,
                                   remove_individuals=NULL,
@@ -2177,31 +2202,64 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
     path2plink <- checkPlink(path2plink)
     args_filter <- checkFiltering(keep_individuals, remove_individuals,
                                   extract_markers, exclude_markers)
-
-    if (tolower(genomebuild) == 'hg18' || tolower(genomebuild) == 'NCBI36') {
-        highld <- system.file("extdata", 'high-LD-regions-hg18-NCBI36.txt',
-                              package="plinkQC")
-    } else if (tolower(genomebuild) == 'hg19' ||
-               tolower(genomebuild) == 'grch37') {
-        highld <- system.file("extdata", 'high-LD-regions-hg19-GRCh37.txt',
-                              package="plinkQC")
-    } else if (tolower(genomebuild) == 'hg38' ||
-               tolower(genomebuild) == 'grch38') {
-        highld <- system.file("extdata", 'high-LD-regions-hg38-GRCh38.txt',
-                              package="plinkQC")
+    if (filter_high_ldregion) {
+        if (!is.null(high_ldregion_file)) {
+            if (!file.exists(high_ldregion_file)) {
+                stop("high_ldregion_file (", high_ldregion_file ,
+                     ") cannot be read")
+            }
+            highld <- data.table::fread(high_ldregion_file, sep=" ",
+                                        header=FALSE, data.table=FALSE)
+            if(ncol(highld) != 4) {
+                stop("high_ldregion_file (", high_ldregion_file ,
+                    ") is incorrectly formated: ",
+                    "contains more/less than 4 columns")
+            }
+            if(any(grepl("chr", highld[,1]))) {
+                stop("high_ldregion_file (", high_ldregion_file ,
+                     ") is incorrectly formated: ",
+                     "chromosome specification in first column",
+                     "cannot contain 'chr'")
+            }
+            if (verbose) message(paste("Using", high_ldregion_file, "coordinates for pruning of",
+                                       "high-ld regions"))
+        } else {
+            if (tolower(genomebuild) == 'hg18' || tolower(genomebuild) == 'NCBI36') {
+                high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg18-NCBI36.txt',
+                                      package="plinkQC")
+            } else if (tolower(genomebuild) == 'hg19' ||
+                       tolower(genomebuild) == 'grch37') {
+                high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg19-GRCh37.txt',
+                                      package="plinkQC")
+            } else if (tolower(genomebuild) == 'hg38' ||
+                       tolower(genomebuild) == 'grch38') {
+                high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg38-GRCh38.txt',
+                                      package="plinkQC")
+            } else {
+                stop(genomebuild, "is not a known/provided human genome build.",
+                     "Options are: hg18, hg19, and hg38")
+            }
+            if (verbose) message(paste("Use", genomebuild, "coordinates for pruning of",
+                                       "high-ld regions"))
+        }
+        if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix,
+                              "--exclude", "range", high_ldregion_file,
+                              "--indep-pairwise", 50, 5, 0.2,
+                              "--out", out,
+                              args_filter),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
     } else {
-        stop(genomebuild, "is not a known/provided human genome build.",
-             "Options are: hg18, hg19, and hg38")
+        if (verbose) message("No pruning of high-ld regions")
+        if (verbose) message(paste("Prune", prefix,
+                                   "for relatedness estimation"))
+        sys::exec_wait(path2plink,
+                       args=c("--bfile", prefix,
+                              "--indep-pairwise", 50, 5, 0.2, "--out", out,
+                              args_filter),
+                       std_out=showPlinkOutput, std_err=showPlinkOutput)
     }
-
-    if (verbose) message(paste("Use", genomebuild, "coordinates for pruning of",
-                               "high-ld regions"))
-    if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
-    sys::exec_wait(path2plink,
-                   args=c("--bfile", prefix, "--exclude", "range", highld,
-                          "--indep-pairwise", 50, 5, 0.2, "--out", out,
-                          args_filter),
-                   std_out=showPlinkOutput, std_err=showPlinkOutput)
 
     if (verbose) message("Run check_relatedness via plink --genome")
     if (!is.null(mafThRelatedness)) {
