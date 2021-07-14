@@ -37,12 +37,12 @@ Imports:
 Suggests:
     testthat,
     mockery,
+    formatR,
     knitr,
     rmarkdown
 License: MIT + file LICENSE
 SystemRequirements:
     plink (1.9)
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
