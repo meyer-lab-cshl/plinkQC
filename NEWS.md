@@ -1,3 +1,10 @@
+# plinkQC 0.3.4
+## major changes
+* Add flag for removing high LD regions and add option for user provided file,
+allowing removal of high LD regions for non-human organisms; fix missing flag
+[19bc569](https://github.com/meyer-lab-cshl/plinkQC/commit/19bc5697f80c4766d91c24d773337b8bf88a3e6f) and
+[#42](https://github.com/meyer-lab-cshl/plinkQC/issues/42)
+
 # plinkQC 0.3.3
 ## major changes
 * Output all IBD estimates in `run_check_relatedness` not just fail IBD
