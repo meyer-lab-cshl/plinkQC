@@ -36,7 +36,7 @@ optimised to retain as many individuals as possible in the study.
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC** is: 0.3.3 and can be installed
+The current github version of **plinkQC** is: 0.3.4 and can be installed
 via
 
 ``` r
@@ -44,18 +44,18 @@ library(devtools)
 install_github("meyer-lab-cshl/plinkQC")
 ```
 
-The current CRAN version of **plinkQC** is: 0.3.2 and can be installed
+The current CRAN version of **plinkQC** is: 0.3.3 and can be installed
 via
 
 ``` r
 install.packages("plinkQC")
 ```
 
-A log of version changes can be found [here](https://meyer-lab-cshl.github.io/plinkQC/news/index.html).
+A log of version changes can be found
+[here](https://meyer-lab-cshl.github.io/plinkQC/news/index.html).
 
 ## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
 
 Meyer HV (2020) plinkQC: Genotype quality control in genetic association
-studies. [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3934294.svg)](https://doi.org/10.5281/zenodo.3934294)
-
-
+studies.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3934294.svg)](https://doi.org/10.5281/zenodo.3934294)
