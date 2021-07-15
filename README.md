@@ -17,7 +17,7 @@ genetic marker) and relationship functions easily accessible from within
 R and allows for automatic evaluation of the results.
 
 Full documentation is available at
-<http://meyer-lab-cshl.github.io/plinkQC/>.
+<https://meyer-lab-cshl.github.io/plinkQC/>.
 
 **plinkQC** generates a per-individual and per-marker quality control
 report. A step-by-step guide on how to run these analyses can be found

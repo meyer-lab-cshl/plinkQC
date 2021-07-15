@@ -5,7 +5,7 @@ Version: 0.3.4
 Authors@R:
     person("Hannah", "Meyer", email = "hannah.v.meyer@gmail.com",
     role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4564-0899"))
-URL: https://meyer-lab-cshl.github.io/plinkQC
+URL: https://meyer-lab-cshl.github.io/plinkQC/
 BugReports: https://github.com/meyer-lab-cshl/plinkQC/issues
 Maintainer: Hannah Meyer <hannah.v.meyer@gmail.com>
 Description: Genotyping arrays enable the direct measurement of an individuals
