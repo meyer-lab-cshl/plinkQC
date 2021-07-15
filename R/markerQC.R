@@ -367,9 +367,10 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
         }
         suffix <- ""
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--missing", "--freq",
-                              "--out",
-                              paste(out, suffix, sep=""),
+                       args=c("--bfile", prefix,
+                              "--missing",
+                              "--freq",
+                              "--out", paste(out, suffix, sep=""),
                               args_filter),
                     std_out=showPlinkOutput, std_err=showPlinkOutput)
 
@@ -394,8 +395,11 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
                     col.names=FALSE, row.names=FALSE, quote=FALSE)
         suffix <- ".no_failIDs"
         sys::exec_wait(path2plink,
-                       args=c("--bfile", prefix, "--remove", removeIDs_file,
-                              "--freq", "--out", paste(out, suffix, sep=""),
+                       args=c("--bfile", prefix,
+                              "--remove", removeIDs_file,
+                              "--missing",
+                              "--freq",
+                              "--out", paste(out, suffix, sep=""),
                               args_filter),
                        std_out=showPlinkOutput, std_err=showPlinkOutput)
     }

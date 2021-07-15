@@ -1,3 +1,14 @@
+# plinkQC 0.3.4
+## major changes
+* Add flag for removing high LD regions and add option for user provided file,
+allowing removal of high LD regions for non-human organisms; fix missing flag
+[19bc569](https://github.com/meyer-lab-cshl/plinkQC/commit/19bc5697f80c4766d91c24d773337b8bf88a3e6f) and
+[#42](https://github.com/meyer-lab-cshl/plinkQC/issues/42)
+* Fixed failing data.no_failIDs.lmiss file in check_snp_missingness function
+when failIDs were present
+[86adc39](https://github.com/meyer-lab-cshl/plinkQC/commit/86adc39764ed6271e947d12063229be0e0189d12) and
+[#43](https://github.com/meyer-lab-cshl/plinkQC/issues/43)
+
 # plinkQC 0.3.3
 ## major changes
 * Output all IBD estimates in `run_check_relatedness` not just fail IBD

@@ -11,6 +11,8 @@ run_check_relatedness(
   highIBDTh = 0.185,
   mafThRelatedness = 0.1,
   path2plink = NULL,
+  filter_high_ldregion = TRUE,
+  high_ldregion_file = NULL,
   genomebuild = "hg19",
   showPlinkOutput = TRUE,
   keep_individuals = NULL,
@@ -44,6 +46,22 @@ plink should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
+
+\item{filter_high_ldregion}{[logical] Should high LD regions be filtered
+before IBD estimation; carried out per default with high LD regions for
+hg19 provided as default via \code{genomebuild}. For alternative genome
+builds not provided or non-human data, high LD regions files can be
+provided via \code{high_ldregion_file}.}
+
+\item{high_ldregion_file}{[character] Path to file with high LD regions used
+for filtering before IBD estimation if \code{filter_high_ldregion} == TRUE,
+otherwise ignored; for human genome data, high LD region files are provided
+and can simply be chosen via \code{genomebuild}. Files have to be
+space-delimited, no column names with the following columns: chromosome,
+region-start, region-end, region number. Chromosomes are specified without
+'chr' prefix. For instance:
+1 48000000 52000000 1
+2 86000000 100500000 2}
 
 \item{genomebuild}{[character] Name of the genome build of the PLINK file
 annotations, ie mappings in the name.bim file. Will be used to remove

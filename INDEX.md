@@ -33,7 +33,7 @@ optimised to retain as many individuals as possible in the study.
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC** is: 0.3.3 and can be installed
+The current github version of **plinkQC** is: 0.3.4 and can be installed
 via
 
 ``` r

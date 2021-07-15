@@ -226,7 +226,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     }
 
     # Remove symmetric IID rows
-    relatedness <- dplyr::select_(relatedness, ~IID1, ~IID2, ~M)
+    relatedness <- dplyr::select(relatedness, .data$IID1, .data$IID2, .data$M)
 
     sortedIDs <- data.frame(t(apply(relatedness, 1, function(pair) {
         c(sort(c(pair[1], pair[2])))
@@ -237,7 +237,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     relatedness <- relatedness[keepIndex,]
 
     # individuals with at least one pair-wise comparison > relatednessTh
-    highRelated <- dplyr::filter_(relatedness, ~M > relatednessTh)
+    highRelated <- dplyr::filter(relatedness, .data$M > relatednessTh)
     if (nrow(highRelated) == 0) {
         return(list(relatednessFails=NULL, failIDs=NULL))
     }
