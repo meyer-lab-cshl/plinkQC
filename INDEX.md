@@ -41,7 +41,7 @@ library(devtools)
 install_github("meyer-lab-cshl/plinkQC")
 ```
 
-The current CRAN version of **plinkQC** is: 0.3.3 and can be installed
+The current CRAN version of **plinkQC** is: 0.3.4 and can be installed
 via
 
 ``` r
