@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
       </span>
     </div>
 
@@ -81,13 +81,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file"></span>
+    <span class="fas fa-file"></span>
      
     documentation
      
@@ -112,21 +112,21 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
+    <span class="fas fa-newspaper-o"></span>
      
     news
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
+    <span class="fas fa-code"></span>
      
     functions
   </a>
 </li>
 <li>
-  <a href="https://github.com/meyer-lab-cshl/plinkQC">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/HannahVMeyer/plinkQC">
+    <span class="fas fa-github fa-lg"></span>
      
     github
   </a>
@@ -148,13 +148,28 @@
       <small>Source: <a href='https://github.com/meyer-lab-cshl/plinkQC/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="plinkqc-033" class="section level1">
-<h1 class="page-header" data-toc-text="0.3.3">
-<a href="#plinkqc-033" class="anchor"></a>plinkQC 0.3.3<small> Unreleased </small>
+    <div id="plinkqc-034" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.4">
+<a href="#plinkqc-034" class="anchor"></a>plinkQC 0.3.4<small> Unreleased </small>
 </h1>
 <div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>major changes</h2>
+<ul>
+<li>Add flag for removing high LD regions and add option for user provided file, allowing removal of high LD regions for non-human organisms; fix missing flag <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/19bc5697f80c4766d91c24d773337b8bf88a3e6f">19bc569</a> and <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/42"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/42'>#42</a></a>
+</li>
+<li>Fixed failing data.no_failIDs.lmiss file in check_snp_missingness function when failIDs were present <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/86adc39764ed6271e947d12063229be0e0189d12">86adc39</a> and <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/43"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/43'>#43</a></a>
+</li>
+</ul>
+</div>
+</div>
+    <div id="plinkqc-033" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.3">
+<a href="#plinkqc-033" class="anchor"></a>plinkQC 0.3.3<small> 2021-02-08 </small>
+</h1>
+<div id="major-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes-1" class="anchor"></a>major changes</h2>
 <ul>
 <li>Output all IBD estimates in <code>run_check_relatedness</code> not just fail IBD estimates <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/d009da90434a83cb4867881e3772b518d17dc2dd">d009da90</a>
 </li>
@@ -238,9 +253,9 @@
 <h1 class="page-header" data-toc-text="0.3.0">
 <a href="#plinkqc-030" class="anchor"></a>plinkQC 0.3.0<small> 2019-10-19 </small>
 </h1>
-<div id="major-changes-1" class="section level2">
+<div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-1" class="anchor"></a>major changes</h2>
+<a href="#major-changes-2" class="anchor"></a>major changes</h2>
 <ul>
 <li>Relationship filter can handle more complicated relationship scenarios as observed in plant genotype sets (fixed <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/11"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/11'>#11</a></a>)</li>
 <li>code moved to the meyer-lab repository: <a href="https://github.com/meyer-lab-cshl/plinkQC" class="uri">https://github.com/meyer-lab-cshl/plinkQC</a>
@@ -252,9 +267,9 @@
 <h1 class="page-header" data-toc-text="0.2.3">
 <a href="#plinkqc-023" class="anchor"></a>plinkQC 0.2.3<small> 2019-09-25 </small>
 </h1>
-<div id="major-changes-2" class="section level2">
+<div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-2" class="anchor"></a>major changes</h2>
+<a href="#major-changes-3" class="anchor"></a>major changes</h2>
 <ul>
 <li>Enable return of overview plots as ggplot object (fixes <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/6"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/6'>#6</a></a> in <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/ab2e840f0f22ccdeb5317475698aa58e7eecd345">ab2e840</a> and <a href="https://github.com/meyer-lab-cshl/plinkQC/commit/101e74e318752b2f8038330245d875f6afd5b57b">101e74e</a>)</li>
 <li>Relationship filter now deals with more complicated relationship scenarios as observed in plant genotype sets (addresses <a href="https://github.com/meyer-lab-cshl/plinkQC/issues/11"><a href='https://github.com/meyer-lab-cshl/plinkQC/issues/11'>#11</a></a>)</li>
@@ -312,9 +327,9 @@
 <h1 class="page-header" data-toc-text="0.2.0">
 <a href="#plinkqc-020" class="anchor"></a>plinkQC 0.2.0<small> 2018-11-09 </small>
 </h1>
-<div id="major-changes-3" class="section level2">
+<div id="major-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-3" class="anchor"></a>major changes</h2>
+<a href="#major-changes-4" class="anchor"></a>major changes</h2>
 <ul>
 <li>All system calls to plink are conducted with sys::exec_wait - this should solve platform dependent issues, mainly compatibility with windows.</li>
 <li>Make path construction compatible with windows.</li>
@@ -338,9 +353,9 @@
 <h1 class="page-header" data-toc-text="0.1.1">
 <a href="#plinkqc-011" class="anchor"></a>plinkQC 0.1.1<small> 2018-11-06 </small>
 </h1>
-<div id="major-changes-4" class="section level2">
+<div id="major-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-4" class="anchor"></a>major changes</h2>
+<a href="#major-changes-5" class="anchor"></a>major changes</h2>
 <ul>
 <li>run_check_relatedness will only save IBD estimates of individuals whose estimates are higher than the threshold.</li>
 </ul>
