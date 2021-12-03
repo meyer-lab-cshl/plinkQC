@@ -61,7 +61,7 @@ refdir='~/reference'
 name='data'
 refname='HapMapIII'
 
-mkdir -r $qcdir/plink_log
+mkdir -p $qcdir/plink_log
 ```
 
 ## Match study genotypes and reference data
