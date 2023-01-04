@@ -91,12 +91,14 @@ awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
 plink --bfile  $refdir/$refname \
       --exclude $qcdir/$refname.ac_gt_snps \
       --make-bed \
+      --allow-extra-chr \
       --out $qcdir/$refname.no_ac_gt_snps
 mv  $qcdir/$refname.no_ac_gt_snps.log $qcdir/plink_log/$refname.no_ac_gt_snps.log
 
 plink --bfile  $qcdir/$name \
       --exclude $qcdir/$name.ac_gt_snps \
       --make-bed \
+      --allow-extra-chr \
       --out $qcdir/$name.no_ac_gt_snps
 mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 ```
