@@ -42,7 +42,7 @@ is provided with $plinkQC$ in `file.path(find.package('plinkQC'),'extdata')`.
 A suitable reference dataset should be downloaded and if necessary, re-formated
 into PLINK format. Vignettes
 ['Processing HapMap III reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html) and 
-['Processing 1000Genomes  reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/1000Genomes.html),
+['Processing 1000Genomes  reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html),
 show the download and processing of the HapMap phase III and 1000Genomes phase
 III dataset, respectively. In this example, we will use the HapmapIII data as
 the reference dataset.

@@ -84,19 +84,19 @@ a change. Thank you!
 ```{bash download, eval=FALSE}
 cd $refdir
 
-pgen=https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst?dl=1
-pvar=https://www.dropbox.com/s/op9osq6luy3pjg8/all_phase3.pvar.zst?dl=1
-sample=https://www.dropbox.com/s/yozrzsdrwqej63q/phase3_corrected.psam?dl=1
+pgen=https://www.dropbox.com/s/e5n8yr4n7y91fyp/all_hg38.pgen.zst?dl=1
+pvar=https://www.dropbox.com/s/cy46f1c8yutd1h4/all_hg38.pvar.zst?dl=1
+sample=https://www.dropbox.com/s/3j9zg103fi8cjfs/all_hg38.psam?dl=1
 
 wget $pgen
-mv 'all_phase3.pgen.zst?dl=1' all_phase3.pgen.zst
-plink2 --zst-decompress all_phase3.pgen.zst > all_phase3.pgen
+mv 'all_hg38.pgen.zst?dl=1' all_hg38.pgen.zst
+plink2 --zst-decompress all_hg38.pgen.zst > all_hg38.pgen
 
 wget $pvar
-mv 'all_phase3.pvar.zst?dl=1' all_phase3.pvar.zst
+mv 'all_hg38.pvar.zst?dl=1' all_hg38.pvar.zst
 
 wget $sample
-mv 'phase3_corrected.psam?dl=1' all_phase3.psam
+mv 'all_hg38.psam?dl=1' all_hg38.psam
 ```
 
 ## Convert 1000 Genomes phase 3 data to plink 1 binary format
@@ -105,11 +105,12 @@ We then convert the
 (at the moment) more standardly used
 [PLINK 1 binary format](https://www.cog-genomics.org/plink/1.9/inputbped).
 ```{bash convert, eval=FALSE}
-plink2 --pfile $refdir/all_phase3 vzs\
-      --max-alleles 2
+plink2 --pfile $refdir/all_hg38 vzs\
+      --max-alleles 2 \ 
       --make-bed \
-      --out $refdir/all_phase3
-mv $refdir/all_phase3.log $refdir/log
+      --allow-extra-chr 0 \
+      --out $refdir/all_hg38
+mv $refdir/all_hg38.log $refdir/log
 ```
 
  
