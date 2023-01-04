@@ -54,6 +54,8 @@ updated versions of the reference or new datasets in the future.
 Is is also useful to keep the PLINK log-files for future reference. In order to
 keep the data directory tidy, we'll create a directory for the log files and
 move them to the log directory here after each analysis step.
+Note: If you are using 1000Genomes reference data, the refname will be 
+'all_hg38'.  
 
 ```{bash setup, eval=FALSE}
 qcdir='~/qcdir'
