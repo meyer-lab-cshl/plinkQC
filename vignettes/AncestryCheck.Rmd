@@ -134,8 +134,9 @@ We will use the list of pruned variants from the study sample to reduce the
 reference dataset to the size of the study samples:
 ```{bash filter, eval=FALSE}
 plink --bfile  $refdir/$refname \
-      --extract $qcdir/$name.prune.in \
+      --extract $qcdir/$name.no_ac_gt_snps.prune.in \
       --make-bed \
+      --allow-extra-chr 0 \
       --out $qcdir/$refname.pruned
 mv  $qcdir/$refname.pruned.log $qcdir/plink_log/$refname.pruned.log
 ```
