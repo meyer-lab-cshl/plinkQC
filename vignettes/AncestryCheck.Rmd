@@ -47,6 +47,34 @@ show the download and processing of the HapMap phase III and 1000Genomes phase
 III dataset, respectively. In this example, we will use the HapmapIII data as
 the reference dataset.
 
+## Update study data
+At the moment, the study data we have downloaded from PLINK needs to be updated.  The data we have downloaded as the study data is currently the hg37 version.  Eventually, we will need to combine the reference and study data, so we need both data sets to be the same version. We use the liftOver tool, which takes information in a format similar to the PLINK.bim format, the UCSCm bed format and a liftover chain, containing the mapping information between the old genome (target) and the new genome (query).  It return the updated annotation (newFile) and a file with unmappable variants (unMapped):
+```{bash setup, eval=FALSE}
+liftOver oldFile liftover.chain newFile unMapped 
+```
+We first need to download the liftOver tool from https://genome.ucsc.edu/cgi-bin/hgLiftOver and the appropriate liftover chain from http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/ .  We then convert the [PLINK.bim](https://www.cog-genomics.org/plink/1.9/formats#bim) format, to the zero-based [UCSC bed](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) format. 
+
+Be sure to create an executable of the liftOver. 
+
+The chromosome data is encoded numerically, with chrX represented by chr23, and chrY by chr24.  In order to match data encoded by chrX and chrY, we will have to renmae these chromosomes.  Converting to zero-based UCSC format and re-coding chromosome codes can be achieved by:
+```{bash setup, eval=FALSE}
+awk '{print "chr" $1, $4 -1, $4, $2 }' $qcdir/data.no_ac_gt_snps.bim | \      
+    sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > \                
+    $qcdir/data.no_ac_gt_snps.tolift
+```
+
+We then use the liftOver tool and the UCSC bed formated annotation file together with the approporiate chain file to do the lift over. 
+```{bash setup, eval=FALSE}
+liftOver $qcdir/data.no_ac_gt_snps.tolift /Users/meyerlab/projects/ancestry/liftOver/hg19ToHg38.over.chain.gz $qcdir/data.no_ac_gt_snps.hg38 $qcdir/data.no_ac_gt_snps.unMapped  
+```
+After a successsful liftover, we will be able to extract i) the variants that were mappable from the old to the new genome and ii) their updated positions.  
+```{bash setup, eval=FALSE}
+# extract mapped variants
+awk '{print $4}' $qcdir/data.no_ac_gt_snps.hg38 > $qcdir/data.no_ac_gt_snps.hg38.snps   
+# extract updated positions
+awk '{print $4, $3}' $qcdir/data.no_ac_gt_snps.hg38 > $qcdir/data.no_ac_gt_snps.hg38.pos
+```
+
 ## Set-up
 We will first set up some bash variables and create directories needed; storing
 the names and directories of the reference and study will make it easy to use 
@@ -122,7 +150,7 @@ plink --bfile  $qcdir/$name.no_ac_gt_snps \
       --out $qcdir/$name.no_ac_gt_snps
 mv  $qcdir/$name.prune.log $qcdir/plink_log/$name.prune.log
 
-plink --bfile  $qcdir/$name.no_ac_gt_snps \
+plink --bfile  $qcdir/$name.no_ac_gt_snps \ls
       --extract $qcdir/$name.no_ac_gt_snps.prune.in \
       --make-bed \
       --out $qcdir/$name.pruned
