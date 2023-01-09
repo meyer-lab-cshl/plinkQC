@@ -50,12 +50,11 @@ the reference dataset.
 ## Set-up
 We will first set up some bash variables and create directories needed; storing
 the names and directories of the reference and study will make it easy to use 
-updated versions of the reference or new datasets in the future. 
+updated versions of the reference or new datasets in the future. We create a 
+directory named 'qcdir' for the study data. 
 Is is also useful to keep the PLINK log-files for future reference. In order to
 keep the data directory tidy, we'll create a directory for the log files and
 move them to the log directory here after each analysis step.
-Note: If you are using 1000Genomes reference data, the refname will be 
-'all_hg38'.  
 
 ```{bash setup, eval=FALSE}
 qcdir='~/qcdir'
@@ -85,32 +84,39 @@ the [PLINK.bim](https://www.cog-genomics.org/plink/1.9/formats#bim) format, to
 the zero-based [UCSC bed](https://genome.ucsc.edu/FAQ/FAQformat.html#format1) 
 format. Be sure to create an executable of the liftOver tool. 
 
+It is helpful to store your liftOver tool and chain in a separate directory for 
+future use.  Be sure to create an executable of the liftOver tool. 
+```{bash setup, eval=FALSE}
+liftover=~/projects/liftOver
+mkdir -p ~/projects/liftOver
+```
+
 The chromosome data is encoded numerically, with chrX represented by chr23, and 
 chrY by chr24.  In order to match data encoded by chrX and chrY, we will have 
 to renmae these chromosomes. Converting to zero-based UCSC format and re-coding 
 chromosome codes can be achieved by:
 ```{bash setup, eval=FALSE}
-awk '{print "chr" $1, $4 -1, $4, $2 }' $qcdir/data.no_ac_gt_snps.bim | \      
+awk '{print "chr" $1, $4 -1, $4, $2 }' $qcdir/data.bim | \      
     sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > \                
-    $qcdir/data.no_ac_gt_snps.tolift
+    $qcdir/data.tolift
 ```
 
 We use the liftOver tool and the UCSC bed formatted annotation file together
 with the appropriate chain file to do the lift over. 
 ```{bash setup, eval=FALSE}
-liftOver $qcdir/data.no_ac_gt_snps.tolift \
-    /Users/meyerlab/projects/ancestry/liftOver/hg19ToHg38.over.chain.gz \ 
-    $qcdir/data.no_ac_gt_snps.hg38 $qcdir/data.no_ac_gt_snps.unMapped  
+liftOver $qcdir/data.tolift \
+    $liftover/hg19ToHg38.over.chain.gz \ 
+    $qcdir/datahg38 $qcdir/data.unMapped  
 ```
 After a successful liftover, we will be able to extract i) the variants that 
 were mappable from the old to the new genome and ii) their updated positions.  
 ```{bash setup, eval=FALSE}
 # extract mapped variants
-awk '{print $4}' $qcdir/data.no_ac_gt_snps.hg38 > \
-    $qcdir/data.no_ac_gt_snps.hg38.snps   
+awk '{print $4}' $qcdir/datahg38 > \
+    $qcdir/datahg38.snps   
 # extract updated positions
-awk '{print $4, $3}' $qcdir/data.no_ac_gt_snps.hg38 > \ 
-    $qcdir/data.no_ac_gt_snps.hg38.pos
+awk '{print $4, $3}' $qcdir/datahg38 > \ 
+    $qcdir/datahg38.pos
 ```
 
 ## Convert ID names in data 
@@ -120,11 +126,12 @@ The current data uses RSIDs like 'rs3094315', while the reference data uses
 need to convert the RS IDs in the current data we downloaded to this form. We 
 will be manipulating our PLINK.bim format file to do this.
 
-In the 'qcdir' directoy, create an RScript that will act as a mapping document.  
+In the 'qcdir' directoy, create an RScript that will act as a mapping document. 
+Create and run this file to correctly convert our data files.  
 The functionality below will correctly convert our identifiers. 
 ```{bash setup, eval=FALSE}
 df <- read.table(
-    "/Users/meyerlab/qcdir/data.no_ac_gt_snps.hg38.bim",
+    "/Users/meyerlab/qcdir/datahg38.bim",
     header = FALSE,
     sep = "\t",
     dec = "."
@@ -136,14 +143,13 @@ head(df)
 
 write.table(
   df,
-  file = "/Users/meyerlab/qcdir/data.no_ac_gt_snps.hg38.bim",
+  file = "/Users/meyerlab/qcdir/datahg38.bim",
   sep = "\t",
   quote = FALSE,
   row.names = FALSE,
   col.names = FALSE
 )
 ```
-
 
 ## Match study genotypes and reference data
 In order to compute joint principal components of the reference and study

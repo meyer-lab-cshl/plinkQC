@@ -84,9 +84,9 @@ a change. Thank you!
 ```{bash download, eval=FALSE}
 cd $refdir
 
-pgen=https://www.dropbox.com/s/e5n8yr4n7y91fyp/all_hg38.pgen.zst?dl=1
-pvar=https://www.dropbox.com/s/cy46f1c8yutd1h4/all_hg38.pvar.zst?dl=1
-sample=https://www.dropbox.com/s/3j9zg103fi8cjfs/all_hg38.psam?dl=1
+pgen=https://www.dropbox.com/s/j72j6uciq5zuzii/all_hg38.pgen.zst?dl=1
+pvar=https://www.dropbox.com/s/vx09262b4k1kszy/all_hg38.pvar.zst?dl=1
+sample=https://www.dropbox.com/s/2e87z6nc4qexjjm/all_hg38.psam?dl=1
 
 wget $pgen
 mv 'all_hg38.pgen.zst?dl=1' all_hg38.pgen.zst
