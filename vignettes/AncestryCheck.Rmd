@@ -36,6 +36,7 @@ In the following, the workflow for combining a study dataset with the
 reference samples, conducting PCA and estimating ancestry is demonstrated.
 The study dataset consists of 200 individuals and 10,000 genetic markers and
 is provided with $plinkQC$ in `file.path(find.package('plinkQC'),'extdata')`.
+Copy the data.bim, .bed, and .fam files into qcdir.  
 
 # Workflow
 ## Download reference data
@@ -95,22 +96,21 @@ The chromosome data is encoded numerically, with chrX represented by chr23, and
 chrY by chr24.  In order to match data encoded by chrX and chrY, we will have 
 to renmae these chromosomes. Converting to zero-based UCSC format and re-coding 
 chromosome codes can be achieved by:
-```{bash setup, eval=FALSE}
-awk '{print "chr" $1, $4 -1, $4, $2 }' $qcdir/data.bim | \      
-    sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > \                
-    $qcdir/data.tolift
+```{bash convert, eval=FALSE}
+awk '{print "chr" $1, $4 -1, $4, $2 }' $qcdir/data.bim \
+  sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > $qcdir/data.tolift
 ```
 
 We use the liftOver tool and the UCSC bed formatted annotation file together
 with the appropriate chain file to do the lift over. 
-```{bash setup, eval=FALSE}
+```{bash convert, eval=FALSE}
 liftOver $qcdir/data.tolift \
     $liftover/hg19ToHg38.over.chain.gz \ 
     $qcdir/datahg38 $qcdir/data.unMapped  
 ```
 After a successful liftover, we will be able to extract i) the variants that 
 were mappable from the old to the new genome and ii) their updated positions.  
-```{bash setup, eval=FALSE}
+```{bash convert, eval=FALSE}
 # extract mapped variants
 awk '{print $4}' $qcdir/datahg38 > \
     $qcdir/datahg38.snps   
