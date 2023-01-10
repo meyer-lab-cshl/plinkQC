@@ -106,11 +106,11 @@ We then convert the
 [PLINK 1 binary format](https://www.cog-genomics.org/plink/1.9/inputbped).
 ```{bash convert, eval=FALSE}
 plink2 --pfile $refdir/all_hg38 vzs\
-      --max-alleles 2 \ 
+      --max-alleles 2 \
       --make-bed \
       --allow-extra-chr 0 \
       --out $refdir/all_hg38
-mv $refdir/all_hg38.log $refdir/log
+mv $refdir/all_hg38.log $refdir/plink_log
 ```
 
  
