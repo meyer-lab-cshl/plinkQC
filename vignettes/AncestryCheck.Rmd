@@ -27,8 +27,8 @@ The identification of individuals of divergent ancestry can be achieved by
 combining the genotypes of the study population with genotypes of a reference
 dataset consisting of individuals from known ethnicities (for instance
 individuals from the Hapmap or 1000 genomes study [@HapMap2005,@HapMap2007,
-@HapMap2010,@a1000Genomes2015,@b1000Genomes2015]). Principal component
-analysis (PCA) on this combined genotype panel can then be used to detect
+@HapMap2010,@a1000Genomes2015,@b1000Genomes2015]). Principal componeanalysis 
+(PCA) on this combined genotype panel can then be used to detect
 population structure down to the level of the reference dataset (for Hapmap and
 1000 Genomes, this is down to large-scale continental ancestry).
 
@@ -36,7 +36,6 @@ In the following, the workflow for combining a study dataset with the
 reference samples, conducting PCA and estimating ancestry is demonstrated.
 The study dataset consists of 200 individuals and 10,000 genetic markers and
 is provided with $plinkQC$ in `file.path(find.package('plinkQC'),'extdata')`.
-Copy the data.bim, .bed, and .fam files into qcdir.  
 
 # Workflow
 ## Download reference data
@@ -55,7 +54,10 @@ updated versions of the reference or new datasets in the future. We create a
 directory named 'qcdir' for the study data. 
 Is is also useful to keep the PLINK log-files for future reference. In order to
 keep the data directory tidy, we'll create a directory for the log files and
-move them to the log directory here after each analysis step.
+move them to the log directory here after each analysis step. 
+Once you have created 'qcdir', be sure to copy the data.bim, data.bed, 
+and data.fam files into your directory. If you are using HapMap III reference 
+data, be sure to use the correct variable name; refname='HapMapIII'.  
 
 ```{bash setup, eval=FALSE}
 qcdir=~/qcdir
@@ -111,14 +113,18 @@ window. The LD-pruned dataset is generated below, using plink --indep-pairwise
 to compute the LD-variants; additionally exclude range is used to remove genomic
 ranges of known high-LD structure. This file was originally provided by
 @Anderson2010 and is available in
-`file.path(find.package('plinkQC'),'extdata','high-LD-regions.txt')`.
+`file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')`.
+If there has been an update in reference data, this will need to be updated as 
+well. 
 
 ```{bash prune, eval=FALSE}
+highld=' high-LD-regions-hg38-GRCh38.txt'
+
 plink --bfile  $qcdir/$name.no_ac_gt_snps \
-      --exclude range  $refdir/$highld \
+      --exclude range  $qcdir/$highld \
       --indep-pairwise 50 5 0.2 \
       --out $qcdir/$name.no_ac_gt_snps
-mv  $qcdir/$name.prune.log $qcdir/plink_log/$name.prune.log
+mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.prune.log
 
 plink --bfile  $qcdir/$name.no_ac_gt_snps \
       --extract $qcdir/$name.no_ac_gt_snps.prune.in \
@@ -233,8 +239,8 @@ in columns 1 and 2, followed by the first 20 principal components.
 ```{bash pca, eval=FALSE}
 plink --bfile $qcdir/$name.merge.$refname \
       --pca \
-      --out $qcdir/$name.$reference
-mv $qcdir/$name.$reference.log $qcdir/plink_log
+      --out $qcdir/$name.$refname
+mv $qcdir/$name.$refname.log $qcdir/plink_log
 ```
 
 ## Check ancestry
@@ -248,21 +254,28 @@ specified by the maximum Euclidean distance of the reference samples multiplied
 by the chosen `europeanTh` are considered non-European. `check_ancestry` shows
 the result of the ancestry analysis in a scatter plot of PC1 versus
 PC2 colour-coded for samples of the reference populations and the study
-population. From within R, run the following command to the ancestry check:
+population. Reminder, if you are using HapMap III reference data, refname will
+be the reference name you have used previously. Also, the files to use are 
+"/HapMap_ID2Pop.txt" instead of the Genomes1000_ID2Pop and "HapMap_PopColors.txt"
 
+From within R, run the following command to the ancestry check:
+### For HapMap data
 ```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
 library(plinkQC)
 indir <- system.file("extdata", package="plinkQC")
+qcdir <- "~/qcdir"
 name <- 'data'
-refname <- 'HapMapIII'
+refname <- 'all_hg38'
 prefixMergedDataset <- paste(name, ".", refname, sep="")
 
 exclude_ancestry <-
-    evaluate_check_ancestry(indir=indir, name=name,
+    evaluate_check_ancestry(indir=qcdir, name=name,
                             prefixMergedDataset=prefixMergedDataset,
-                            refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",
+                            refSamplesFile=paste(indir, 
+                                                 "/Genomes1000_ID2Pop.txt",
                                                  sep=""), 
-                            refColorsFile=paste(indir, "/HapMap_PopColors.txt",
+                            refColorsFile=paste(indir, 
+                                                "/Genomes1000_PopColors.txt",
                                                 sep=""),
                             interactive=TRUE)
 ```
