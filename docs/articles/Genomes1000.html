@@ -20,8 +20,10 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
-      <header><div class="navbar navbar-standard navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -32,62 +34,45 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home"></span>
-     
-  </a>
+  <a href="../articles/plinkQC.html">Get started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
-     
-    documentation
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/plinkQC.html">Step-by-step QC</a>
+      <a href="../articles/AncestryCheck.html">Ancestry estimation based on reference samples of known ethnicities</a>
     </li>
     <li>
-      <a href="../articles/AncestryCheck.html">Ancestry</a>
+      <a href="../articles/Genomes1000.html">Processing 1000 Genomes reference data for ancestry estimation</a>
     </li>
     <li>
-      <a href="../articles/HapMap.html">HapMap III reference</a>
-    </li>
-    <li>
-      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
+      <a href="../articles/HapMap.html">Processing HapMap III reference data for ancestry estimation</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
-    news
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
-     
-    functions
-  </a>
-</li>
-<li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
-     
-    github
   </a>
 </li>
       </ul>
@@ -100,85 +85,137 @@
 
       
 
-      </header><script src="Genomes1000_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Processing 1000 Genomes reference data for ancestry estimation</h1>
-                        <h4 class="author">Hannah Meyer</h4>
+      <h1 data-toc-skip>Processing 1000 Genomes reference data for
+ancestry estimation</h1>
+                        <h4 data-toc-skip class="author">Hannah
+Meyer</h4>
             
-            <h4 class="date">2021-07-15</h4>
+            <h4 data-toc-skip class="date">2023-01-12</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/Genomes1000.Rmd"><code>vignettes/Genomes1000.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/Genomes1000.Rmd" class="external-link"><code>vignettes/Genomes1000.Rmd</code></a></small>
       <div class="hidden name"><code>Genomes1000.Rmd</code></div>
 
     </div>
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>Genotype quality control for genetic association studies often includes the need for selecting samples of the same ethnic background. To identify individuals of divergent ancestry based on genotypes, the genotypes of the study population can be combined with genotypes of a reference dataset consisting of individuals from known ethnicities. Principal component analysis (PCA) on this combined genotype panel can then be used to detect population structure down to the level of the reference dataset.</p>
-<p>The following vignette shows the processing steps required to use samples of the 1000 Genomes study <span class="citation">[1]</span>,<span class="citation">[2]</span> as a reference dataset. Using the 1000 Genomes reference, population structure down to large-scale continental ancestry can be detected. A step-by-step instruction on how to conduct this ancestry analysis is described in this <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry estimation vignette</a>.</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Genotype quality control for genetic association studies often
+includes the need for selecting samples of the same ethnic background.
+To identify individuals of divergent ancestry based on genotypes, the
+genotypes of the study population can be combined with genotypes of a
+reference dataset consisting of individuals from known ethnicities.
+Principal component analysis (PCA) on this combined genotype panel can
+then be used to detect population structure down to the level of the
+reference dataset.</p>
+<p>The following vignette shows the processing steps required to use
+samples of the 1000 Genomes study <span class="citation">[1]</span>,<span class="citation">[2]</span> as a
+reference dataset. Using the 1000 Genomes reference, population
+structure down to large-scale continental ancestry can be detected. A
+step-by-step instruction on how to conduct this ancestry analysis is
+described in this <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html" class="external-link">Ancestry
+estimation vignette</a>.</p>
 </div>
-<div id="workflow" class="section level1">
-<h1 class="hasAnchor">
-<a href="#workflow" class="anchor"></a>Workflow</h1>
-<div id="set-up" class="section level2">
-<h2 class="hasAnchor">
-<a href="#set-up" class="anchor"></a>Set-up</h2>
-<p>We will first set up some bash variables and create directories needed; storing the names and directories of the reference will make it easy to use updated versions of the reference in the future. Is is also useful to keep the PLINK log-files for future reference. In order to keep the data directory tidy, we’ll create a directory for the log files and move them to the log directory here after each analysis step.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="va">refdir=</span>~/reference</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">mkdir</span> -p <span class="va">$refdir</span>/plink_log</span></code></pre></div>
+<div class="section level2">
+<h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
+</h2>
+<div class="section level3">
+<h3 id="set-up">Set-up<a class="anchor" aria-label="anchor" href="#set-up"></a>
+</h3>
+<p>We will first set up some bash variables and create directories
+needed; storing the names and directories of the reference will make it
+easy to use updated versions of the reference in the future. Is is also
+useful to keep the PLINK log-files for future reference. In order to
+keep the data directory tidy, we’ll create a directory for the log files
+and move them to the log directory here after each analysis step.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$refdir</span>/plink_log</span></code></pre></div>
 </div>
-<div id="plink-software" class="section level2">
-<h2 class="hasAnchor">
-<a href="#plink-software" class="anchor"></a>PLINK software</h2>
-<p>In addition to <a href="https://www.cog-genomics.org/plink/1.9/">PLINK v1.9</a>, which is a requirment for the <code>plinkQC</code> package, we will also need <a href="https://www.cog-genomics.org/plink/2.0/">PLINK v2</a> for processing the downloaded the dataset. In the following, when <code>plink</code> is invoked, this corresponds to v1.9, whereas <code>plink2</code> corresponds to v2.</p>
+<div class="section level3">
+<h3 id="plink-software">PLINK software<a class="anchor" aria-label="anchor" href="#plink-software"></a>
+</h3>
+<p>In addition to <a href="https://www.cog-genomics.org/plink/1.9/" class="external-link">PLINK v1.9</a>, which is
+a requirment for the <code>plinkQC</code> package, we will also need <a href="https://www.cog-genomics.org/plink/2.0/" class="external-link">PLINK v2</a> for
+processing the downloaded the dataset. In the following, when
+<code>plink</code> is invoked, this corresponds to v1.9, whereas
+<code>plink2</code> corresponds to v2.</p>
 </div>
-<div id="download-and-decompress-1000-genomes-phase-3-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#download-and-decompress-1000-genomes-phase-3-data" class="anchor"></a>Download and decompress 1000 Genomes phase 3 data</h2>
-<p>1000 Genomes phase III (1000GenomesIII) is available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a> at <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>. In addition, a sample file with information about the individuals’ ancestry is available and should be downloaded as in input for <code><a href="../reference/check_ancestry.html">plinkQC::check_ancestry()</a></code>. The following code chunk downloads and decompresses the data. The genome build of these files is the same as the original release of the 1000GenomesIII, namely CGRCh37.</p>
-<p>NB: CGRCh38 positions in vcf format can be found <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/">here</a>. The remainder of this vignette will however look at the data processing required for the 1000GenomesIII available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a>.</p>
-<p>NB: the links to the files below are the three boldfaced links on this page: <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>. The dropbox links have been updated in the past, which means the links below where outdated. Please refer to the original site and open an issue on github if you notice a change. Thank you!</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="bu">cd</span> <span class="va">$refdir</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="va">pgen=</span>https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst<span class="ex">?dl</span>=1</span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="va">pvar=</span>https://www.dropbox.com/s/op9osq6luy3pjg8/all_phase3.pvar.zst<span class="ex">?dl</span>=1</span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="va">sample=</span>https://www.dropbox.com/s/yozrzsdrwqej63q/phase3_corrected.psam<span class="ex">?dl</span>=1</span>
-<span id="cb2-6"><a href="#cb2-6"></a></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="fu">wget</span> <span class="va">$pgen</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="fu">mv</span> <span class="st">'all_phase3.pgen.zst?dl=1'</span> all_phase3.pgen.zst</span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="ex">plink2</span> --zst-decompress all_phase3.pgen.zst <span class="op">&gt;</span> all_phase3.pgen</span>
-<span id="cb2-10"><a href="#cb2-10"></a></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="fu">wget</span> <span class="va">$pvar</span></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="fu">mv</span> <span class="st">'all_phase3.pvar.zst?dl=1'</span> all_phase3.pvar.zst</span>
-<span id="cb2-13"><a href="#cb2-13"></a></span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="fu">wget</span> <span class="va">$sample</span></span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="fu">mv</span> <span class="st">'phase3_corrected.psam?dl=1'</span> all_phase3.psam</span></code></pre></div>
+<div class="section level3">
+<h3 id="download-and-decompress-1000-genomes-phase-3-data">Download and decompress 1000 Genomes phase 3 data<a class="anchor" aria-label="anchor" href="#download-and-decompress-1000-genomes-phase-3-data"></a>
+</h3>
+<p>1000 Genomes phase III (1000GenomesIII) is available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen" class="external-link">PLINK 2 binary
+format</a> at <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="external-link uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>.
+In addition, a sample file with information about the individuals’
+ancestry is available and should be downloaded as in input for
+<code><a href="../reference/check_ancestry.html">plinkQC::check_ancestry()</a></code>. The following code chunk
+downloads and decompresses the data. The genome build of these files is
+the same as the original release of the 1000GenomesIII, namely
+CGRCh37.</p>
+<p>NB: CGRCh38 positions in vcf format can be found <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/" class="external-link">here</a>.
+The remainder of this vignette will however look at the data processing
+required for the 1000GenomesIII available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen" class="external-link">PLINK 2 binary
+format</a>.</p>
+<p>NB: the links to the files below are the three boldfaced links on
+this page: <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="external-link uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>.
+The dropbox links have been updated in the past, which means the links
+below where outdated. Please refer to the original site and open an
+issue on github if you notice a change. Thank you!</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$refdir</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="va">pgen</span><span class="op">=</span>https://www.dropbox.com/s/j72j6uciq5zuzii/all_hg38.pgen.zst<span class="pp">?</span>dl=1</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">pvar</span><span class="op">=</span>https://www.dropbox.com/s/vx09262b4k1kszy/all_hg38.pvar.zst<span class="pp">?</span>dl=1</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">sample</span><span class="op">=</span>https://www.dropbox.com/s/2e87z6nc4qexjjm/all_hg38.psam<span class="pp">?</span>dl=1</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="va">$pgen</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="st">'all_hg38.pgen.zst?dl=1'</span> all_hg38.pgen.zst</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--zst-decompress</span> all_hg38.pgen.zst <span class="op">&gt;</span> all_hg38.pgen</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="va">$pvar</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="st">'all_hg38.pvar.zst?dl=1'</span> all_hg38.pvar.zst</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="va">$sample</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="st">'all_hg38.psam?dl=1'</span> all_hg38.psam</span></code></pre></div>
 </div>
-<div id="convert-1000-genomes-phase-3-data-to-plink-1-binary-format" class="section level2">
-<h2 class="hasAnchor">
-<a href="#convert-1000-genomes-phase-3-data-to-plink-1-binary-format" class="anchor"></a>Convert 1000 Genomes phase 3 data to plink 1 binary format</h2>
-<p>We then convert the <a href="https://www.cog-genomics.org/plink/2.0/input#pgen">PLINK 2 binary format</a> to the (at the moment) more standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped">PLINK 1 binary format</a>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">plink2</span> --pfile <span class="va">$refdir</span>/all_phase3 vzs\</span>
-<span id="cb3-2"><a href="#cb3-2"></a>      --max-alleles 2</span>
-<span id="cb3-3"><a href="#cb3-3"></a>      <span class="ex">--make-bed</span> \</span>
-<span id="cb3-4"><a href="#cb3-4"></a>      --out <span class="va">$refdir</span>/all_phase3</span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="fu">mv</span> <span class="va">$refdir</span>/all_phase3.log <span class="va">$refdir</span>/log</span></code></pre></div>
-<p>After these steps, the 1000 Genomes dataset can be used for inferring study ancestry as described in the corresponding <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry estimation vignette</a>.</p>
+<div class="section level3">
+<h3 id="convert-1000-genomes-phase-3-data-to-plink-1-binary-format">Convert 1000 Genomes phase 3 data to plink 1 binary format<a class="anchor" aria-label="anchor" href="#convert-1000-genomes-phase-3-data-to-plink-1-binary-format"></a>
+</h3>
+<p>We then convert the <a href="https://www.cog-genomics.org/plink/2.0/input#pgen" class="external-link">PLINK 2 binary
+format</a> to the (at the moment) more standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped" class="external-link">PLINK 1 binary
+format</a>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> <span class="va">$refdir</span>/all_hg38 vzs<span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> 0 <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$refdir</span>/all_hg38</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$refdir</span>/all_hg38.log <span class="va">$refdir</span>/plink_log</span></code></pre></div>
+<p>After these steps, the 1000 Genomes dataset can be used for inferring
+study ancestry as described in the corresponding <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html" class="external-link">Ancestry
+estimation vignette</a>.</p>
 </div>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
-<div id="refs" class="references">
-<div id="ref-a1000Genomes2015">
-<p>1. 1000 Genomes Project Consortium. An integrated map of structural variation in 2,504 human genomes. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15394">10.1038/nature15394</a></p>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-a1000Genomes2015" class="csl-entry">
+<div class="csl-left-margin">1. </div>
+<div class="csl-right-inline">1000
+Genomes Project Consortium. <span class="nocase">An integrated map of
+structural variation in 2,504 human genomes</span>. Nature. 2015;526:
+75–81. doi:<a href="https://doi.org/10.1038/nature15394" class="external-link">10.1038/nature15394</a>
 </div>
-<div id="ref-b1000Genomes2015">
-<p>2. 1000 Genomes Project Consortium. A global reference for human genetic variation. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15393">10.1038/nature15393</a></p>
+</div>
+<div id="ref-b1000Genomes2015" class="csl-entry">
+<div class="csl-left-margin">2. </div>
+<div class="csl-right-inline">1000
+Genomes Project Consortium. <span class="nocase">A global reference for
+human genetic variation</span>. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15393" class="external-link">10.1038/nature15393</a>
+</div>
 </div>
 </div>
 </div>
@@ -195,11 +232,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Hannah Meyer.</p>
+  <p></p>
+<p>Developed by Hannah Meyer, Caroline Walter.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -207,6 +246,8 @@
 
   
 
+
+  
 
   </body>
 </html>

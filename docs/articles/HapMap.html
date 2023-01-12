@@ -20,8 +20,10 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
-      <header><div class="navbar navbar-standard navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -32,62 +34,45 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home"></span>
-     
-  </a>
+  <a href="../articles/plinkQC.html">Get started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
-     
-    documentation
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/plinkQC.html">Step-by-step QC</a>
+      <a href="../articles/AncestryCheck.html">Ancestry estimation based on reference samples of known ethnicities</a>
     </li>
     <li>
-      <a href="../articles/AncestryCheck.html">Ancestry</a>
+      <a href="../articles/Genomes1000.html">Processing 1000 Genomes reference data for ancestry estimation</a>
     </li>
     <li>
-      <a href="../articles/HapMap.html">HapMap III reference</a>
-    </li>
-    <li>
-      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
+      <a href="../articles/HapMap.html">Processing HapMap III reference data for ancestry estimation</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
-    news
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
-     
-    functions
-  </a>
-</li>
-<li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
-     
-    github
   </a>
 </li>
       </ul>
@@ -100,103 +85,168 @@
 
       
 
-      </header><script src="HapMap_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Processing HapMap III reference data for ancestry estimation</h1>
-                        <h4 class="author">Hannah Meyer</h4>
+      <h1 data-toc-skip>Processing HapMap III reference data for
+ancestry estimation</h1>
+                        <h4 data-toc-skip class="author">Hannah
+Meyer</h4>
             
-            <h4 class="date">2021-07-15</h4>
+            <h4 data-toc-skip class="date">2023-01-12</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/HapMap.Rmd"><code>vignettes/HapMap.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/HapMap.Rmd" class="external-link"><code>vignettes/HapMap.Rmd</code></a></small>
       <div class="hidden name"><code>HapMap.Rmd</code></div>
 
     </div>
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>Genotype quality control for genetic association studies often includes the need for selecting samples of the same ethnic background. To identify individuals of divergent ancestry based on genotypes, the genotypes of the study population can be combined with genotypes of a reference dataset consisting of individuals from known ethnicities. Principal component analysis (PCA) on this combined genotype panel can then be used to detect population structure down to the level of the reference dataset.</p>
-<p>The following vignette shows the processing steps required to use samples of the HapMap study <span class="citation">[1]</span><span class="citation">[2]</span><span class="citation">[3]</span> as a reference dataset. Using this reference, population structure down to large-scale continental ancestry can be detected. A step-by-step instruction on how to conduct this analysis is described in this <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry estimation vignette</a>.</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Genotype quality control for genetic association studies often
+includes the need for selecting samples of the same ethnic background.
+To identify individuals of divergent ancestry based on genotypes, the
+genotypes of the study population can be combined with genotypes of a
+reference dataset consisting of individuals from known ethnicities.
+Principal component analysis (PCA) on this combined genotype panel can
+then be used to detect population structure down to the level of the
+reference dataset.</p>
+<p>The following vignette shows the processing steps required to use
+samples of the HapMap study [<span class="citation">[1]</span>]<span class="citation">[2]</span><span class="citation">[3]</span> as a
+reference dataset. Using this reference, population structure down to
+large-scale continental ancestry can be detected. A step-by-step
+instruction on how to conduct this analysis is described in this <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html" class="external-link">Ancestry
+estimation vignette</a>.</p>
 </div>
-<div id="workflow" class="section level1">
-<h1 class="hasAnchor">
-<a href="#workflow" class="anchor"></a>Workflow</h1>
-<div id="set-up" class="section level2">
-<h2 class="hasAnchor">
-<a href="#set-up" class="anchor"></a>Set-up</h2>
-<p>We will first set up some bash variables and create directories needed; storing the names and directories of the reference will make it easy to use updated versions of the reference in the future. Is is also useful to keep the PLINK log-files for future reference. In order to keep the data directory tidy, we’ll create a directory for the log files and move them to the log directory here after each analysis step.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="va">refdir=</span><span class="st">'~/reference'</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">mkdir</span> -r <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="section level2">
+<h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
+</h2>
+<div class="section level3">
+<h3 id="set-up">Set-up<a class="anchor" aria-label="anchor" href="#set-up"></a>
+</h3>
+<p>We will first set up some bash variables and create directories
+needed; storing the names and directories of the reference will make it
+easy to use updated versions of the reference in the future. Is is also
+useful to keep the PLINK log-files for future reference. In order to
+keep the data directory tidy, we’ll create a directory for the log files
+and move them to the log directory here after each analysis step.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span><span class="st">'~/reference'</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-r</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
-<div id="download-and-convert-hapmap-phase-iii-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#download-and-convert-hapmap-phase-iii-data" class="anchor"></a>Download and convert Hapmap phase III data</h2>
-<p>Hapmap phase 3 data (HapMapIII) is available in <a href="https://www.cog-genomics.org/plink/1.9/input#ped">PLINK text format</a> at ncbi. In addition, a sample file with information about the individuals’ ancestry is available and should be downloaded as in input for <code>plinkQC::chec_Ancestry()</code>. The following code chunk downloads and unzips the data.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="bu">cd</span> <span class="va">$refdir</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="va">ftp=</span>ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/2009-01_phaseIII/plink_format/</span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="va">prefix=</span>hapmap3_r2_b36_fwd.consensus.qc.poly</span>
-<span id="cb2-5"><a href="#cb2-5"></a></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.map.bz2</span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="fu">bunzip2</span> <span class="va">$prefix</span>.map.bz2</span>
-<span id="cb2-8"><a href="#cb2-8"></a></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.ped.bz2</span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="fu">bunzip2</span> <span class="va">$prefix</span>.per.bz2</span>
-<span id="cb2-11"><a href="#cb2-11"></a></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="fu">wget</span> <span class="va">$ftp</span>/relationships_w_pops_121708.txt</span></code></pre></div>
-<p>We then convert the <a href="https://www.cog-genomics.org/plink/1.9/input#ped">PLINK text format</a> to the standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped">PLINK binary format</a>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">plink</span> --file <span class="va">$refdir</span>/<span class="va">$prefix</span> \</span>
-<span id="cb3-2"><a href="#cb3-2"></a>      --make-bed \</span>
-<span id="cb3-3"><a href="#cb3-3"></a>      --out <span class="va">$refdir</span>/HapMapIII_NCBI36</span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="fu">mv</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.log <span class="va">$refdir</span>/log</span></code></pre></div>
+<div class="section level3">
+<h3 id="download-and-convert-hapmap-phase-iii-data">Download and convert Hapmap phase III data<a class="anchor" aria-label="anchor" href="#download-and-convert-hapmap-phase-iii-data"></a>
+</h3>
+<p>Hapmap phase 3 data (HapMapIII) is available in <a href="https://www.cog-genomics.org/plink/1.9/input#ped" class="external-link">PLINK text
+format</a> at ncbi. In addition, a sample file with information about
+the individuals’ ancestry is available and should be downloaded as in
+input for <code>plinkQC::chec_Ancestry()</code>. The following code
+chunk downloads and unzips the data.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$refdir</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="va">ftp</span><span class="op">=</span>ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/2009-01_phaseIII/plink_format/</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">prefix</span><span class="op">=</span>hapmap3_r2_b36_fwd.consensus.qc.poly</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.map.bz2</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">bunzip2</span> <span class="va">$prefix</span>.map.bz2</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="va">$ftp</span>/<span class="va">$prefix</span>.ped.bz2</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">bunzip2</span> <span class="va">$prefix</span>.per.bz2</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="va">$ftp</span>/relationships_w_pops_121708.txt</span></code></pre></div>
+<p>We then convert the <a href="https://www.cog-genomics.org/plink/1.9/input#ped" class="external-link">PLINK text
+format</a> to the standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped" class="external-link">PLINK binary
+format</a>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--file</span> <span class="va">$refdir</span>/<span class="va">$prefix</span> <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$refdir</span>/HapMapIII_NCBI36</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.log <span class="va">$refdir</span>/log</span></code></pre></div>
 </div>
-<div id="update-annotation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#update-annotation" class="anchor"></a>Update annotation</h2>
-<p>The genome build of HapMap III data is NCBI36. Currently most datasets are updated to CGRCh37 or CGRCh38. In order to update the HapMap III data to the desired build, we use the UCSC <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver">liftOver</a> tool. The liftOver tool takes information in a format similar to the <a href="https://www.cog-genomics.org/plink/1.9/formats#bim">PLINK .bim</a> format, the <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">UCSC bed format</a> and a <a href="http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/">liftover chain</a>, containing the mapping information between the old genome (target) and new genome (query). It returns the updated annotation (newFile) and a file with unmappable variants (unMapped):</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">liftOver</span> oldFile liftover.chain newFile unMapped</span></code></pre></div>
-<p>We first need to download the liftOver tool from <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="uri">https://genome.ucsc.edu/cgi-bin/hgLiftOver</a> and the appropriate liftover chain from <a href="http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/" class="uri">http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/</a>). We then convert the <a href="https://www.cog-genomics.org/plink/1.9/formats#bim">PLINK .bim</a> format, to the zero-based <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">UCSC bed</a> format.</p>
-<p>Hapmap chromosome data is encoded numerically, with chrX represented by chr23, and chrY as chr24. In order to match to data encoded by chrX and chrY, we will have to rename these hapmap chromosomes. Converting to zero-based UCSC format and re-coding chromosome codes can be achieved by:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">awk</span> <span class="st">'{print "chr" $1, $4 -1, $4, $2 }'</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.bim <span class="kw">|</span> <span class="kw">\</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>    <span class="fu">sed</span> <span class="st">'s/chr23/chrX/'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/chr24/chrY/'</span> <span class="op">&gt;</span> \</span>
-<span id="cb5-3"><a href="#cb5-3"></a>    <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift</span></code></pre></div>
-<p>[Note: In the official HapMap release, chromosome codes described above, however in the original download files (link above), no chr24 detected. I will keep this line in for completeness, but note, when inspecting file that no chr24/chrY are present.]</p>
-<p>We use the liftOver tool and the UCSC bed formated annotation file together with the appropriate chain file to do the lift over.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="ex">liftOver</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift <span class="va">$refdir</span>/hg18ToHg19.over.chain \</span>
-<span id="cb6-2"><a href="#cb6-2"></a>    <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="va">$refdir</span>/HapMapIII_NCBI36.unMapped</span></code></pre></div>
-<p>After successful liftover, we will be able to extract i) the variants that were mappable from the old to the new genome and ii) their updated positions</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># ectract mapped variants</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">awk</span> <span class="st">'{print $4}'</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="op">&gt;</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps</span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="co"># ectract updated positions</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="fu">awk</span> <span class="st">'{print $4, $3}'</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="op">&gt;</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos</span></code></pre></div>
+<div class="section level3">
+<h3 id="update-annotation">Update annotation<a class="anchor" aria-label="anchor" href="#update-annotation"></a>
+</h3>
+<p>The genome build of HapMap III data is NCBI36. Currently most
+datasets are updated to CGRCh37 or CGRCh38. In order to update the
+HapMap III data to the desired build, we use the UCSC <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a> tool. The
+liftOver tool takes information in a format similar to the <a href="https://www.cog-genomics.org/plink/1.9/formats#bim" class="external-link">PLINK .bim</a>
+format, the <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1" class="external-link">UCSC bed
+format</a> and a <a href="http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/" class="external-link">liftover
+chain</a>, containing the mapping information between the old genome
+(target) and new genome (query). It returns the updated annotation
+(newFile) and a file with unmappable variants (unMapped):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">liftOver</span> oldFile liftover.chain newFile unMapped</span></code></pre></div>
+<p>We first need to download the liftOver tool from <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link uri">https://genome.ucsc.edu/cgi-bin/hgLiftOver</a> and the
+appropriate liftover chain from <a href="http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/" class="external-link uri">http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/</a>).
+We then convert the <a href="https://www.cog-genomics.org/plink/1.9/formats#bim" class="external-link">PLINK .bim</a>
+format, to the zero-based <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1" class="external-link">UCSC bed</a>
+format.</p>
+<p>Hapmap chromosome data is encoded numerically, with chrX represented
+by chr23, and chrY as chr24. In order to match to data encoded by chrX
+and chrY, we will have to rename these hapmap chromosomes. Converting to
+zero-based UCSC format and re-coding chromosome codes can be achieved
+by:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print "chr" $1, $4 -1, $4, $2 }'</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.bim <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sed</span> <span class="st">'s/chr23/chrX/'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/chr24/chrY/'</span> <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift</span></code></pre></div>
+<p>[Note: In the official HapMap release, chromosome codes described
+above, however in the original download files (link above), no chr24
+detected. I will keep this line in for completeness, but note, when
+inspecting file that no chr24/chrY are present.]</p>
+<p>We use the liftOver tool and the UCSC bed formated annotation file
+together with the appropriate chain file to do the lift over.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">liftOver</span> <span class="va">$refdir</span>/HapMapIII_NCBI36.tolift <span class="va">$refdir</span>/hg18ToHg19.over.chain <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="va">$refdir</span>/HapMapIII_NCBI36.unMapped</span></code></pre></div>
+<p>After successful liftover, we will be able to extract i) the variants
+that were mappable from the old to the new genome and ii) their updated
+positions</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ectract mapped variants</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print $4}'</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="op">&gt;</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ectract updated positions</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print $4, $3}'</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37 <span class="op">&gt;</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos</span></code></pre></div>
 </div>
-<div id="update-the-reference-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#update-the-reference-data" class="anchor"></a>Update the reference data</h2>
-<p>We can now use PLINK to extract the mappable variants from the old build and update their position. After these steps, the HapMap III dataset can be used for inferring study ancestry as described in the corresponding <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry estimation vignette</a>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">plink</span> --bfile <span class="va">$refdir</span>/HapMapIII_NCBI36 \</span>
-<span id="cb8-2"><a href="#cb8-2"></a>    --extract <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps \</span>
-<span id="cb8-3"><a href="#cb8-3"></a>    --update-map <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos \</span>
-<span id="cb8-4"><a href="#cb8-4"></a>    --make-bed \</span>
-<span id="cb8-5"><a href="#cb8-5"></a>    --out <span class="va">$refdir</span>/HapMapIII_CGRCh37</span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="fu">mv</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.log <span class="va">$refdir</span>/log</span></code></pre></div>
+<div class="section level3">
+<h3 id="update-the-reference-data">Update the reference data<a class="anchor" aria-label="anchor" href="#update-the-reference-data"></a>
+</h3>
+<p>We can now use PLINK to extract the mappable variants from the old
+build and update their position. After these steps, the HapMap III
+dataset can be used for inferring study ancestry as described in the
+corresponding <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html" class="external-link">Ancestry
+estimation vignette</a>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$refdir</span>/HapMapIII_NCBI36 <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--extract</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--update-map</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--out</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.log <span class="va">$refdir</span>/log</span></code></pre></div>
 </div>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
-<div id="refs" class="references">
-<div id="ref-HapMap2005">
-<p>1. The International HapMap Consortium. A haplotype map of the human genome. Nature. 2005;437: 1299–320. doi:<a href="https://doi.org/10.1038/nature04226">10.1038/nature04226</a></p>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-HapMap2005" class="csl-entry">
+<div class="csl-left-margin">1. </div>
+<div class="csl-right-inline">The
+International HapMap Consortium. <span class="nocase">A haplotype map of
+the human genome.</span> Nature. 2005;437: 1299–320. doi:<a href="https://doi.org/10.1038/nature04226" class="external-link">10.1038/nature04226</a>
 </div>
-<div id="ref-HapMap2007">
-<p>2. The International HapMap Consortium. A second generation human haplotype map of over 3.1 million SNPs. Nature. 2007;449: 851. doi:<a href="https://doi.org/10.1038/nature06258">10.1038/nature06258</a></p>
 </div>
-<div id="ref-HapMap2010">
-<p>3. The International HapMap Consortium. Integrating common and rare genetic variation in diverse human populations. Nature. 2010;467. doi:<a href="https://doi.org/10.1038/nature09298">10.1038/nature09298</a></p>
+<div id="ref-HapMap2007" class="csl-entry">
+<div class="csl-left-margin">2. </div>
+<div class="csl-right-inline">The
+International HapMap Consortium. <span class="nocase">A second
+generation human haplotype map of over 3.1 million SNPs</span>. Nature.
+2007;449: 851–. doi:<a href="https://doi.org/10.1038/nature06258" class="external-link">10.1038/nature06258</a>
+</div>
+</div>
+<div id="ref-HapMap2010" class="csl-entry">
+<div class="csl-left-margin">3. </div>
+<div class="csl-right-inline">The
+International HapMap Consortium. <span class="nocase">Integrating common
+and rare genetic variation in diverse human populations</span>. Nature.
+2010;467. doi:<a href="https://doi.org/10.1038/nature09298" class="external-link">10.1038/nature09298</a>
+</div>
 </div>
 </div>
 </div>
@@ -213,11 +263,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Hannah Meyer.</p>
+  <p></p>
+<p>Developed by Hannah Meyer, Caroline Walter.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -225,6 +277,8 @@
 
   
 
+
+  
 
   </body>
 </html>

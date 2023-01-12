@@ -20,8 +20,10 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
-      <header><div class="navbar navbar-standard navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -32,62 +34,45 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home"></span>
-     
-  </a>
+  <a href="../articles/plinkQC.html">Get started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-file"></span>
-     
-    documentation
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/plinkQC.html">Step-by-step QC</a>
+      <a href="../articles/AncestryCheck.html">Ancestry estimation based on reference samples of known ethnicities</a>
     </li>
     <li>
-      <a href="../articles/AncestryCheck.html">Ancestry</a>
+      <a href="../articles/Genomes1000.html">Processing 1000 Genomes reference data for ancestry estimation</a>
     </li>
     <li>
-      <a href="../articles/HapMap.html">HapMap III reference</a>
-    </li>
-    <li>
-      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
+      <a href="../articles/HapMap.html">Processing HapMap III reference data for ancestry estimation</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+  <a href="https://github.com/meyer-lab-cshl/plinkQC/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
-    news
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">
-    <span class="fas fa-code"></span>
-     
-    functions
-  </a>
-</li>
-<li>
-  <a href="https://github.com/HannahVMeyer/plinkQC">
-    <span class="fas fa-github fa-lg"></span>
-     
-    github
   </a>
 </li>
       </ul>
@@ -100,225 +85,350 @@
 
       
 
-      </header><script src="AncestryCheck_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Ancestry estimation based on reference samples of known ethnicities</h1>
-                        <h4 class="author">Hannah Meyer</h4>
+      <h1 data-toc-skip>Ancestry estimation based on reference samples
+of known ethnicities</h1>
+                        <h4 data-toc-skip class="author">Hannah
+Meyer</h4>
             
-            <h4 class="date">2021-07-15</h4>
+            <h4 data-toc-skip class="date">2023-01-12</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/master/vignettes/AncestryCheck.Rmd"><code>vignettes/AncestryCheck.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/AncestryCheck.Rmd" class="external-link"><code>vignettes/AncestryCheck.Rmd</code></a></small>
       <div class="hidden name"><code>AncestryCheck.Rmd</code></div>
 
     </div>
 
     
     
-<div id="ancestry-estimation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#ancestry-estimation" class="anchor"></a>Ancestry estimation</h1>
-<p>The identification of individuals of divergent ancestry can be achieved by combining the genotypes of the study population with genotypes of a reference dataset consisting of individuals from known ethnicities (for instance individuals from the Hapmap or 1000 genomes study <span class="citation">[1]</span>). Principal component analysis (PCA) on this combined genotype panel can then be used to detect population structure down to the level of the reference dataset (for Hapmap and 1000 Genomes, this is down to large-scale continental ancestry).</p>
-<p>In the following, the workflow for combining a study dataset with the reference samples, conducting PCA and estimating ancestry is demonstrated. The study dataset consists of 200 individuals and 10,000 genetic markers and is provided with <span class="math inline">\(plinkQC\)</span> in <code><a href="https://rdrr.io/r/base/file.path.html">file.path(find.package('plinkQC'),'extdata')</a></code>.</p>
+<div class="section level2">
+<h2 id="ancestry-estimation">Ancestry estimation<a class="anchor" aria-label="anchor" href="#ancestry-estimation"></a>
+</h2>
+<p>The identification of individuals of divergent ancestry can be
+achieved by combining the genotypes of the study population with
+genotypes of a reference dataset consisting of individuals from known
+ethnicities (for instance individuals from the Hapmap or 1000 genomes
+study <span class="citation">[5]</span>). Principal componeanalysis
+(PCA) on this combined genotype panel can then be used to detect
+population structure down to the level of the reference dataset (for
+Hapmap and 1000 Genomes, this is down to large-scale continental
+ancestry).</p>
+<p>In the following, the workflow for combining a study dataset with the
+reference samples, conducting PCA and estimating ancestry is
+demonstrated. The study dataset consists of 200 individuals and 10,000
+genetic markers and is provided with <span class="math inline">\(plinkQC\)</span> in
+<code>file.path(find.package('plinkQC'),'extdata')</code>.</p>
 </div>
-<div id="workflow" class="section level1">
-<h1 class="hasAnchor">
-<a href="#workflow" class="anchor"></a>Workflow</h1>
-<div id="download-reference-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#download-reference-data" class="anchor"></a>Download reference data</h2>
-<p>A suitable reference dataset should be downloaded and if necessary, re-formated into PLINK format. Vignettes <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html">‘Processing HapMap III reference data for ancestry estimation’</a> and <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/1000Genomes.html">‘Processing 1000Genomes reference data for ancestry estimation’</a>, show the download and processing of the HapMap phase III and 1000Genomes phase III dataset, respectively. In this example, we will use the HapmapIII data as the reference dataset.</p>
+<div class="section level2">
+<h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
+</h2>
+<div class="section level3">
+<h3 id="download-reference-data">Download reference data<a class="anchor" aria-label="anchor" href="#download-reference-data"></a>
+</h3>
+<p>A suitable reference dataset should be downloaded and if necessary,
+re-formated into PLINK format. Vignettes <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html" class="external-link">‘Processing
+HapMap III reference data for ancestry estimation’</a> and <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html" class="external-link">‘Processing
+1000Genomes reference data for ancestry estimation’</a>, show the
+download and processing of the HapMap phase III and 1000Genomes phase
+III dataset, respectively. In this example, we will use the HapmapIII
+data as the reference dataset.</p>
 </div>
-<div id="set-up" class="section level2">
-<h2 class="hasAnchor">
-<a href="#set-up" class="anchor"></a>Set-up</h2>
-<p>We will first set up some bash variables and create directories needed; storing the names and directories of the reference and study will make it easy to use updated versions of the reference or new datasets in the future. Is is also useful to keep the PLINK log-files for future reference. In order to keep the data directory tidy, we’ll create a directory for the log files and move them to the log directory here after each analysis step.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="va">qcdir=</span><span class="st">'~/qcdir'</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="va">refdir=</span><span class="st">'~/reference'</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="va">name=</span><span class="st">'data'</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="va">refname=</span><span class="st">'HapMapIII'</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">mkdir</span> -r <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="section level3">
+<h3 id="set-up">Set-up<a class="anchor" aria-label="anchor" href="#set-up"></a>
+</h3>
+<p>We will first set up some bash variables and create directories
+needed; storing the names and directories of the reference and study
+will make it easy to use updated versions of the reference or new
+datasets in the future. We create a directory named ‘qcdir’ for the
+study data. Is is also useful to keep the PLINK log-files for future
+reference. In order to keep the data directory tidy, we’ll create a
+directory for the log files and move them to the log directory here
+after each analysis step. Once you have created ‘qcdir’, be sure to copy
+the data.bim, data.bed, and data.fam files into your directory. If you
+are using HapMap III reference data, be sure to use the correct variable
+name; refname=‘HapMapIII’.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">qcdir</span><span class="op">=</span>~/qcdir</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="st">'data'</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">refname</span><span class="op">=</span><span class="st">'all_hg38'</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
-<div id="match-study-genotypes-and-reference-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#match-study-genotypes-and-reference-data" class="anchor"></a>Match study genotypes and reference data</h2>
-<p>In order to compute joint principal components of the reference and study population, we’ll need to combine the two datasets. The plink –merge function enables this merge, but requires the variants in the datasets to be matching by chromosome, position and alleles. The following sections show how to extract the relevant data from the reference and study dataset and how to filter matching variants.</p>
-<div id="filter-reference-and-study-data-for-non-a-t-or-g-c-snps" class="section level3">
-<h3 class="hasAnchor">
-<a href="#filter-reference-and-study-data-for-non-a-t-or-g-c-snps" class="anchor"></a>Filter reference and study data for non A-T or G-C SNPs</h3>
-<p>We will use an awk script to find A→T and C→G SNPs. As these SNPs are more difficult to align and only a subset of SNPs is required for the analysis, we will remove them from both the reference and study data set.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> \</span>
-<span id="cb2-3"><a href="#cb2-3"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.bim  <span class="op">&gt;</span> \</span>
-<span id="cb2-4"><a href="#cb2-4"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps</span>
-<span id="cb2-5"><a href="#cb2-5"></a></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> \</span>
-<span id="cb2-8"><a href="#cb2-8"></a>    <span class="va">$refdir</span>/<span class="va">$refname</span>.bim  <span class="op">&gt;</span> \</span>
-<span id="cb2-9"><a href="#cb2-9"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps</span>
-<span id="cb2-10"><a href="#cb2-10"></a>   </span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="ex">plink</span> --bfile  <span class="va">$refdir</span>/<span class="va">$refname</span> \</span>
-<span id="cb2-12"><a href="#cb2-12"></a>      --exclude <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps \</span>
-<span id="cb2-13"><a href="#cb2-13"></a>      --make-bed \</span>
-<span id="cb2-14"><a href="#cb2-14"></a>      --out <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps</span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.no_ac_gt_snps.log</span>
-<span id="cb2-16"><a href="#cb2-16"></a></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="ex">plink</span> --bfile  <span class="va">$qcdir</span>/<span class="va">$name</span> \</span>
-<span id="cb2-18"><a href="#cb2-18"></a>      --exclude <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps \</span>
-<span id="cb2-19"><a href="#cb2-19"></a>      --make-bed \</span>
-<span id="cb2-20"><a href="#cb2-20"></a>      --out <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps</span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.no_ac_gt_snps.log</span></code></pre></div>
+<div class="section level3">
+<h3 id="match-study-genotypes-and-reference-data">Match study genotypes and reference data<a class="anchor" aria-label="anchor" href="#match-study-genotypes-and-reference-data"></a>
+</h3>
+<p>In order to compute joint principal components of the reference and
+study population, we’ll need to combine the two datasets. The plink
+–merge function enables this merge, but requires the variants in the
+datasets to be matching by chromosome, position and alleles. The
+following sections show how to extract the relevant data from the
+reference and study dataset and how to filter matching variants.</p>
+<div class="section level4">
+<h4 id="filter-reference-and-study-data-for-non-a-t-or-g-c-snps">Filter reference and study data for non A-T or G-C SNPs<a class="anchor" aria-label="anchor" href="#filter-reference-and-study-data-for-non-a-t-or-g-c-snps"></a>
+</h4>
+<p>We will use an awk script to find A→T and C→G SNPs. As these SNPs are
+more difficult to align and only a subset of SNPs is required for the
+analysis, we will remove them from both the reference and study data
+set.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">$refdir</span>/<span class="va">$refname</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$refdir</span>/<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps <span class="dt">\</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> <span class="dt">\</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.no_ac_gt_snps.log</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span> <span class="dt">\</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps <span class="dt">\</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> <span class="dt">\</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.no_ac_gt_snps.log</span></code></pre></div>
 </div>
-<div id="prune-study-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#prune-study-data" class="anchor"></a>Prune study data</h3>
-<p>We will conduct principle component analysis on genetic variants that are pruned for variants in linkage disequilibrium (LD) with an <span class="math inline">\(r^2 &gt;0.2\)</span> in a 50kb window. The LD-pruned dataset is generated below, using plink –indep-pairwise to compute the LD-variants; additionally exclude range is used to remove genomic ranges of known high-LD structure. This file was originally provided by <span class="citation">[6]</span> and is available in <code><a href="https://rdrr.io/r/base/file.path.html">file.path(find.package('plinkQC'),'extdata','high-LD-regions.txt')</a></code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">plink</span> --bfile  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps \</span>
-<span id="cb3-2"><a href="#cb3-2"></a>      --exclude range  <span class="va">$refdir</span>/<span class="va">$highld</span> \</span>
-<span id="cb3-3"><a href="#cb3-3"></a>      --indep-pairwise 50 5 0.2 \</span>
-<span id="cb3-4"><a href="#cb3-4"></a>      --out <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps</span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.prune.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.prune.log</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="ex">plink</span> --bfile  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps \</span>
-<span id="cb3-8"><a href="#cb3-8"></a>      --extract <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.prune.in \</span>
-<span id="cb3-9"><a href="#cb3-9"></a>      --make-bed \</span>
-<span id="cb3-10"><a href="#cb3-10"></a>      --out <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned</span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.pruned.log</span></code></pre></div>
+<div class="section level4">
+<h4 id="prune-study-data">Prune study data<a class="anchor" aria-label="anchor" href="#prune-study-data"></a>
+</h4>
+<p>We will conduct principle component analysis on genetic variants that
+are pruned for variants in linkage disequilibrium (LD) with an <span class="math inline">\(r^2 &gt;0.2\)</span> in a 50kb window. The
+LD-pruned dataset is generated below, using plink –indep-pairwise to
+compute the LD-variants; additionally exclude range is used to remove
+genomic ranges of known high-LD structure. This file was originally
+provided by <span class="citation">[6]</span> and is available in
+<code>file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')</code>.
+If there has been an update in reference data, this will need to be
+updated as well.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">highld</span><span class="op">=</span><span class="st">' high-LD-regions-hg38-GRCh38.txt'</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--exclude</span> range  <span class="va">$qcdir</span>/<span class="va">$highld</span> <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">--indep-pairwise</span> 50 5 0.2 <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.prune.log</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps <span class="dt">\</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.prune.in <span class="dt">\</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.pruned.log</span></code></pre></div>
 </div>
-<div id="filter-reference-data-for-the-same-snp-set-as-in-study" class="section level3">
-<h3 class="hasAnchor">
-<a href="#filter-reference-data-for-the-same-snp-set-as-in-study" class="anchor"></a>Filter reference data for the same SNP set as in study</h3>
-<p>We will use the list of pruned variants from the study sample to reduce the reference dataset to the size of the study samples:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">plink</span> --bfile  <span class="va">$refdir</span>/<span class="va">$refname</span> \</span>
-<span id="cb4-2"><a href="#cb4-2"></a>      --extract <span class="va">$qcdir</span>/<span class="va">$name</span>.prune.in \</span>
-<span id="cb4-3"><a href="#cb4-3"></a>      --make-bed \</span>
-<span id="cb4-4"><a href="#cb4-4"></a>      --out <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned</span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.pruned.log</span></code></pre></div>
+<div class="section level4">
+<h4 id="filter-reference-data-for-the-same-snp-set-as-in-study">Filter reference data for the same SNP set as in study<a class="anchor" aria-label="anchor" href="#filter-reference-data-for-the-same-snp-set-as-in-study"></a>
+</h4>
+<p>We will use the list of pruned variants from the study sample to
+reduce the reference dataset to the size of the study samples:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$refdir</span>/<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.prune.in <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> 0 <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.pruned.log</span></code></pre></div>
 </div>
-<div id="check-and-correct-chromosome-mismatch" class="section level3">
-<h3 class="hasAnchor">
-<a href="#check-and-correct-chromosome-mismatch" class="anchor"></a>Check and correct chromosome mismatch</h3>
-<p>The following section uses an awk-script to check that the variant IDs of the reference data have the same chromosome ID as the study data. For computing the genetic PC, the annotation is not important, however, merging the files via PLINK will only work for variants with perfectly matching attributes. For simplicity, we update the pruned reference dataset. Note, that sex chromosomes are often encoded differently and might make the matching more difficult. Again, for simplicity and since not crucial to the final task, we will ignore XY-encoded sex chromosomes (via <code>sed -n '/^[XY]/!p'</code>).</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$2]=$1; next} \</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="st">    ($2 in a &amp;&amp; a[$2] != $1)  {print a[$2],$2}'</span> \</span>
-<span id="cb5-3"><a href="#cb5-3"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="kw">|</span> <span class="kw">\</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a>    <span class="fu">sed</span> -n <span class="st">'/^[XY]/!p'</span> <span class="op">&gt;</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.toUpdateChr</span>
-<span id="cb5-5"><a href="#cb5-5"></a></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="ex">plink</span> --bfile <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned \</span>
-<span id="cb5-7"><a href="#cb5-7"></a>      --update-chr <span class="va">$qcdir</span>/<span class="va">$refname</span>.toUpdateChr 1 2 \</span>
-<span id="cb5-8"><a href="#cb5-8"></a>      --make-bed \</span>
-<span id="cb5-9"><a href="#cb5-9"></a>      --out <span class="va">$qcdir</span>/<span class="va">$refname</span>.updateChr</span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.updateChr.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.updateChr.log</span></code></pre></div>
+<div class="section level4">
+<h4 id="check-and-correct-chromosome-mismatch">Check and correct chromosome mismatch<a class="anchor" aria-label="anchor" href="#check-and-correct-chromosome-mismatch"></a>
+</h4>
+<p>The following section uses an awk-script to check that the variant
+IDs of the reference data have the same chromosome ID as the study data.
+For computing the genetic PC, the annotation is not important, however,
+merging the files via PLINK will only work for variants with perfectly
+matching attributes. For simplicity, we update the pruned reference
+dataset. Note, that sex chromosomes are often encoded differently and
+might make the matching more difficult. Again, for simplicity and since
+not crucial to the final task, we will ignore XY-encoded sex chromosomes
+(via <code>sed -n '/^[XY]/!p'</code>).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$2]=$1; next} \</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">    ($2 in a &amp;&amp; a[$2] != $1)  {print a[$2],$2}'</span> <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sed</span> <span class="at">-n</span> <span class="st">'/^[XY]/!p'</span> <span class="op">&gt;</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.toUpdateChr</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">--update-chr</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.toUpdateChr 1 2 <span class="dt">\</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.updateChr</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.updateChr.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.updateChr.log</span></code></pre></div>
 </div>
-<div id="position-mismatch" class="section level3">
-<h3 class="hasAnchor">
-<a href="#position-mismatch" class="anchor"></a>Position mismatch</h3>
-<p>Similar to the chromosome matching, we use an awk-script to find variants with mis-matching chromosomal positions.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$2]=$4; next} \</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="st">    ($2 in a &amp;&amp; a[$2] != $4)  {print a[$2],$2}'</span> \</span>
-<span id="cb6-3"><a href="#cb6-3"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="op">&gt;</span> \</span>
-<span id="cb6-4"><a href="#cb6-4"></a>    <span class="va">$qcdir</span>/<span class="va">${refname}</span>.toUpdatePos</span></code></pre></div>
+<div class="section level4">
+<h4 id="position-mismatch">Position mismatch<a class="anchor" aria-label="anchor" href="#position-mismatch"></a>
+</h4>
+<p>Similar to the chromosome matching, we use an awk-script to find
+variants with mis-matching chromosomal positions.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$2]=$4; next} \</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">    ($2 in a &amp;&amp; a[$2] != $4)  {print a[$2],$2}'</span> <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">${refname}</span>.toUpdatePos</span></code></pre></div>
 </div>
-<div id="possible-allele-flips" class="section level3">
-<h3 class="hasAnchor">
-<a href="#possible-allele-flips" class="anchor"></a>Possible allele flips</h3>
-<p>Unlike chromosomal and base-pair annotation, mismatching allele-annotations will not only prevent the plink –merge, but also mean that it is likely that actually a different genotype was measured. Initially, we can use the following awk-script to check if non-matching allele codes are a simple case of allele flips.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$1$2$4]=$5$6; next} \</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="st">    ($1$2$4 in a &amp;&amp; a[$1$2$4] != $5$6 &amp;&amp; a[$1$2$4] != $6$5)  {print $2}'</span> \</span>
-<span id="cb7-3"><a href="#cb7-3"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="op">&gt;</span> \</span>
-<span id="cb7-4"><a href="#cb7-4"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.toFlip</span></code></pre></div>
+<div class="section level4">
+<h4 id="possible-allele-flips">Possible allele flips<a class="anchor" aria-label="anchor" href="#possible-allele-flips"></a>
+</h4>
+<p>Unlike chromosomal and base-pair annotation, mismatching
+allele-annotations will not only prevent the plink –merge, but also mean
+that it is likely that actually a different genotype was measured.
+Initially, we can use the following awk-script to check if non-matching
+allele codes are a simple case of allele flips.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$1$2$4]=$5$6; next} \</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="st">    ($1$2$4 in a &amp;&amp; a[$1$2$4] != $5$6 &amp;&amp; a[$1$2$4] != $6$5)  {print $2}'</span> <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.bim <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.toFlip</span></code></pre></div>
 </div>
-<div id="upate-positions-and-flip-alleles" class="section level3">
-<h3 class="hasAnchor">
-<a href="#upate-positions-and-flip-alleles" class="anchor"></a>Upate positions and flip alleles</h3>
-<p>We use plink to update the mismatching positions and possible allele-flips identified above.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">plink</span> --bfile <span class="va">$qcdir</span>/<span class="va">$refname</span>.updateChr \</span>
-<span id="cb8-2"><a href="#cb8-2"></a>      --update-map <span class="va">$qcdir</span>/<span class="va">$refname</span>.toUpdatePos 1 2 \</span>
-<span id="cb8-3"><a href="#cb8-3"></a>      --flip <span class="va">$qcdir</span>/<span class="va">$refname</span>.toFlip \</span>
-<span id="cb8-4"><a href="#cb8-4"></a>      --make-bed \</span>
-<span id="cb8-5"><a href="#cb8-5"></a>      --out <span class="va">$qcdir</span>/<span class="va">$refname</span>.flipped</span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.flipped.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.flipped.log</span></code></pre></div>
+<div class="section level4">
+<h4 id="upate-positions-and-flip-alleles">Upate positions and flip alleles<a class="anchor" aria-label="anchor" href="#upate-positions-and-flip-alleles"></a>
+</h4>
+<p>We use plink to update the mismatching positions and possible
+allele-flips identified above.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.updateChr <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--update-map</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.toUpdatePos 1 2 <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--flip</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.toFlip <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.flipped</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.flipped.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.flipped.log</span></code></pre></div>
 </div>
-<div id="remove-mismatches" class="section level3">
-<h3 class="hasAnchor">
-<a href="#remove-mismatches" class="anchor"></a>Remove mismatches</h3>
-<p>Any alleles that do not match after allele flipping, are identified and removed from the reference dataset.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$1$2$4]=$5$6; next} \</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="st">    ($1$2$4 in a &amp;&amp; a[$1$2$4] != $5$6 &amp;&amp; a[$1$2$4] != $6$5) {print $2}'</span> \</span>
-<span id="cb9-3"><a href="#cb9-3"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.flipped.bim <span class="op">&gt;</span> \</span>
-<span id="cb9-4"><a href="#cb9-4"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.mismatch</span>
-<span id="cb9-5"><a href="#cb9-5"></a></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="ex">plink</span> --bfile <span class="va">$qcdir</span>/<span class="va">$refname</span>.flipped \</span>
-<span id="cb9-7"><a href="#cb9-7"></a>      --exclude <span class="va">$qcdir</span>/<span class="va">$refname</span>.mismatch \</span>
-<span id="cb9-8"><a href="#cb9-8"></a>      --make-bed \</span>
-<span id="cb9-9"><a href="#cb9-9"></a>      --out <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean</span>
-<span id="cb9-10"><a href="#cb9-10"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.clean.log</span></code></pre></div>
+<div class="section level4">
+<h4 id="remove-mismatches">Remove mismatches<a class="anchor" aria-label="anchor" href="#remove-mismatches"></a>
+</h4>
+<p>Any alleles that do not match after allele flipping, are identified
+and removed from the reference dataset.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"} FNR==NR {a[$1$2$4]=$5$6; next} \</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">    ($1$2$4 in a &amp;&amp; a[$1$2$4] != $5$6 &amp;&amp; a[$1$2$4] != $6$5) {print $2}'</span> <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.bim <span class="va">$qcdir</span>/<span class="va">$refname</span>.flipped.bim <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.mismatch</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.flipped <span class="dt">\</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.mismatch <span class="dt">\</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.clean.log</span></code></pre></div>
 </div>
 </div>
-<div id="merge-study-genotypes-and-reference-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#merge-study-genotypes-and-reference-data" class="anchor"></a>Merge study genotypes and reference data</h2>
-<p>The matching study and reference dataset can now be merged into a combined dataset with plink –bmerge. If all steps outlined above were conducted successfully, no mismatch errors should occur.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1"></a><span class="ex">plink</span> --bfile <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned  \</span>
-<span id="cb10-2"><a href="#cb10-2"></a>      --bmerge <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean.bed <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean.bim \</span>
-<span id="cb10-3"><a href="#cb10-3"></a>         <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean.fam  \</span>
-<span id="cb10-4"><a href="#cb10-4"></a>      --make-bed \</span>
-<span id="cb10-5"><a href="#cb10-5"></a>      --out <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="section level3">
+<h3 id="merge-study-genotypes-and-reference-data">Merge study genotypes and reference data<a class="anchor" aria-label="anchor" href="#merge-study-genotypes-and-reference-data"></a>
+</h3>
+<p>The matching study and reference dataset can now be merged into a
+combined dataset with plink –bmerge. If all steps outlined above were
+conducted successfully, no mismatch errors should occur.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned  <span class="dt">\</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean.bed <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean.bim <span class="dt">\</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         <span class="va">$qcdir</span>/<span class="va">$refname</span>.clean.fam  <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
-<div id="pca-on-the-merged-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pca-on-the-merged-data" class="anchor"></a>PCA on the merged data</h2>
-<p>We can now run principal component analysis on the combined dataset using plink –pca which returns a .eigenvec file with the family and individual ID in columns 1 and 2, followed by the first 20 principal components.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1"></a><span class="ex">plink</span> --bfile <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> \</span>
-<span id="cb11-2"><a href="#cb11-2"></a>      --pca \</span>
-<span id="cb11-3"><a href="#cb11-3"></a>      --out <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$reference</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$reference</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="section level3">
+<h3 id="pca-on-the-merged-data">PCA on the merged data<a class="anchor" aria-label="anchor" href="#pca-on-the-merged-data"></a>
+</h3>
+<p>We can now run principal component analysis on the combined dataset
+using plink –pca which returns a .eigenvec file with the family and
+individual ID in columns 1 and 2, followed by the first 20 principal
+components.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--pca</span> <span class="dt">\</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
-<div id="check-ancestry" class="section level2">
-<h2 class="hasAnchor">
-<a href="#check-ancestry" class="anchor"></a>Check ancestry</h2>
-<p>We can use the .eigenvec file to estimate the ancestry of the study samples. Identifying individuals of divergent ancestry is implemented in <code>check_ancestry</code>. Currently, check ancestry only supports automatic selection of individuals of European descent. It uses principal components 1 and 2 to find the center of the known European reference samples. All study samples whose Euclidean distance from the centre falls outside the radius specified by the maximum Euclidean distance of the reference samples multiplied by the chosen <code>europeanTh</code> are considered non-European. <code>check_ancestry</code> shows the result of the ancestry analysis in a scatter plot of PC1 versus PC2 colour-coded for samples of the reference populations and the study population. From within R, run the following command to the ancestry check:</p>
+<div class="section level3">
+<h3 id="check-ancestry">Check ancestry<a class="anchor" aria-label="anchor" href="#check-ancestry"></a>
+</h3>
+<p>We can use the .eigenvec file to estimate the ancestry of the study
+samples. Identifying individuals of divergent ancestry is implemented in
+<code>check_ancestry</code>. Currently, check ancestry only supports
+automatic selection of individuals of European descent. It uses
+principal components 1 and 2 to find the center of the known European
+reference samples. All study samples whose Euclidean distance from the
+centre falls outside the radius specified by the maximum Euclidean
+distance of the reference samples multiplied by the chosen
+<code>europeanTh</code> are considered non-European.
+<code>check_ancestry</code> shows the result of the ancestry analysis in
+a scatter plot of PC1 versus PC2 colour-coded for samples of the
+reference populations and the study population. Reminder, if you are
+using HapMap III reference data, refname will be the reference name you
+have used previously. Also, the files to use are “/HapMap_ID2Pop.txt”
+instead of the Genomes1000_ID2Pop and “HapMap_PopColors.txt”.</p>
+<p>Note: this vignette provides the 1000 Genomes annotation files, or
+the HapMap annotation files. If you choose to use either the 1000Genomes
+or HapMap reference population data, you can simply use our color
+mapping files and it should work.<br>
+If not, you must provide it to the function. An example of the color
+scheme for the 1000 Genomes reference data is found in
+‘1000Genomes_PopColors.txt’.</p>
+<p>From within R, run the following command to the ancestry check: ###
+For 1000 Genomes data</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://meyer-lab-cshl.github.io/plinkQC/">plinkQC</a></span><span class="op">)</span>
-<span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package<span class="op">=</span><span class="st">"plinkQC"</span><span class="op">)</span>
-<span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data'</span>
-<span class="va">refname</span> <span class="op">&lt;-</span> <span class="st">'HapMapIII'</span>
-<span class="va">prefixMergedDataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"."</span>, <span class="va">refname</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>
-
-<span class="va">exclude_ancestry</span> <span class="op">&lt;-</span>
-    <span class="fu"><a href="../reference/evaluate_check_ancestry.html">evaluate_check_ancestry</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, name<span class="op">=</span><span class="va">name</span>,
-                            prefixMergedDataset<span class="op">=</span><span class="va">prefixMergedDataset</span>,
-                            refSamplesFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">indir</span>, <span class="st">"/HapMap_ID2Pop.txt"</span>,
-                                                 sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>, 
-                            refColorsFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">indir</span>, <span class="st">"/HapMap_PopColors.txt"</span>,
-                                                sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>,
-                            interactive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://meyer-lab-cshl.github.io/plinkQC/" class="external-link">plinkQC</a></span><span class="op">)</span></span>
+<span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package<span class="op">=</span><span class="st">"plinkQC"</span><span class="op">)</span></span>
+<span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="st">"~/qcdir"</span></span>
+<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data'</span></span>
+<span><span class="va">refname</span> <span class="op">&lt;-</span> <span class="st">'all_hg38'</span></span>
+<span><span class="va">prefixMergedDataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"."</span>, <span class="va">refname</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">exclude_ancestry</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu"><a href="../reference/evaluate_check_ancestry.html">evaluate_check_ancestry</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
+<span>                            prefixMergedDataset<span class="op">=</span><span class="va">prefixMergedDataset</span>,</span>
+<span>                            refSamplesFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">indir</span>, </span>
+<span>                                                 <span class="st">"/Genomes1000_ID2Pop.txt"</span>,</span>
+<span>                                                 sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>, </span>
+<span>                            refColorsFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">indir</span>, </span>
+<span>                                                <span class="st">"/Genomes1000_PopColors.txt"</span>,</span>
+<span>                                                sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>,</span>
+<span>                            interactive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="checkAncestry.png" width="500px" style="display: block; margin: auto;"></p>
 </div>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
-<div id="refs" class="references">
-<div id="ref-HapMap2005">
-<p>1. The International HapMap Consortium. A haplotype map of the human genome. Nature. 2005;437: 1299–320. doi:<a href="https://doi.org/10.1038/nature04226">10.1038/nature04226</a></p>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-HapMap2005" class="csl-entry">
+<div class="csl-left-margin">1. </div>
+<div class="csl-right-inline">The
+International HapMap Consortium. <span class="nocase">A haplotype map of
+the human genome.</span> Nature. 2005;437: 1299–320. doi:<a href="https://doi.org/10.1038/nature04226" class="external-link">10.1038/nature04226</a>
 </div>
-<div id="ref-HapMap2007">
-<p>2. The International HapMap Consortium. A second generation human haplotype map of over 3.1 million SNPs. Nature. 2007;449: 851. doi:<a href="https://doi.org/10.1038/nature06258">10.1038/nature06258</a></p>
 </div>
-<div id="ref-HapMap2010">
-<p>3. The International HapMap Consortium. Integrating common and rare genetic variation in diverse human populations. Nature. 2010;467. doi:<a href="https://doi.org/10.1038/nature09298">10.1038/nature09298</a></p>
+<div id="ref-HapMap2007" class="csl-entry">
+<div class="csl-left-margin">2. </div>
+<div class="csl-right-inline">The
+International HapMap Consortium. <span class="nocase">A second
+generation human haplotype map of over 3.1 million SNPs</span>. Nature.
+2007;449: 851–. doi:<a href="https://doi.org/10.1038/nature06258" class="external-link">10.1038/nature06258</a>
 </div>
-<div id="ref-a1000Genomes2015">
-<p>4. 1000 Genomes Project Consortium. An integrated map of structural variation in 2,504 human genomes. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15394">10.1038/nature15394</a></p>
 </div>
-<div id="ref-b1000Genomes2015">
-<p>5. 1000 Genomes Project Consortium. A global reference for human genetic variation. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15393">10.1038/nature15393</a></p>
+<div id="ref-HapMap2010" class="csl-entry">
+<div class="csl-left-margin">3. </div>
+<div class="csl-right-inline">The
+International HapMap Consortium. <span class="nocase">Integrating common
+and rare genetic variation in diverse human populations</span>. Nature.
+2010;467. doi:<a href="https://doi.org/10.1038/nature09298" class="external-link">10.1038/nature09298</a>
 </div>
-<div id="ref-Anderson2010">
-<p>6. Anderson CA, Pettersson FH, Clarke GM, Cardon LR, Morris AP, Zondervan KT. Data quality control in genetic case-control association studies. Nature Protocols. 2010;5: 1564–73. doi:<a href="https://doi.org/10.1038/nprot.2010.116">10.1038/nprot.2010.116</a></p>
+</div>
+<div id="ref-a1000Genomes2015" class="csl-entry">
+<div class="csl-left-margin">4. </div>
+<div class="csl-right-inline">1000
+Genomes Project Consortium. <span class="nocase">An integrated map of
+structural variation in 2,504 human genomes</span>. Nature. 2015;526:
+75–81. doi:<a href="https://doi.org/10.1038/nature15394" class="external-link">10.1038/nature15394</a>
+</div>
+</div>
+<div id="ref-b1000Genomes2015" class="csl-entry">
+<div class="csl-left-margin">5. </div>
+<div class="csl-right-inline">1000
+Genomes Project Consortium. <span class="nocase">A global reference for
+human genetic variation</span>. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15393" class="external-link">10.1038/nature15393</a>
+</div>
+</div>
+<div id="ref-Anderson2010" class="csl-entry">
+<div class="csl-left-margin">6. </div>
+<div class="csl-right-inline">Anderson CA, Pettersson FH, Clarke GM, Cardon
+LR, Morris AP, Zondervan KT. <span class="nocase">Data quality control
+in genetic case-control association studies.</span> Nature Protocols.
+2010;5: 1564–73. doi:<a href="https://doi.org/10.1038/nprot.2010.116" class="external-link">10.1038/nprot.2010.116</a>
+</div>
 </div>
 </div>
 </div>
@@ -335,11 +445,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Hannah Meyer.</p>
+  <p></p>
+<p>Developed by Hannah Meyer, Caroline Walter.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -347,6 +459,8 @@
 
   
 
+
+  
 
   </body>
 </html>

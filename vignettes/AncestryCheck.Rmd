@@ -256,10 +256,16 @@ the result of the ancestry analysis in a scatter plot of PC1 versus
 PC2 colour-coded for samples of the reference populations and the study
 population. Reminder, if you are using HapMap III reference data, refname will
 be the reference name you have used previously. Also, the files to use are 
-"/HapMap_ID2Pop.txt" instead of the Genomes1000_ID2Pop and "HapMap_PopColors.txt"
+"/HapMap_ID2Pop.txt" instead of the Genomes1000_ID2Pop and "HapMap_PopColors.txt".
+
+Note: this vignette provides the 1000 Genomes annotation files, or the HapMap 
+annotation files. If you choose to use either the 1000Genomes or  HapMap reference 
+population data, you can simply use our color mapping files and it should work.  
+If not, you must provide it to the function.  An example of the color scheme 
+for the 1000 Genomes reference data is found in '1000Genomes_PopColors.txt'.  
 
 From within R, run the following command to the ancestry check:
-### For HapMap data
+### For 1000 Genomes data
 ```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
 library(plinkQC)
 indir <- system.file("extdata", package="plinkQC")
