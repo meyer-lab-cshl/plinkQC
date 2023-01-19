@@ -105,7 +105,7 @@ plink --bfile  $qcdir/$name \
       --out $qcdir/$name.no_ac_gt_snps
 mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 ```
-
+After here, is where you need to remove letters from ids. 
 ### Prune study data
 We will conduct principle component analysis on genetic variants that are
 pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
@@ -118,7 +118,7 @@ If there has been an update in reference data, this will need to be updated as
 well. 
 
 ```{bash prune, eval=FALSE}
-highld=' high-LD-regions-hg38-GRCh38.txt'
+highld='high-LD-regions-hg38-GRCh38.txt'
 
 plink --bfile  $qcdir/$name.no_ac_gt_snps \
       --exclude range  $qcdir/$highld \
@@ -136,8 +136,9 @@ mv  $qcdir/$name.pruned.log $qcdir/plink_log/$name.pruned.log
 ### Filter reference data for the same SNP set as in study
 We will use the list of pruned variants from the study sample to reduce the 
 reference dataset to the size of the study samples:
+Notes - make --bfile $refdir/$refname to $qcdir/$refname because the first is not converted 
 ```{bash filter, eval=FALSE}
-plink --bfile  $refdir/$refname \
+plink --bfile  $qcdir/$refname.no_ac_gt_snps \
       --extract $qcdir/$name.no_ac_gt_snps.prune.in \
       --make-bed \
       --allow-extra-chr 0 \
@@ -168,16 +169,6 @@ plink --bfile $qcdir/$refname.pruned \
 mv $qcdir/$refname.updateChr.log $qcdir/plink_log/$refname.updateChr.log
 ```
 
-### Position mismatch
-Similar to the chromosome matching, we use an awk-script to find variants with
-mis-matching chromosomal positions.
-```{bash position mismatch, eval=FALSE}
-awk 'BEGIN {OFS="\t"} FNR==NR {a[$2]=$4; next} \
-    ($2 in a && a[$2] != $4)  {print a[$2],$2}' \
-    $qcdir/$name.pruned.bim $qcdir/$refname.pruned.bim > \
-    $qcdir/${refname}.toUpdatePos
-```
-
 ### Possible allele flips
 Unlike chromosomal and base-pair annotation, mismatching allele-annotations will
 not only prevent the plink --merge, but also mean that it is likely that
@@ -185,18 +176,17 @@ actually a different genotype was measured. Initially, we can use the following
 awk-script to check if non-matching allele codes are a simple case of allele
 flips. 
 ```{bash possible allele flips, eval=FALSE}
-awk 'BEGIN {OFS="\t"} FNR==NR {a[$1$2$4]=$5$6; next} \
-    ($1$2$4 in a && a[$1$2$4] != $5$6 && a[$1$2$4] != $6$5)  {print $2}' \
+awk 'BEGIN {OFS="\t"} FNR==NR {a[$1$4]=$5$6; next} \
+    ($1$4 in a && a[$1$4] != $5$6 && a[$1$4] != $6$5)  {print $2}' \
     $qcdir/$name.pruned.bim $qcdir/$refname.pruned.bim > \
     $qcdir/$refname.toFlip
 ```
 
-### Upate positions and flip alleles
+### Update flip alleles
 We use plink to update the mismatching positions and possible allele-flips
 identified above.
 ```{bash update and flip, eval=FALSE}
 plink --bfile $qcdir/$refname.updateChr \
-      --update-map $qcdir/$refname.toUpdatePos 1 2 \
       --flip $qcdir/$refname.toFlip \
       --make-bed \
       --out $qcdir/$refname.flipped
