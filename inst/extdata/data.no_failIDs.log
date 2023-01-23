@@ -1,0 +1,26 @@
+PLINK v1.90b6.5 64-bit (13 Sep 2018)
+Options in effect:
+  --bfile /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data
+  --extract /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/extract_markers
+  --freq
+  --out /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs
+  --remove /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.lmiss.remove.IDs
+
+Hostname: hannahmbpr
+Working directory: /Users/hannah/RPackagesDevel/plinkQC
+Start time: Mon Feb  8 13:24:38 2021
+
+Random number seed: 1612808678
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+10000 variants loaded from .bim file.
+200 people (89 males, 111 females) loaded from .fam.
+--extract: 5000 variants remaining.
+--remove: 7 people remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 7 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate in remaining samples is 0.996943.
+--freq: Allele frequencies (founders only) written to
+/Users/hannah/RPackagesDevel/plinkQC/inst/extdata/data.no_failIDs.frq .
+
+End time: Mon Feb  8 13:24:38 2021

@@ -1,0 +1,42 @@
+checkPlink              Check PLINK software access
+check_ancestry          Identification of individuals of divergent
+                        ancestry
+check_het_and_miss      Identification of individuals with outlying
+                        missing genotype or heterozygosity rates
+check_hwe               Identification of SNPs showing a significant
+                        deviation from Hardy-Weinberg- equilibrium
+                        (HWE)
+check_maf               Identification of SNPs with low minor allele
+                        frequency
+check_relatedness       Identification of related individuals
+check_sex               Identification of individuals with discordant
+                        sex information
+check_snp_missingness   Identification of SNPs with high missingness
+                        rate
+cleanData               Create plink dataset with individuals and
+                        markers passing quality control
+evaluate_check_ancestry
+                        Evaluate results from PLINK PCA on combined
+                        study and reference data
+evaluate_check_het_and_miss
+                        Evaluate results from PLINK missing genotype
+                        and heterozygosity rate check.
+evaluate_check_relatedness
+                        Evaluate results from PLINK IBD estimation.
+evaluate_check_sex      Evaluate results from PLINK sex check.
+overviewPerIndividualQC
+                        Overview of per sample QC
+overviewPerMarkerQC     Overview of per marker QC
+perIndividualQC         Quality control for all individuals in
+                        plink-dataset
+perMarkerQC             Quality control for all markers in
+                        plink-dataset
+relatednessFilter       Remove related individuals while keeping
+                        maximum number of individuals
+run_check_ancestry      Run PLINK principal component analysis
+run_check_heterozygosity
+                        Run PLINK heterozygosity rate calculation
+run_check_missingness   Run PLINK missingness rate calculation
+run_check_relatedness   Run PLINK IBD estimation
+run_check_sex           Run PLINK sexcheck
+testNumerics            Test lists for different properties of numerics

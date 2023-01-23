@@ -1,0 +1,36 @@
+Package: plinkQC
+Type: Package
+Title: Genotype Quality Control with 'PLINK'
+Version: 0.3.2
+Authors@R: 
+    person("Hannah", "Meyer", email = "hannah.v.meyer@gmail.com",
+    role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4564-0899"))
+URL: https://meyer-lab-cshl.github.io/plinkQC
+BugReports: https://github.com/meyer-lab-cshl/plinkQC/issues
+Maintainer: Hannah Meyer <hannah.v.meyer@gmail.com>
+Description: Genotyping arrays enable the direct measurement of an individuals
+    genotype at thousands of markers. 'plinkQC' facilitates genotype quality
+    control for genetic association studies as described by Anderson and
+    colleagues (2010) <doi:10.1038/nprot.2010.116>. It makes 'PLINK' basic
+    statistics (e.g. missing genotyping rates per individual, allele frequencies
+    per genetic marker) and relationship functions accessible from 'R' and
+    generates a per-individual and per-marker quality control report.
+    Individuals and markers that fail the quality control can subsequently be
+    removed to generate a new, clean dataset. Removal of individuals based on
+    relationship status is optimised to retain as many individuals as possible
+    in the study.
+Depends: R (>= 3.6.0)
+Imports: methods, optparse, data.table (>= 1.11.0), R.utils, ggplot2,
+        ggforce, ggrepel, cowplot, UpSetR, dplyr, igraph (>= 1.2.4),
+        sys
+Suggests: testthat, knitr, rmarkdown
+License: MIT + file LICENSE
+SystemRequirements: plink (1.9)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2020-07-07 13:28:02 UTC; hannah
+Author: Hannah Meyer [aut, cre] (<https://orcid.org/0000-0003-4564-0899>)
+Built: R 4.0.0; ; 2020-07-07 13:29:41 UTC; unix

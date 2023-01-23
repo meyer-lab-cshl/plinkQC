@@ -1,0 +1,27 @@
+PLINK v1.90b6.5 64-bit (13 Sep 2018)
+Options in effect:
+  --bfile test
+  --make-bed
+  --out test.hh.remove
+  --set-hh-missing
+
+Hostname: hannahmbpr
+Working directory: /Users/hannah/RPackagesDevel/plinkQC/inst/extdata/createData
+Start time: Fri Nov  9 07:10:57 2018
+
+Random number seed: 1541747457
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+10000 variants loaded from .bim file.
+200 people (89 males, 111 females) loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 200 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Warning: 354 het. haploid genotypes present (see test.hh.remove.hh ); many
+commands treat these as missing.
+Total genotyping rate is 0.990506.
+10000 variants and 200 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to test.hh.remove.bed + test.hh.remove.bim + test.hh.remove.fam ...
+done.
+
+End time: Fri Nov  9 07:10:57 2018

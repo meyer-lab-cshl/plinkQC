@@ -1,0 +1,3401 @@
+Hmm ... looks like a package
+
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.6980)
+entering extended mode
+LaTeX2e <2018-12-01>
+
+(Rd2.tex
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/book.cls"
+Document Class: book 2018/09/03 v1.4i Standard LaTeX document class
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/bk10.clo"))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ifthen.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/longtable.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/bm.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/alltt.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/verbatim.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url
+/url.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/textcomp.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1enc.def"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1enc.dfu")))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/fontenc.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/t1enc.def"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/times.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/zi4.sty"
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xke
+yval/xkeyval.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/xkeyval.tex"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/xkvutils.tex"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/keyval.tex")))))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics/color.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics-cfg/color.cfg")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics-def/pdftex.def"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/hyperref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/hobsub-hyperref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/hobsub-generic.sty"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/i
+fxetex/ifxetex.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/auxhook.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/kvoptions.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/pd1enc.def")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/00m
+iktex/hyperref.cfg"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/hpdftex.def"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/rerunfilecheck.sty"))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/makeidx.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/inputenc.sty")
+Writing index file Rd2.idx
+No file Rd2.aux.
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1cmr.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/t1ptm.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/context/b
+ase/mkii/supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/nameref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/gettitlestring.sty"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/ts1ptm.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/t1zi4.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/t1phv.fd") [1{/Users/hannah/Library/Application Support/MiKTeX/texmfs/data/
+pdftex/config/pdftex.map}]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 66--72
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (9.10655pt too wide) in paragraph at lines 82--95
+\T1/ptm/m/n/10 automatic selection of individuals of European descent. It uses 
+information from principal components
+
+Overfull \hbox (38.11765pt too wide) in paragraph at lines 82--95
+\T1/ptm/m/n/10 1 and 2 returned by plink --pca to find the center of the Europe
+an reference samples (mean(PC1_europeanRef),
+[2]
+Overfull \hbox (20.10716pt too wide) in paragraph at lines 133--139
+[]\T1/ptm/m/n/10 [character] /path/to/directory where prefixMergedDataset.eigen
+vec results as returned
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 144--150
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (60.92725pt too wide) in paragraph at lines 151--154
+\T1/ptm/m/n/10 Identifiers have to be corresponding to population IDs [refColor
+sPop] in refColorsfile/refColors. 
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 155--160
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 155--160
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 166--170
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 166--170
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 177--179
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+[3]
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 180--182
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 186--188
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (9.24702pt too wide) in paragraph at lines 199--204
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_ancestry)
+
+Overfull \hbox (19.67786pt too wide) in paragraph at lines 199--204
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_ancestry, other_arguments) or pdf(outfil
+e) print(p_ancestry)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 207--213
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Underfull \hbox (badness 2495) in paragraph at lines 242--242
+[]\T1/ptm/m/it/10 Identification of individuals with outlying missing genotype 
+or
+
+Overfull \hbox (0.22789pt too wide) in paragraph at lines 245--260
+\T1/ptm/m/n/10 by [][]\T1/zi4/m/n/10 check_relatedness[][][] \T1/ptm/m/n/10 as 
+individuals that fail the relatedness filters. \T1/zi4/m/n/10 check_het_and_mis
+s \T1/ptm/m/n/10 creates
+[4]
+Overfull \hbox (23.74725pt too wide) in paragraph at lines 288--293
+[]\T1/ptm/m/n/10 [character] /path/to/directory where name.het as returned by p
+link --het and name.imiss
+
+Overfull \hbox (58.93738pt too wide) in paragraph at lines 288--293
+\T1/ptm/m/n/10 as returned by plink --missing will be saved. Per default qcdir=
+indir. If run.check_het_and_miss
+
+Overfull \hbox (19.96774pt too wide) in paragraph at lines 297--302
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable deviation from mean heterozy
+gosity per individual.
+
+Overfull \hbox (13.01724pt too wide) in paragraph at lines 297--302
+\T1/ptm/m/n/10 Expressed as multiples of standard deviation of heterozygosity (
+het), i.e. individuals
+[5]
+Overfull \hbox (14.26675pt too wide) in paragraph at lines 312--317
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_het_imiss)
+
+Overfull \hbox (32.26724pt too wide) in paragraph at lines 312--317
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_het_imiss , other_arguments) or pdf(outf
+ile) print(p_het_imiss)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 320--326
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (13.46974pt too wide) in paragraph at lines 333--342
+[][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]\T1/ptm/m/n/10 . If run.che
+ck_het_and_miss is TRUE, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]
+[6]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 411--416
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 411--416
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (25.51834pt too wide) in paragraph at lines 419--424
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_hwe, other_arguments) or pdf(outfile) pr
+int(p_hwe) dev.off(). 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 425--431
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (20.11794pt too wide) in paragraph at lines 441--446
+[]\T1/zi4/m/n/10 check_hwe \T1/ptm/m/n/10 uses plink --remove name.fail.IDs --h
+ardy to calculate the observed and expected heterozygote
+
+Overfull \hbox (10.25697pt too wide) in paragraph at lines 441--446
+\T1/ptm/m/n/10 frequencies per SNP in the individuals that passed the [][]\T1/z
+i4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 . It does so without generating
+[7]
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/ts1zi4.fd") [8]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 513--518
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 513--518
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (23.2981pt too wide) in paragraph at lines 527--532
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_maf, other_arguments) or pdf(outfile) pr
+int(p_maf) dev.off(). 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 533--539
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[9]
+Overfull \hbox (18.22731pt too wide) in paragraph at lines 626--628
+[]\T1/ptm/m/n/10 [character] Prefix of PLINK files, i.e. name.bed, name.bim, na
+me.fam, name.genome
+
+Overfull \hbox (8.78783pt too wide) in paragraph at lines 629--634
+[]\T1/ptm/m/n/10 [character] /path/to/directory to where name.genome as returne
+d by plink --genome
+
+Overfull \hbox (14.5179pt too wide) in paragraph at lines 629--634
+\T1/ptm/m/n/10 assumed that plink --missing and plink --genome have been run an
+d qcdir/name.imiss
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 635--637
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 638--642
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+[10]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 663--669
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (2.8706pt too wide) in paragraph at lines 676--682
+[][][]\T1/zi4/m/n/10 check_relatedness[][][] \T1/ptm/m/n/10 wraps around [][]\T
+1/zi4/m/n/10 run_check_relatedness[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 
+evaluate_check_relatedness[][][]\T1/ptm/m/n/10 .
+
+Overfull \hbox (4.40755pt too wide) in paragraph at lines 689--705
+\T1/ptm/m/n/10 value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 
+(P(IBD=1)), Z2 (P(IBD=2)), PI_HAT
+[11]
+Overfull \hbox (1.60793pt too wide) in paragraph at lines 770--774
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.sexcheck as return
+ed by plink --check-
+[12]
+Overfull \hbox (46.59692pt too wide) in paragraph at lines 786--789
+[]\T1/ptm/m/n/10 [data.frame, optional] Dataframe with sample IDs [externalSexI
+D] and sex [externalSexSex]
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 795--797
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 798--800
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (12.42722pt too wide) in paragraph at lines 805--810
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sexcheck)
+
+Overfull \hbox (26.68814pt too wide) in paragraph at lines 805--810
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sexcheck, other_arguments) or pdf(outfil
+e) print(p_sexcheck)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 816--822
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (33.69682pt too wide) in paragraph at lines 841--848
+\T1/ptm/m/n/10 heterozygosity (SNPSEX) of the sample split by their (PEDSEX), w
+hich can be shown by print(p_sexcheck). 
+[13]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 895--900
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 895--900
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 910--916
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[14] [15]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 1006--1011
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 1006--1011
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (21.31879pt too wide) in paragraph at lines 1017--1023
+\T1/ptm/m/n/10 rates (via [][]\T1/zi4/m/n/10 check_het_and_miss[][][] \T1/ptm/m
+/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Requires fil
+e qcdir/name.fail-
+
+Overfull \hbox (33.99733pt too wide) in paragraph at lines 1017--1023
+\T1/ptm/m/n/10 het.IDs (automatically created by [][]\T1/zi4/m/n/10 perIndividu
+alQC[][][] \T1/ptm/m/n/10 if do.evaluate_check_het_and_miss
+
+Overfull \hbox (21.31879pt too wide) in paragraph at lines 1024--1030
+\T1/ptm/m/n/10 rates (via [][]\T1/zi4/m/n/10 check_het_and_miss[][][] \T1/ptm/m
+/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Requires fil
+e qcdir/name.fail-
+
+Overfull \hbox (42.89696pt too wide) in paragraph at lines 1024--1030
+\T1/ptm/m/n/10 imiss.IDs (automatically created by [][]\T1/zi4/m/n/10 perIndivi
+dualQC[][][] \T1/ptm/m/n/10 if do.evaluate_check_het_and_miss
+
+Overfull \hbox (0.46788pt too wide) in paragraph at lines 1031--1035
+\T1/ptm/m/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Req
+uires file qcdir/name.fail-ancestry.IDs (automatically
+
+Overfull \hbox (24.62778pt too wide) in paragraph at lines 1036--1040
+[]\T1/ptm/m/n/10 [logical] Set to exclude samples that failed relatedness check
+ (via [][]\T1/zi4/m/n/10 check_relatedness[][][]
+
+Overfull \hbox (15.7877pt too wide) in paragraph at lines 1036--1040
+\T1/ptm/m/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Req
+uires file qcdir/name.fail-IBD.IDs (automatically created
+[16]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1064--1070
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[17]
+Overfull \hbox (30.55664pt too wide) in paragraph at lines 1168--1171
+[]\T1/ptm/m/n/10 [character] /path/to/directory/with/QC/results containing pref
+ixMergedDataset.eigenvec
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 1172--1177
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+[18]
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 1178--1183
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 1178--1183
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 1189--1195
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 1189--1195
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 1203--1205
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 1206--1208
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 1212--1214
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (60.92725pt too wide) in paragraph at lines 1218--1221
+\T1/ptm/m/n/10 Identifiers have to be corresponding to population IDs [refColor
+sPop] in refColorsfile/refColors. 
+
+Overfull \hbox (9.24702pt too wide) in paragraph at lines 1224--1229
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_ancestry)
+
+Overfull \hbox (19.67786pt too wide) in paragraph at lines 1224--1229
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_ancestry, other_arguments) or pdf(outfil
+e) print(p_ancestry)
+
+Overfull \hbox (25.34023pt too wide) in paragraph at lines 1233--1236
+[]\T1/ptm/m/n/10 Both [][]\T1/zi4/m/n/10 run_check_ancestry[][][] \T1/ptm/m/n/1
+0 and [][]\T1/zi4/m/n/10 evaluate_check_ancestry[][][] \T1/ptm/m/n/10 can simpl
+y be invoked by [][]\T1/zi4/m/n/10 check_ancestry[][][]\T1/ptm/m/n/10 . 
+[19]
+Overfull \hbox (26.35898pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 --het (heterozygosity rates per individual) via [][]\T1/zi4/m/n/
+10 run_check_heterozygosity[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 run_che
+ck_missingness[][][]
+
+Overfull \hbox (11.52669pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 (hz) rates per individual are often proxies for DNA sample quali
+ty. Larger than expected heterozygosity
+
+Overfull \hbox (21.83809pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 hz_mean = (N-O)/N, where N: number of non-missing genotypes and 
+O:observed number of homozygous
+
+Overfull \hbox (5.94664pt too wide) in paragraph at lines 1297--1300
+[]\T1/ptm/m/n/10 [character] path/to/directory/with/QC/results containing name.
+imiss and name.het
+[20]
+Overfull \hbox (14.26675pt too wide) in paragraph at lines 1316--1321
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_het_imiss)
+
+Overfull \hbox (32.26724pt too wide) in paragraph at lines 1316--1321
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_het_imiss , other_arguments) or pdf(outf
+ile) print(p_het_imiss)
+
+Overfull \hbox (4.84067pt too wide) in paragraph at lines 1325--1329
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and [][]
+\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+
+Overfull \hbox (25.2874pt too wide) in paragraph at lines 1366--1383
+[]\T1/ptm/m/n/10 Evaluates and depicts results from plink --genome on the LD pr
+uned dataset (via [][]\T1/zi4/m/n/10 run_check_relatedness[][][]
+[21]
+Overfull \hbox (25.38658pt too wide) in paragraph at lines 1400--1403
+[]\T1/ptm/m/n/10 [character] path/to/directory/with/QC/results containing name.
+imiss and name.genome
+
+Overfull \hbox (18.22731pt too wide) in paragraph at lines 1404--1406
+[]\T1/ptm/m/n/10 [character] Prefix of PLINK files, i.e. name.bed, name.bim, na
+me.fam, name.genome
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 1407--1409
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (4.40755pt too wide) in paragraph at lines 1434--1450
+\T1/ptm/m/n/10 value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 
+(P(IBD=1)), Z2 (P(IBD=2)), PI_HAT
+[22]
+Overfull \hbox (5.94699pt too wide) in paragraph at lines 1467--1482
+\T1/ptm/m/n/10 sex check). Takes file qcdir/name.sexcheck and returns IIDs for 
+samples whose SNPSEX != PEDSEX
+[23]
+Overfull \hbox (2.49747pt too wide) in paragraph at lines 1521--1524
+[]\T1/ptm/m/n/10 [data.frame, optional] with sample IDs [externalSexID] and sex
+ [externalSexSex]
+
+Overfull \hbox (6.31805pt too wide) in paragraph at lines 1529--1532
+\T1/ptm/m/n/10 name.bed, name.fam files; only required of fixMixup==TRUE. User 
+needs writing
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 1538--1540
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 1541--1543
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1549--1555
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (12.42722pt too wide) in paragraph at lines 1559--1564
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sexcheck)
+
+Overfull \hbox (26.68814pt too wide) in paragraph at lines 1559--1564
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sexcheck, other_arguments) or pdf(outfil
+e) print(p_sexcheck)
+[24]
+Overfull \hbox (12.77753pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 relatedness threshold highIBDTh, iii) outlying_heterozygosity co
+ntaining a [vector]
+
+Overfull \hbox (34.78687pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 with sample IIDs failing selected the heterozygosity threshold h
+etTh, iv) mismatched_sex
+
+Overfull \hbox (3.83801pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 containing a [vector] with the sample IIDs failing the sexcheck 
+based on SNPSEX
+
+Overfull \hbox (3.048pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 failing the ancestry check based on the selected europeanTh and 
+vi) p_sampleQC,
+
+Overfull \hbox (3.5183pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 a ggplot2-object 'containing' a sub-paneled plot with the QC-plo
+ts of [][]\T1/zi4/m/n/10 check_sex[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (12.58736pt too wide) in paragraph at lines 1630--1635
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_overview)
+
+Overfull \hbox (26.35852pt too wide) in paragraph at lines 1630--1635
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_overview, other_arguments) or pdf(outfil
+e) print(p_overview)
+[25]
+Overfull \hbox (22.43733pt too wide) in paragraph at lines 1686--1694
+\T1/ptm/m/n/10 threshold hweTh and 3. maf, containing SNPs failing the MAF thre
+shold mafTh/MAC
+
+Overfull \hbox (6.48802pt too wide) in paragraph at lines 1686--1694
+\T1/ptm/m/n/10 threshold macTh and ii) p_markerQC, a ggplot2-object 'containing
+' a sub-paneled
+
+Overfull \hbox (12.58736pt too wide) in paragraph at lines 1695--1700
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_overview)
+
+Overfull \hbox (26.35852pt too wide) in paragraph at lines 1695--1700
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_overview, other_arguments) or pdf(outfil
+e) print(p_overview)
+[26]
+Overfull \hbox (6.40567pt too wide) in paragraph at lines 1732--1736
+[]\T1/ptm/m/n/10 perIndividualQC checks the samples in the plink dataset for th
+eir total missingness and heterozygosity
+[27]
+Overfull \hbox (3.99721pt too wide) in paragraph at lines 1797--1807
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be saved. Pe
+r default, qcdir=indir.
+
+Overfull \hbox (46.31755pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 If do.evaluate_[analysis] is set to TRUE and do.run_[analysis] i
+s FALSE, \T1/zi4/m/n/10 perIndividualQC
+
+Overfull \hbox (16.90773pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 name.sexcheck, do.evaluate_check_het_and_miss expects name.het a
+nd name.imiss,
+
+Overfull \hbox (88.297pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 do.evaluate_check_relatedness expects name.genome and name.imiss
+ and do.evaluate_check_ancestry
+
+Overfull \hbox (8.95856pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 expects prefixMergeData.eigenvec. If these files are not present
+ \T1/zi4/m/n/10 perIndividualQC
+
+Overfull \hbox (26.72849pt too wide) in paragraph at lines 1808--1811
+[]\T1/ptm/m/n/10 [logical] If TRUE, no sex check will be conducted; short for d
+o.run_check_sex=FALSE
+
+Overfull \hbox (46.59692pt too wide) in paragraph at lines 1823--1826
+[]\T1/ptm/m/n/10 [data.frame, optional] Dataframe with sample IDs [externalSexI
+D] and sex [externalSexSex]
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 1829--1831
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 1832--1834
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+[28]
+Overfull \hbox (18.3481pt too wide) in paragraph at lines 1842--1848
+\T1/ptm/m/n/10 short for do.run_check_heterozygosity=FALSE, do.run_check_missin
+gness=FALSE
+
+Overfull \hbox (82.8881pt too wide) in paragraph at lines 1842--1848
+\T1/ptm/m/n/10 and do.evaluate_check_het_and_miss=FALSE. Takes precedence over 
+do.run_check_heterozygosity,
+
+Overfull \hbox (14.97025pt too wide) in paragraph at lines 1849--1852
+[]\T1/ptm/m/n/10 [logical] If TRUE, run [][]\T1/zi4/m/n/10 run_check_heterozygo
+sity[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 run_check_missingness[][][] 
+
+Overfull \hbox (19.96774pt too wide) in paragraph at lines 1859--1864
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable deviation from mean heterozy
+gosity per individual.
+
+Overfull \hbox (13.01724pt too wide) in paragraph at lines 1859--1864
+\T1/ptm/m/n/10 Expressed as multiples of standard deviation of heterozygosity (
+het), i.e. individuals
+
+Overfull \hbox (89.2272pt too wide) in paragraph at lines 1865--1869
+[]\T1/ptm/m/n/10 [logical] If TRUE, no relatedness check will be conducted; sho
+rt for do.run_check_relatedness=FALSE
+
+Overfull \hbox (56.0179pt too wide) in paragraph at lines 1865--1869
+\T1/ptm/m/n/10 and do.evaluate_check_relatedness=FALSE. Takes precedence over d
+o.run_check_relatedness
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 1876--1878
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 1882--1886
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+
+Overfull \hbox (67.00775pt too wide) in paragraph at lines 1887--1891
+[]\T1/ptm/m/n/10 [logical] If TRUE, no ancestry check will be conducted; short 
+for do.run_check_ancestry=FALSE
+
+Overfull \hbox (33.79845pt too wide) in paragraph at lines 1887--1891
+\T1/ptm/m/n/10 and do.evaluate_check_ancestry=FALSE. Takes precedence over do.r
+un_check_ancestry
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 1902--1908
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 1909--1914
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 1909--1914
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+[29]
+Overfull \hbox (11.247pt too wide) in paragraph at lines 1920--1924
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 1920--1924
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 1931--1933
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 1934--1936
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 1940--1942
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (18.14691pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sampleQC)
+
+Overfull \hbox (38.00754pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sampleQC, other_arguments) or pdf(outfil
+e) print(p_sampleQC)
+
+Overfull \hbox (2.95776pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 heterozygosity rates on the y-axis (if do.evaluate_check_het_and
+_miss is TRUE),
+
+Overfull \hbox (22.86623pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 iii) depicts all pair-wise IBD-estimates as histogram (if do.eva
+luate_check_relatedness
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1966--1972
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (50.44963pt too wide) in paragraph at lines 1988--2002
+[][]\T1/zi4/m/n/10 check_het_and_miss[][][]\T1/ptm/m/n/10 , [][]\T1/zi4/m/n/10 
+check_relatedness[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 check_ancestry[][
+][]\T1/ptm/m/n/10 , which can be shown by print(p_sampleQC).
+[30]
+Overfull \hbox (1.6264pt too wide) in paragraph at lines 2030--2042
+\T1/ptm/m/n/10 their deviation from Hardy-Weinberg-Equilibrium (HWE) and their 
+minor allele frequencies (MAF).
+[31]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 2070--2075
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 2070--2075
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (4.14716pt too wide) in paragraph at lines 2096--2101
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_marker)
+
+Overfull \hbox (9.7281pt too wide) in paragraph at lines 2096--2101
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_marker, other_arguments) or pdf(outfile)
+ print(p_marker)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2104--2110
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[32]
+Underfull \hbox (badness 1867) in paragraph at lines 2152--2152
+[]\T1/ptm/m/it/10 Remove related individuals while keeping maximum number of
+[33]
+Overfull \hbox (48.66592pt too wide) in paragraph at lines 2196--2204
+[]\T1/ptm/m/n/10 [data.frame] containing pair-wise relatedness estimates (in co
+lumn [relatednessRelatedness])
+
+Overfull \hbox (47.65729pt too wide) in paragraph at lines 2196--2204
+\T1/ptm/m/n/10 for individual 1 (in column [relatednessIID1] and individual 2 (
+in column [relatednessIID1]).
+
+Overfull \hbox (33.96696pt too wide) in paragraph at lines 2205--2210
+\T1/ptm/m/n/10 individual (in column [otherCriterionIID]). otherCriterionMeasur
+e and otherCriterionIID
+
+Overfull \hbox (16.65674pt too wide) in paragraph at lines 2219--2225
+\T1/ptm/m/n/10 'gt', individuals whose otherCriterionMeasure > otherCriterionTh
+ will automatically
+
+Overfull \hbox (15.65755pt too wide) in paragraph at lines 2248--2250
+[]\T1/ptm/m/n/10 [character] Column name of the column containing the measure o
+f the otherCriterion
+[34]
+Overfull \hbox (3.01758pt too wide) in paragraph at lines 2268--2270
+[]\T1/ptm/m/n/10 Run plink --pca to calculate the principal components on merge
+d genotypes of the study and reference
+
+Overfull \hbox (154.73499pt too wide) in paragraph at lines 2287--2290
+[]\T1/ptm/m/n/10 [character] /path/to/directory containing the basic PLINK data
+ files prefixMergedDataset.bim,prefixMergedDataset.fam
+
+Overfull \hbox (32.52765pt too wide) in paragraph at lines 2291--2294
+[]\T1/ptm/m/n/10 [character] Prefix of merged study and reference data files, i
+.e. prefixMergedDataset.bed,
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2301--2307
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (7.96942pt too wide) in paragraph at lines 2314--2317
+[]\T1/ptm/m/n/10 Both, [][]\T1/zi4/m/n/10 run_check_ancestry[][][] \T1/ptm/m/n/
+10 and its evaluation by [][]\T1/zi4/m/n/10 evaluate_check_ancestry[][][] \T1/p
+tm/m/n/10 can simply be invoked
+[35]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2366--2372
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (80.02992pt too wide) in paragraph at lines 2379--2383
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and thei
+r evaluation by [][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[36]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2433--2439
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (80.02992pt too wide) in paragraph at lines 2446--2450
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and thei
+r evaluation by [][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[37]
+Overfull \hbox (22.49733pt too wide) in paragraph at lines 2469--2478
+\T1/ptm/m/n/10 highldfile contains regions of high LD as provided by Anderson e
+t (2010) Nature Protocols. Subsequently,
+
+Overfull \hbox (4.27794pt too wide) in paragraph at lines 2504--2507
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.genome as returned
+ by plink --genome.
+
+Overfull \hbox (1.2875pt too wide) in paragraph at lines 2508--2511
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals;
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2515--2521
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[38]
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 2522--2526
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+[39]
+Overfull \hbox (1.60793pt too wide) in paragraph at lines 2594--2597
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.sexcheck as return
+ed by plink --check-
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2600--2606
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (4.74945pt too wide) in paragraph at lines 2613--2616
+[]\T1/ptm/m/n/10 Both [][]\T1/zi4/m/n/10 run_check_sex[][][] \T1/ptm/m/n/10 and
+ its evaluation [][]\T1/zi4/m/n/10 evaluate_check_sex[][][] \T1/ptm/m/n/10 can 
+simply be invoked by [][]\T1/zi4/m/n/10 check_sex[][][]\T1/ptm/m/n/10 . 
+[40]
+No file Rd2.ind.
+[41]
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)pdfTeX warning (dest): name
+{Rfn.upset} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{Rfn.exec} has been referenced but does not exist, r
+eplaced by a fixed one
+
+{/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvip
+s/inconsolata/i4-ts1.enc}{/Users/hannah/Library/Application Support/MiKTeX/texm
+fs/install/fonts/enc/dvips/base/8r.enc}{/Users/hannah/Library/Application Suppo
+rt/MiKTeX/texmfs/install/fonts/enc/dvips/inconsolata/i4-t1-0.enc}</Users/hannah
+/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/inconsola
+ta/Inconsolata-zi4r.pfb></Users/hannah/Library/Application Support/MiKTeX/texmf
+s/install/fonts/type1/urw/helvetic/uhvr8a.pfb></Users/hannah/Library/Applicatio
+n Support/MiKTeX/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></Users/hannah
+/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/urw/times/utmr8a
+.pfb></Users/hannah/Library/Application Support/MiKTeX/texmfs/install/fonts/typ
+e1/urw/times/utmr8a.pfb></Users/hannah/Library/Application Support/MiKTeX/texmf
+s/install/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (41 pages, 255556 bytes).
+Transcript written on Rd2.log.
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.6980)
+entering extended mode
+LaTeX2e <2018-12-01>
+
+(Rd2.tex
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/book.cls"
+Document Class: book 2018/09/03 v1.4i Standard LaTeX document class
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/bk10.clo"))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ifthen.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/longtable.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/bm.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/alltt.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/verbatim.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url
+/url.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/textcomp.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1enc.def"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1enc.dfu")))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/fontenc.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/t1enc.def"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/times.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/zi4.sty"
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xke
+yval/xkeyval.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/xkeyval.tex"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/xkvutils.tex"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/keyval.tex")))))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics/color.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics-cfg/color.cfg")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics-def/pdftex.def"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/hyperref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/hobsub-hyperref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/hobsub-generic.sty"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/i
+fxetex/ifxetex.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/auxhook.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/kvoptions.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/pd1enc.def")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/00m
+iktex/hyperref.cfg"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/hpdftex.def"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/rerunfilecheck.sty"))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/makeidx.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/inputenc.sty")
+Writing index file Rd2.idx
+
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.aux)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1cmr.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/t1ptm.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/context/b
+ase/mkii/supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/nameref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/gettitlestring.sty"))
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.out)
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.out)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/ts1ptm.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/t1zi4.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/t1phv.fd")
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.toc [1{/Users/hannah/Library/Application Support/MiKTeX/texmfs/dat
+a/pdftex/config/pdftex.map}])
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 66--72
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[2]
+Overfull \hbox (9.10655pt too wide) in paragraph at lines 82--95
+\T1/ptm/m/n/10 automatic selection of individuals of European descent. It uses 
+information from principal components
+
+Overfull \hbox (38.11765pt too wide) in paragraph at lines 82--95
+\T1/ptm/m/n/10 1 and 2 returned by plink --pca to find the center of the Europe
+an reference samples (mean(PC1_europeanRef),
+
+Overfull \hbox (20.10716pt too wide) in paragraph at lines 133--139
+[]\T1/ptm/m/n/10 [character] /path/to/directory where prefixMergedDataset.eigen
+vec results as returned
+[3]
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 144--150
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (60.92725pt too wide) in paragraph at lines 151--154
+\T1/ptm/m/n/10 Identifiers have to be corresponding to population IDs [refColor
+sPop] in refColorsfile/refColors. 
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 155--160
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 155--160
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 166--170
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 166--170
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 177--179
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 180--182
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 186--188
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (9.24702pt too wide) in paragraph at lines 199--204
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_ancestry)
+
+Overfull \hbox (19.67786pt too wide) in paragraph at lines 199--204
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_ancestry, other_arguments) or pdf(outfil
+e) print(p_ancestry)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 207--213
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[4]
+Underfull \hbox (badness 2495) in paragraph at lines 242--242
+[]\T1/ptm/m/it/10 Identification of individuals with outlying missing genotype 
+or
+
+Overfull \hbox (0.22789pt too wide) in paragraph at lines 245--260
+\T1/ptm/m/n/10 by [][]\T1/zi4/m/n/10 check_relatedness[][][] \T1/ptm/m/n/10 as 
+individuals that fail the relatedness filters. \T1/zi4/m/n/10 check_het_and_mis
+s \T1/ptm/m/n/10 creates
+[5]
+Overfull \hbox (23.74725pt too wide) in paragraph at lines 288--293
+[]\T1/ptm/m/n/10 [character] /path/to/directory where name.het as returned by p
+link --het and name.imiss
+
+Overfull \hbox (58.93738pt too wide) in paragraph at lines 288--293
+\T1/ptm/m/n/10 as returned by plink --missing will be saved. Per default qcdir=
+indir. If run.check_het_and_miss
+
+Overfull \hbox (19.96774pt too wide) in paragraph at lines 297--302
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable deviation from mean heterozy
+gosity per individual.
+
+Overfull \hbox (13.01724pt too wide) in paragraph at lines 297--302
+\T1/ptm/m/n/10 Expressed as multiples of standard deviation of heterozygosity (
+het), i.e. individuals
+
+Overfull \hbox (14.26675pt too wide) in paragraph at lines 312--317
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_het_imiss)
+
+Overfull \hbox (32.26724pt too wide) in paragraph at lines 312--317
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_het_imiss , other_arguments) or pdf(outf
+ile) print(p_het_imiss)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 320--326
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (13.46974pt too wide) in paragraph at lines 333--342
+[][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]\T1/ptm/m/n/10 . If run.che
+ck_het_and_miss is TRUE, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]
+[6] [7]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 411--416
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 411--416
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (25.51834pt too wide) in paragraph at lines 419--424
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_hwe, other_arguments) or pdf(outfile) pr
+int(p_hwe) dev.off(). 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 425--431
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (20.11794pt too wide) in paragraph at lines 441--446
+[]\T1/zi4/m/n/10 check_hwe \T1/ptm/m/n/10 uses plink --remove name.fail.IDs --h
+ardy to calculate the observed and expected heterozygote
+
+Overfull \hbox (10.25697pt too wide) in paragraph at lines 441--446
+\T1/ptm/m/n/10 frequencies per SNP in the individuals that passed the [][]\T1/z
+i4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 . It does so without generating
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/ts1zi4.fd") [8]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 513--518
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 513--518
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (23.2981pt too wide) in paragraph at lines 527--532
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_maf, other_arguments) or pdf(outfile) pr
+int(p_maf) dev.off(). 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 533--539
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[9] [10]
+Overfull \hbox (18.22731pt too wide) in paragraph at lines 626--628
+[]\T1/ptm/m/n/10 [character] Prefix of PLINK files, i.e. name.bed, name.bim, na
+me.fam, name.genome
+
+Overfull \hbox (8.78783pt too wide) in paragraph at lines 629--634
+[]\T1/ptm/m/n/10 [character] /path/to/directory to where name.genome as returne
+d by plink --genome
+
+Overfull \hbox (14.5179pt too wide) in paragraph at lines 629--634
+\T1/ptm/m/n/10 assumed that plink --missing and plink --genome have been run an
+d qcdir/name.imiss
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 635--637
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 638--642
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 663--669
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[11]
+Overfull \hbox (2.8706pt too wide) in paragraph at lines 676--682
+[][][]\T1/zi4/m/n/10 check_relatedness[][][] \T1/ptm/m/n/10 wraps around [][]\T
+1/zi4/m/n/10 run_check_relatedness[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 
+evaluate_check_relatedness[][][]\T1/ptm/m/n/10 .
+
+Overfull \hbox (4.40755pt too wide) in paragraph at lines 689--705
+\T1/ptm/m/n/10 value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 
+(P(IBD=1)), Z2 (P(IBD=2)), PI_HAT
+[12]
+Overfull \hbox (1.60793pt too wide) in paragraph at lines 770--774
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.sexcheck as return
+ed by plink --check-
+
+Overfull \hbox (46.59692pt too wide) in paragraph at lines 786--789
+[]\T1/ptm/m/n/10 [data.frame, optional] Dataframe with sample IDs [externalSexI
+D] and sex [externalSexSex]
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 795--797
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 798--800
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (12.42722pt too wide) in paragraph at lines 805--810
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sexcheck)
+
+Overfull \hbox (26.68814pt too wide) in paragraph at lines 805--810
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sexcheck, other_arguments) or pdf(outfil
+e) print(p_sexcheck)
+[13]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 816--822
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (33.69682pt too wide) in paragraph at lines 841--848
+\T1/ptm/m/n/10 heterozygosity (SNPSEX) of the sample split by their (PEDSEX), w
+hich can be shown by print(p_sexcheck). 
+[14]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 895--900
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 895--900
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 910--916
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[15] [16]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 1006--1011
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 1006--1011
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (21.31879pt too wide) in paragraph at lines 1017--1023
+\T1/ptm/m/n/10 rates (via [][]\T1/zi4/m/n/10 check_het_and_miss[][][] \T1/ptm/m
+/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Requires fil
+e qcdir/name.fail-
+
+Overfull \hbox (33.99733pt too wide) in paragraph at lines 1017--1023
+\T1/ptm/m/n/10 het.IDs (automatically created by [][]\T1/zi4/m/n/10 perIndividu
+alQC[][][] \T1/ptm/m/n/10 if do.evaluate_check_het_and_miss
+
+Overfull \hbox (21.31879pt too wide) in paragraph at lines 1024--1030
+\T1/ptm/m/n/10 rates (via [][]\T1/zi4/m/n/10 check_het_and_miss[][][] \T1/ptm/m
+/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Requires fil
+e qcdir/name.fail-
+
+Overfull \hbox (42.89696pt too wide) in paragraph at lines 1024--1030
+\T1/ptm/m/n/10 imiss.IDs (automatically created by [][]\T1/zi4/m/n/10 perIndivi
+dualQC[][][] \T1/ptm/m/n/10 if do.evaluate_check_het_and_miss
+
+Overfull \hbox (0.46788pt too wide) in paragraph at lines 1031--1035
+\T1/ptm/m/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Req
+uires file qcdir/name.fail-ancestry.IDs (automatically
+
+Overfull \hbox (24.62778pt too wide) in paragraph at lines 1036--1040
+[]\T1/ptm/m/n/10 [logical] Set to exclude samples that failed relatedness check
+ (via [][]\T1/zi4/m/n/10 check_relatedness[][][]
+
+Overfull \hbox (15.7877pt too wide) in paragraph at lines 1036--1040
+\T1/ptm/m/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Req
+uires file qcdir/name.fail-IBD.IDs (automatically created
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1064--1070
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[17] [18]
+Overfull \hbox (30.55664pt too wide) in paragraph at lines 1168--1171
+[]\T1/ptm/m/n/10 [character] /path/to/directory/with/QC/results containing pref
+ixMergedDataset.eigenvec
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 1172--1177
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 1178--1183
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 1178--1183
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 1189--1195
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 1189--1195
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 1203--1205
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 1206--1208
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+[19]
+Overfull \hbox (31.567pt too wide) in paragraph at lines 1212--1214
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (60.92725pt too wide) in paragraph at lines 1218--1221
+\T1/ptm/m/n/10 Identifiers have to be corresponding to population IDs [refColor
+sPop] in refColorsfile/refColors. 
+
+Overfull \hbox (9.24702pt too wide) in paragraph at lines 1224--1229
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_ancestry)
+
+Overfull \hbox (19.67786pt too wide) in paragraph at lines 1224--1229
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_ancestry, other_arguments) or pdf(outfil
+e) print(p_ancestry)
+
+Overfull \hbox (25.34023pt too wide) in paragraph at lines 1233--1236
+[]\T1/ptm/m/n/10 Both [][]\T1/zi4/m/n/10 run_check_ancestry[][][] \T1/ptm/m/n/1
+0 and [][]\T1/zi4/m/n/10 evaluate_check_ancestry[][][] \T1/ptm/m/n/10 can simpl
+y be invoked by [][]\T1/zi4/m/n/10 check_ancestry[][][]\T1/ptm/m/n/10 . 
+
+Overfull \hbox (26.35898pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 --het (heterozygosity rates per individual) via [][]\T1/zi4/m/n/
+10 run_check_heterozygosity[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 run_che
+ck_missingness[][][]
+
+Overfull \hbox (11.52669pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 (hz) rates per individual are often proxies for DNA sample quali
+ty. Larger than expected heterozygosity
+
+Overfull \hbox (21.83809pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 hz_mean = (N-O)/N, where N: number of non-missing genotypes and 
+O:observed number of homozygous
+[20]
+Overfull \hbox (5.94664pt too wide) in paragraph at lines 1297--1300
+[]\T1/ptm/m/n/10 [character] path/to/directory/with/QC/results containing name.
+imiss and name.het
+
+Overfull \hbox (14.26675pt too wide) in paragraph at lines 1316--1321
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_het_imiss)
+
+Overfull \hbox (32.26724pt too wide) in paragraph at lines 1316--1321
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_het_imiss , other_arguments) or pdf(outf
+ile) print(p_het_imiss)
+
+Overfull \hbox (4.84067pt too wide) in paragraph at lines 1325--1329
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and [][]
+\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[21]
+Overfull \hbox (25.2874pt too wide) in paragraph at lines 1366--1383
+[]\T1/ptm/m/n/10 Evaluates and depicts results from plink --genome on the LD pr
+uned dataset (via [][]\T1/zi4/m/n/10 run_check_relatedness[][][]
+
+Overfull \hbox (25.38658pt too wide) in paragraph at lines 1400--1403
+[]\T1/ptm/m/n/10 [character] path/to/directory/with/QC/results containing name.
+imiss and name.genome
+
+Overfull \hbox (18.22731pt too wide) in paragraph at lines 1404--1406
+[]\T1/ptm/m/n/10 [character] Prefix of PLINK files, i.e. name.bed, name.bim, na
+me.fam, name.genome
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 1407--1409
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+[22]
+Overfull \hbox (4.40755pt too wide) in paragraph at lines 1434--1450
+\T1/ptm/m/n/10 value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 
+(P(IBD=1)), Z2 (P(IBD=2)), PI_HAT
+
+Overfull \hbox (5.94699pt too wide) in paragraph at lines 1467--1482
+\T1/ptm/m/n/10 sex check). Takes file qcdir/name.sexcheck and returns IIDs for 
+samples whose SNPSEX != PEDSEX
+[23]
+Overfull \hbox (2.49747pt too wide) in paragraph at lines 1521--1524
+[]\T1/ptm/m/n/10 [data.frame, optional] with sample IDs [externalSexID] and sex
+ [externalSexSex]
+
+Overfull \hbox (6.31805pt too wide) in paragraph at lines 1529--1532
+\T1/ptm/m/n/10 name.bed, name.fam files; only required of fixMixup==TRUE. User 
+needs writing
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 1538--1540
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 1541--1543
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1549--1555
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[24]
+Overfull \hbox (12.42722pt too wide) in paragraph at lines 1559--1564
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sexcheck)
+
+Overfull \hbox (26.68814pt too wide) in paragraph at lines 1559--1564
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sexcheck, other_arguments) or pdf(outfil
+e) print(p_sexcheck)
+
+Overfull \hbox (12.77753pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 relatedness threshold highIBDTh, iii) outlying_heterozygosity co
+ntaining a [vector]
+
+Overfull \hbox (34.78687pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 with sample IIDs failing selected the heterozygosity threshold h
+etTh, iv) mismatched_sex
+
+Overfull \hbox (3.83801pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 containing a [vector] with the sample IIDs failing the sexcheck 
+based on SNPSEX
+
+Overfull \hbox (3.048pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 failing the ancestry check based on the selected europeanTh and 
+vi) p_sampleQC,
+
+Overfull \hbox (3.5183pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 a ggplot2-object 'containing' a sub-paneled plot with the QC-plo
+ts of [][]\T1/zi4/m/n/10 check_sex[][][]\T1/ptm/m/n/10 ,
+[25]
+Overfull \hbox (12.58736pt too wide) in paragraph at lines 1630--1635
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_overview)
+
+Overfull \hbox (26.35852pt too wide) in paragraph at lines 1630--1635
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_overview, other_arguments) or pdf(outfil
+e) print(p_overview)
+[26]
+Overfull \hbox (22.43733pt too wide) in paragraph at lines 1686--1694
+\T1/ptm/m/n/10 threshold hweTh and 3. maf, containing SNPs failing the MAF thre
+shold mafTh/MAC
+
+Overfull \hbox (6.48802pt too wide) in paragraph at lines 1686--1694
+\T1/ptm/m/n/10 threshold macTh and ii) p_markerQC, a ggplot2-object 'containing
+' a sub-paneled
+
+Overfull \hbox (12.58736pt too wide) in paragraph at lines 1695--1700
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_overview)
+
+Overfull \hbox (26.35852pt too wide) in paragraph at lines 1695--1700
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_overview, other_arguments) or pdf(outfil
+e) print(p_overview)
+
+Overfull \hbox (6.40567pt too wide) in paragraph at lines 1732--1736
+[]\T1/ptm/m/n/10 perIndividualQC checks the samples in the plink dataset for th
+eir total missingness and heterozygosity
+[27] [28]
+Overfull \hbox (3.99721pt too wide) in paragraph at lines 1797--1807
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be saved. Pe
+r default, qcdir=indir.
+
+Overfull \hbox (46.31755pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 If do.evaluate_[analysis] is set to TRUE and do.run_[analysis] i
+s FALSE, \T1/zi4/m/n/10 perIndividualQC
+
+Overfull \hbox (16.90773pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 name.sexcheck, do.evaluate_check_het_and_miss expects name.het a
+nd name.imiss,
+
+Overfull \hbox (88.297pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 do.evaluate_check_relatedness expects name.genome and name.imiss
+ and do.evaluate_check_ancestry
+
+Overfull \hbox (8.95856pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 expects prefixMergeData.eigenvec. If these files are not present
+ \T1/zi4/m/n/10 perIndividualQC
+
+Overfull \hbox (26.72849pt too wide) in paragraph at lines 1808--1811
+[]\T1/ptm/m/n/10 [logical] If TRUE, no sex check will be conducted; short for d
+o.run_check_sex=FALSE
+
+Overfull \hbox (46.59692pt too wide) in paragraph at lines 1823--1826
+[]\T1/ptm/m/n/10 [data.frame, optional] Dataframe with sample IDs [externalSexI
+D] and sex [externalSexSex]
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 1829--1831
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 1832--1834
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (18.3481pt too wide) in paragraph at lines 1842--1848
+\T1/ptm/m/n/10 short for do.run_check_heterozygosity=FALSE, do.run_check_missin
+gness=FALSE
+
+Overfull \hbox (82.8881pt too wide) in paragraph at lines 1842--1848
+\T1/ptm/m/n/10 and do.evaluate_check_het_and_miss=FALSE. Takes precedence over 
+do.run_check_heterozygosity,
+
+Overfull \hbox (14.97025pt too wide) in paragraph at lines 1849--1852
+[]\T1/ptm/m/n/10 [logical] If TRUE, run [][]\T1/zi4/m/n/10 run_check_heterozygo
+sity[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 run_check_missingness[][][] 
+
+Overfull \hbox (19.96774pt too wide) in paragraph at lines 1859--1864
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable deviation from mean heterozy
+gosity per individual.
+
+Overfull \hbox (13.01724pt too wide) in paragraph at lines 1859--1864
+\T1/ptm/m/n/10 Expressed as multiples of standard deviation of heterozygosity (
+het), i.e. individuals
+
+Overfull \hbox (89.2272pt too wide) in paragraph at lines 1865--1869
+[]\T1/ptm/m/n/10 [logical] If TRUE, no relatedness check will be conducted; sho
+rt for do.run_check_relatedness=FALSE
+
+Overfull \hbox (56.0179pt too wide) in paragraph at lines 1865--1869
+\T1/ptm/m/n/10 and do.evaluate_check_relatedness=FALSE. Takes precedence over d
+o.run_check_relatedness
+[29]
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 1876--1878
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 1882--1886
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+
+Overfull \hbox (67.00775pt too wide) in paragraph at lines 1887--1891
+[]\T1/ptm/m/n/10 [logical] If TRUE, no ancestry check will be conducted; short 
+for do.run_check_ancestry=FALSE
+
+Overfull \hbox (33.79845pt too wide) in paragraph at lines 1887--1891
+\T1/ptm/m/n/10 and do.evaluate_check_ancestry=FALSE. Takes precedence over do.r
+un_check_ancestry
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 1902--1908
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 1909--1914
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 1909--1914
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 1920--1924
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 1920--1924
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 1931--1933
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 1934--1936
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 1940--1942
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (18.14691pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sampleQC)
+
+Overfull \hbox (38.00754pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sampleQC, other_arguments) or pdf(outfil
+e) print(p_sampleQC)
+
+Overfull \hbox (2.95776pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 heterozygosity rates on the y-axis (if do.evaluate_check_het_and
+_miss is TRUE),
+
+Overfull \hbox (22.86623pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 iii) depicts all pair-wise IBD-estimates as histogram (if do.eva
+luate_check_relatedness
+[30]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1966--1972
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (50.44963pt too wide) in paragraph at lines 1988--2002
+[][]\T1/zi4/m/n/10 check_het_and_miss[][][]\T1/ptm/m/n/10 , [][]\T1/zi4/m/n/10 
+check_relatedness[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 check_ancestry[][
+][]\T1/ptm/m/n/10 , which can be shown by print(p_sampleQC).
+[31]
+Overfull \hbox (1.6264pt too wide) in paragraph at lines 2030--2042
+\T1/ptm/m/n/10 their deviation from Hardy-Weinberg-Equilibrium (HWE) and their 
+minor allele frequencies (MAF).
+
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 2070--2075
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 2070--2075
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+[32]
+Overfull \hbox (4.14716pt too wide) in paragraph at lines 2096--2101
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_marker)
+
+Overfull \hbox (9.7281pt too wide) in paragraph at lines 2096--2101
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_marker, other_arguments) or pdf(outfile)
+ print(p_marker)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2104--2110
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[33]
+Underfull \hbox (badness 1867) in paragraph at lines 2152--2152
+[]\T1/ptm/m/it/10 Remove related individuals while keeping maximum number of
+
+Overfull \hbox (48.66592pt too wide) in paragraph at lines 2196--2204
+[]\T1/ptm/m/n/10 [data.frame] containing pair-wise relatedness estimates (in co
+lumn [relatednessRelatedness])
+
+Overfull \hbox (47.65729pt too wide) in paragraph at lines 2196--2204
+\T1/ptm/m/n/10 for individual 1 (in column [relatednessIID1] and individual 2 (
+in column [relatednessIID1]).
+
+Overfull \hbox (33.96696pt too wide) in paragraph at lines 2205--2210
+\T1/ptm/m/n/10 individual (in column [otherCriterionIID]). otherCriterionMeasur
+e and otherCriterionIID
+[34]
+Overfull \hbox (16.65674pt too wide) in paragraph at lines 2219--2225
+\T1/ptm/m/n/10 'gt', individuals whose otherCriterionMeasure > otherCriterionTh
+ will automatically
+
+Overfull \hbox (15.65755pt too wide) in paragraph at lines 2248--2250
+[]\T1/ptm/m/n/10 [character] Column name of the column containing the measure o
+f the otherCriterion
+
+Overfull \hbox (3.01758pt too wide) in paragraph at lines 2268--2270
+[]\T1/ptm/m/n/10 Run plink --pca to calculate the principal components on merge
+d genotypes of the study and reference
+[35]
+Overfull \hbox (154.73499pt too wide) in paragraph at lines 2287--2290
+[]\T1/ptm/m/n/10 [character] /path/to/directory containing the basic PLINK data
+ files prefixMergedDataset.bim,prefixMergedDataset.fam
+
+Overfull \hbox (32.52765pt too wide) in paragraph at lines 2291--2294
+[]\T1/ptm/m/n/10 [character] Prefix of merged study and reference data files, i
+.e. prefixMergedDataset.bed,
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2301--2307
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (7.96942pt too wide) in paragraph at lines 2314--2317
+[]\T1/ptm/m/n/10 Both, [][]\T1/zi4/m/n/10 run_check_ancestry[][][] \T1/ptm/m/n/
+10 and its evaluation by [][]\T1/zi4/m/n/10 evaluate_check_ancestry[][][] \T1/p
+tm/m/n/10 can simply be invoked
+[36]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2366--2372
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (80.02992pt too wide) in paragraph at lines 2379--2383
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and thei
+r evaluation by [][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[37]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2433--2439
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (80.02992pt too wide) in paragraph at lines 2446--2450
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and thei
+r evaluation by [][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[38]
+Overfull \hbox (22.49733pt too wide) in paragraph at lines 2469--2478
+\T1/ptm/m/n/10 highldfile contains regions of high LD as provided by Anderson e
+t (2010) Nature Protocols. Subsequently,
+
+Overfull \hbox (4.27794pt too wide) in paragraph at lines 2504--2507
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.genome as returned
+ by plink --genome.
+
+Overfull \hbox (1.2875pt too wide) in paragraph at lines 2508--2511
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals;
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2515--2521
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 2522--2526
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+[39]
+Overfull \hbox (1.60793pt too wide) in paragraph at lines 2594--2597
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.sexcheck as return
+ed by plink --check-
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2600--2606
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[40]
+Overfull \hbox (4.74945pt too wide) in paragraph at lines 2613--2616
+[]\T1/ptm/m/n/10 Both [][]\T1/zi4/m/n/10 run_check_sex[][][] \T1/ptm/m/n/10 and
+ its evaluation [][]\T1/zi4/m/n/10 evaluate_check_sex[][][] \T1/ptm/m/n/10 can 
+simply be invoked by [][]\T1/zi4/m/n/10 check_sex[][][]\T1/ptm/m/n/10 . 
+No file Rd2.ind.
+[41]
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.aux) )
+(see the transcript file for additional information)pdfTeX warning (dest): name
+{Rfn.upset} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{Rfn.exec} has been referenced but does not exist, r
+eplaced by a fixed one
+
+{/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvip
+s/inconsolata/i4-ts1.enc}{/Users/hannah/Library/Application Support/MiKTeX/texm
+fs/install/fonts/enc/dvips/base/8r.enc}{/Users/hannah/Library/Application Suppo
+rt/MiKTeX/texmfs/install/fonts/enc/dvips/inconsolata/i4-t1-0.enc}</Users/hannah
+/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/inconsola
+ta/Inconsolata-zi4r.pfb></Users/hannah/Library/Application Support/MiKTeX/texmf
+s/install/fonts/type1/urw/helvetic/uhvr8a.pfb></Users/hannah/Library/Applicatio
+n Support/MiKTeX/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></Users/hannah
+/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/urw/times/utmr8a
+.pfb></Users/hannah/Library/Application Support/MiKTeX/texmfs/install/fonts/typ
+e1/urw/times/utmr8a.pfb></Users/hannah/Library/Application Support/MiKTeX/texmf
+s/install/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (41 pages, 266914 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.15 [MiKTeX 2.9.6980] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (177 entries accepted, 0 rejected).
+Sorting entries....done (1389 comparisons).
+Generating output file Rd2.ind....done (129 lines written, 4 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.6980)
+entering extended mode
+LaTeX2e <2018-12-01>
+
+(Rd2.tex
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/book.cls"
+Document Class: book 2018/09/03 v1.4i Standard LaTeX document class
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/bk10.clo"))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ifthen.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/longtable.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/bm.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/alltt.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/verbatim.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url
+/url.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/textcomp.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1enc.def"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1enc.dfu")))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/fontenc.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/t1enc.def"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/times.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/zi4.sty"
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xke
+yval/xkeyval.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/xkeyval.tex"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/xkvutils.tex"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/keyval.tex")))))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics/color.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics-cfg/color.cfg")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics-def/pdftex.def"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/hyperref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/hobsub-hyperref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/hobsub-generic.sty"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/i
+fxetex/ifxetex.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/auxhook.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/kvoptions.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/pd1enc.def")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/00m
+iktex/hyperref.cfg"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/hpdftex.def"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/rerunfilecheck.sty"))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/makeidx.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/inputenc.sty")
+Writing index file Rd2.idx
+
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.aux)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1cmr.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/t1ptm.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/context/b
+ase/mkii/supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/nameref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/gettitlestring.sty"))
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.out)
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.out)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/ts1ptm.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/t1zi4.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/t1phv.fd")
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.toc [1{/Users/hannah/Library/Application Support/MiKTeX/texmfs/dat
+a/pdftex/config/pdftex.map}])
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 66--72
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[2]
+Overfull \hbox (9.10655pt too wide) in paragraph at lines 82--95
+\T1/ptm/m/n/10 automatic selection of individuals of European descent. It uses 
+information from principal components
+
+Overfull \hbox (38.11765pt too wide) in paragraph at lines 82--95
+\T1/ptm/m/n/10 1 and 2 returned by plink --pca to find the center of the Europe
+an reference samples (mean(PC1_europeanRef),
+
+Overfull \hbox (20.10716pt too wide) in paragraph at lines 133--139
+[]\T1/ptm/m/n/10 [character] /path/to/directory where prefixMergedDataset.eigen
+vec results as returned
+[3]
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 144--150
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (60.92725pt too wide) in paragraph at lines 151--154
+\T1/ptm/m/n/10 Identifiers have to be corresponding to population IDs [refColor
+sPop] in refColorsfile/refColors. 
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 155--160
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 155--160
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 166--170
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 166--170
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 177--179
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 180--182
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 186--188
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (9.24702pt too wide) in paragraph at lines 199--204
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_ancestry)
+
+Overfull \hbox (19.67786pt too wide) in paragraph at lines 199--204
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_ancestry, other_arguments) or pdf(outfil
+e) print(p_ancestry)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 207--213
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[4]
+Underfull \hbox (badness 2495) in paragraph at lines 242--242
+[]\T1/ptm/m/it/10 Identification of individuals with outlying missing genotype 
+or
+
+Overfull \hbox (0.22789pt too wide) in paragraph at lines 245--260
+\T1/ptm/m/n/10 by [][]\T1/zi4/m/n/10 check_relatedness[][][] \T1/ptm/m/n/10 as 
+individuals that fail the relatedness filters. \T1/zi4/m/n/10 check_het_and_mis
+s \T1/ptm/m/n/10 creates
+[5]
+Overfull \hbox (23.74725pt too wide) in paragraph at lines 288--293
+[]\T1/ptm/m/n/10 [character] /path/to/directory where name.het as returned by p
+link --het and name.imiss
+
+Overfull \hbox (58.93738pt too wide) in paragraph at lines 288--293
+\T1/ptm/m/n/10 as returned by plink --missing will be saved. Per default qcdir=
+indir. If run.check_het_and_miss
+
+Overfull \hbox (19.96774pt too wide) in paragraph at lines 297--302
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable deviation from mean heterozy
+gosity per individual.
+
+Overfull \hbox (13.01724pt too wide) in paragraph at lines 297--302
+\T1/ptm/m/n/10 Expressed as multiples of standard deviation of heterozygosity (
+het), i.e. individuals
+
+Overfull \hbox (14.26675pt too wide) in paragraph at lines 312--317
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_het_imiss)
+
+Overfull \hbox (32.26724pt too wide) in paragraph at lines 312--317
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_het_imiss , other_arguments) or pdf(outf
+ile) print(p_het_imiss)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 320--326
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (13.46974pt too wide) in paragraph at lines 333--342
+[][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]\T1/ptm/m/n/10 . If run.che
+ck_het_and_miss is TRUE, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]
+[6] [7]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 411--416
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 411--416
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (25.51834pt too wide) in paragraph at lines 419--424
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_hwe, other_arguments) or pdf(outfile) pr
+int(p_hwe) dev.off(). 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 425--431
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (20.11794pt too wide) in paragraph at lines 441--446
+[]\T1/zi4/m/n/10 check_hwe \T1/ptm/m/n/10 uses plink --remove name.fail.IDs --h
+ardy to calculate the observed and expected heterozygote
+
+Overfull \hbox (10.25697pt too wide) in paragraph at lines 441--446
+\T1/ptm/m/n/10 frequencies per SNP in the individuals that passed the [][]\T1/z
+i4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 . It does so without generating
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/ts1zi4.fd") [8]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 513--518
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 513--518
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (23.2981pt too wide) in paragraph at lines 527--532
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_maf, other_arguments) or pdf(outfile) pr
+int(p_maf) dev.off(). 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 533--539
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[9] [10]
+Overfull \hbox (18.22731pt too wide) in paragraph at lines 626--628
+[]\T1/ptm/m/n/10 [character] Prefix of PLINK files, i.e. name.bed, name.bim, na
+me.fam, name.genome
+
+Overfull \hbox (8.78783pt too wide) in paragraph at lines 629--634
+[]\T1/ptm/m/n/10 [character] /path/to/directory to where name.genome as returne
+d by plink --genome
+
+Overfull \hbox (14.5179pt too wide) in paragraph at lines 629--634
+\T1/ptm/m/n/10 assumed that plink --missing and plink --genome have been run an
+d qcdir/name.imiss
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 635--637
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 638--642
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 663--669
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[11]
+Overfull \hbox (2.8706pt too wide) in paragraph at lines 676--682
+[][][]\T1/zi4/m/n/10 check_relatedness[][][] \T1/ptm/m/n/10 wraps around [][]\T
+1/zi4/m/n/10 run_check_relatedness[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 
+evaluate_check_relatedness[][][]\T1/ptm/m/n/10 .
+
+Overfull \hbox (4.40755pt too wide) in paragraph at lines 689--705
+\T1/ptm/m/n/10 value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 
+(P(IBD=1)), Z2 (P(IBD=2)), PI_HAT
+[12]
+Overfull \hbox (1.60793pt too wide) in paragraph at lines 770--774
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.sexcheck as return
+ed by plink --check-
+
+Overfull \hbox (46.59692pt too wide) in paragraph at lines 786--789
+[]\T1/ptm/m/n/10 [data.frame, optional] Dataframe with sample IDs [externalSexI
+D] and sex [externalSexSex]
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 795--797
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 798--800
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (12.42722pt too wide) in paragraph at lines 805--810
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sexcheck)
+
+Overfull \hbox (26.68814pt too wide) in paragraph at lines 805--810
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sexcheck, other_arguments) or pdf(outfil
+e) print(p_sexcheck)
+[13]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 816--822
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (33.69682pt too wide) in paragraph at lines 841--848
+\T1/ptm/m/n/10 heterozygosity (SNPSEX) of the sample split by their (PEDSEX), w
+hich can be shown by print(p_sexcheck). 
+[14]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 895--900
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 895--900
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 910--916
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[15] [16]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 1006--1011
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 1006--1011
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (21.31879pt too wide) in paragraph at lines 1017--1023
+\T1/ptm/m/n/10 rates (via [][]\T1/zi4/m/n/10 check_het_and_miss[][][] \T1/ptm/m
+/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Requires fil
+e qcdir/name.fail-
+
+Overfull \hbox (33.99733pt too wide) in paragraph at lines 1017--1023
+\T1/ptm/m/n/10 het.IDs (automatically created by [][]\T1/zi4/m/n/10 perIndividu
+alQC[][][] \T1/ptm/m/n/10 if do.evaluate_check_het_and_miss
+
+Overfull \hbox (21.31879pt too wide) in paragraph at lines 1024--1030
+\T1/ptm/m/n/10 rates (via [][]\T1/zi4/m/n/10 check_het_and_miss[][][] \T1/ptm/m
+/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Requires fil
+e qcdir/name.fail-
+
+Overfull \hbox (42.89696pt too wide) in paragraph at lines 1024--1030
+\T1/ptm/m/n/10 imiss.IDs (automatically created by [][]\T1/zi4/m/n/10 perIndivi
+dualQC[][][] \T1/ptm/m/n/10 if do.evaluate_check_het_and_miss
+
+Overfull \hbox (0.46788pt too wide) in paragraph at lines 1031--1035
+\T1/ptm/m/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Req
+uires file qcdir/name.fail-ancestry.IDs (automatically
+
+Overfull \hbox (24.62778pt too wide) in paragraph at lines 1036--1040
+[]\T1/ptm/m/n/10 [logical] Set to exclude samples that failed relatedness check
+ (via [][]\T1/zi4/m/n/10 check_relatedness[][][]
+
+Overfull \hbox (15.7877pt too wide) in paragraph at lines 1036--1040
+\T1/ptm/m/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Req
+uires file qcdir/name.fail-IBD.IDs (automatically created
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1064--1070
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[17] [18]
+Overfull \hbox (30.55664pt too wide) in paragraph at lines 1168--1171
+[]\T1/ptm/m/n/10 [character] /path/to/directory/with/QC/results containing pref
+ixMergedDataset.eigenvec
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 1172--1177
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 1178--1183
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 1178--1183
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 1189--1195
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 1189--1195
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 1203--1205
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 1206--1208
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+[19]
+Overfull \hbox (31.567pt too wide) in paragraph at lines 1212--1214
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (60.92725pt too wide) in paragraph at lines 1218--1221
+\T1/ptm/m/n/10 Identifiers have to be corresponding to population IDs [refColor
+sPop] in refColorsfile/refColors. 
+
+Overfull \hbox (9.24702pt too wide) in paragraph at lines 1224--1229
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_ancestry)
+
+Overfull \hbox (19.67786pt too wide) in paragraph at lines 1224--1229
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_ancestry, other_arguments) or pdf(outfil
+e) print(p_ancestry)
+
+Overfull \hbox (25.34023pt too wide) in paragraph at lines 1233--1236
+[]\T1/ptm/m/n/10 Both [][]\T1/zi4/m/n/10 run_check_ancestry[][][] \T1/ptm/m/n/1
+0 and [][]\T1/zi4/m/n/10 evaluate_check_ancestry[][][] \T1/ptm/m/n/10 can simpl
+y be invoked by [][]\T1/zi4/m/n/10 check_ancestry[][][]\T1/ptm/m/n/10 . 
+
+Overfull \hbox (26.35898pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 --het (heterozygosity rates per individual) via [][]\T1/zi4/m/n/
+10 run_check_heterozygosity[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 run_che
+ck_missingness[][][]
+
+Overfull \hbox (11.52669pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 (hz) rates per individual are often proxies for DNA sample quali
+ty. Larger than expected heterozygosity
+
+Overfull \hbox (21.83809pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 hz_mean = (N-O)/N, where N: number of non-missing genotypes and 
+O:observed number of homozygous
+[20]
+Overfull \hbox (5.94664pt too wide) in paragraph at lines 1297--1300
+[]\T1/ptm/m/n/10 [character] path/to/directory/with/QC/results containing name.
+imiss and name.het
+
+Overfull \hbox (14.26675pt too wide) in paragraph at lines 1316--1321
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_het_imiss)
+
+Overfull \hbox (32.26724pt too wide) in paragraph at lines 1316--1321
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_het_imiss , other_arguments) or pdf(outf
+ile) print(p_het_imiss)
+
+Overfull \hbox (4.84067pt too wide) in paragraph at lines 1325--1329
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and [][]
+\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[21]
+Overfull \hbox (25.2874pt too wide) in paragraph at lines 1366--1383
+[]\T1/ptm/m/n/10 Evaluates and depicts results from plink --genome on the LD pr
+uned dataset (via [][]\T1/zi4/m/n/10 run_check_relatedness[][][]
+
+Overfull \hbox (25.38658pt too wide) in paragraph at lines 1400--1403
+[]\T1/ptm/m/n/10 [character] path/to/directory/with/QC/results containing name.
+imiss and name.genome
+
+Overfull \hbox (18.22731pt too wide) in paragraph at lines 1404--1406
+[]\T1/ptm/m/n/10 [character] Prefix of PLINK files, i.e. name.bed, name.bim, na
+me.fam, name.genome
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 1407--1409
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+[22]
+Overfull \hbox (4.40755pt too wide) in paragraph at lines 1434--1450
+\T1/ptm/m/n/10 value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 
+(P(IBD=1)), Z2 (P(IBD=2)), PI_HAT
+
+Overfull \hbox (5.94699pt too wide) in paragraph at lines 1467--1482
+\T1/ptm/m/n/10 sex check). Takes file qcdir/name.sexcheck and returns IIDs for 
+samples whose SNPSEX != PEDSEX
+[23]
+Overfull \hbox (2.49747pt too wide) in paragraph at lines 1521--1524
+[]\T1/ptm/m/n/10 [data.frame, optional] with sample IDs [externalSexID] and sex
+ [externalSexSex]
+
+Overfull \hbox (6.31805pt too wide) in paragraph at lines 1529--1532
+\T1/ptm/m/n/10 name.bed, name.fam files; only required of fixMixup==TRUE. User 
+needs writing
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 1538--1540
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 1541--1543
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1549--1555
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[24]
+Overfull \hbox (12.42722pt too wide) in paragraph at lines 1559--1564
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sexcheck)
+
+Overfull \hbox (26.68814pt too wide) in paragraph at lines 1559--1564
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sexcheck, other_arguments) or pdf(outfil
+e) print(p_sexcheck)
+
+Overfull \hbox (12.77753pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 relatedness threshold highIBDTh, iii) outlying_heterozygosity co
+ntaining a [vector]
+
+Overfull \hbox (34.78687pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 with sample IIDs failing selected the heterozygosity threshold h
+etTh, iv) mismatched_sex
+
+Overfull \hbox (3.83801pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 containing a [vector] with the sample IIDs failing the sexcheck 
+based on SNPSEX
+
+Overfull \hbox (3.048pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 failing the ancestry check based on the selected europeanTh and 
+vi) p_sampleQC,
+
+Overfull \hbox (3.5183pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 a ggplot2-object 'containing' a sub-paneled plot with the QC-plo
+ts of [][]\T1/zi4/m/n/10 check_sex[][][]\T1/ptm/m/n/10 ,
+[25]
+Overfull \hbox (12.58736pt too wide) in paragraph at lines 1630--1635
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_overview)
+
+Overfull \hbox (26.35852pt too wide) in paragraph at lines 1630--1635
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_overview, other_arguments) or pdf(outfil
+e) print(p_overview)
+[26]
+Overfull \hbox (22.43733pt too wide) in paragraph at lines 1686--1694
+\T1/ptm/m/n/10 threshold hweTh and 3. maf, containing SNPs failing the MAF thre
+shold mafTh/MAC
+
+Overfull \hbox (6.48802pt too wide) in paragraph at lines 1686--1694
+\T1/ptm/m/n/10 threshold macTh and ii) p_markerQC, a ggplot2-object 'containing
+' a sub-paneled
+
+Overfull \hbox (12.58736pt too wide) in paragraph at lines 1695--1700
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_overview)
+
+Overfull \hbox (26.35852pt too wide) in paragraph at lines 1695--1700
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_overview, other_arguments) or pdf(outfil
+e) print(p_overview)
+
+Overfull \hbox (6.40567pt too wide) in paragraph at lines 1732--1736
+[]\T1/ptm/m/n/10 perIndividualQC checks the samples in the plink dataset for th
+eir total missingness and heterozygosity
+[27] [28]
+Overfull \hbox (3.99721pt too wide) in paragraph at lines 1797--1807
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be saved. Pe
+r default, qcdir=indir.
+
+Overfull \hbox (46.31755pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 If do.evaluate_[analysis] is set to TRUE and do.run_[analysis] i
+s FALSE, \T1/zi4/m/n/10 perIndividualQC
+
+Overfull \hbox (16.90773pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 name.sexcheck, do.evaluate_check_het_and_miss expects name.het a
+nd name.imiss,
+
+Overfull \hbox (88.297pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 do.evaluate_check_relatedness expects name.genome and name.imiss
+ and do.evaluate_check_ancestry
+
+Overfull \hbox (8.95856pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 expects prefixMergeData.eigenvec. If these files are not present
+ \T1/zi4/m/n/10 perIndividualQC
+
+Overfull \hbox (26.72849pt too wide) in paragraph at lines 1808--1811
+[]\T1/ptm/m/n/10 [logical] If TRUE, no sex check will be conducted; short for d
+o.run_check_sex=FALSE
+
+Overfull \hbox (46.59692pt too wide) in paragraph at lines 1823--1826
+[]\T1/ptm/m/n/10 [data.frame, optional] Dataframe with sample IDs [externalSexI
+D] and sex [externalSexSex]
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 1829--1831
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 1832--1834
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (18.3481pt too wide) in paragraph at lines 1842--1848
+\T1/ptm/m/n/10 short for do.run_check_heterozygosity=FALSE, do.run_check_missin
+gness=FALSE
+
+Overfull \hbox (82.8881pt too wide) in paragraph at lines 1842--1848
+\T1/ptm/m/n/10 and do.evaluate_check_het_and_miss=FALSE. Takes precedence over 
+do.run_check_heterozygosity,
+
+Overfull \hbox (14.97025pt too wide) in paragraph at lines 1849--1852
+[]\T1/ptm/m/n/10 [logical] If TRUE, run [][]\T1/zi4/m/n/10 run_check_heterozygo
+sity[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 run_check_missingness[][][] 
+
+Overfull \hbox (19.96774pt too wide) in paragraph at lines 1859--1864
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable deviation from mean heterozy
+gosity per individual.
+
+Overfull \hbox (13.01724pt too wide) in paragraph at lines 1859--1864
+\T1/ptm/m/n/10 Expressed as multiples of standard deviation of heterozygosity (
+het), i.e. individuals
+
+Overfull \hbox (89.2272pt too wide) in paragraph at lines 1865--1869
+[]\T1/ptm/m/n/10 [logical] If TRUE, no relatedness check will be conducted; sho
+rt for do.run_check_relatedness=FALSE
+
+Overfull \hbox (56.0179pt too wide) in paragraph at lines 1865--1869
+\T1/ptm/m/n/10 and do.evaluate_check_relatedness=FALSE. Takes precedence over d
+o.run_check_relatedness
+[29]
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 1876--1878
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 1882--1886
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+
+Overfull \hbox (67.00775pt too wide) in paragraph at lines 1887--1891
+[]\T1/ptm/m/n/10 [logical] If TRUE, no ancestry check will be conducted; short 
+for do.run_check_ancestry=FALSE
+
+Overfull \hbox (33.79845pt too wide) in paragraph at lines 1887--1891
+\T1/ptm/m/n/10 and do.evaluate_check_ancestry=FALSE. Takes precedence over do.r
+un_check_ancestry
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 1902--1908
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 1909--1914
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 1909--1914
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 1920--1924
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 1920--1924
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 1931--1933
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 1934--1936
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 1940--1942
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (18.14691pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sampleQC)
+
+Overfull \hbox (38.00754pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sampleQC, other_arguments) or pdf(outfil
+e) print(p_sampleQC)
+
+Overfull \hbox (2.95776pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 heterozygosity rates on the y-axis (if do.evaluate_check_het_and
+_miss is TRUE),
+
+Overfull \hbox (22.86623pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 iii) depicts all pair-wise IBD-estimates as histogram (if do.eva
+luate_check_relatedness
+[30]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1966--1972
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (50.44963pt too wide) in paragraph at lines 1988--2002
+[][]\T1/zi4/m/n/10 check_het_and_miss[][][]\T1/ptm/m/n/10 , [][]\T1/zi4/m/n/10 
+check_relatedness[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 check_ancestry[][
+][]\T1/ptm/m/n/10 , which can be shown by print(p_sampleQC).
+[31]
+Overfull \hbox (1.6264pt too wide) in paragraph at lines 2030--2042
+\T1/ptm/m/n/10 their deviation from Hardy-Weinberg-Equilibrium (HWE) and their 
+minor allele frequencies (MAF).
+
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 2070--2075
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 2070--2075
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+[32]
+Overfull \hbox (4.14716pt too wide) in paragraph at lines 2096--2101
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_marker)
+
+Overfull \hbox (9.7281pt too wide) in paragraph at lines 2096--2101
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_marker, other_arguments) or pdf(outfile)
+ print(p_marker)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2104--2110
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[33]
+Underfull \hbox (badness 1867) in paragraph at lines 2152--2152
+[]\T1/ptm/m/it/10 Remove related individuals while keeping maximum number of
+
+Overfull \hbox (48.66592pt too wide) in paragraph at lines 2196--2204
+[]\T1/ptm/m/n/10 [data.frame] containing pair-wise relatedness estimates (in co
+lumn [relatednessRelatedness])
+
+Overfull \hbox (47.65729pt too wide) in paragraph at lines 2196--2204
+\T1/ptm/m/n/10 for individual 1 (in column [relatednessIID1] and individual 2 (
+in column [relatednessIID1]).
+
+Overfull \hbox (33.96696pt too wide) in paragraph at lines 2205--2210
+\T1/ptm/m/n/10 individual (in column [otherCriterionIID]). otherCriterionMeasur
+e and otherCriterionIID
+[34]
+Overfull \hbox (16.65674pt too wide) in paragraph at lines 2219--2225
+\T1/ptm/m/n/10 'gt', individuals whose otherCriterionMeasure > otherCriterionTh
+ will automatically
+
+Overfull \hbox (15.65755pt too wide) in paragraph at lines 2248--2250
+[]\T1/ptm/m/n/10 [character] Column name of the column containing the measure o
+f the otherCriterion
+
+Overfull \hbox (3.01758pt too wide) in paragraph at lines 2268--2270
+[]\T1/ptm/m/n/10 Run plink --pca to calculate the principal components on merge
+d genotypes of the study and reference
+[35]
+Overfull \hbox (154.73499pt too wide) in paragraph at lines 2287--2290
+[]\T1/ptm/m/n/10 [character] /path/to/directory containing the basic PLINK data
+ files prefixMergedDataset.bim,prefixMergedDataset.fam
+
+Overfull \hbox (32.52765pt too wide) in paragraph at lines 2291--2294
+[]\T1/ptm/m/n/10 [character] Prefix of merged study and reference data files, i
+.e. prefixMergedDataset.bed,
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2301--2307
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (7.96942pt too wide) in paragraph at lines 2314--2317
+[]\T1/ptm/m/n/10 Both, [][]\T1/zi4/m/n/10 run_check_ancestry[][][] \T1/ptm/m/n/
+10 and its evaluation by [][]\T1/zi4/m/n/10 evaluate_check_ancestry[][][] \T1/p
+tm/m/n/10 can simply be invoked
+[36]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2366--2372
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (80.02992pt too wide) in paragraph at lines 2379--2383
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and thei
+r evaluation by [][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[37]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2433--2439
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (80.02992pt too wide) in paragraph at lines 2446--2450
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and thei
+r evaluation by [][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[38]
+Overfull \hbox (22.49733pt too wide) in paragraph at lines 2469--2478
+\T1/ptm/m/n/10 highldfile contains regions of high LD as provided by Anderson e
+t (2010) Nature Protocols. Subsequently,
+
+Overfull \hbox (4.27794pt too wide) in paragraph at lines 2504--2507
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.genome as returned
+ by plink --genome.
+
+Overfull \hbox (1.2875pt too wide) in paragraph at lines 2508--2511
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals;
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2515--2521
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 2522--2526
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+[39]
+Overfull \hbox (1.60793pt too wide) in paragraph at lines 2594--2597
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.sexcheck as return
+ed by plink --check-
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2600--2606
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[40]
+Overfull \hbox (4.74945pt too wide) in paragraph at lines 2613--2616
+[]\T1/ptm/m/n/10 Both [][]\T1/zi4/m/n/10 run_check_sex[][][] \T1/ptm/m/n/10 and
+ its evaluation [][]\T1/zi4/m/n/10 evaluate_check_sex[][][] \T1/ptm/m/n/10 can 
+simply be invoked by [][]\T1/zi4/m/n/10 check_sex[][][]\T1/ptm/m/n/10 . 
+
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.ind [41] [42])
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)pdfTeX warning (dest): name
+{Rfn.upset} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{Rfn.exec} has been referenced but does not exist, r
+eplaced by a fixed one
+
+{/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvip
+s/inconsolata/i4-ts1.enc}{/Users/hannah/Library/Application Support/MiKTeX/texm
+fs/install/fonts/enc/dvips/base/8r.enc}{/Users/hannah/Library/Application Suppo
+rt/MiKTeX/texmfs/install/fonts/enc/dvips/inconsolata/i4-t1-0.enc}</Users/hannah
+/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/inconsola
+ta/Inconsolata-zi4r.pfb></Users/hannah/Library/Application Support/MiKTeX/texmf
+s/install/fonts/type1/urw/helvetic/uhvr8a.pfb></Users/hannah/Library/Applicatio
+n Support/MiKTeX/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></Users/hannah
+/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/urw/times/utmr8a
+.pfb></Users/hannah/Library/Application Support/MiKTeX/texmfs/install/fonts/typ
+e1/urw/times/utmr8a.pfb></Users/hannah/Library/Application Support/MiKTeX/texmf
+s/install/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (42 pages, 294107 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.15 [MiKTeX 2.9.6980] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (177 entries accepted, 0 rejected).
+Sorting entries....done (1389 comparisons).
+Generating output file Rd2.ind....done (129 lines written, 4 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.6980)
+entering extended mode
+LaTeX2e <2018-12-01>
+
+(Rd2.tex
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/book.cls"
+Document Class: book 2018/09/03 v1.4i Standard LaTeX document class
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/bk10.clo"))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ifthen.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/longtable.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/bm.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/alltt.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/too
+ls/verbatim.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url
+/url.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/textcomp.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1enc.def"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1enc.dfu")))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/fontenc.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/t1enc.def"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/times.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/zi4.sty"
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xke
+yval/xkeyval.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/xkeyval.tex"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/xkvutils.tex"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/x
+keyval/keyval.tex")))))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics/color.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics-cfg/color.cfg")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/gra
+phics-def/pdftex.def"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/hyperref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/hobsub-hyperref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/hobsub-generic.sty"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/i
+fxetex/ifxetex.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/auxhook.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/kvoptions.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/pd1enc.def")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/00m
+iktex/hyperref.cfg"))
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/hpdftex.def"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/obe
+rdiek/rerunfilecheck.sty"))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/makeidx.sty")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/inputenc.sty")
+Writing index file Rd2.idx
+
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.aux)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/bas
+e/ts1cmr.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/t1ptm.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/context/b
+ase/mkii/supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyp
+erref/nameref.sty"
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/generic/o
+berdiek/gettitlestring.sty"))
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.out)
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.out)
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/ts1ptm.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/t1zi4.fd")
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psn
+fss/t1phv.fd")
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.toc [1{/Users/hannah/Library/Application Support/MiKTeX/texmfs/dat
+a/pdftex/config/pdftex.map}])
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 66--72
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[2]
+Overfull \hbox (9.10655pt too wide) in paragraph at lines 82--95
+\T1/ptm/m/n/10 automatic selection of individuals of European descent. It uses 
+information from principal components
+
+Overfull \hbox (38.11765pt too wide) in paragraph at lines 82--95
+\T1/ptm/m/n/10 1 and 2 returned by plink --pca to find the center of the Europe
+an reference samples (mean(PC1_europeanRef),
+
+Overfull \hbox (20.10716pt too wide) in paragraph at lines 133--139
+[]\T1/ptm/m/n/10 [character] /path/to/directory where prefixMergedDataset.eigen
+vec results as returned
+[3]
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 144--150
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (60.92725pt too wide) in paragraph at lines 151--154
+\T1/ptm/m/n/10 Identifiers have to be corresponding to population IDs [refColor
+sPop] in refColorsfile/refColors. 
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 155--160
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 155--160
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 166--170
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 166--170
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 177--179
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 180--182
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 186--188
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (9.24702pt too wide) in paragraph at lines 199--204
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_ancestry)
+
+Overfull \hbox (19.67786pt too wide) in paragraph at lines 199--204
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_ancestry, other_arguments) or pdf(outfil
+e) print(p_ancestry)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 207--213
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[4]
+Underfull \hbox (badness 2495) in paragraph at lines 242--242
+[]\T1/ptm/m/it/10 Identification of individuals with outlying missing genotype 
+or
+
+Overfull \hbox (0.22789pt too wide) in paragraph at lines 245--260
+\T1/ptm/m/n/10 by [][]\T1/zi4/m/n/10 check_relatedness[][][] \T1/ptm/m/n/10 as 
+individuals that fail the relatedness filters. \T1/zi4/m/n/10 check_het_and_mis
+s \T1/ptm/m/n/10 creates
+[5]
+Overfull \hbox (23.74725pt too wide) in paragraph at lines 288--293
+[]\T1/ptm/m/n/10 [character] /path/to/directory where name.het as returned by p
+link --het and name.imiss
+
+Overfull \hbox (58.93738pt too wide) in paragraph at lines 288--293
+\T1/ptm/m/n/10 as returned by plink --missing will be saved. Per default qcdir=
+indir. If run.check_het_and_miss
+
+Overfull \hbox (19.96774pt too wide) in paragraph at lines 297--302
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable deviation from mean heterozy
+gosity per individual.
+
+Overfull \hbox (13.01724pt too wide) in paragraph at lines 297--302
+\T1/ptm/m/n/10 Expressed as multiples of standard deviation of heterozygosity (
+het), i.e. individuals
+
+Overfull \hbox (14.26675pt too wide) in paragraph at lines 312--317
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_het_imiss)
+
+Overfull \hbox (32.26724pt too wide) in paragraph at lines 312--317
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_het_imiss , other_arguments) or pdf(outf
+ile) print(p_het_imiss)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 320--326
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (13.46974pt too wide) in paragraph at lines 333--342
+[][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]\T1/ptm/m/n/10 . If run.che
+ck_het_and_miss is TRUE, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]
+[6] [7]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 411--416
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 411--416
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (25.51834pt too wide) in paragraph at lines 419--424
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_hwe, other_arguments) or pdf(outfile) pr
+int(p_hwe) dev.off(). 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 425--431
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (20.11794pt too wide) in paragraph at lines 441--446
+[]\T1/zi4/m/n/10 check_hwe \T1/ptm/m/n/10 uses plink --remove name.fail.IDs --h
+ardy to calculate the observed and expected heterozygote
+
+Overfull \hbox (10.25697pt too wide) in paragraph at lines 441--446
+\T1/ptm/m/n/10 frequencies per SNP in the individuals that passed the [][]\T1/z
+i4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 . It does so without generating
+
+("/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/tex/latex/inc
+onsolata/ts1zi4.fd") [8]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 513--518
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 513--518
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (23.2981pt too wide) in paragraph at lines 527--532
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_maf, other_arguments) or pdf(outfile) pr
+int(p_maf) dev.off(). 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 533--539
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[9] [10]
+Overfull \hbox (18.22731pt too wide) in paragraph at lines 626--628
+[]\T1/ptm/m/n/10 [character] Prefix of PLINK files, i.e. name.bed, name.bim, na
+me.fam, name.genome
+
+Overfull \hbox (8.78783pt too wide) in paragraph at lines 629--634
+[]\T1/ptm/m/n/10 [character] /path/to/directory to where name.genome as returne
+d by plink --genome
+
+Overfull \hbox (14.5179pt too wide) in paragraph at lines 629--634
+\T1/ptm/m/n/10 assumed that plink --missing and plink --genome have been run an
+d qcdir/name.imiss
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 635--637
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 638--642
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 663--669
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[11]
+Overfull \hbox (2.8706pt too wide) in paragraph at lines 676--682
+[][][]\T1/zi4/m/n/10 check_relatedness[][][] \T1/ptm/m/n/10 wraps around [][]\T
+1/zi4/m/n/10 run_check_relatedness[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 
+evaluate_check_relatedness[][][]\T1/ptm/m/n/10 .
+
+Overfull \hbox (4.40755pt too wide) in paragraph at lines 689--705
+\T1/ptm/m/n/10 value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 
+(P(IBD=1)), Z2 (P(IBD=2)), PI_HAT
+[12]
+Overfull \hbox (1.60793pt too wide) in paragraph at lines 770--774
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.sexcheck as return
+ed by plink --check-
+
+Overfull \hbox (46.59692pt too wide) in paragraph at lines 786--789
+[]\T1/ptm/m/n/10 [data.frame, optional] Dataframe with sample IDs [externalSexI
+D] and sex [externalSexSex]
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 795--797
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 798--800
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (12.42722pt too wide) in paragraph at lines 805--810
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sexcheck)
+
+Overfull \hbox (26.68814pt too wide) in paragraph at lines 805--810
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sexcheck, other_arguments) or pdf(outfil
+e) print(p_sexcheck)
+[13]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 816--822
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (33.69682pt too wide) in paragraph at lines 841--848
+\T1/ptm/m/n/10 heterozygosity (SNPSEX) of the sample split by their (PEDSEX), w
+hich can be shown by print(p_sexcheck). 
+[14]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 895--900
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 895--900
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 910--916
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[15] [16]
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 1006--1011
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 1006--1011
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+
+Overfull \hbox (21.31879pt too wide) in paragraph at lines 1017--1023
+\T1/ptm/m/n/10 rates (via [][]\T1/zi4/m/n/10 check_het_and_miss[][][] \T1/ptm/m
+/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Requires fil
+e qcdir/name.fail-
+
+Overfull \hbox (33.99733pt too wide) in paragraph at lines 1017--1023
+\T1/ptm/m/n/10 het.IDs (automatically created by [][]\T1/zi4/m/n/10 perIndividu
+alQC[][][] \T1/ptm/m/n/10 if do.evaluate_check_het_and_miss
+
+Overfull \hbox (21.31879pt too wide) in paragraph at lines 1024--1030
+\T1/ptm/m/n/10 rates (via [][]\T1/zi4/m/n/10 check_het_and_miss[][][] \T1/ptm/m
+/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Requires fil
+e qcdir/name.fail-
+
+Overfull \hbox (42.89696pt too wide) in paragraph at lines 1024--1030
+\T1/ptm/m/n/10 imiss.IDs (automatically created by [][]\T1/zi4/m/n/10 perIndivi
+dualQC[][][] \T1/ptm/m/n/10 if do.evaluate_check_het_and_miss
+
+Overfull \hbox (0.46788pt too wide) in paragraph at lines 1031--1035
+\T1/ptm/m/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Req
+uires file qcdir/name.fail-ancestry.IDs (automatically
+
+Overfull \hbox (24.62778pt too wide) in paragraph at lines 1036--1040
+[]\T1/ptm/m/n/10 [logical] Set to exclude samples that failed relatedness check
+ (via [][]\T1/zi4/m/n/10 check_relatedness[][][]
+
+Overfull \hbox (15.7877pt too wide) in paragraph at lines 1036--1040
+\T1/ptm/m/n/10 or [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ). Req
+uires file qcdir/name.fail-IBD.IDs (automatically created
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1064--1070
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[17] [18]
+Overfull \hbox (30.55664pt too wide) in paragraph at lines 1168--1171
+[]\T1/ptm/m/n/10 [character] /path/to/directory/with/QC/results containing pref
+ixMergedDataset.eigenvec
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 1172--1177
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 1178--1183
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 1178--1183
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 1189--1195
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 1189--1195
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 1203--1205
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 1206--1208
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+[19]
+Overfull \hbox (31.567pt too wide) in paragraph at lines 1212--1214
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (60.92725pt too wide) in paragraph at lines 1218--1221
+\T1/ptm/m/n/10 Identifiers have to be corresponding to population IDs [refColor
+sPop] in refColorsfile/refColors. 
+
+Overfull \hbox (9.24702pt too wide) in paragraph at lines 1224--1229
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_ancestry)
+
+Overfull \hbox (19.67786pt too wide) in paragraph at lines 1224--1229
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_ancestry, other_arguments) or pdf(outfil
+e) print(p_ancestry)
+
+Overfull \hbox (25.34023pt too wide) in paragraph at lines 1233--1236
+[]\T1/ptm/m/n/10 Both [][]\T1/zi4/m/n/10 run_check_ancestry[][][] \T1/ptm/m/n/1
+0 and [][]\T1/zi4/m/n/10 evaluate_check_ancestry[][][] \T1/ptm/m/n/10 can simpl
+y be invoked by [][]\T1/zi4/m/n/10 check_ancestry[][][]\T1/ptm/m/n/10 . 
+
+Overfull \hbox (26.35898pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 --het (heterozygosity rates per individual) via [][]\T1/zi4/m/n/
+10 run_check_heterozygosity[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 run_che
+ck_missingness[][][]
+
+Overfull \hbox (11.52669pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 (hz) rates per individual are often proxies for DNA sample quali
+ty. Larger than expected heterozygosity
+
+Overfull \hbox (21.83809pt too wide) in paragraph at lines 1263--1280
+\T1/ptm/m/n/10 hz_mean = (N-O)/N, where N: number of non-missing genotypes and 
+O:observed number of homozygous
+[20]
+Overfull \hbox (5.94664pt too wide) in paragraph at lines 1297--1300
+[]\T1/ptm/m/n/10 [character] path/to/directory/with/QC/results containing name.
+imiss and name.het
+
+Overfull \hbox (14.26675pt too wide) in paragraph at lines 1316--1321
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_het_imiss)
+
+Overfull \hbox (32.26724pt too wide) in paragraph at lines 1316--1321
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_het_imiss , other_arguments) or pdf(outf
+ile) print(p_het_imiss)
+
+Overfull \hbox (4.84067pt too wide) in paragraph at lines 1325--1329
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and [][]
+\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[21]
+Overfull \hbox (25.2874pt too wide) in paragraph at lines 1366--1383
+[]\T1/ptm/m/n/10 Evaluates and depicts results from plink --genome on the LD pr
+uned dataset (via [][]\T1/zi4/m/n/10 run_check_relatedness[][][]
+
+Overfull \hbox (25.38658pt too wide) in paragraph at lines 1400--1403
+[]\T1/ptm/m/n/10 [character] path/to/directory/with/QC/results containing name.
+imiss and name.genome
+
+Overfull \hbox (18.22731pt too wide) in paragraph at lines 1404--1406
+[]\T1/ptm/m/n/10 [character] Prefix of PLINK files, i.e. name.bed, name.bim, na
+me.fam, name.genome
+
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 1407--1409
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+[22]
+Overfull \hbox (4.40755pt too wide) in paragraph at lines 1434--1450
+\T1/ptm/m/n/10 value, based on just .fam/.ped relationship), Z0 (P(IBD=0)), Z1 
+(P(IBD=1)), Z2 (P(IBD=2)), PI_HAT
+
+Overfull \hbox (5.94699pt too wide) in paragraph at lines 1467--1482
+\T1/ptm/m/n/10 sex check). Takes file qcdir/name.sexcheck and returns IIDs for 
+samples whose SNPSEX != PEDSEX
+[23]
+Overfull \hbox (2.49747pt too wide) in paragraph at lines 1521--1524
+[]\T1/ptm/m/n/10 [data.frame, optional] with sample IDs [externalSexID] and sex
+ [externalSexSex]
+
+Overfull \hbox (6.31805pt too wide) in paragraph at lines 1529--1532
+\T1/ptm/m/n/10 name.bed, name.fam files; only required of fixMixup==TRUE. User 
+needs writing
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 1538--1540
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 1541--1543
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1549--1555
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[24]
+Overfull \hbox (12.42722pt too wide) in paragraph at lines 1559--1564
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sexcheck)
+
+Overfull \hbox (26.68814pt too wide) in paragraph at lines 1559--1564
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sexcheck, other_arguments) or pdf(outfil
+e) print(p_sexcheck)
+
+Overfull \hbox (12.77753pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 relatedness threshold highIBDTh, iii) outlying_heterozygosity co
+ntaining a [vector]
+
+Overfull \hbox (34.78687pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 with sample IIDs failing selected the heterozygosity threshold h
+etTh, iv) mismatched_sex
+
+Overfull \hbox (3.83801pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 containing a [vector] with the sample IIDs failing the sexcheck 
+based on SNPSEX
+
+Overfull \hbox (3.048pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 failing the ancestry check based on the selected europeanTh and 
+vi) p_sampleQC,
+
+Overfull \hbox (3.5183pt too wide) in paragraph at lines 1615--1629
+\T1/ptm/m/n/10 a ggplot2-object 'containing' a sub-paneled plot with the QC-plo
+ts of [][]\T1/zi4/m/n/10 check_sex[][][]\T1/ptm/m/n/10 ,
+[25]
+Overfull \hbox (12.58736pt too wide) in paragraph at lines 1630--1635
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_overview)
+
+Overfull \hbox (26.35852pt too wide) in paragraph at lines 1630--1635
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_overview, other_arguments) or pdf(outfil
+e) print(p_overview)
+[26]
+Overfull \hbox (22.43733pt too wide) in paragraph at lines 1686--1694
+\T1/ptm/m/n/10 threshold hweTh and 3. maf, containing SNPs failing the MAF thre
+shold mafTh/MAC
+
+Overfull \hbox (6.48802pt too wide) in paragraph at lines 1686--1694
+\T1/ptm/m/n/10 threshold macTh and ii) p_markerQC, a ggplot2-object 'containing
+' a sub-paneled
+
+Overfull \hbox (12.58736pt too wide) in paragraph at lines 1695--1700
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_overview)
+
+Overfull \hbox (26.35852pt too wide) in paragraph at lines 1695--1700
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_overview, other_arguments) or pdf(outfil
+e) print(p_overview)
+
+Overfull \hbox (6.40567pt too wide) in paragraph at lines 1732--1736
+[]\T1/ptm/m/n/10 perIndividualQC checks the samples in the plink dataset for th
+eir total missingness and heterozygosity
+[27] [28]
+Overfull \hbox (3.99721pt too wide) in paragraph at lines 1797--1807
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be saved. Pe
+r default, qcdir=indir.
+
+Overfull \hbox (46.31755pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 If do.evaluate_[analysis] is set to TRUE and do.run_[analysis] i
+s FALSE, \T1/zi4/m/n/10 perIndividualQC
+
+Overfull \hbox (16.90773pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 name.sexcheck, do.evaluate_check_het_and_miss expects name.het a
+nd name.imiss,
+
+Overfull \hbox (88.297pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 do.evaluate_check_relatedness expects name.genome and name.imiss
+ and do.evaluate_check_ancestry
+
+Overfull \hbox (8.95856pt too wide) in paragraph at lines 1797--1807
+\T1/ptm/m/n/10 expects prefixMergeData.eigenvec. If these files are not present
+ \T1/zi4/m/n/10 perIndividualQC
+
+Overfull \hbox (26.72849pt too wide) in paragraph at lines 1808--1811
+[]\T1/ptm/m/n/10 [logical] If TRUE, no sex check will be conducted; short for d
+o.run_check_sex=FALSE
+
+Overfull \hbox (46.59692pt too wide) in paragraph at lines 1823--1826
+[]\T1/ptm/m/n/10 [data.frame, optional] Dataframe with sample IDs [externalSexI
+D] and sex [externalSexSex]
+
+Overfull \hbox (12.25775pt too wide) in paragraph at lines 1829--1831
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing sex inform
+ation in externalSex. 
+
+Overfull \hbox (9.62715pt too wide) in paragraph at lines 1832--1834
+[]\T1/ptm/m/n/10 [character] Column identifier for column containing ID informa
+tion in externalSex. 
+
+Overfull \hbox (18.3481pt too wide) in paragraph at lines 1842--1848
+\T1/ptm/m/n/10 short for do.run_check_heterozygosity=FALSE, do.run_check_missin
+gness=FALSE
+
+Overfull \hbox (82.8881pt too wide) in paragraph at lines 1842--1848
+\T1/ptm/m/n/10 and do.evaluate_check_het_and_miss=FALSE. Takes precedence over 
+do.run_check_heterozygosity,
+
+Overfull \hbox (14.97025pt too wide) in paragraph at lines 1849--1852
+[]\T1/ptm/m/n/10 [logical] If TRUE, run [][]\T1/zi4/m/n/10 run_check_heterozygo
+sity[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 run_check_missingness[][][] 
+
+Overfull \hbox (19.96774pt too wide) in paragraph at lines 1859--1864
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable deviation from mean heterozy
+gosity per individual.
+
+Overfull \hbox (13.01724pt too wide) in paragraph at lines 1859--1864
+\T1/ptm/m/n/10 Expressed as multiples of standard deviation of heterozygosity (
+het), i.e. individuals
+
+Overfull \hbox (89.2272pt too wide) in paragraph at lines 1865--1869
+[]\T1/ptm/m/n/10 [logical] If TRUE, no relatedness check will be conducted; sho
+rt for do.run_check_relatedness=FALSE
+
+Overfull \hbox (56.0179pt too wide) in paragraph at lines 1865--1869
+\T1/ptm/m/n/10 and do.evaluate_check_relatedness=FALSE. Takes precedence over d
+o.run_check_relatedness
+[29]
+Overfull \hbox (1.00761pt too wide) in paragraph at lines 1876--1878
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals. 
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 1882--1886
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+
+Overfull \hbox (67.00775pt too wide) in paragraph at lines 1887--1891
+[]\T1/ptm/m/n/10 [logical] If TRUE, no ancestry check will be conducted; short 
+for do.run_check_ancestry=FALSE
+
+Overfull \hbox (33.79845pt too wide) in paragraph at lines 1887--1891
+\T1/ptm/m/n/10 and do.evaluate_check_ancestry=FALSE. Takes precedence over do.r
+un_check_ancestry
+
+Overfull \hbox (2.81857pt too wide) in paragraph at lines 1902--1908
+[]\T1/ptm/m/n/10 [double] Scaling factor of radius to be drawn around center of
+ European reference
+
+Overfull \hbox (10.94775pt too wide) in paragraph at lines 1909--1914
+\T1/ptm/m/n/10 to IIDs in prefixMergedDataset.eigenvec and population identifie
+r [refSamplesPop]
+
+Overfull \hbox (4.36754pt too wide) in paragraph at lines 1909--1914
+\T1/ptm/m/n/10 corresponding to population IDs [refColorsPop] in refColorsfile/
+refColors. Either
+
+Overfull \hbox (11.247pt too wide) in paragraph at lines 1920--1924
+\T1/ptm/m/n/10 identifiers [refSamplesIID] corresponding to IIDs in prefixMerge
+dDataset.eigenvec
+
+Overfull \hbox (39.98755pt too wide) in paragraph at lines 1920--1924
+\T1/ptm/m/n/10 and population identifier [refSamplesPop] corresponding to popul
+ation IDs [refColorsPop]
+
+Overfull \hbox (1.32703pt too wide) in paragraph at lines 1931--1933
+[]\T1/ptm/m/n/10 [character] Column name of reference sample IDs in refSamples/
+refSamplesFile. 
+
+Overfull \hbox (46.00667pt too wide) in paragraph at lines 1934--1936
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refSamples/refSamplesFile. 
+
+Overfull \hbox (31.567pt too wide) in paragraph at lines 1940--1942
+[]\T1/ptm/m/n/10 [character] Column name of reference sample population IDs in 
+refColors/refColorsFile. 
+
+Overfull \hbox (18.14691pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_sampleQC)
+
+Overfull \hbox (38.00754pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_sampleQC, other_arguments) or pdf(outfil
+e) print(p_sampleQC)
+
+Overfull \hbox (2.95776pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 heterozygosity rates on the y-axis (if do.evaluate_check_het_and
+_miss is TRUE),
+
+Overfull \hbox (22.86623pt too wide) in paragraph at lines 1948--1963
+\T1/ptm/m/n/10 iii) depicts all pair-wise IBD-estimates as histogram (if do.eva
+luate_check_relatedness
+[30]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 1966--1972
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (50.44963pt too wide) in paragraph at lines 1988--2002
+[][]\T1/zi4/m/n/10 check_het_and_miss[][][]\T1/ptm/m/n/10 , [][]\T1/zi4/m/n/10 
+check_relatedness[][][] \T1/ptm/m/n/10 and [][]\T1/zi4/m/n/10 check_ancestry[][
+][]\T1/ptm/m/n/10 , which can be shown by print(p_sampleQC).
+[31]
+Overfull \hbox (1.6264pt too wide) in paragraph at lines 2030--2042
+\T1/ptm/m/n/10 their deviation from Hardy-Weinberg-Equilibrium (HWE) and their 
+minor allele frequencies (MAF).
+
+Overfull \hbox (8.69768pt too wide) in paragraph at lines 2070--2075
+[]\T1/ptm/m/n/10 [character] /path/to/directory where results will be written t
+o. If [][]\T1/zi4/m/n/10 perIndividualQC[][][]
+
+Overfull \hbox (33.15823pt too wide) in paragraph at lines 2070--2075
+\T1/ptm/m/n/10 was conducted, this directory should be the same as qcdir specif
+ied in [][]\T1/zi4/m/n/10 perIndividualQC[][][]\T1/ptm/m/n/10 ,
+[32]
+Overfull \hbox (4.14716pt too wide) in paragraph at lines 2096--2101
+\T1/ptm/m/n/10 Alternatively, set interactive=FALSE and save the returned plot 
+object (p_marker)
+
+Overfull \hbox (9.7281pt too wide) in paragraph at lines 2096--2101
+\T1/ptm/m/n/10 via ggplot2::ggsave(p=p_marker, other_arguments) or pdf(outfile)
+ print(p_marker)
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2104--2110
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[33]
+Underfull \hbox (badness 1867) in paragraph at lines 2152--2152
+[]\T1/ptm/m/it/10 Remove related individuals while keeping maximum number of
+
+Overfull \hbox (48.66592pt too wide) in paragraph at lines 2196--2204
+[]\T1/ptm/m/n/10 [data.frame] containing pair-wise relatedness estimates (in co
+lumn [relatednessRelatedness])
+
+Overfull \hbox (47.65729pt too wide) in paragraph at lines 2196--2204
+\T1/ptm/m/n/10 for individual 1 (in column [relatednessIID1] and individual 2 (
+in column [relatednessIID1]).
+
+Overfull \hbox (33.96696pt too wide) in paragraph at lines 2205--2210
+\T1/ptm/m/n/10 individual (in column [otherCriterionIID]). otherCriterionMeasur
+e and otherCriterionIID
+[34]
+Overfull \hbox (16.65674pt too wide) in paragraph at lines 2219--2225
+\T1/ptm/m/n/10 'gt', individuals whose otherCriterionMeasure > otherCriterionTh
+ will automatically
+
+Overfull \hbox (15.65755pt too wide) in paragraph at lines 2248--2250
+[]\T1/ptm/m/n/10 [character] Column name of the column containing the measure o
+f the otherCriterion
+
+Overfull \hbox (3.01758pt too wide) in paragraph at lines 2268--2270
+[]\T1/ptm/m/n/10 Run plink --pca to calculate the principal components on merge
+d genotypes of the study and reference
+[35]
+Overfull \hbox (154.73499pt too wide) in paragraph at lines 2287--2290
+[]\T1/ptm/m/n/10 [character] /path/to/directory containing the basic PLINK data
+ files prefixMergedDataset.bim,prefixMergedDataset.fam
+
+Overfull \hbox (32.52765pt too wide) in paragraph at lines 2291--2294
+[]\T1/ptm/m/n/10 [character] Prefix of merged study and reference data files, i
+.e. prefixMergedDataset.bed,
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2301--2307
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (7.96942pt too wide) in paragraph at lines 2314--2317
+[]\T1/ptm/m/n/10 Both, [][]\T1/zi4/m/n/10 run_check_ancestry[][][] \T1/ptm/m/n/
+10 and its evaluation by [][]\T1/zi4/m/n/10 evaluate_check_ancestry[][][] \T1/p
+tm/m/n/10 can simply be invoked
+[36]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2366--2372
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (80.02992pt too wide) in paragraph at lines 2379--2383
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and thei
+r evaluation by [][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[37]
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2433--2439
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (80.02992pt too wide) in paragraph at lines 2446--2450
+[]\T1/ptm/m/n/10 All, [][]\T1/zi4/m/n/10 run_check_heterozygosity[][][]\T1/ptm/
+m/n/10 , [][]\T1/zi4/m/n/10 run_check_missingness[][][] \T1/ptm/m/n/10 and thei
+r evaluation by [][]\T1/zi4/m/n/10 evaluate_check_het_and_miss[][][]
+[38]
+Overfull \hbox (22.49733pt too wide) in paragraph at lines 2469--2478
+\T1/ptm/m/n/10 highldfile contains regions of high LD as provided by Anderson e
+t (2010) Nature Protocols. Subsequently,
+
+Overfull \hbox (4.27794pt too wide) in paragraph at lines 2504--2507
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.genome as returned
+ by plink --genome.
+
+Overfull \hbox (1.2875pt too wide) in paragraph at lines 2508--2511
+[]\T1/ptm/m/n/10 [double] Threshold for acceptable proportion of IBD between pa
+ir of individuals;
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2515--2521
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+
+Overfull \hbox (2.20741pt too wide) in paragraph at lines 2522--2526
+[]\T1/ptm/m/n/10 [character] Name of the genome build of the PLINK file annotat
+ions, ie mappings
+[39]
+Overfull \hbox (1.60793pt too wide) in paragraph at lines 2594--2597
+[]\T1/ptm/m/n/10 [character] /path/to/directory to save name.sexcheck as return
+ed by plink --check-
+
+Overfull \hbox (3.23822pt too wide) in paragraph at lines 2600--2606
+\T1/ptm/m/n/10 of the executable should be specified: for windows OS, this mean
+s path/plink.exe,
+[40]
+Overfull \hbox (4.74945pt too wide) in paragraph at lines 2613--2616
+[]\T1/ptm/m/n/10 Both [][]\T1/zi4/m/n/10 run_check_sex[][][] \T1/ptm/m/n/10 and
+ its evaluation [][]\T1/zi4/m/n/10 evaluate_check_sex[][][] \T1/ptm/m/n/10 can 
+simply be invoked by [][]\T1/zi4/m/n/10 check_sex[][][]\T1/ptm/m/n/10 . 
+
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.ind [41] [42])
+(/private/var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T/RtmpIKC29L/Rd2pdfb054
+7e29166f/Rd2.aux) )
+(see the transcript file for additional information)pdfTeX warning (dest): name
+{Rfn.upset} has been referenced but does not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{Rfn.exec} has been referenced but does not exist, r
+eplaced by a fixed one
+
+{/Users/hannah/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvip
+s/inconsolata/i4-ts1.enc}{/Users/hannah/Library/Application Support/MiKTeX/texm
+fs/install/fonts/enc/dvips/base/8r.enc}{/Users/hannah/Library/Application Suppo
+rt/MiKTeX/texmfs/install/fonts/enc/dvips/inconsolata/i4-t1-0.enc}</Users/hannah
+/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/inconsola
+ta/Inconsolata-zi4r.pfb></Users/hannah/Library/Application Support/MiKTeX/texmf
+s/install/fonts/type1/urw/helvetic/uhvr8a.pfb></Users/hannah/Library/Applicatio
+n Support/MiKTeX/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></Users/hannah
+/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/urw/times/utmr8a
+.pfb></Users/hannah/Library/Application Support/MiKTeX/texmfs/install/fonts/typ
+e1/urw/times/utmr8a.pfb></Users/hannah/Library/Application Support/MiKTeX/texmf
+s/install/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (42 pages, 295209 bytes).
+Transcript written on Rd2.log.
+Saving output to ‘plinkQC-manual.pdf’ ...
+Done
+You may want to clean up by 'rm -Rf /var/folders/rc/xlxbh6n92qzbm6dh_qqcd56h0000gq/T//RtmpIKC29L/Rd2pdfb0547e29166f'
