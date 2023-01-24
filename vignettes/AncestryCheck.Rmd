@@ -70,7 +70,7 @@ mkdir -p $qcdir/plink_log
 
 ## Match study genotypes and reference data
 In order to compute joint principal components of the reference and study
-population, we'll need to combine the two datasets. The plink --merge
+population, we will need to combine the two datasets. The plink --merge
 function enables this merge, but requires the variants in the datasets to be
 matching by chromosome, position and alleles. The following sections show how
 to extract the relevant data from the reference and study dataset and how to
@@ -79,7 +79,10 @@ filter matching variants.
 ### Filter reference and study data for non A-T or G-C SNPs
 We will use an awk script to find A→T and C→G SNPs. As these SNPs are more
 difficult to align and only a subset of SNPs is required for the analysis, we
-will remove them from both the reference and study data set.
+will remove them from both the reference and study data set. In addition,
+we will only keep the autosomes (chr 1-22), keep snps only (snps-only),
+of those, keep only the biallelic ones (max-alleles 2) and remove any duplicates
+(rm-dup).
 
 ```{bash filter at and gc snps, eval=FALSE}
 awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
@@ -91,21 +94,53 @@ awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
     $refdir/$refname.bim  > \
     $qcdir/$refname.ac_gt_snps
    
-plink --bfile  $refdir/$refname \
+plink2 --bfile  $refdir/$refname \
+      --rm-dup exclude-all \
+      --max-alleles 2 \
+      --snps-only just-acgt \
       --exclude $qcdir/$refname.ac_gt_snps \
+      --chr 1-22 \
       --make-bed \
-      --allow-extra-chr \
       --out $qcdir/$refname.no_ac_gt_snps
 mv  $qcdir/$refname.no_ac_gt_snps.log $qcdir/plink_log/$refname.no_ac_gt_snps.log
 
-plink --bfile  $qcdir/$name \
+plink2 --bfile  $qcdir/$name \
+      --rm-dup exclude-all \
+      --max-alleles 2 \
+      --snps-only just-acgt \
       --exclude $qcdir/$name.ac_gt_snps \
       --make-bed \
+      --chr 1-22 \
       --allow-extra-chr \
       --out $qcdir/$name.no_ac_gt_snps
 mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 ```
-After here, is where you need to remove letters from ids. 
+
+### Rename to common scheme
+Variant identifiers can vary between studies and/or reference sets. For instance,
+commonly used are either rsIDs or a name constructed from chr-position-alleles.
+Here, we will make sure that we are dealing with the same identifiers for the
+merge by renaming all variants by their chromosome and position, followed by
+the genome build. As this might introduce additional duplicates (e.g. identifiers
+that now are identical because of tri-allelic variants that could not be caught
+in the previous step), we will also remove duplicates again.
+
+```{bash}
+plink2 --bfile  $qcdir/$name.no_ac_gt_snps \
+      --set-all-var-ids @:#[hg38] \
+      --rm-dup exclude-all \
+      --make-bed \
+      --out $qcdir/$name.renamed
+mv  $qcdir/$name.renamed.log $qcdir/plink_log
+
+plink2 --bfile  $qcdir/$refname.no_ac_gt_snps \
+      --set-all-var-ids @:#[hg38] \
+      --rm-dup exclude-all \
+      --make-bed \
+      --out $qcdir/$refname.renamed
+mv  $qcdir/$refname.renamed.log $qcdir/plink_log
+```
+
 ### Prune study data
 We will conduct principle component analysis on genetic variants that are
 pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
@@ -120,14 +155,17 @@ well.
 ```{bash prune, eval=FALSE}
 highld='high-LD-regions-hg38-GRCh38.txt'
 
-plink --bfile  $qcdir/$name.no_ac_gt_snps \
+plink --bfile  $qcdir/$name.renamed \
       --exclude range  $qcdir/$highld \
       --indep-pairwise 50 5 0.2 \
-      --out $qcdir/$name.no_ac_gt_snps
-mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.prune.log
+      --out $qcdir/$name.renamed
+mv  $qcdir/$name.renamed.log $qcdir/plink_log/$name.renamed.prune.log
 
-plink --bfile  $qcdir/$name.no_ac_gt_snps \
-      --extract $qcdir/$name.no_ac_gt_snps.prune.in \
+```
+
+```{bash rename}
+plink --bfile  $qcdir/$name.renamed \
+      --extract $qcdir/$name.renamed.prune.in \
       --make-bed \
       --out $qcdir/$name.pruned
 mv  $qcdir/$name.pruned.log $qcdir/plink_log/$name.pruned.log
@@ -138,75 +176,11 @@ We will use the list of pruned variants from the study sample to reduce the
 reference dataset to the size of the study samples:
 Notes - make --bfile $refdir/$refname to $qcdir/$refname because the first is not converted 
 ```{bash filter, eval=FALSE}
-plink --bfile  $qcdir/$refname.no_ac_gt_snps \
-      --extract $qcdir/$name.no_ac_gt_snps.prune.in \
+plink --bfile  $qcdir/$refname.renamed \
+      --extract $qcdir/$name.renamed.prune.in \
       --make-bed \
-      --allow-extra-chr 0 \
       --out $qcdir/$refname.pruned
 mv  $qcdir/$refname.pruned.log $qcdir/plink_log/$refname.pruned.log
-```
-
-### Check and correct chromosome mismatch
-The following section uses an awk-script to check that the variant IDs of the
-reference data have the same chromosome ID as the study data. 
-For computing the genetic PC, the annotation is not important, however, merging 
-the files via PLINK will only work for variants with perfectly
-matching attributes. For simplicity, we update the pruned reference dataset.
-Note, that sex chromosomes are often encoded differently and might make the
-matching more difficult. Again, for simplicity and since not crucial to the final
-task, we will ignore XY-encoded sex chromosomes (via `sed -n '/^[XY]/!p'`).
-
-```{bash chromosome mismatch, eval=FALSE}
-awk 'BEGIN {OFS="\t"} FNR==NR {a[$2]=$1; next} \
-    ($2 in a && a[$2] != $1)  {print a[$2],$2}' \
-    $qcdir/$name.pruned.bim $qcdir/$refname.pruned.bim | \
-    sed -n '/^[XY]/!p' > $qcdir/$refname.toUpdateChr
-
-plink --bfile $qcdir/$refname.pruned \
-      --update-chr $qcdir/$refname.toUpdateChr 1 2 \
-      --make-bed \
-      --out $qcdir/$refname.updateChr
-mv $qcdir/$refname.updateChr.log $qcdir/plink_log/$refname.updateChr.log
-```
-
-### Possible allele flips
-Unlike chromosomal and base-pair annotation, mismatching allele-annotations will
-not only prevent the plink --merge, but also mean that it is likely that
-actually a different genotype was measured. Initially, we can use the following
-awk-script to check if non-matching allele codes are a simple case of allele
-flips. 
-```{bash possible allele flips, eval=FALSE}
-awk 'BEGIN {OFS="\t"} FNR==NR {a[$1$4]=$5$6; next} \
-    ($1$4 in a && a[$1$4] != $5$6 && a[$1$4] != $6$5)  {print $2}' \
-    $qcdir/$name.pruned.bim $qcdir/$refname.pruned.bim > \
-    $qcdir/$refname.toFlip
-```
-
-### Update flip alleles
-We use plink to update the mismatching positions and possible allele-flips
-identified above.
-```{bash update and flip, eval=FALSE}
-plink --bfile $qcdir/$refname.updateChr \
-      --flip $qcdir/$refname.toFlip \
-      --make-bed \
-      --out $qcdir/$refname.flipped
-mv $qcdir/$refname.flipped.log $qcdir/plink_log/$refname.flipped.log
-```
-
-### Remove mismatches
-Any alleles that do not match after allele flipping, are identified and removed
-from the reference dataset.
-```{bash mismatch, eval=FALSE}
-awk 'BEGIN {OFS="\t"} FNR==NR {a[$1$2$4]=$5$6; next} \
-    ($1$2$4 in a && a[$1$2$4] != $5$6 && a[$1$2$4] != $6$5) {print $2}' \
-    $qcdir/$name.pruned.bim $qcdir/$refname.flipped.bim > \
-    $qcdir/$refname.mismatch
-
-plink --bfile $qcdir/$refname.flipped \
-      --exclude $qcdir/$refname.mismatch \
-      --make-bed \
-      --out $qcdir/$refname.clean
-mv $qcdir/$refname.clean.log $qcdir/plink_log/$refname.clean.log
 ```
 
 ## Merge study genotypes and reference data
@@ -214,9 +188,15 @@ The matching study and reference dataset can now be merged into a combined
 dataset with plink --bmerge. If all steps outlined above were conducted
 successfully, no mismatch errors should occur.
 ```{bash merge, eval=FALSE}
+plink --bfile $qcdir/$name.pruned \
+      --bmerge $qcdir/$refname.pruned \
+      --out $qcdir/$name.merge.$refname \
+      --merge-mode 6
+mv $qcdir/$name.merge.$refname.log $qcdir/plink_log/$name.merge.$refname.missnp.log
+
 plink --bfile $qcdir/$name.pruned  \
-      --bmerge $qcdir/$refname.clean.bed $qcdir/$refname.clean.bim \
-         $qcdir/$refname.clean.fam  \
+      --bmerge $qcdir/$refname.pruned \
+      --exclude $qcdir/$name.merge.$refname.missnp \
       --make-bed \
       --out $qcdir/$name.merge.$refname
 mv $qcdir/$name.merge.$refname.log $qcdir/plink_log
