@@ -44,7 +44,7 @@ into PLINK format. Vignettes
 ['Processing HapMap III reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html) and 
 ['Processing 1000Genomes  reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html),
 show the download and processing of the HapMap phase III and 1000Genomes phase
-III dataset, respectively. In this example, we will use the HapmapIII data as
+III dataset, respectively. In this example, we will use the 1000Genomes data as
 the reference dataset.
 
 ## Set-up
@@ -125,7 +125,7 @@ the genome build. As this might introduce additional duplicates (e.g. identifier
 that now are identical because of tri-allelic variants that could not be caught
 in the previous step), we will also remove duplicates again.
 
-```{bash}
+```{bash, eval=FALSE}
 plink2 --bfile  $qcdir/$name.no_ac_gt_snps \
       --set-all-var-ids @:#[hg38] \
       --rm-dup exclude-all \
@@ -163,7 +163,7 @@ mv  $qcdir/$name.renamed.log $qcdir/plink_log/$name.renamed.prune.log
 
 ```
 
-```{bash rename}
+```{bash rename, eval=FALSE}
 plink --bfile  $qcdir/$name.renamed \
       --extract $qcdir/$name.renamed.prune.in \
       --make-bed \
@@ -174,7 +174,7 @@ mv  $qcdir/$name.pruned.log $qcdir/plink_log/$name.pruned.log
 ### Filter reference data for the same SNP set as in study
 We will use the list of pruned variants from the study sample to reduce the 
 reference dataset to the size of the study samples:
-Notes - make --bfile $refdir/$refname to $qcdir/$refname because the first is not converted 
+
 ```{bash filter, eval=FALSE}
 plink --bfile  $qcdir/$refname.renamed \
       --extract $qcdir/$name.renamed.prune.in \
@@ -223,19 +223,20 @@ samples whose Euclidean distance from the centre falls outside the radius
 specified by the maximum Euclidean distance of the reference samples multiplied
 by the chosen `europeanTh` are considered non-European. `check_ancestry` shows
 the result of the ancestry analysis in a scatter plot of PC1 versus
-PC2 colour-coded for samples of the reference populations and the study
-population. Reminder, if you are using HapMap III reference data, refname will
+PC2, colour-coded for samples of the reference populations and the study
+population. Reminder, if you are using HapMapIII reference data, refname will
 be the reference name you have used previously. Also, the files to use are 
-"/HapMap_ID2Pop.txt" instead of the Genomes1000_ID2Pop and "HapMap_PopColors.txt".
+"/HapMap_ID2Pop.txt" instead of the Genomes1000_ID2Pop and 
+"HapMap_PopColors.txt" instead of Genomes1000_PopColors.txt.
 
-Note: this vignette provides the 1000 Genomes annotation files, or the HapMap 
-annotation files. If you choose to use either the 1000Genomes or  HapMap reference 
+Note: this vignette provides the 1000Genomes annotation files, or the HapMapIII 
+annotation files. If you choose to use either 1000Genomes or HapMapIII reference 
 population data, you can simply use our color mapping files and it should work.  
 If not, you must provide it to the function.  An example of the color scheme 
 for the 1000 Genomes reference data is found in '1000Genomes_PopColors.txt'.  
 
-From within R, run the following command to the ancestry check:
-### For 1000 Genomes data
+From within R, run the following command to the ancestry check.  This is for 
+the 1000 Genomes Data. 
 ```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
 library(plinkQC)
 indir <- system.file("extdata", package="plinkQC")
