@@ -52,9 +52,9 @@ We will first set up some bash variables and create directories needed; storing
 the names and directories of the reference and study will make it easy to use 
 updated versions of the reference or new datasets in the future. We create a 
 directory named 'qcdir' for the study data. 
-Is is also useful to keep the PLINK log-files for future reference. In order to
-keep the data directory tidy, we'll create a directory for the log files and
-move them to the log directory here after each analysis step. 
+In order to keep the data directory tidy, we'll create a directory for the log 
+files and move them to the log directory here after each analysis step. This
+is useful to keep the PLINK log-files for future reference. 
 Once you have created 'qcdir', be sure to copy the data.bim, data.bed, 
 and data.fam files into your directory. If you are using HapMap III reference 
 data, be sure to use the correct variable name; refname='HapMapIII'.  
