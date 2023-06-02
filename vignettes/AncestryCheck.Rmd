@@ -260,4 +260,8 @@ exclude_ancestry <-
 knitr::include_graphics("checkAncestry.png")
 ```
 
+
+After these steps, this .eigenvec file can be used to build a random forest.  
+The steps for this process are described in [link next vignette]. 
+
 # References
