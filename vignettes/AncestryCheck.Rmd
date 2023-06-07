@@ -263,5 +263,24 @@ knitr::include_graphics("checkAncestry.png")
 
 After these steps, this .eigenvec file can be used to build a random forest.  
 The steps for this process are described in [link next vignette]. 
+For now, I am putting the Random Forest documentation here. 
+
+## Random Forest Classification 
+The previous [Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html) 
+performed PCA on the combined study and reference datasets  and identified 
+individuals of European descent based on clustering of data in the first and 
+second PC space. In this two dimensional space, there is no adequate 
+identification of individuals of other ancestries. In this vignette, we will
+train a random forest classifier that uses up to 20 PCs to sufficiently identify
+individuals of all ancestries in the reference dataset. 
+
+We use the .eigenvec file that was created when preparing files for ancestry 
+estimation, and read in its dataframe. The file contains the eigenvectors for the PCA on the LD-prunced genotype data.  The .eigenvec file only included the eigenvalues per PC for each individual and did not include any information regarding individual's ancestries. Therefore, I had to acquire the file available in the plinkQC download, which contains the individual's ID, their family ID, and their associated ancestry and read in that dataframe, as obtained from the 1000 Genomes database. 
+
+Parameters portion 
+It is important to tune a few parameters to see which produces the best forest. 
+
+
+
 
 # References
