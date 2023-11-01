@@ -105,7 +105,8 @@ plink --bfile  $qcdir/$name \
       --out $qcdir/$name.no_ac_gt_snps
 mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 ```
-After here, is where you need to remove letters from ids. 
+After here, is where you need to remove letters from ids.
+
 ### Prune study data
 We will conduct principle component analysis on genetic variants that are
 pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
@@ -209,12 +210,26 @@ plink --bfile $qcdir/$refname.flipped \
 mv $qcdir/$refname.clean.log $qcdir/plink_log/$refname.clean.log
 ```
 
+### Filter study data for the same SNPs as in reference data
+We will use the final list of corrected variants from the reference study to match the snps in our study:
+
+```{bash filter, eval=FALSE}
+cut -f 2 $qcdir/$refname.clean.bim > $qcdir/$refname.clean.keepSNPs
+
+plink --bfile  $qcdir/$name.pruned \
+      --extract $qcdir/$refname.clean.keepSNPs \
+      --make-bed \
+      --allow-extra-chr 0 \
+      --out $qcdir/$name.pruned.clean
+mv  $qcdir/$name.pruned.clean.log $qcdir/plink_log/$name.pruned.clean.log
+```
+
 ## Merge study genotypes and reference data
 The matching study and reference dataset can now be merged into a combined 
 dataset with plink --bmerge. If all steps outlined above were conducted
 successfully, no mismatch errors should occur.
 ```{bash merge, eval=FALSE}
-plink --bfile $qcdir/$name.pruned  \
+plink --bfile $qcdir/$name.pruned.clean  \
       --bmerge $qcdir/$refname.clean.bed $qcdir/$refname.clean.bim \
          $qcdir/$refname.clean.fam  \
       --make-bed \
