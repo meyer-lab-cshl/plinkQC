@@ -110,7 +110,7 @@ plink2 --pfile $refdir/all_hg38 vzs\
       --make-bed \
       --allow-extra-chr 0 \
       --out $refdir/all_hg38
-mv $refdir/all_hg38.log $refdir/plink_log
+mv $refdir/all_hg38.log $refdir/plink_log/all_hg38_convert.log
 ```
 
  
