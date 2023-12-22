@@ -15,7 +15,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 ```{r setup knitr, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -77,11 +76,10 @@ to extract the relevant data from the reference and study dataset and how to
 filter matching variants.
 
 ### Filter reference and study data for non A-T or G-C SNPs
-We will use an awk script to find A→T and C→G SNPs. As these SNPs are more
-difficult to align and only a subset of SNPs is required for the analysis, we
-will remove them from both the reference and study data set. In addition,
-we will only keep the autosomes (chr 1-22), keep snps only (snps-only),
-of those, keep only the biallelic ones (max-alleles 2) and remove any duplicates
+We will use an awk script to find non-A/T and non-G/C SNPs, as these SNPs are more
+difficult to align, and remove them from both the reference and study data sets.
+In addition, we will only keep the autosomes (chr 1-22), only keep snps (snps-only),
+of those, keep only the biallelic ones (max-alleles 2), and remove any duplicates
 (rm-dup).
 
 ```{bash filter at and gc snps, eval=FALSE}
@@ -116,14 +114,17 @@ plink2 --bfile  $qcdir/$name \
 mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 ```
 
-### Rename to common scheme
-Variant identifiers can vary between studies and/or reference sets. For instance,
-commonly used are either rsIDs or a name constructed from chr-position-alleles.
-Here, we will make sure that we are dealing with the same identifiers for the
-merge by renaming all variants by their chromosome and position, followed by
-the genome build. As this might introduce additional duplicates (e.g. identifiers
-that now are identical because of tri-allelic variants that could not be caught
-in the previous step), we will also remove duplicates again.
+### Rename Variant Identifiers to common scheme
+Variant identifiers can vary between studies and/or reference sets. For 
+computing the genetic PC, the annotation is not important, however, merging the
+files via PLINK will only work for variants with perfectly matching attributes. 
+For instance, commonly used identifiers are either rsIDs or a name constructed 
+from chr-position-alleles. Here, we must ensure the study and reference sets 
+use the same identifiers in order to merge them by renaming all variants using 
+their chromosome and position, followed by the genome build. As this might 
+introduce additional duplicates (e.g. identifiers that now are identical because
+of tri-allelic variants that could not be caught in the previous step), we will 
+also remove duplicates again.
 
 ```{bash, eval=FALSE}
 plink2 --bfile  $qcdir/$name.no_ac_gt_snps \
@@ -144,8 +145,8 @@ mv  $qcdir/$refname.renamed.log $qcdir/plink_log
 ### Prune study data
 We will conduct principle component analysis on genetic variants that are
 pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
-window. The LD-pruned dataset is generated below, using plink --indep-pairwise
-to compute the LD-variants; additionally exclude range is used to remove genomic
+window. The LD-pruned dataset is generated below, using `plink --indep-pairwise`
+to compute the LD-variants; additionally `exclude range` is used to remove genomic
 ranges of known high-LD structure. This file was originally provided by
 @Anderson2010 and is available in
 `file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')`.
@@ -204,7 +205,7 @@ mv $qcdir/$name.merge.$refname.log $qcdir/plink_log
 
 ## PCA on the merged data
 We can now run principal component analysis on the combined dataset using
-plink --pca which returns a .eigenvec file with the family and individual ID
+`plink --pca` which returns a .eigenvec file with the family and individual ID
 in columns 1 and 2, followed by the first 20 principal components. 
 ```{bash pca, eval=FALSE}
 plink --bfile $qcdir/$name.merge.$refname \
@@ -267,19 +268,355 @@ For now, I am putting the Random Forest documentation here.
 
 ## Random Forest Classification 
 The previous [Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html) 
-performed PCA on the combined study and reference datasets  and identified 
+performed PCA from the combined study and reference dataset and identified 
 individuals of European descent based on clustering of data in the first and 
 second PC space. In this two dimensional space, there is no adequate 
 identification of individuals of other ancestries. In this vignette, we will
-train a random forest classifier that uses up to 20 PCs to sufficiently identify
-individuals of all ancestries in the reference dataset. 
+train a random forest classifier that uses up to 20 PCs to sufficiently 
+estimate the study samples' ancestry based on any ancestry in the reference
+dataset.
 
 We use the .eigenvec file that was created when preparing files for ancestry 
-estimation, and read in its dataframe. The file contains the eigenvectors for the PCA on the LD-prunced genotype data.  The .eigenvec file only included the eigenvalues per PC for each individual and did not include any information regarding individual's ancestries. Therefore, I had to acquire the file available in the plinkQC download, which contains the individual's ID, their family ID, and their associated ancestry and read in that dataframe, as obtained from the 1000 Genomes database. 
+estimation, and read in its dataframe. The file contains the eigenvectors for 
+the PCA on the LD-pruned genotype data.  The .eigenvec file only included the 
+eigenvalues per PC for each individual and did not include any information 
+regarding individual's ancestries. Therefore, the file available in the plinkQC download, which contains a dataframe with each individual's ID, their family ID, and their associated ancestry must be obtained and read in, as obtained from the 1000 Genomes database. These two files are to be joined by ID and filtered to remove any IDs where no genetic data were available. 
 
-Parameters portion 
-It is important to tune a few parameters to see which produces the best forest. 
+The file paths must change!!!
+```
+Definitely do not need all of these: 
 
+library(plinkQC)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(randomForest)
+require(caTools)
+library(caret)
+library(tidyverse)
+library(pipeR)
+library(rlist)
+```
+Here, we will read in both files with corresponding data frames.
+```
+# Read in both data frames 
+g_1000 <- read_delim('~/Ancestry/build_forest/train_data', col_names = FALSE)
+ancestry_info <- read_delim("~/Ancestry/build_forest/Genomes1000_ID2Pop.txt")
+```
+The PC, training data, and ancestry files are correctly formatted, the ancestry 
+file is filtered to remove IDs that have no corresponding genetic data, and the 
+files are then joined by ID.
+```
+g_1000 <- g_1000 %>%
+  select(-X1)
+colnames(g_1000) <- c("ID", paste0("PC", 1:20))
+colnames(ancestry_info) <- c("Fam_ID", "ID", "Ancestry")
+ancestry_info <- ancestry_info %>% filter(ancestry_info$ID %in% g_1000$ID)
+g_1000 <- g_1000 %>% 
+  left_join(ancestry_info)
+```
+The documentation below provides visuals of ancestry data for your understanding
+by making a histogram, `hist`, of individuals per ancestry in our data set. 
+In a random forest classification, the original data set is split into training 
+and testing subsets. Below, 20 individuals from each ancestry are chosen at 
+random to avoid any under or over representation on one ancestry during this 
+split, shown in `test_hist`.  These 20 individuals are then saved and removed 
+from the data set to create two distinct sets, and the ancestries are converted 
+into a factor instead of a categorical value. 
+```
+ancestries <- as.factor(g_1000$Ancestry)
+hist <- ggplot(data.frame(ancestries), aes(x = ancestries)) + geom_bar()
+
+# Sample 20 ancestry sepcific individuals
+n_individuals <- 20
+set.seed(123)
+idx <- split(seq(nrow(ancestry_info)), ancestry_info$Ancestry)
+
+# I changed this to use g_1000 instead of ancestry_info, because ancestry_info
+# was creating samples that were above the 2584 samples that are in g_1000
+
+test.ids <- lapply(idx, function(i) {
+  sample(i, n_individuals)
+})
+
+# For each population, it extracts the ids that were sampled above
+ancestry.test <- ancestry_info$Ancestry[unlist(test.ids)]
+# Histogram of testing set to show sampling was successful. 
+test_hist <- ggplot(data.frame(ancestry.test), aes(x = ancestry.test)) + geom_bar()
+
+# Remove the `test.ids` from `g_1000` and `ancestry_info` data objects. 
+ids_to_remove <- unlist(test.ids, use.names = FALSE, recursive = FALSE)
+g_1000 <- g_1000[-ids_to_remove,]
+ancestry_info <- ancestry_info[-ids_to_remove,]
+
+# Covert Ancestry value to a factor instead of categorical value. 
+g_1000$Ancestry <- factor(g_1000$Ancestry)
+```
+Now that the files are correctly formatted, we are able to run a random forest
+classification on out Ancestry data object. The documentation is below. 
+```
+rf <- randomForest(Ancestry ~ .,
+                   data = g_1000[,-c(1,21,22)], 
+                   method = "rf", 
+                   ntree = 750,
+                   importance = TRUE)
+rf
+```
+![This is an example random forest classification model that builds 500 decision trees, and has an mtry of 4 (4 input features are considered at any moment during the decision tree construction process). This model has an out-of-bag error rate of 14.24%, meaning this random forest has an accuracy of 85.76% in classifying ancestry. The confusion matrix displays the number of correct classifications for each ancestry along the diagonal. Any values outside the diagonal are misclassifications for that other ancestry. For example, the African Caribbean in Barbados (ACB) ancestry was correctly classified for 57 samples, but was misclassified as African Ancestry in Southwest United States (ASW) 19 times, as Esan in Nigeria (ESN) 1 time, and Yoruba in Ibadan, Nigeria (YRI) 4 times. The class error is the amount of misclassification you get for each ancestry.](~/RpackageDevelopment/plinkQC/docs/articles/rfLarge.png)
+
+
+Below provides documentation for a heatmap of the ancestries.  
+From the heatmap, you may see that there are some false estimations. 
+The next section will allow us to tune the random forest in an attempt to 
+improve accuracy. 
+```
+my_rf <- rf$confusion
+heatmap(my_rf[,-c(27)], scale = 'column', trace = 'none')
+```
+
+# Parameter Tuning
+Tuning the parameters for this random forest is crucial in building a 
+machine-learning model to produce the best forest, in this case having the 
+highest accuracy.
+
+### Number of Trees 
+A random forest model is comprised of building several trees and the 'Number of 
+trees' parameter decides exactly how many decision trees will constitute the 
+random forest. Although there exists a positive relationship between the number 
+of trees and predictive performance of the model, there exists a point where 
+continuing to increase the number of trees will no longer find you a better prediction
+while elongating computational efficiency. There also exists a tradeoff between
+predictive performance and computational efficiency. Excess trees also pose a 
+possible issue of overfitting as more trees are trained.  It is important for 
+your dataset to test and find the point of diminishing returns.  For the example
+below of the 1000 Genomes set, 500-1000 trees allows accurate predictions to be 
+made, while also staying computationally efficient. 
+```
+rf_100_trees <- randomForest(Ancestry ~ .,
+                   data = g_1000[,-c(1,21,22)], 
+                   ntree = 100, 
+                   method = "rf", 
+                   importance = TRUE)
+
+rf_500_trees <- randomForest(Ancestry ~ .,
+                   data = g_1000[,-c(1,21,22)], 
+                   ntree = 500, 
+                   method = "rf", 
+                   importance = TRUE)  
+
+rf_10000_trees <- randomForest(Ancestry ~ .,
+                   data = g_1000[,-c(1,21,22)], 
+                   ntree = 10000, 
+                   method = "rf", 
+                   mtry = best_mtry,
+                   importance = TRUE)
+```
+
+## Mtry
+The mrty parameter controls the number of variables tried at each split. During 
+decision tree construcrion process, the confirmation that no two trees look exactly 
+the same must be investiagted.  More specifically, this mtry parameter controls the number of input features a decision tree is able to consider at any moment during tree construction 
+and controls how much randomness is added during the process. Testing different 
+values of mtry is crucial and can greatly impact the model's performance.  For 
+every new split that is added as a node to a decision tree, mtry controls how 
+many of the PC variables are allowed to be considered for each successive split. 
+
+If the value of mtry is too large and each model has access to all features as 
+every split, there will not be as much randomness in the model and the decision 
+trees may look very similar to each other, reducing the benefits of building 
+multiple independent decision trees.  Two common heuristics for choosing an mtry
+value is for the value of the parameter to either be the square root of or log 
+base 2 of the total number of features. For the example below, those values end 
+up being about 4.47 and 4.32, respectively; 4 was chosen to avoid the effect of 
+a large mtry that diminishes the randomness in the model. 
+
+
+Here, three mtry values will be tested and the best found value will be the one with the 
+smallest OOB error, and will be saved into the `best_mtry` variable. At each 
+iteration, the mtry will be inflated or deflated by the stepFactor value. The 
+`improve` specifies the relative improvement in OOB error rate must be improved 
+by that much for the search to continue. The `trace` specifies whether to print 
+the progress of the search, and `plot` says whether to plot the OOB error as 
+a function of mtry.  We can then build the random forest model again using the
+best saved mtry value. 
+```
+# This first line will provide the best mtry 
+mtry<- tuneRF(x = g_1000[,-c(1,21,22)], y = g_1000$Ancestry, 
+              stepFactor = 1.5, improve = 0.01, trace = TRUE, plot = TRUE)
+best_mtry <- mtry[mtry[, 2] == min(mtry[, 2]), 1]
+
+set.seed(123)
+rf_mtry <- randomForest(Ancestry ~ .,
+                        data = g_1000[,-c(1,21,22)], 
+                        mtry = best_mtry, 
+                        ntree = 1500,
+                        method = "rf", 
+                        importance = TRUE)
+rf_mtry
+```
+
+
+
+### K-fold Cross Validation
+Cross-validation is used to estimate the skill of a machine learning model on 
+unseen data. When tuning this RF model, k-fold cross validation is used to split 
+bootstrapped datasets into random groups, holding one group as test data and 
+training the different models (the individual decision trees) on the remaining 
+groups, where 'k' is the number of folds/groups in the dataset. Using k=5 or k=10 
+is common and usually arbitrarily chosen, depending on the size of the dataset. 
+A higher number of folds tends to lead to a more accurate model as you are splitting. 
+In the example below, k=10 for 10-fold cross-validation was used, meaning there were 10 iterations of the model for each of the 500 decision trees, each using a different group as the test set and the remaining 9 groups as training data for the model. After all 10 iterations were complete, the resulting iterations are averaged to find the final cross-validation model which is our random forest model.
+
+It is important to test different values of k as there exists a tradeoff between 
+model accuracy and computational expense.  Each iteration requires the entire 
+model to run, so this can get very computationally expensive depending on the 
+size of the dataset. Below is the documentation for two different values of
+k for k-fold cross validation. 
+
+
+```
+set.seed(123)
+trainControl_5 <- trainControl(method = "cv",
+                          number = 5, 
+                          search = "grid")
+                          
+forest_5 <- train(Ancestry ~ .,
+               data=g_1000[,-c(1,21,22)], 
+               method = "rf",
+               metric = "Accuracy",
+               trControl = trainControl_5
+               )
+# Print out the model details                
+forest_5$finalModel
+                      
+# Now for 10-fold cross validation    
+trainControl_10 <- trainControl(method = "cv",
+                          number = 10, 
+                          search = "grid")
+forest_10 <- train(Ancestry ~ .,
+               data=g_1000[,-c(1,21,22)], 
+               method = "rf",
+               metric = "Accuracy",
+               trControl = trainControl_10
+               )   
+               
+# Print out model details
+rf_10_fold_cv <- forest_10$finalModel
+
+```
+
+
+## Evaluating/Interpretting the RF
+
+Once you have found a successful OOB error rate, you can use the below package
+to find out important information regarding your tree. The below documentation 
+builds a decision tree using categorical aspects to classify the data. The PC 
+values for each sample are provided in our 1000 Genomes reference dataset file, 
+where each sample has values for 20 distinct PCs. We ask if a certain sample's
+value for a specific PC is less than or greater than a given numer.  Based on
+that answer, it is either classified as a specific ancestry or needs to undergo
+more investigation to classify it correctly. For comprehensability, this is only
+a subset of a decision tree the random forest builds as classifying all 26 
+ancestries builds quite a complicated and cluttered plot. 
+```
+# This is a visual of the random forest being made. 
+# https://github.com/araastat/reprtree
+reprtree:::plot.getTree(rf_mtry)
+# Two different plots 
+reprtree:::plot.getTree(rf_mtry, k=1, d=5) 
+reprtree:::plot.getTree(rf_mtry, k=1, d=6) 
+```
+
+![This shows a subset of categorical aspects of the data that are used to find true/false answers. To correctly classify a sample the Luhya in Webuye, Kenya ancestry (LWK), we see we only need to investigate whether the PC value for PC 8 is more or less than 0.04457765. If it is not smaller than that value, it is classified as LWK ancestry.  This continues on to classify the remaining ancestry groups. ](~/RpackageDevelopment/plinkQC/docs/articles/broad.png)
+## Making a random forest to classify superpopulation 
+```
+g_1000 <- read_delim('~/Ancestry/build_forest/train_data', col_names = FALSE)
+ancestry_info <- read_delim("~/Ancestry/build_forest/Genomes1000_ID2Pop.txt")
+broader_ancestries <- read_delim("~/Ancestry/build_forest/AncestryGeoLocations.csv")
+# This line below is for the map construction visual
+broader_ancestries$latitude <- as.numeric(as.character(broader_ancestries$latitude))
+
+g_1000 <- g_1000 %>%
+  select(-X1)
+
+colnames(g_1000) <- c("ID", paste0("PC", 1:20))
+
+colnames(ancestry_info) <- c("Fam_ID", "ID", "Ancestry")
+ancestry_info <- ancestry_info %>% filter(ancestry_info$ID %in% g_1000$ID)
+
+g_1000 <- g_1000 %>%  #t    raining data
+  left_join(ancestry_info)
+
+# These are again for the map construction - but also useful in building rf for superpopulation
+df_superpop <- g_1000 %>%
+  right_join(broader_ancestries, by=c("Ancestry"))
+df_superpop$superpopulation <- as.factor(df_superpop$superpopulation)
+
+# Ignore - this needs to be fixed
+rf_superpop <- randomForest(superpopulation ~ .,
+                   data = df2[,-c(1, 22, 23, 24, 25, 26, 27, 29)], 
+                   method = "rf", 
+                   importance = TRUE)
+```
+
+
+## More Plots and Visuals of the data 
+This is more information on building some of the useful visuals/plots that show 
+the data objects and sets we are working with. 
+### 1000 Genomes Population Database on Map 
+```
+## This portion is the documentation for the map visual in Figure 1 of my thesis.   
+install.packages("rnaturalearthdata")
+install.packages("sf")
+library(dplyr)
+library("tidyverse")
+library("sf")
+library("rnaturalearth")
+library("RColorBrewer")
+library("rnaturalearthdata")
+
+g_1000 <- read_delim('~/Ancestry/build_forest/train_data', col_names = FALSE)
+ancestry_info <- read_delim("~/Ancestry/build_forest/Genomes1000_ID2Pop.txt")
+broader_ancestries <- read_delim("~/Ancestry/build_forest/AncestryGeoLocations.csv")
+broader_ancestries$latitude <- as.numeric(as.character(broader_ancestries$latitude))
+
+g_1000 <- g_1000 %>%
+  select(-X1)
+
+colnames(g_1000) <- c("ID", paste0("PC", 1:20))
+
+colnames(ancestry_info) <- c("Fam_ID", "ID", "Ancestry")
+ancestry_info <- ancestry_info %>% filter(ancestry_info$ID %in% g_1000$ID)
+
+g_1000 <- g_1000 %>%  #training data
+  left_join(ancestry_info)
+
+df2 <- g_1000 %>%
+  right_join(broader_ancestries, by=c("Ancestry"))
+
+df2 <- df2 %>%
+  select(-PC1, -PC2, -PC3, -PC4, -PC5, -PC6, -PC7, -PC8, -PC9, -PC10, -PC11,
+         -PC12, -PC13, -PC14, -PC15, -PC16, -PC17, -PC18, -PC19, -PC20)
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+g <- ggplot()
+g + geom_sf(data = world) + 
+  geom_point(data = df2, aes(x = longitude, y=latitude, color = superpopulation)) +
+  scale_color_brewer(type="qual", palette = "Set3")
+
+g + geom_sf(data = world) + 
+  geom_point(data = df2, aes(x = longitude, y=latitude, color = Ancestry)) +
+  scale_color_brewer(type="qual", palette = "Set3")
+
+```
+
+
+```
+library(pheatmap)
+install.packages("pheatmap")
+confusion_mat <- (rf_mtry$confusion[,-c(27)])
+```
 
 
 
