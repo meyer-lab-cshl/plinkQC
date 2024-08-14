@@ -35,7 +35,8 @@ Imports:
     UpSetR,
     dplyr,
     igraph (>= 1.2.4),
-    sys
+    sys,
+    randomForest
 Suggests:
     testthat,
     mockery,
@@ -46,5 +47,5 @@ License: MIT + file LICENSE
 SystemRequirements:
     plink (1.9)
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr

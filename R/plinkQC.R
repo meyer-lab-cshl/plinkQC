@@ -13,5 +13,6 @@
 #' @importFrom UpSetR upset
 #' @importFrom methods is
 #' @importFrom stats sd
+#' @importFrom randomForest predict
 #' @keywords internal
 NULL

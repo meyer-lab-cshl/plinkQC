@@ -10,7 +10,7 @@
 #' should be specified: for windows OS, this means path/plink.exe, for unix
 #' platforms this is path/plink. If not provided, assumed that PATH set-up works
 #' and PLINK will be found by \code{\link[sys]{exec}}('plink').
-#' @return Path to PLINK executable.
+#' @return Path to PLINK 1.9 executable.
 #' @export
 
 checkPlink <- function(path2plink=NULL) {
@@ -42,7 +42,72 @@ checkPlink <- function(path2plink=NULL) {
                  findPlink, ".")
         }
     }
+    
+    plinkVersion <- system2(path2plink, args = "-h", stdout = TRUE)
+    if (!any(grepl("PLINK v1", plinkVersion))) {
+      stop("PLINK version 1.9 is required for running this function. A different 
+           version of Plink is linked, Please update path2plink2 with the path to Plink 1.9")
+    }
     return(path2plink)
+}
+
+#' Check PLINK2 software access
+#'
+#' checkPlink checks that the PLINK software version 2.0
+#' (\url{https://www.cog-genomics.org/plink/2.0/})
+#' can be found from system call.
+#'
+#' @param path2plink2 [character] Absolute path to PLINK executable
+#' (\url{https://www.cog-genomics.org/plink/2.0/}) i.e.
+#' plink 2 should be accessible as path2plink -h. The full name of the executable
+#' should be specified: for windows OS, this means path/plink.exe, for unix
+#' platforms this is path/plink. If not provided, assumed that PATH set-up works
+#' and PLINK will be found by \code{\link[sys]{exec}}('plink').
+#' @return Path to PLINK version 2.0 executable.
+#' @export
+
+checkPlink2 <- function(path2plink2=NULL) {
+  if (is.null(path2plink2)) {
+    path2plink2 <- 'plink2'
+    preset <- FALSE
+  } else {
+    preset <- TRUE
+  }
+  if (grepl("~", path2plink2)) {
+    stop("Path to plink (", path2plink2,
+         ") contains ~: please supply full path, not relying",
+         " on tilde extension.")
+  }
+  if (.Platform$OS.type == 'windows') {
+    path2plink2 <- paste(gsub('\\.exe', '', path2plink2), '.exe', sep="")
+  }
+  findPlink <- tryCatch(sys::exec_wait(path2plink2, args="-h", std_out=FALSE,
+                                       std_err=TRUE),
+                        warning=function(w) w,  error = function(e) e)
+  if("simpleError" %in% is(findPlink)) {
+    if (!preset) {
+      stop("PLINK 2.0 software required for running this function cannot be ",
+           "found in current PATH setting. Error message:", findPlink,
+           ". Try to set path2plink.")
+    } else {
+      stop("PLINK 2.0 software required for running this function cannot be ",
+           "found in path2plink (", path2plink2, ") . Error message: ",
+           findPlink, ".")
+    }
+  }
+  plinkVersion <- system2(path2plink2, args = "-h", stdout = TRUE)
+  if (any(grepl("PLINK v1", plinkVersion))) {
+    stop("PLINK version 2.0 is required for running this function. Currently
+         Plink version 1.9 is found. Please update path2plink2 with the path to
+         Plink 2.0")
+  }
+  else if (any(grepl("PLINK v2", plinkVersion))) {
+    return(path2plink2)
+  }
+  else {
+    stop("PLINK version 2.0 is required for running this function. Please update
+         path2plink2 with the path to Plink 2.0")
+  }
 }
 
 #' Test lists for different properties of numerics
@@ -448,6 +513,19 @@ checkFormat <- function(prefix) {
     }
 }
 
+checkFormatPlink2 <- function(prefix) {
+  if (!file.exists(paste(prefix, ".pgen", sep=""))){
+    stop("plink family file: ", prefix, ".pgen does not exist.")
+  }
+  if (!file.exists(paste(prefix, ".psam", sep=""))){
+    stop("plink snp file: ", prefix, ".psam does not exist.")
+  }
+  if (!file.exists(paste(prefix, ".pvar", sep=""))){
+    stop("plink binary file: ", prefix, ".pvar does not exist.")
+  }
+}
+
+
 #' Check and construct PLINK sample and marker filters
 #'
 #' checkFiltering checks that the file names with the individuals and markers to
@@ -573,3 +651,5 @@ checkRemoveIDs <- function(prefix, remove_individuals=NULL, keep_individuals) {
     }
     return(removeIDs)
 }
+
+
