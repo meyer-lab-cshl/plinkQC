@@ -362,7 +362,7 @@ rf <- randomForest(Ancestry ~ .,
                    importance = TRUE)
 rf
 ```
-![This is an example random forest classification model that builds 500 decision trees, and has an mtry of 4 (4 input features are considered at any moment during the decision tree construction process). This model has an out-of-bag error rate of 14.24%, meaning this random forest has an accuracy of 85.76% in classifying ancestry. The confusion matrix displays the number of correct classifications for each ancestry along the diagonal. Any values outside the diagonal are misclassifications for that other ancestry. For example, the African Caribbean in Barbados (ACB) ancestry was correctly classified for 57 samples, but was misclassified as African Ancestry in Southwest United States (ASW) 19 times, as Esan in Nigeria (ESN) 1 time, and Yoruba in Ibadan, Nigeria (YRI) 4 times. The class error is the amount of misclassification you get for each ancestry.](~/RpackageDevelopment/plinkQC/docs/articles/rfLarge.png)
+[This is an example random forest classification model that builds 500 decision trees, and has an mtry of 4 (4 input features are considered at any moment during the decision tree construction process). This model has an out-of-bag error rate of 14.24%, meaning this random forest has an accuracy of 85.76% in classifying ancestry. The confusion matrix displays the number of correct classifications for each ancestry along the diagonal. Any values outside the diagonal are misclassifications for that other ancestry. For example, the African Caribbean in Barbados (ACB) ancestry was correctly classified for 57 samples, but was misclassified as African Ancestry in Southwest United States (ASW) 19 times, as Esan in Nigeria (ESN) 1 time, and Yoruba in Ibadan, Nigeria (YRI) 4 times. The class error is the amount of misclassification you get for each ancestry.(~/RpackageDevelopment/plinkQC/docs/articles/rfLarge.png)]:#
 
 
 Below provides documentation for a heatmap of the ancestries.  
@@ -527,7 +527,7 @@ reprtree:::plot.getTree(rf_mtry, k=1, d=5)
 reprtree:::plot.getTree(rf_mtry, k=1, d=6) 
 ```
 
-![This shows a subset of categorical aspects of the data that are used to find true/false answers. To correctly classify a sample the Luhya in Webuye, Kenya ancestry (LWK), we see we only need to investigate whether the PC value for PC 8 is more or less than 0.04457765. If it is not smaller than that value, it is classified as LWK ancestry.  This continues on to classify the remaining ancestry groups. ](~/RpackageDevelopment/plinkQC/docs/articles/broad.png)
+[This shows a subset of categorical aspects of the data that are used to find true/false answers. To correctly classify a sample the Luhya in Webuye, Kenya ancestry (LWK), we see we only need to investigate whether the PC value for PC 8 is more or less than 0.04457765. If it is not smaller than that value, it is classified as LWK ancestry.  This continues on to classify the remaining ancestry groups. (~/RpackageDevelopment/plinkQC/docs/articles/broad.png)]: # 
 ## Making a random forest to classify superpopulation 
 ```
 g_1000 <- read_delim('~/Ancestry/build_forest/train_data', col_names = FALSE)
@@ -620,4 +620,74 @@ confusion_mat <- (rf_mtry$confusion[,-c(27)])
 
 
 
+## Running Random Forest Classification
+
+We can determine the ancestry of samples using the provided already trained random 
+forest classification algorithm. This was trained on the princple components of 
+cleaned genomics data from the 1000 genomes dataset. To do so, we will first 
+convert the genomic data from PLINK 1.9 format to PLINK 2.0 format if needed. Then, 
+we can predict the ancestry using the trained random forest.
+
+```
+convert_to_plink2( PUT IN INSIDES HERE)
+ancestries <- superpop_classification( PUT IN SAME INSIDES)
+```
+
+Sometimes there might not be enough overlap between the SNPs in the study dataset
+and the trained random forest algorithm for a accurate prediction. In this case,
+we recommend training your own random forest. To do so, we will first need to 
+download the 1000 genomes dataset which is described in detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.Rmd): .
+
+```{bash filter, eval=FALSE}
+cd $refdir
+awk '{print $3}' $name.pvar > $name.varids.txt
+
+plink2 --pfile all_hg38 --keep $name.varids.txt --make-pgen --out filtered_hg38
+
+```
+
+Then, we will remove variants with a low minor allele count and variants within 
+linkage disequilibrium with each other. 
+NEED TO RUN AND SEE IF A) EVERYTHING WORKS PROPERLY AND IF A LOG FILE IS CREATED
+AND SEE HOW THEY PREVIOUSLY CALLED THE NAME OF THE FILE FOR LDs
+
+```{bash low MAF and prune, eval=FALSE}
+plink2 --pfile filtered_hg38\
+       --maf \
+       --ac-founders \
+       --make-pgen \
+       --out filtered_hg38.maf
+
+plink2 --pfile filtered_hg38.maf\
+       --exclude $LINKAGEFILE FILE IN HERE \
+       --indep-pairwise 50 5 0.2 \
+       --out filtered_hg38.renamed
+
+plink2 --pfile filtered_hg38.renamed \
+       --extract range filtered_hg38.renamed.prune.in \
+       --make-pgen \
+       --out filtered_hg38.pruned
+```
+
+After filtering out the low minor allele frequency and pruning, we will extract the principle components from the data.
+I THINK I SHOULD ACTUALLY BE INCLUDING FOUNDERS IN THIS SO MAKE SURE TO RERUN THIS CODE AND TAKE OUT THAT ONE LINE
+``` {bash pca, eval=FALSE}
+plink2 --pfile filtered_hg38.pruned \
+       --ac-founders \
+       --freq counts \
+       --pca allele-wts 20 \
+       --out filtered_hg38.pruned.pca
+```
+
+After running a PCA, we will proejct the original dataset onto the principle components.
+
+From this, this will be used to train the random forest algorithm in R. 
+
+
+run a pca
+then the R code for how that becomes a RF
+then carolines fine tuning information 
+
+To predict data, you need to project the newdata onto the principle components. 
+This is done with the --score function in plink2
 # References
