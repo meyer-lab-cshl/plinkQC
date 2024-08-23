@@ -1,4 +1,7 @@
-#' Identifying ancestries of samples from plink data samples
+#' Converting PLINK v1.9 data files into PLINK v2.0 data files
+#' 
+#' This converts files in the PLINK v1.9 format (i.e. name.bim, name.fam, and 
+#' name.bed) into PLINK v2.0 format (i.e. name.pvar, name.psam, and name.pgen)
 #' 
 #' @param indir [character] /path/to/directory containing the basic PLINK 1.9 data
 #' file name.bim, name.fam, name.bed
@@ -12,8 +15,8 @@
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @return 
-#' 
+#' @return Creates plink 2.0 datafiles
+#' @export
 convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
                               path2plink2=NULL,
                               keep_individuals=NULL,
@@ -25,7 +28,7 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
   
-  checkFormatPlink2(prefix)
+  checkFormat(prefix)
   path2plink2 <- checkPlink2(path2plink2)
   
   if (showPlinkOutput) {
@@ -60,6 +63,7 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param name [character] Prefix of PLINK 2.0 files, i.e. name.pgen, name.pvar, 
 #' name.psam
 #' @inheritParams checkPlink2
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -107,44 +111,44 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
 
   proj <- read.csv(paste0(out,".sscore"), 
                    sep='\t', header = TRUE)
-  proj <- proj %>%
-    select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
-  colnames(proj) <- c("ID", paste0("PC", 1:20))
+  
+  #proj <- proj %>%
+  #  select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
+  colnames(proj) <- c("ID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
   
   #load RF
   load("R/sysdata.rda")
-  predictions = predict(proj_superpop, proj)
-  return(setNames(predictions, proj$ID))
+  predictions = predict(superpop, proj)
+  names(predictions) <- proj$ID
+  return(predictions)
   #delete files??
 }
 
-
-  
-  
-#putting it here as an example
-run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
-                                       path2plink=NULL,
-                                       keep_individuals=NULL,
-                                       remove_individuals=NULL,
-                                       exclude_markers=NULL,
-                                       extract_markers=NULL,
-                                       showPlinkOutput=TRUE) {
-    
-    prefix <- makepath(indir, name)
-    out <- makepath(qcdir, name)
-    
-    checkFormat(prefix) #ok so making sure prefix is right format
-    path2plink <- checkPlink(path2plink)
-    args_filter <- checkFiltering(keep_individuals, remove_individuals,
-                                  extract_markers, exclude_markers) #this is just if you want to filter individuals
-    
-    if (verbose) message("Run check_heterozygosity via plink --het")
-    sys::exec_wait(path2plink,
-                   args=c("--bfile", prefix, "--het", "--out", out,
-                          args_filter),
-                   std_out=showPlinkOutput, std_err=showPlinkOutput)
-  }
-  
+ 
+# #putting it here as an example
+# run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
+#                                        path2plink=NULL,
+#                                        keep_individuals=NULL,
+#                                        remove_individuals=NULL,
+#                                        exclude_markers=NULL,
+#                                        extract_markers=NULL,
+#                                        showPlinkOutput=TRUE) {
+#     
+#     prefix <- makepath(indir, name)
+#     out <- makepath(qcdir, name)
+#     
+#     checkFormat(prefix) #ok so making sure prefix is right format
+#     path2plink <- checkPlink(path2plink)
+#     args_filter <- checkFiltering(keep_individuals, remove_individuals,
+#                                   extract_markers, exclude_markers) #this is just if you want to filter individuals
+#     
+#     if (verbose) message("Run check_heterozygosity via plink --het")
+#     sys::exec_wait(path2plink,
+#                    args=c("--bfile", prefix, "--het", "--out", out,
+#                           args_filter),
+#                    std_out=showPlinkOutput, std_err=showPlinkOutput)
+#   }
+#   
   
 
   
