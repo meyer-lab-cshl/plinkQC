@@ -1,6 +1,6 @@
 ---
 title: "Ancestry estimation based on reference samples of known ethnicities"
-author: "Hannah Meyer"
+author: "Maha Syed and Caroline Walter"
 date: "`r Sys.Date()`"
 output:
     pdf_document:
@@ -21,6 +21,382 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+## Running Random Forest Classification
+
+This package contains a classier to predict the ancestry of samples. This works 
+through a random forest algorithm trained on the principal components of
+cleaned genomics data from the [1000 genomes dataset](https://www.internationalgenome.org/data/).
+[Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of the package. 
+
+### Workflow
+
+To begin with this is an example of how to run the classifier with a provided test data set.
+We will set up a temporary directory for qcdir. 
+```{r setting up, eval = FALSE}
+package.dir <- find.package('plinkQC')
+indir <- file.path(package.dir, 'extdata')
+qcdir <- tempdir()
+name <- 'data.hg38'
+path2plink2 <- "/Users/syed/bin/plink2"
+```
+
+Before use, the study data should be in the new hg38 annotation. USCSC's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
+may be needed to map variants from one annotation to another. More details on how
+to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd).
+
+In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
+and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
+We can use the included functions convert_to_plink2() and rename_variant_identifiers()
+to correctly format genomic data that is in the hg38 annotation. 
+
+``` {R, eval = FALSE}
+convert_to_plink2(indir=indir, qcdir=qcdir, name=name, 
+                  path2plink2 = path2plink2)
+rename_variant_identifiers(indir=indir, qcdir=qcdir, name=name, 
+                           path2plink2 = path2plink2)
+name <- paste0(name, ".renamed")
+ancestries <- superpop_classification(indir=indir, qcdir=qcdir, name=name, 
+                                      path2plink2 = path2plink2) 
+head(ancestries)
+```
+
+## Training Your Own Random Forest Classifier 
+
+Sometimes there might not be enough overlap between the SNPs in the study dataset
+and the trained random forest algorithm for a accurate prediction. In this case,
+we recommend training your own random forest. To do so, we will first need to set up the needed bash variables and download the 1000 genomes dataset into qcdir which is described in 
+detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.Rmd). We will use a test study dataset included in the package as an example for the workflow. 
+
+### Setting up Bash Script
+``` {bash setting up bash, eval = FALSE}
+qcdir='~/qcdir'
+name='data.hg38'
+refdir=~/reference
+
+mkdir -r $qcdir/plink_log
+```
+
+### Putting study data in qcdir
+Copy your study dataset to the qcdir folder. In this example, we are assuming that 
+the provided test dataset included with the package has been moved. 
+
+### Renaming variant identifiers
+Variant identifiers can vary between studies. To ensure that the data can be properly processed,
+we will rename the variant identifiers to a common scheme based on chromosome number and basepair location.
+``` {bash renaming, eval = FALSE}
+plink2 --bfile  $qcdir/all_hg38 \
+      --set-all-var-ids "@:#[hg38]" \
+      --rm-dup exclude-all \
+      --make-bed \
+      --out $qcdir/all_hg38.renamed
+      
+plink2 --bfile  $qcdir/$name \
+      --set-all-var-ids "@:#[hg38]" \
+      --rm-dup exclude-all \
+      --make-bed \
+      --out $qcdir/$name.renamed
+
+mv $qcdir/all_hg38.renamed.log $qcdir/plink_log
+mv $qcdir/$name.renamed.log $qcdir/plink_log
+```
+
+### Filtering out the shared SNPs between the study dataset and reference 1000G dataset
+
+```{bash filter study SNPs, eval=FALSE}
+cd $qcdir
+awk '{print $3}' $name.pvar > $name.varids.txt
+
+plink2 --pfile all_hg38 --keep $name.varids.txt --make-pgen --out filtered_hg38
+
+```
+
+Then, we will remove variants with a low minor allele count and variants within 
+linkage disequilibrium with each other. 
+NEED TO RUN AND SEE IF A) EVERYTHING WORKS PROPERLY AND IF A LOG FILE IS CREATED
+AND SEE HOW THEY PREVIOUSLY CALLED THE NAME OF THE FILE FOR LDs
+THERE IS A LOG FILE FOR MAF
+
+```{bash low MAF and prune, eval=FALSE}
+plink2 --pfile $qcdir/filtered_hg38\
+       --maf \
+       --nonfounders \
+       --make-pgen \
+       --out $qcdir/filtered_hg38.maf
+  
+plink2 --pfile filtered_hg38.renamed\
+       --exclude range $LINKAGEFILE FILE IN HERE \
+       --indep-pairwise 50 5 0.2 \
+       --out filtered_hg38.renamed
+
+plink2 --pfile filtered_hg38.renamed \
+       --extract filtered_hg38.renamed.prune.in \
+       --make-pgen \
+       --out filtered_hg38.pruned
+```
+
+After filtering out the low minor allele frequency and pruning, we will extract the principal
+components from the data.
+``` {bash pca reference, eval=FALSE}
+plink2 --pfile filtered_hg38.pruned \
+       --nonfounders \
+       --freq counts \
+       --pca allele-wts 20 \
+       --out filtered_hg38.pruned.pca
+```
+
+After running a PCA, we will project the original dataset onto the principal components.
+``` {bash project, eval=FALSE}
+plink2 --pfile all_hg38.pruned 
+       --read-freq all_hg38.pca.acount 
+       --score all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize 
+       --score-col-nums 7-26 --out all_hg38.projection
+
+```
+
+From this, this will be used to train the random forest algorithm in R. 
+NEED TO FIX FILE PATH AND PUT FILES IN EXTDATA FOLDER
+```{r, eval = FALSE}
+filepath <- "~/Documents/meyerlab/plinkQC_validation/eigenvectors/founders_inc/all_hg38.projection.sscore"
+
+ancestry_info <- read_delim("~/Ancestry/build_forest/Genomes1000_ID2Pop.txt")
+```
+
+To predict newdata, you need to project the newdata onto the principal components. 
+This is done with the --score function in plink2 which can be inputted into the 
+random forest algorithm. 
+```{bash project newdata, eval=FALSE}
+plink2 --pfile newdata 
+       --read-freq all_hg38.pca.acount 
+       --score all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize 
+       --score-col-nums 7-26 --out all_hg38.projection
+```
+
+Then we can clean the data in preparation to be used for training the random forest
+algorithm. 
+
+```{r, eval = FALSE}
+proj <- read.csv(
+  file="~/Documents/meyerlab/plinkQC_validation/eigenvectors/founders_inc/all_hg38.projection.sscore", 
+  sep='\t', header = TRUE)
+ancestry_info <- 
+  read_delim("~/Documents/meyerlab/Aim1/Ancestry/build_forest/Genomes1000_ID2Pop.txt")
+superpop <- 
+  read_csv("~/Documents/meyerlab/Aim1/Ancestry/build_forest/AncestryGeoLocations.csv")
+
+proj <- proj %>%
+  select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
+colnames(proj) <- c("ID", paste0("PC", 1:20))
+colnames(ancestry_info) <- c("Fam_ID", "ID", "Ancestry")
+
+superpop_code <- superpop %>%
+  select(c(Ancestry, superpopulation_code))
+
+labeled_proj <- merge(proj, ancestry_info)
+super_proj1000 <- merge(labeled_proj, superpop_code)
+super_proj1000$superpopulation_code <- factor(super_proj1000$superpopulation_code)
+```
+
+Then, we divide an even number from each ancestral group to be used in the testing data
+``` {r, eval = FALSE}
+n_individuals <- 20
+set.seed(123)
+idx <- split(seq(nrow(labeled_proj)), labeled_proj$Ancestry)
+
+test.ids <- lapply(idx, function(i) {
+  sample(i, n_individuals)
+})
+
+# For each population, it extracts the ids that were sampled above
+ancestry.test <- labeled_proj$Ancestry[unlist(test.ids)]
+# Histogram of testing set to show sampling was successful. 
+test_hist <- ggplot(data.frame(ancestry.test), aes(x = ancestry.test)) + geom_bar()
+
+# Remove the `test.ids` from `g_1000` and `ancestry_info` data objects. 
+ids_to_remove <- unlist(test.ids, use.names = FALSE, recursive = FALSE)
+test_proj_1000g <- labeled_proj[-ids_to_remove,]
+
+```
+
+Then, we can train the random forest
+```{r, eval = FALSE}
+superpop <- randomForest(superpopulation_code ~ .,
+                              data = super_proj1000[,-c(1,2, 23)], 
+                              method = "rf", 
+                              ntree = 750,
+                              importance = TRUE)
+superpop
+```
+
+[This is an example random forest classification model that builds 500 decision trees, and has an mtry of 4 (4 input features are considered at any moment during the decision tree construction process). This model has an out-of-bag error rate of 14.24%, meaning this random forest has an accuracy of 85.76% in classifying ancestry. The confusion matrix displays the number of correct classifications for each ancestry along the diagonal. Any values outside the diagonal are misclassifications for that other ancestry. For example, the African Caribbean in Barbados (ACB) ancestry was correctly classified for 57 samples, but was misclassified as African Ancestry in Southwest United States (ASW) 19 times, as Esan in Nigeria (ESN) 1 time, and Yoruba in Ibadan, Nigeria (YRI) 4 times. The class error is the amount of misclassification you get for each ancestry.(~/RpackageDevelopment/plinkQC/docs/articles/rfLarge.png)]:#
+
+
+Below provides documentation for a heatmap of the ancestries.  
+From the heatmap, you may see that there are some false estimations. 
+The next section will allow us to tune the random forest in an attempt to 
+improve accuracy. 
+```{r, eval = FALSE}
+my_rf <- rf$confusion
+heatmap(my_rf[,-c(27)], scale = 'column', trace = 'none')
+```
+
+# Parameter Tuning
+Tuning the parameters for this random forest is crucial in building a 
+machine-learning model to produce the best forest, in this case having the 
+highest accuracy.
+
+### Number of Trees 
+A random forest model is comprised of building several trees and the 'Number of 
+trees' parameter decides exactly how many decision trees will constitute the 
+random forest. Although there exists a positive relationship between the number 
+of trees and predictive performance of the model, there exists a point where 
+continuing to increase the number of trees will no longer find you a better prediction
+while elongating computational efficiency. There also exists a tradeoff between
+predictive performance and computational efficiency. Excess trees also pose a 
+possible issue of overfitting as more trees are trained.  It is important for 
+your dataset to test and find the point of diminishing returns.  For the example
+below of the 1000 Genomes set, 500-1000 trees allows accurate predictions to be 
+made, while also staying computationally efficient. 
+```{r, eval = FALSE}
+rf_100_trees <- randomForest(Ancestry ~ .,
+                   data = g_1000[,-c(1,21,22)], 
+                   ntree = 100, 
+                   method = "rf", 
+                   importance = TRUE)
+
+rf_500_trees <- randomForest(Ancestry ~ .,
+                   data = g_1000[,-c(1,21,22)], 
+                   ntree = 500, 
+                   method = "rf", 
+                   importance = TRUE)  
+
+rf_10000_trees <- randomForest(Ancestry ~ .,
+                   data = g_1000[,-c(1,21,22)], 
+                   ntree = 10000, 
+                   method = "rf", 
+                   mtry = best_mtry,
+                   importance = TRUE)
+```
+
+## Mtry
+The mrty parameter controls the number of variables tried at each split. During 
+decision tree construcrion process, the confirmation that no two trees look exactly 
+the same must be investiagted.  More specifically, this mtry parameter controls the number of input features a decision tree is able to consider at any moment during tree construction 
+and controls how much randomness is added during the process. Testing different 
+values of mtry is crucial and can greatly impact the model's performance.  For 
+every new split that is added as a node to a decision tree, mtry controls how 
+many of the PC variables are allowed to be considered for each successive split. 
+
+If the value of mtry is too large and each model has access to all features as 
+every split, there will not be as much randomness in the model and the decision 
+trees may look very similar to each other, reducing the benefits of building 
+multiple independent decision trees.  Two common heuristics for choosing an mtry
+value is for the value of the parameter to either be the square root of or log 
+base 2 of the total number of features. For the example below, those values end 
+up being about 4.47 and 4.32, respectively; 4 was chosen to avoid the effect of 
+a large mtry that diminishes the randomness in the model. 
+
+
+Here, three mtry values will be tested and the best found value will be the one with the 
+smallest OOB error, and will be saved into the `best_mtry` variable. At each 
+iteration, the mtry will be inflated or deflated by the stepFactor value. The 
+`improve` specifies the relative improvement in OOB error rate must be improved 
+by that much for the search to continue. The `trace` specifies whether to print 
+the progress of the search, and `plot` says whether to plot the OOB error as 
+a function of mtry.  We can then build the random forest model again using the
+best saved mtry value. 
+```{r, eval = FALSE}
+# This first line will provide the best mtry 
+mtry<- tuneRF(x = g_1000[,-c(1,21,22)], y = g_1000$Ancestry, 
+              stepFactor = 1.5, improve = 0.01, trace = TRUE, plot = TRUE)
+best_mtry <- mtry[mtry[, 2] == min(mtry[, 2]), 1]
+
+set.seed(123)
+rf_mtry <- randomForest(Ancestry ~ .,
+                        data = g_1000[,-c(1,21,22)], 
+                        mtry = best_mtry, 
+                        ntree = 1500,
+                        method = "rf", 
+                        importance = TRUE)
+rf_mtry
+```
+
+
+
+### K-fold Cross Validation
+Cross-validation is used to estimate the skill of a machine learning model on 
+unseen data. When tuning this RF model, k-fold cross validation is used to split 
+bootstrapped datasets into random groups, holding one group as test data and 
+training the different models (the individual decision trees) on the remaining 
+groups, where 'k' is the number of folds/groups in the dataset. Using k=5 or k=10 
+is common and usually arbitrarily chosen, depending on the size of the dataset. 
+A higher number of folds tends to lead to a more accurate model as you are splitting. 
+In the example below, k=10 for 10-fold cross-validation was used, meaning there were 10 iterations of the model for each of the 500 decision trees, each using a different group as the test set and the remaining 9 groups as training data for the model. After all 10 iterations were complete, the resulting iterations are averaged to find the final cross-validation model which is our random forest model.
+
+It is important to test different values of k as there exists a tradeoff between 
+model accuracy and computational expense.  Each iteration requires the entire 
+model to run, so this can get very computationally expensive depending on the 
+size of the dataset. Below is the documentation for two different values of
+k for k-fold cross validation. 
+
+
+```{r, eval = FALSE}
+set.seed(123)
+trainControl_5 <- trainControl(method = "cv",
+                          number = 5, 
+                          search = "grid")
+                          
+forest_5 <- train(Ancestry ~ .,
+               data=g_1000[,-c(1,21,22)], 
+               method = "rf",
+               metric = "Accuracy",
+               trControl = trainControl_5
+               )
+# Print out the model details                
+forest_5$finalModel
+                      
+# Now for 10-fold cross validation    
+trainControl_10 <- trainControl(method = "cv",
+                          number = 10, 
+                          search = "grid")
+forest_10 <- train(Ancestry ~ .,
+               data=g_1000[,-c(1,21,22)], 
+               method = "rf",
+               metric = "Accuracy",
+               trControl = trainControl_10
+               )   
+               
+# Print out model details
+rf_10_fold_cv <- forest_10$finalModel
+
+```
+
+
+## Evaluating/Interpretting the RF
+
+Once you have found a successful OOB error rate, you can use the below package
+to find out important information regarding your tree. The below documentation 
+builds a decision tree using categorical aspects to classify the data. The PC 
+values for each sample are provided in our 1000 Genomes reference dataset file, 
+where each sample has values for 20 distinct PCs. We ask if a certain sample's
+value for a specific PC is less than or greater than a given numer.  Based on
+that answer, it is either classified as a specific ancestry or needs to undergo
+more investigation to classify it correctly. For comprehensability, this is only
+a subset of a decision tree the random forest builds as classifying all 26 
+ancestries builds quite a complicated and cluttered plot. 
+```{r, eval = FALSE}
+# This is a visual of the random forest being made. 
+# https://github.com/araastat/reprtree
+reprtree:::plot.getTree(rf_mtry)
+# Two different plots 
+reprtree:::plot.getTree(rf_mtry, k=1, d=5) 
+reprtree:::plot.getTree(rf_mtry, k=1, d=6) 
+```
+
+
+
+
+### Older stuff (moved down for ease of access)
 # Ancestry estimation
 The identification of individuals of divergent ancestry can be achieved by
 combining the genotypes of the study population with genotypes of a reference
@@ -176,7 +552,7 @@ mv  $qcdir/$name.pruned.log $qcdir/plink_log/$name.pruned.log
 We will use the list of pruned variants from the study sample to reduce the 
 reference dataset to the size of the study samples:
 
-```{bash filter, eval=FALSE}
+```{bash filter SNPs, eval=FALSE}
 plink --bfile  $qcdir/$refname.renamed \
       --extract $qcdir/$name.renamed.prune.in \
       --make-bed \
@@ -620,74 +996,4 @@ confusion_mat <- (rf_mtry$confusion[,-c(27)])
 
 
 
-## Running Random Forest Classification
-
-We can determine the ancestry of samples using the provided already trained random 
-forest classification algorithm. This was trained on the princple components of 
-cleaned genomics data from the 1000 genomes dataset. To do so, we will first 
-convert the genomic data from PLINK 1.9 format to PLINK 2.0 format if needed. Then, 
-we can predict the ancestry using the trained random forest.
-
-```
-convert_to_plink2( PUT IN INSIDES HERE)
-ancestries <- superpop_classification( PUT IN SAME INSIDES)
-```
-
-Sometimes there might not be enough overlap between the SNPs in the study dataset
-and the trained random forest algorithm for a accurate prediction. In this case,
-we recommend training your own random forest. To do so, we will first need to 
-download the 1000 genomes dataset which is described in detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.Rmd): .
-
-```{bash filter, eval=FALSE}
-cd $refdir
-awk '{print $3}' $name.pvar > $name.varids.txt
-
-plink2 --pfile all_hg38 --keep $name.varids.txt --make-pgen --out filtered_hg38
-
-```
-
-Then, we will remove variants with a low minor allele count and variants within 
-linkage disequilibrium with each other. 
-NEED TO RUN AND SEE IF A) EVERYTHING WORKS PROPERLY AND IF A LOG FILE IS CREATED
-AND SEE HOW THEY PREVIOUSLY CALLED THE NAME OF THE FILE FOR LDs
-
-```{bash low MAF and prune, eval=FALSE}
-plink2 --pfile filtered_hg38\
-       --maf \
-       --ac-founders \
-       --make-pgen \
-       --out filtered_hg38.maf
-
-plink2 --pfile filtered_hg38.maf\
-       --exclude $LINKAGEFILE FILE IN HERE \
-       --indep-pairwise 50 5 0.2 \
-       --out filtered_hg38.renamed
-
-plink2 --pfile filtered_hg38.renamed \
-       --extract range filtered_hg38.renamed.prune.in \
-       --make-pgen \
-       --out filtered_hg38.pruned
-```
-
-After filtering out the low minor allele frequency and pruning, we will extract the principle components from the data.
-I THINK I SHOULD ACTUALLY BE INCLUDING FOUNDERS IN THIS SO MAKE SURE TO RERUN THIS CODE AND TAKE OUT THAT ONE LINE
-``` {bash pca, eval=FALSE}
-plink2 --pfile filtered_hg38.pruned \
-       --ac-founders \
-       --freq counts \
-       --pca allele-wts 20 \
-       --out filtered_hg38.pruned.pca
-```
-
-After running a PCA, we will proejct the original dataset onto the principle components.
-
-From this, this will be used to train the random forest algorithm in R. 
-
-
-run a pca
-then the R code for how that becomes a RF
-then carolines fine tuning information 
-
-To predict data, you need to project the newdata onto the principle components. 
-This is done with the --score function in plink2
 # References
