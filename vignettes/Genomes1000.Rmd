@@ -99,6 +99,13 @@ wget $sample
 mv 'all_hg38.psam?dl=1' all_hg38.psam
 ```
 
+fter these steps, the 1000 Genomes dataset can be used 
+for inferring study ancestry as described in the corresponding
+[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+
+
+
+I think I should delete this?
 ## Convert 1000 Genomes phase 3 data to plink 1 binary format
 We then convert the
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) to the
@@ -114,9 +121,6 @@ mv $refdir/all_hg38.log $refdir/plink_log/all_hg38_convert.log
 ```
 
  
-After these steps, the 1000 Genomes dataset can be used 
-for inferring study ancestry as described in the corresponding
-[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
-
+A
 # References
 

@@ -41,7 +41,7 @@ name <- 'data.hg38'
 path2plink2 <- "/Users/syed/bin/plink2"
 ```
 
-Before use, the study data should be in the new hg38 annotation. USCSC's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
+Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
 may be needed to map variants from one annotation to another. More details on how
 to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd).
 
@@ -53,10 +53,14 @@ to correctly format genomic data that is in the hg38 annotation.
 ``` {R, eval = FALSE}
 convert_to_plink2(indir=indir, qcdir=qcdir, name=name, 
                   path2plink2 = path2plink2)
-rename_variant_identifiers(indir=indir, qcdir=qcdir, name=name, 
+rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name, 
                            path2plink2 = path2plink2)
 name <- paste0(name, ".renamed")
-ancestries <- superpop_classification(indir=indir, qcdir=qcdir, name=name, 
+```
+
+After correctly formatting the data, we can use the provided function to return the sample ids and predicted ancestry. 
+``` {R ancestry identification, eval = FALSE}
+ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
                                       path2plink2 = path2plink2) 
 head(ancestries)
 ```
@@ -65,7 +69,8 @@ head(ancestries)
 
 Sometimes there might not be enough overlap between the SNPs in the study dataset
 and the trained random forest algorithm for a accurate prediction. In this case,
-we recommend training your own random forest. To do so, we will first need to set up the needed bash variables and download the 1000 genomes dataset into qcdir which is described in 
+we recommend training your own random forest. To do so, we will first need to set 
+up the needed bash variables and download the 1000 genomes dataset into qcdir which is described in 
 detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.Rmd). We will use a test study dataset included in the package as an example for the workflow. 
 
 ### Setting up Bash Script
@@ -88,13 +93,13 @@ we will rename the variant identifiers to a common scheme based on chromosome nu
 plink2 --bfile  $qcdir/all_hg38 \
       --set-all-var-ids "@:#[hg38]" \
       --rm-dup exclude-all \
-      --make-bed \
+      --make-pgen \
       --out $qcdir/all_hg38.renamed
       
 plink2 --bfile  $qcdir/$name \
       --set-all-var-ids "@:#[hg38]" \
       --rm-dup exclude-all \
-      --make-bed \
+      --make-pgen \
       --out $qcdir/$name.renamed
 
 mv $qcdir/all_hg38.renamed.log $qcdir/plink_log
@@ -111,21 +116,30 @@ plink2 --pfile all_hg38 --keep $name.varids.txt --make-pgen --out filtered_hg38
 
 ```
 
-Then, we will remove variants with a low minor allele count and variants within 
-linkage disequilibrium with each other. 
-NEED TO RUN AND SEE IF A) EVERYTHING WORKS PROPERLY AND IF A LOG FILE IS CREATED
-AND SEE HOW THEY PREVIOUSLY CALLED THE NAME OF THE FILE FOR LDs
-THERE IS A LOG FILE FOR MAF
-
-```{bash low MAF and prune, eval=FALSE}
+Then, we will remove variants with a low minor allele count with the --maf function of plink 2. 
+```{bash low MAF, eval=FALSE}
 plink2 --pfile $qcdir/filtered_hg38\
        --maf \
        --nonfounders \
        --make-pgen \
        --out $qcdir/filtered_hg38.maf
-  
+```
+
+We will conduct principal component analysis on genetic variants that are
+pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
+window. The LD-pruned dataset is generated below, using `plink --indep-pairwise`
+to compute the LD-variants; additionally `exclude range` is used to remove genomic
+ranges of known high-LD structure. This file was originally provided by
+@Anderson2010 and is available in
+`file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')`.
+If there has been an update in reference data, this will need to be updated as 
+well. 
+
+``` {R prune ref, eval = FALSE}
+highld='high-LD-regions-hg38-GRCh38.txt'
+
 plink2 --pfile filtered_hg38.renamed\
-       --exclude range $LINKAGEFILE FILE IN HERE \
+       --exclude range $qcdir/$highld \
        --indep-pairwise 50 5 0.2 \
        --out filtered_hg38.renamed
 
@@ -147,58 +161,42 @@ plink2 --pfile filtered_hg38.pruned \
 
 After running a PCA, we will project the original dataset onto the principal components.
 ``` {bash project, eval=FALSE}
-plink2 --pfile all_hg38.pruned 
+plink2 --pfile filtered_hg38.pruned 
        --read-freq all_hg38.pca.acount 
        --score all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize 
-       --score-col-nums 7-26 --out all_hg38.projection
+       --score-col-nums 7-26 --out filtered_hg38.projection
 
 ```
 
-From this, this will be used to train the random forest algorithm in R. 
-NEED TO FIX FILE PATH AND PUT FILES IN EXTDATA FOLDER
+From this, this will be used to train the random forest algorithm in R. The 
+information about the samples is included in the extdata/ folder of the package. 
 ```{r, eval = FALSE}
-filepath <- "~/Documents/meyerlab/plinkQC_validation/eigenvectors/founders_inc/all_hg38.projection.sscore"
+library(tidyverse)
+library(randomForest)
 
-ancestry_info <- read_delim("~/Ancestry/build_forest/Genomes1000_ID2Pop.txt")
-```
-
-To predict newdata, you need to project the newdata onto the principal components. 
-This is done with the --score function in plink2 which can be inputted into the 
-random forest algorithm. 
-```{bash project newdata, eval=FALSE}
-plink2 --pfile newdata 
-       --read-freq all_hg38.pca.acount 
-       --score all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize 
-       --score-col-nums 7-26 --out all_hg38.projection
-```
-
-Then we can clean the data in preparation to be used for training the random forest
-algorithm. 
-
-```{r, eval = FALSE}
-proj <- read.csv(
-  file="~/Documents/meyerlab/plinkQC_validation/eigenvectors/founders_inc/all_hg38.projection.sscore", 
+filepath <- '~/qcdir/filtered_hg38.projection.sscore'
+proj_1000g <- read.csv(
+  file= filepath,
   sep='\t', header = TRUE)
-ancestry_info <- 
-  read_delim("~/Documents/meyerlab/Aim1/Ancestry/build_forest/Genomes1000_ID2Pop.txt")
-superpop <- 
-  read_csv("~/Documents/meyerlab/Aim1/Ancestry/build_forest/AncestryGeoLocations.csv")
 
-proj <- proj %>%
+package.dir <- find.package('plinkQC')
+ancestry_info <- 
+  read_delim(file.path(package.dir,"extdata/Genomes1000_ID2Pop.txt"))
+```
+
+We divide up the data into a testing and training portion. Since there is not an 
+even representation of each ancestral group within the data, we will sample the data
+to ensure there is an even representation of each ancestral group in the testing 
+portion to ensure our model works well on each of the groups. 
+
+``` {r, eval = FALSE}
+proj_1000g <- proj_1000g %>%
   select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
-colnames(proj) <- c("ID", paste0("PC", 1:20))
+colnames(proj_1000g) <- c("ID", paste0("PC", 1:20))
 colnames(ancestry_info) <- c("Fam_ID", "ID", "Ancestry")
 
-superpop_code <- superpop %>%
-  select(c(Ancestry, superpopulation_code))
+labeled_proj <- merge(proj_1000g, ancestry_info)
 
-labeled_proj <- merge(proj, ancestry_info)
-super_proj1000 <- merge(labeled_proj, superpop_code)
-super_proj1000$superpopulation_code <- factor(super_proj1000$superpopulation_code)
-```
-
-Then, we divide an even number from each ancestral group to be used in the testing data
-``` {r, eval = FALSE}
 n_individuals <- 20
 set.seed(123)
 idx <- split(seq(nrow(labeled_proj)), labeled_proj$Ancestry)
@@ -218,27 +216,67 @@ test_proj_1000g <- labeled_proj[-ids_to_remove,]
 
 ```
 
-Then, we can train the random forest
+Then, we can train the random forest.
 ```{r, eval = FALSE}
 superpop <- randomForest(superpopulation_code ~ .,
                               data = super_proj1000[,-c(1,2, 23)], 
                               method = "rf", 
                               ntree = 750,
                               importance = TRUE)
-superpop
 ```
 
-[This is an example random forest classification model that builds 500 decision trees, and has an mtry of 4 (4 input features are considered at any moment during the decision tree construction process). This model has an out-of-bag error rate of 14.24%, meaning this random forest has an accuracy of 85.76% in classifying ancestry. The confusion matrix displays the number of correct classifications for each ancestry along the diagonal. Any values outside the diagonal are misclassifications for that other ancestry. For example, the African Caribbean in Barbados (ACB) ancestry was correctly classified for 57 samples, but was misclassified as African Ancestry in Southwest United States (ASW) 19 times, as Esan in Nigeria (ESN) 1 time, and Yoruba in Ibadan, Nigeria (YRI) 4 times. The class error is the amount of misclassification you get for each ancestry.(~/RpackageDevelopment/plinkQC/docs/articles/rfLarge.png)]:#
+### Predicting ancestries of new study data
 
+To predict newdata, you need to project the newdata onto the principal components. 
+This is done with the --score function in plink2 which can be inputted into the 
+random forest algorithm. 
+```{bash project newdata, eval=FALSE}
+plink2 --pfile newdata 
+       --read-freq all_hg38.pca.acount 
+       --score all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize 
+       --score-col-nums 7-26 --out all_hg38.projection
+```
 
-Below provides documentation for a heatmap of the ancestries.  
-From the heatmap, you may see that there are some false estimations. 
-The next section will allow us to tune the random forest in an attempt to 
-improve accuracy. 
+Then we can clean the data in preparation to be used for training the random forest
+algorithm. 
+
+```{r, eval = FALSE}
+package.dir <- find.package('plinkQC')
+ancestry_info <- 
+  read_delim(file.path(package.dir,"extdata/Genomes1000_ID2Pop.txt"))
+superpop <- 
+  read_csv(file.path(package.dir, "extdata/AncestryGeoLocations.csv"))
+proj <- read.csv(
+  file="all_hg38.projection", 
+  sep='\t', header = TRUE)
+
+proj <- proj %>%
+  select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
+colnames(proj) <- c("ID", paste0("PC", 1:20))
+colnames(ancestry_info) <- c("Fam_ID", "ID", "Ancestry")
+
+superpop_code <- superpop %>%
+  select(c(Ancestry, superpopulation_code))
+
+labeled_proj <- merge(proj, ancestry_info)
+super_proj1000 <- merge(labeled_proj, superpop_code)
+super_proj1000$superpopulation_code <- factor(super_proj1000$superpopulation_code)
+
+predictions <- predict(superpop, super_proj1000)
+```
+
+### Evalulating and Tuning Classification
+To evaluate the accuracy of the model, a commonly used metric is the out-of-bag 
+error rate and confusion matrix. The confusion matrix displays the number of correct classifications for each ancestry along the diagonal. Any values outside the diagonal are misclassifications for that other ancestry. A summary of these metrics can be seen through:
+```
+superpop
+```
+And we can visualize the confusion matrix as a heatmap.
 ```{r, eval = FALSE}
 my_rf <- rf$confusion
 heatmap(my_rf[,-c(27)], scale = 'column', trace = 'none')
 ```
+
 
 # Parameter Tuning
 Tuning the parameters for this random forest is crucial in building a 
@@ -519,7 +557,7 @@ mv  $qcdir/$refname.renamed.log $qcdir/plink_log
 ```
 
 ### Prune study data
-We will conduct principle component analysis on genetic variants that are
+We will conduct principal component analysis on genetic variants that are
 pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
 window. The LD-pruned dataset is generated below, using `plink --indep-pairwise`
 to compute the LD-variants; additionally `exclude range` is used to remove genomic
@@ -529,7 +567,7 @@ ranges of known high-LD structure. This file was originally provided by
 If there has been an update in reference data, this will need to be updated as 
 well. 
 
-```{bash prune, eval=FALSE}
+```{bash prune study, eval=FALSE}
 highld='high-LD-regions-hg38-GRCh38.txt'
 
 plink --bfile  $qcdir/$name.renamed \

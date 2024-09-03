@@ -11,7 +11,7 @@ output:
 bibliography: references.bib
 csl: plos-genetics.csl
 vignette: >
-  %\VignetteIndexEntry{AncestryCheck}
+  %\VignetteIndexEntry{AncestryRF}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
