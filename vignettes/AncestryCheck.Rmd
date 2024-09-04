@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 This package contains a classier to predict the ancestry of samples. This works 
 through a random forest algorithm trained on the principal components of
 cleaned genomics data from the [1000 genomes dataset](https://www.internationalgenome.org/data/).
-[Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of the package. 
+For this portion of the package, [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed. 
 
 ### Workflow
 
