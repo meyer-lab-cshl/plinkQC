@@ -100,7 +100,7 @@ Default: NULL, i.e. no filtering on markers.}
 \value{
 Named list with i) fail_hwe containing a [data.frame] with CHR
 (Chromosome code), SNP (Variant identifier), TEST (Type of test: one of
-{'ALL', 'AFF', 'UNAFF', 'ALL(QT)', 'ALL(NP)'}), A1 (Allele 1; usually minor),
+\{'ALL', 'AFF', 'UNAFF', 'ALL(QT)', 'ALL(NP)'\}), A1 (Allele 1; usually minor),
 A2 (Allele 2; usually major), GENO ('/'-separated genotype counts: A1 hom,
 het, A2 hom), O(HET) (Observed heterozygote frequency E(HET) (Expected
 heterozygote frequency), P (Hardy-Weinberg equilibrium exact test p-value)

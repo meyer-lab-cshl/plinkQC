@@ -20,3 +20,27 @@ test_that("Superpop_classification works", {
   expect_no_error(superpop_classification(indir = indir, qcdir = qcdir, name = name)
   )
 })
+
+test_that("Superpop_classification works", {
+  mockery::stub(where = superpop_classification,
+                what = "checkPlink2",
+                how = TRUE)
+  mockery::stub(where = superpop_classification,
+                what = "system2",
+                how = TRUE)
+  expect_no_error(superpop_classification(indir = indir, qcdir = qcdir, name = name)
+  )
+})
+
+test_that("Throws file error if data is in wrong format for convert to plink", {
+  mockery::stub(where = superpop_classification,
+                what = "checkPlink2",
+                how = TRUE)
+  mockery::stub(where = superpop_classification,
+                what = "system2",
+                how = TRUE)
+  expect_no_error(convert_to_plink2(indir = indir, qcdir = qcdir, 
+                                          name = "data.hg38.renamed")
+  )
+})
+
