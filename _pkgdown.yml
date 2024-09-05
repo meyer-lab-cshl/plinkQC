@@ -1,3 +1,4 @@
+url: https://meyer-lab-cshl.github.io/plinkQC/ 
 reference:
 - title: Main quality control functions
   desc: ~
@@ -38,9 +39,16 @@ reference:
   desc: ~
   contents:
   - '`checkPlink`'
+  - '`checkPlink2`'
   - '`testNumerics`'
   - '`relatednessFilter`'
   - '`checkFiltering`'
+  - '`rename_variant_identifiers`'
+- title: Identifying Ancestry
+  desc: ~
+  contents:
+  - '`convert_to_plink2`'
+  - '`superpop_classification`'
 - title: internal
   contents:
   - '`checkRemoveIDs`'
@@ -70,3 +78,5 @@ navbar:
     - icon: fa-github fa-lg
       text: "github"
       href: https://github.com/meyer-lab-cshl/plinkQC
+template:
+  bootstrap: 5

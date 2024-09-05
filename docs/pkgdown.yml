@@ -1,5 +1,5 @@
-pandoc: 2.19.2
-pkgdown: 2.0.6
+pandoc: 3.1.1
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   AncestryCheck: AncestryCheck.html
@@ -7,5 +7,7 @@ articles:
   Genomes1000: Genomes1000.html
   HapMap: HapMap.html
   plinkQC: plinkQC.html
-last_built: 2023-12-22T14:28Z
-
+last_built: 2024-09-05T19:06Z
+urls:
+  reference: https://meyer-lab-cshl.github.io/plinkQC/reference
+  article: https://meyer-lab-cshl.github.io/plinkQC/articles

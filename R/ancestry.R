@@ -17,6 +17,16 @@
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return Creates plink 2.0 datafiles
 #' @export
+#' @examples
+#' indir <- system.file("extdata", package="plinkQC")
+#' qcdir <- tempdir()
+#' name <- "data"
+#' path2plink <- '/path/to/plink'
+#' # the following code is not run on package build, as the path2plink on the
+#' # user system is not known.
+#' \dontrun{
+#' convert_to_plink2(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
+#' }
 convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
                               path2plink2=NULL,
                               keep_individuals=NULL,
@@ -39,7 +49,7 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
   args_filter <- checkFiltering(keep_individuals, remove_individuals,
                                 extract_markers, exclude_markers) 
   
-  if (verbose) message("Projecting data on 1000G PC space via Plink2 --score")
+  if (verbose) message("Converting to plink2 data types")
   system2(path2plink2, 
           args=c("--bfile", prefix,
                  args_filter,
@@ -53,7 +63,8 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' Predicts the ancestry of inputted samples using plink2. This program utilizes a random 
 #' forest algorithm that was trained on the 1000 genomes dataset to predict the 
 #' ancestry of the samples. There are five possible ancestral superpopulation
-#' categories: AFR, AMR, EAS, EUR, and SAS. 
+#' categories: AFR, AMR, EAS, EUR, and SAS. Genomic data version hg38 with variant 
+#' identifiers in the format of 1:12345[hg38] is needed for the function to work 
 #' 
 #' @param indir [character] /path/to/directory containing the basic PLINK 2.0 data
 #' file name.pgen, name.pvar, name.psam
@@ -71,6 +82,16 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' correspond to the ancestry that a sample comes from and the names corresponds
 #' to the IDs.
 #' @export 
+#' @examples
+#' indir <- system.file("extdata", package="plinkQC")
+#' qcdir <- tempdir()
+#' name <- "data.hg38"
+#' path2plink <- '/path/to/plink'
+#' # the following code is not run on package build, as the path2plink on the
+#' # user system is not known.
+#' \dontrun{
+#' superpop_classification(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
+#' }
 superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     path2plink2=NULL,
                                     keep_individuals=NULL,
@@ -83,11 +104,18 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
 
   checkFormatPlink2(prefix)
   path2plink2 <- checkPlink2(path2plink2)
-
-  ref_pca_acount <- system.file("extdata", 'all_hg38_maf_first_pca.acount',
+  
+  pca_files <- tempdir()
+  ref_pca_acount <- system.file("extdata", 'all_hg38_0821.acount.RDS',
                                     package="plinkQC")
-  ref_pca_eigen_allele <- system.file("extdata", 'all_hg38_maf_first_pca.eigenvec.allele',
+  ref_pca_eigen_allele <- system.file("extdata", 'all_hg38_0821.eigenvec.allele.RDS',
                                 package="plinkQC")
+  acount_file <- readRDS(ref_pca_acount)
+  eigen_file <- readRDS(ref_pca_eigen_allele)
+  write.table(acount_file, file = file.path(pca_files, "all_hg38.acount"),
+            sep = "\t", quote = FALSE, row.names = FALSE)
+  write.table(eigen_file, file = file.path(pca_files, "all_hg38.eigenvec.allele"),
+              sep = "\t", quote = FALSE, row.names = FALSE)
   
   if (showPlinkOutput) {
     showPlinkOutput = ""
@@ -103,53 +131,83 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   system2(path2plink2, 
           args=c("--pfile", prefix,
                  args_filter,
-                 "--read-freq", ref_pca_acount,
-                 "--score", ref_pca_eigen_allele,
+                 "--read-freq", file.path(pca_files, "all_hg38.acount"),
+                 "--score", file.path(pca_files, "all_hg38.eigenvec.allele"),
                  "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
                  "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 
   proj <- read.csv(paste0(out,".sscore"), 
                    sep='\t', header = TRUE)
-  
-  #proj <- proj %>%
-  #  select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
+
   colnames(proj) <- c("ID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
   
   #load RF
-  load("R/sysdata.rda")
-  predictions = predict(superpop, proj)
+  rf_path <- system.file("extdata", 'superpop_rf_0821.rds',
+              package="plinkQC")
+  superpop <- readRDS(rf_path)
+  predictions <- predict(superpop, proj)
   names(predictions) <- proj$ID
-  return(predictions)
-  #delete files??
+  return(data.frame(predictions))
 }
 
- 
-# #putting it here as an example
-# run_check_heterozygosity <- function(indir, name, qcdir=indir, verbose=FALSE,
-#                                        path2plink=NULL,
-#                                        keep_individuals=NULL,
-#                                        remove_individuals=NULL,
-#                                        exclude_markers=NULL,
-#                                        extract_markers=NULL,
-#                                        showPlinkOutput=TRUE) {
-#     
-#     prefix <- makepath(indir, name)
-#     out <- makepath(qcdir, name)
-#     
-#     checkFormat(prefix) #ok so making sure prefix is right format
-#     path2plink <- checkPlink(path2plink)
-#     args_filter <- checkFiltering(keep_individuals, remove_individuals,
-#                                   extract_markers, exclude_markers) #this is just if you want to filter individuals
-#     
-#     if (verbose) message("Run check_heterozygosity via plink --het")
-#     sys::exec_wait(path2plink,
-#                    args=c("--bfile", prefix, "--het", "--out", out,
-#                           args_filter),
-#                    std_out=showPlinkOutput, std_err=showPlinkOutput)
-#   }
-#   
+
+#' Renaming variants  
+#' 
+#' Changes the format of the variant identifier. The default is in the format of
+#' chr1:12345[hg38].
+#' 
+#' @param indir [character] /path/to/directory containing the basic PLINK 2.0 data
+#' file name.pgen, name.pvar, name.psam
+#' @param qcdir [character] /path/to/directory where name.sscore as returned by 
+#' plink2 --score will be saved to. User needs writing permission to qcdir. Per 
+#' default is qcdir=indir.  
+#' @param name [character] Prefix of PLINK 2.0 files, i.e. name.pgen, name.pvar, 
+#' name.psam
+#' @param format [character] This gives the template to rewrite the variant identifier.
+#' A '@' represents the chromosome code, and a '#' represents the base-pair position.
+#' @inheritParams checkPlink2
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @return Files with a .renamed in them that have the renamed variants
+#' @export 
+#' @examples
+#' indir <- system.file("extdata", package="plinkQC")
+#' qcdir <- tempdir()
+#' name <- "data.hg38"
+#' path2plink <- '/path/to/plink'
+#' # the following code is not run on package build, as the path2plink on the
+#' # user system is not known.
+#' \dontrun{
+#' rename_variant_identifiers(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
+#' }
+rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
+                                    path2plink2=NULL,
+                                    format = "@:#[hg38]",
+                                    showPlinkOutput=TRUE) {
   
+  prefix <- makepath(indir, name)
+  out <- makepath(qcdir, paste0(name, ".renamed")) 
+  
+  checkFormatPlink2(prefix)
+  checkPlink2(path2plink2)
+  
+  if (showPlinkOutput) {
+    showPlinkOutput = ""
+  } 
+  else {
+    showPlinkOutput = FALSE 
+  }
+  
+  system2(path2plink2, 
+          args=c("--pfile", prefix,
+                 "--set-all-var-ids", paste0('"', format, '"'),
+                 "--rm-dup exclude-all",
+                 "--make-pgen",
+                 "--out", out),
+          stdout = showPlinkOutput, stderr = showPlinkOutput)
+}
 
   
   

@@ -6,6 +6,8 @@ Authors@R: c(
     person("Hannah", "Meyer", email = "hannah.v.meyer@gmail.com",
     role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4564-0899")),
     person("Caroline", "Walter", email= "carowalter26@hotmail.com",
+    role = c("ctb")),
+    person("Maha", "Syed", email= "maha.s.syed@gmail.com",
     role = c("ctb")))
 URL: https://meyer-lab-cshl.github.io/plinkQC/
 BugReports: https://github.com/meyer-lab-cshl/plinkQC/issues
@@ -49,3 +51,4 @@ SystemRequirements:
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
+LazyData: true

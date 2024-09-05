@@ -4,484 +4,315 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Ancestry estimation based on reference samples of known ethnicities • plinkQC</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Ancestry estimation based on reference samples of known ethnicities">
-<meta property="og:description" content="plinkQC">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
-    
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-standard navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">plinkQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.4</span>
-      </span>
-    </div>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-file"></span>
-     
-    documentation
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/plinkQC.html">Step-by-step QC</a>
-    </li>
-    <li>
-      <a href="../articles/AncestryCheck.html">Ancestry</a>
-    </li>
-    <li>
-      <a href="../articles/HapMap.html">HapMap III reference</a>
-    </li>
-    <li>
-      <a href="../articles/Genomes1000.html">1000 Genomes reference</a>
-    </li>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="standard" aria-label="Site navigation"><div class="container">
+
+    <a class="navbar-brand me-2" href="../index.html">plinkQC</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span></a></li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-documentation" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-file"></span> documentation</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-documentation">
+<li><a class="dropdown-item" href="../articles/plinkQC.html">Step-by-step QC</a></li>
+    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Ancestry</a></li>
+    <li><a class="dropdown-item" href="../articles/HapMap.html">HapMap III reference</a></li>
+    <li><a class="dropdown-item" href="../articles/Genomes1000.html">1000 Genomes reference</a></li>
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="../news/index.html">
-    <span class="fa fa-newspaper-o"></span>
-     
-    news
-  </a>
-</li>
-<li>
-  <a href="../reference/index.html">
-    <span class="fa fa-code"></span>
-     
-    functions
-  </a>
-</li>
-<li>
-  <a href="https://github.com/meyer-lab-cshl/plinkQC" class="external-link">
-    <span class="fa fa-github fa-lg"></span>
-     
-    github
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><a class="nav-link" href="../news/index.html"><span class="fa fa-newspaper-o"></span> news</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-code"></span> functions</a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/meyer-lab-cshl/plinkQC"><span class="fa fa-github fa-lg"></span> github</a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
-      
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Ancestry estimation based on reference samples
-of known ethnicities</h1>
-                        <h4 data-toc-skip class="author">Hannah
-Meyer</h4>
+
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+
+      <h1>Ancestry estimation based on reference samples of known ethnicities</h1>
+                        <h4 data-toc-skip class="author">Maha Syed and
+Caroline Walter</h4>
             
-            <h4 data-toc-skip class="date">2023-12-22</h4>
+            <h4 data-toc-skip class="date">2024-09-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/AncestryCheck.Rmd" class="external-link"><code>vignettes/AncestryCheck.Rmd</code></a></small>
-      <div class="hidden name"><code>AncestryCheck.Rmd</code></div>
-
+      <div class="d-none name"><code>AncestryCheck.Rmd</code></div>
     </div>
 
     
     
-<div class="section level2">
-<h2 id="ancestry-estimation">Ancestry estimation<a class="anchor" aria-label="anchor" href="#ancestry-estimation"></a>
-</h2>
-<p>The identification of individuals of divergent ancestry can be
-achieved by combining the genotypes of the study population with
-genotypes of a reference dataset consisting of individuals from known
-ethnicities (for instance individuals from the Hapmap or 1000 genomes
-study <span class="citation">[5]</span>). Principal componeanalysis
-(PCA) on this combined genotype panel can then be used to detect
-population structure down to the level of the reference dataset (for
-Hapmap and 1000 Genomes, this is down to large-scale continental
-ancestry).</p>
-<p>In the following, the workflow for combining a study dataset with the
-reference samples, conducting PCA and estimating ancestry is
-demonstrated. The study dataset consists of 200 individuals and 10,000
-genetic markers and is provided with <span class="math inline">\(plinkQC\)</span> in
-<code>file.path(find.package('plinkQC'),'extdata')</code>.</p>
-</div>
-<div class="section level2">
-<h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
-</h2>
 <div class="section level3">
-<h3 id="download-reference-data">Download reference data<a class="anchor" aria-label="anchor" href="#download-reference-data"></a>
+<h3 id="running-random-forest-classification">Running Random Forest Classification<a class="anchor" aria-label="anchor" href="#running-random-forest-classification"></a>
 </h3>
-<p>A suitable reference dataset should be downloaded and if necessary,
-re-formated into PLINK format. Vignettes <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html" class="external-link">‘Processing
-HapMap III reference data for ancestry estimation’</a> and <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html" class="external-link">‘Processing
-1000Genomes reference data for ancestry estimation’</a>, show the
-download and processing of the HapMap phase III and 1000Genomes phase
-III dataset, respectively. In this example, we will use the 1000Genomes
-data as the reference dataset.</p>
+<p>This package contains a classier to predict the ancestry of samples.
+This works through a random forest algorithm trained on the principal
+components of cleaned genomics data from the <a href="https://www.internationalgenome.org/data/" class="external-link">1000 genomes
+dataset</a>. This method is based off the ancestry identification scheme
+used in the <a href="https://pan.ukbb.broadinstitute.org/" class="external-link">Pan-UK
+BioBank analysis</a>.</p>
+<p><a href="https://www.cog-genomics.org/plink/2.0/" class="external-link">Plink v2</a> is
+needed for this portion of the package.</p>
+<div class="section level4">
+<h4 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
+</h4>
+<p>To begin with this is an example of how to run the classifier with a
+provided test data set. We will set up a temporary directory for
+qcdir.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">package.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/find.package.html" class="external-link">find.package</a></span><span class="op">(</span><span class="st">'plinkQC'</span><span class="op">)</span></span>
+<span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>, <span class="st">'extdata'</span><span class="op">)</span></span>
+<span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data.hg38'</span></span>
+<span><span class="va">path2plink2</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink2"</span></span></code></pre></div>
+<p>Before use, the study data should be in the new hg38 annotation.
+USCS’s <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a>
+tool may be needed to map variants from one annotation to another. More
+details on how to use the tool can be found on the processing <a href="HapMap.Rmd">HapMap III reference data vignette</a>.</p>
+<p>In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar,
+psam files), and the variants identifiers should be formatted similar to
+the following example: 1:12345[hg38]. We can use the included functions
+convert_to_plink2() and rename_variant_identifiers() to correctly format
+genomic data that is in the hg38 annotation.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/convert_to_plink2.html">convert_to_plink2</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
+<span>                  path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
+<span>                           path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span></span>
+<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">".renamed"</span><span class="op">)</span></span></code></pre></div>
+<p>After correctly formatting the data, we can use the provided function
+to return the sample ids and predicted ancestry.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ancestries</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/superpop_classification.html">superpop_classification</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
+<span>                                      path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ancestries</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="set-up">Set-up<a class="anchor" aria-label="anchor" href="#set-up"></a>
-</h3>
-<p>We will first set up some bash variables and create directories
-needed; storing the names and directories of the reference and study
-will make it easy to use updated versions of the reference or new
-datasets in the future. We create a directory named ‘qcdir’ for the
-study data. In order to keep the data directory tidy, we’ll create a
-directory for the log files and move them to the log directory here
-after each analysis step. This is useful to keep the PLINK log-files for
-future reference. Once you have created ‘qcdir’, be sure to copy the
-data.bim, data.bed, and data.fam files into your directory. If you are
-using HapMap III reference data, be sure to use the correct variable
-name; refname=‘HapMapIII’.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">qcdir</span><span class="op">=</span>~/qcdir</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="st">'data'</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">refname</span><span class="op">=</span><span class="st">'all_hg38'</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="match-study-genotypes-and-reference-data">Match study genotypes and reference data<a class="anchor" aria-label="anchor" href="#match-study-genotypes-and-reference-data"></a>
+<h3 id="training-your-own-random-forest-classifier">Training Your Own Random Forest Classifier<a class="anchor" aria-label="anchor" href="#training-your-own-random-forest-classifier"></a>
 </h3>
-<p>In order to compute joint principal components of the reference and
-study population, we will need to combine the two datasets. The plink
-–merge function enables this merge, but requires the variants in the
-datasets to be matching by chromosome, position and alleles. The
-following sections show how to extract the relevant data from the
-reference and study dataset and how to filter matching variants.</p>
+<p>Sometimes there might not be enough overlap between the SNPs in the
+study dataset and the trained random forest algorithm for a accurate
+prediction. In this case, we recommend training your own random forest.
+To do so, we will first need to set up the needed bash variables and
+download the 1000 genomes dataset into qcdir which is described in
+detail in <a href="Genomes1000.Rmd">Processing 1000 Genomes reference
+data for ancestry estimation</a>. We will use a test study dataset
+included in the package as an example for the workflow.</p>
 <div class="section level4">
-<h4 id="filter-reference-and-study-data-for-non-a-t-or-g-c-snps">Filter reference and study data for non A-T or G-C SNPs<a class="anchor" aria-label="anchor" href="#filter-reference-and-study-data-for-non-a-t-or-g-c-snps"></a>
+<h4 id="setting-up-bash-script">Setting up Bash Script<a class="anchor" aria-label="anchor" href="#setting-up-bash-script"></a>
 </h4>
-<p>We will use an awk script to find non-A/T and non-G/C SNPs, as these
-SNPs are more difficult to align, and remove them from both the
-reference and study data sets. In addition, we will only keep the
-autosomes (chr 1-22), only keep snps (snps-only), of those, keep only
-the biallelic ones (max-alleles 2), and remove any duplicates
-(rm-dup).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">$refdir</span>/<span class="va">$refname</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$refdir</span>/<span class="va">$refname</span> <span class="dt">\</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">--snps-only</span> just-acgt <span class="dt">\</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps <span class="dt">\</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">--chr</span> 1-22 <span class="dt">\</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.no_ac_gt_snps.log</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span> <span class="dt">\</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">--snps-only</span> just-acgt <span class="dt">\</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps <span class="dt">\</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">--chr</span> 1-22 <span class="dt">\</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> <span class="dt">\</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.no_ac_gt_snps.log</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="va">qcdir</span><span class="op">=</span><span class="st">'~/qcdir'</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="st">'data.hg38'</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-r</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="rename-variant-identifiers-to-common-scheme">Rename Variant Identifiers to common scheme<a class="anchor" aria-label="anchor" href="#rename-variant-identifiers-to-common-scheme"></a>
+<h4 id="putting-study-data-in-qcdir">Putting study data in qcdir<a class="anchor" aria-label="anchor" href="#putting-study-data-in-qcdir"></a>
 </h4>
-<p>Variant identifiers can vary between studies and/or reference sets.
-For computing the genetic PC, the annotation is not important, however,
-merging the files via PLINK will only work for variants with perfectly
-matching attributes. For instance, commonly used identifiers are either
-rsIDs or a name constructed from chr-position-alleles. Here, we must
-ensure the study and reference sets use the same identifiers in order to
-merge them by renaming all variants using their chromosome and position,
-followed by the genome build. As this might introduce additional
-duplicates (e.g. identifiers that now are identical because of
-tri-allelic variants that could not be caught in the previous step), we
-will also remove duplicates again.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps <span class="dt">\</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> @:#[hg38] <span class="dt">\</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps <span class="dt">\</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> @:#[hg38] <span class="dt">\</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<p>Copy your study dataset to the qcdir folder. In this example, we are
+assuming that the provided test dataset included with the package has
+been moved.</p>
 </div>
 <div class="section level4">
-<h4 id="prune-study-data">Prune study data<a class="anchor" aria-label="anchor" href="#prune-study-data"></a>
+<h4 id="renaming-variant-identifiers">Renaming variant identifiers<a class="anchor" aria-label="anchor" href="#renaming-variant-identifiers"></a>
 </h4>
-<p>We will conduct principle component analysis on genetic variants that
-are pruned for variants in linkage disequilibrium (LD) with an <span class="math inline">\(r^2 &gt;0.2\)</span> in a 50kb window. The
-LD-pruned dataset is generated below, using
+<p>Variant identifiers can vary between studies. To ensure that the data
+can be properly processed, we will rename the variant identifiers to a
+common scheme based on chromosome number and basepair location.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/all_hg38 <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> <span class="st">"@:#[hg38]"</span> <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>      <span class="at">--make-pgen</span> <span class="dt">\</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/all_hg38.renamed</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>      </span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span> <span class="dt">\</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> <span class="st">"@:#[hg38]"</span> <span class="dt">\</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>      <span class="at">--make-pgen</span> <span class="dt">\</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/all_hg38.renamed.log <span class="va">$qcdir</span>/plink_log</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="filtering-out-the-shared-snps-between-the-study-dataset-and-reference-1000g-dataset">Filtering out the shared SNPs between the study dataset and
+reference 1000G dataset<a class="anchor" aria-label="anchor" href="#filtering-out-the-shared-snps-between-the-study-dataset-and-reference-1000g-dataset"></a>
+</h4>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$qcdir</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print $3}'</span> <span class="va">$name</span>.pvar <span class="op">&gt;</span> <span class="va">$name</span>.varids.txt</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> all_hg38 <span class="at">--keep</span> <span class="va">$name</span>.varids.txt <span class="at">--make-pgen</span> <span class="at">--out</span> filtered_hg38</span></code></pre></div>
+<p>Then, we will remove variants with a low minor allele count with the
+–maf function of plink 2.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> <span class="va">$qcdir</span>/filtered_hg38<span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>       <span class="at">--maf</span> <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>       <span class="at">--nonfounders</span> <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>       <span class="at">--make-pgen</span> <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>       <span class="at">--out</span> <span class="va">$qcdir</span>/filtered_hg38.maf</span></code></pre></div>
+<p>We will conduct principal component analysis on genetic variants that
+are pruned for variants in linkage disequilibrium (LD) with an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>r</mi><mn>2</mn></msup><mo>&gt;</mo><mn>0.2</mn></mrow><annotation encoding="application/x-tex">r^2 &gt;0.2</annotation></semantics></math>
+in a 50kb window. The LD-pruned dataset is generated below, using
 <code>plink --indep-pairwise</code> to compute the LD-variants;
 additionally <code>exclude range</code> is used to remove genomic ranges
-of known high-LD structure. This file was originally provided by <span class="citation">[6]</span> and is available in
+of known high-LD structure. This file was originally provided by <span class="citation">[1]</span> and is available in
 <code>file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')</code>.
 If there has been an update in reference data, this will need to be
 updated as well.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">highld</span><span class="op">=</span><span class="st">'high-LD-regions-hg38-GRCh38.txt'</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--exclude</span> range  <span class="va">$qcdir</span>/<span class="va">$highld</span> <span class="dt">\</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">--indep-pairwise</span> 50 5 0.2 <span class="dt">\</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.renamed.prune.log</span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed <span class="dt">\</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.prune.in <span class="dt">\</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.pruned.log</span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="filter-reference-data-for-the-same-snp-set-as-in-study">Filter reference data for the same SNP set as in study<a class="anchor" aria-label="anchor" href="#filter-reference-data-for-the-same-snp-set-as-in-study"></a>
-</h4>
-<p>We will use the list of pruned variants from the study sample to
-reduce the reference dataset to the size of the study samples:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed <span class="dt">\</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.prune.in <span class="dt">\</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.pruned.log</span></code></pre></div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="merge-study-genotypes-and-reference-data">Merge study genotypes and reference data<a class="anchor" aria-label="anchor" href="#merge-study-genotypes-and-reference-data"></a>
-</h3>
-<p>The matching study and reference dataset can now be merged into a
-combined dataset with plink –bmerge. If all steps outlined above were
-conducted successfully, no mismatch errors should occur.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned <span class="dt">\</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">--merge-mode</span> 6</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.merge.<span class="va">$refname</span>.missnp.log</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned  <span class="dt">\</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.missnp <span class="dt">\</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="pca-on-the-merged-data">PCA on the merged data<a class="anchor" aria-label="anchor" href="#pca-on-the-merged-data"></a>
-</h3>
-<p>We can now run principal component analysis on the combined dataset
-using <code>plink --pca</code> which returns a .eigenvec file with the
-family and individual ID in columns 1 and 2, followed by the first 20
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>highld<span class="ot">=</span><span class="st">'high-LD-regions-hg38-GRCh38.txt'</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>plink2 <span class="sc">--</span>pfile filtered_hg38.renamed\</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>       <span class="sc">--</span>exclude range <span class="sc">$</span>qcdir<span class="sc">/</span><span class="er">$</span>highld \</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>       <span class="sc">--</span>indep<span class="sc">-</span>pairwise <span class="dv">50</span> <span class="dv">5</span> <span class="fl">0.2</span> \</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>       <span class="sc">--</span>out filtered_hg38.renamed</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>plink2 <span class="sc">--</span>pfile filtered_hg38.renamed \</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>       <span class="sc">--</span>extract filtered_hg38.renamed.prune.in \</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>       <span class="sc">--</span>make<span class="sc">-</span>pgen \</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>       <span class="sc">--</span>out filtered_hg38.pruned</span></code></pre></div>
+<p>After filtering out the low minor allele frequency and pruning, we
+will extract the principal components from the data.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> filtered_hg38.pruned <span class="dt">\</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>       <span class="at">--nonfounders</span> <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>       <span class="at">--freq</span> counts <span class="dt">\</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>       <span class="at">--pca</span> allele-wts 20 <span class="dt">\</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>       <span class="at">--out</span> filtered_hg38.pruned.pca</span></code></pre></div>
+<p>After running a PCA, we will project the original dataset onto the
 principal components.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">--pca</span> <span class="dt">\</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="check-ancestry">Check ancestry<a class="anchor" aria-label="anchor" href="#check-ancestry"></a>
-</h3>
-<p>We can use the .eigenvec file to estimate the ancestry of the study
-samples. Identifying individuals of divergent ancestry is implemented in
-<code>check_ancestry</code>. Currently, check ancestry only supports
-automatic selection of individuals of European descent. It uses
-principal components 1 and 2 to find the center of the known European
-reference samples. All study samples whose Euclidean distance from the
-centre falls outside the radius specified by the maximum Euclidean
-distance of the reference samples multiplied by the chosen
-<code>europeanTh</code> are considered non-European.
-<code>check_ancestry</code> shows the result of the ancestry analysis in
-a scatter plot of PC1 versus PC2, colour-coded for samples of the
-reference populations and the study population. Reminder, if you are
-using HapMapIII reference data, refname will be the reference name you
-have used previously. Also, the files to use are “/HapMap_ID2Pop.txt”
-instead of the Genomes1000_ID2Pop and “HapMap_PopColors.txt” instead of
-Genomes1000_PopColors.txt.</p>
-<p>Note: this vignette provides the 1000Genomes annotation files, or the
-HapMapIII annotation files. If you choose to use either 1000Genomes or
-HapMapIII reference population data, you can simply use our color
-mapping files and it should work.<br>
-If not, you must provide it to the function. An example of the color
-scheme for the 1000 Genomes reference data is found in
-‘1000Genomes_PopColors.txt’.</p>
-<p>From within R, run the following command to the ancestry check. This
-is for the 1000 Genomes Data.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://meyer-lab-cshl.github.io/plinkQC/" class="external-link">plinkQC</a></span><span class="op">)</span></span>
-<span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package<span class="op">=</span><span class="st">"plinkQC"</span><span class="op">)</span></span>
-<span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="st">"~/qcdir"</span></span>
-<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data'</span></span>
-<span><span class="va">refname</span> <span class="op">&lt;-</span> <span class="st">'all_hg38'</span></span>
-<span><span class="va">prefixMergedDataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"."</span>, <span class="va">refname</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> filtered_hg38.pruned </span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>       <span class="ex">--read-freq</span> all_hg38.pca.acount </span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>       <span class="ex">--score</span> all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize </span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>       <span class="ex">--score-col-nums</span> 7-26 <span class="at">--out</span> filtered_hg38.projection</span></code></pre></div>
+<p>From this, this will be used to train the random forest algorithm in
+R.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">exclude_ancestry</span> <span class="op">&lt;-</span></span>
-<span>    <span class="fu"><a href="../reference/evaluate_check_ancestry.html">evaluate_check_ancestry</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
-<span>                            prefixMergedDataset<span class="op">=</span><span class="va">prefixMergedDataset</span>,</span>
-<span>                            refSamplesFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">indir</span>, </span>
-<span>                                                 <span class="st">"/Genomes1000_ID2Pop.txt"</span>,</span>
-<span>                                                 sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>, </span>
-<span>                            refColorsFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">indir</span>, </span>
-<span>                                                <span class="st">"/Genomes1000_PopColors.txt"</span>,</span>
-<span>                                                sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>,</span>
-<span>                            interactive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="checkAncestry.png" width="500px" style="display: block; margin: auto;"></p>
-<p>After these steps, this .eigenvec file can be used to build a random
-forest.<br>
-The steps for this process are described in [link next vignette]. For
-now, I am putting the Random Forest documentation here.</p>
-</div>
-<div class="section level3">
-<h3 id="random-forest-classification">Random Forest Classification<a class="anchor" aria-label="anchor" href="#random-forest-classification"></a>
-</h3>
-<p>The previous <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html" class="external-link">Ancestry
-estimation vignette</a> performed PCA from the combined study and
-reference dataset and identified individuals of European descent based
-on clustering of data in the first and second PC space. In this two
-dimensional space, there is no adequate identification of individuals of
-other ancestries. In this vignette, we will train a random forest
-classifier that uses up to 20 PCs to sufficiently estimate the study
-samples’ ancestry based on any ancestry in the reference dataset.</p>
-<p>We use the .eigenvec file that was created when preparing files for
-ancestry estimation, and read in its dataframe. The file contains the
-eigenvectors for the PCA on the LD-pruned genotype data. The .eigenvec
-file only included the eigenvalues per PC for each individual and did
-not include any information regarding individual’s ancestries.
-Therefore, the file available in the plinkQC download, which contains a
-dataframe with each individual’s ID, their family ID, and their
-associated ancestry must be obtained and read in, as obtained from the
-1000 Genomes database. These two files are to be joined by ID and
-filtered to remove any IDs where no genetic data were available.</p>
-<p>The file paths must change!!!</p>
-<pre><code>Definitely do not need all of these: 
-
-library(plinkQC)
-library(readr)
-library(dplyr)
-library(ggplot2)
-library(randomForest)
-require(caTools)
-library(caret)
-library(tidyverse)
-library(pipeR)
-library(rlist)</code></pre>
-<p>Here, we will read in both files with corresponding data frames.</p>
-<pre><code><span><span class="co"># Read in both data frames </span></span>
-<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="fu">read_delim</span><span class="op">(</span><span class="st">'~/Ancestry/build_forest/train_data'</span>, col_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="fu">read_delim</span><span class="op">(</span><span class="st">"~/Ancestry/build_forest/Genomes1000_ID2Pop.txt"</span><span class="op">)</span></span></code></pre>
-<p>The PC, training data, and ancestry files are correctly formatted,
-the ancestry file is filtered to remove IDs that have no corresponding
-genetic data, and the files are then joined by ID.</p>
-<pre><code><span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">X1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">g_1000</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="st">'~/qcdir/filtered_hg38.projection.sscore'</span></span>
+<span><span class="va">proj_1000g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
+<span>  file<span class="op">=</span> <span class="va">filepath</span>,</span>
+<span>  sep<span class="op">=</span><span class="st">'\t'</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">package.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/find.package.html" class="external-link">find.package</a></span><span class="op">(</span><span class="st">'plinkQC'</span><span class="op">)</span></span>
+<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>,<span class="st">"extdata/Genomes1000_ID2Pop.txt"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>We divide up the data into a testing and training portion. Since
+there is not an even representation of each ancestral group within the
+data, we will sample the data to ensure there is an even representation
+of each ancestral group in the testing portion to ensure our model works
+well on each of the groups.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">proj_1000g</span> <span class="op">&lt;-</span> <span class="va">proj_1000g</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ALLELE_CT</span>, <span class="va">NAMED_ALLELE_DOSAGE_SUM</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">proj_1000g</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fam_ID"</span>, <span class="st">"ID"</span>, <span class="st">"Ancestry"</span><span class="op">)</span></span>
-<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="va">ancestry_info</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">$</span><span class="va">ID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">g_1000</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span>
-<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">left_join</span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span></span></code></pre>
-<p>The documentation below provides visuals of ancestry data for your
-understanding by making a histogram, <code>hist</code>, of individuals
-per ancestry in our data set. In a random forest classification, the
-original data set is split into training and testing subsets. Below, 20
-individuals from each ancestry are chosen at random to avoid any under
-or over representation on one ancestry during this split, shown in
-<code>test_hist</code>. These 20 individuals are then saved and removed
-from the data set to create two distinct sets, and the ancestries are
-converted into a factor instead of a categorical value.</p>
-<pre><code><span><span class="va">ancestries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span>
-<span><span class="va">hist</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">ancestries</span><span class="op">)</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">ancestries</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Sample 20 ancestry sepcific individuals</span></span>
+<span><span class="va">labeled_proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">proj_1000g</span>, <span class="va">ancestry_info</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">n_individuals</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span><span class="op">)</span>, <span class="va">ancestry_info</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># I changed this to use g_1000 instead of ancestry_info, because ancestry_info</span></span>
-<span><span class="co"># was creating samples that were above the 2584 samples that are in g_1000</span></span>
+<span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">labeled_proj</span><span class="op">)</span><span class="op">)</span>, <span class="va">labeled_proj</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">test.ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">idx</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">n_individuals</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># For each population, it extracts the ids that were sampled above</span></span>
-<span><span class="va">ancestry.test</span> <span class="op">&lt;-</span> <span class="va">ancestry_info</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">test.ids</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">ancestry.test</span> <span class="op">&lt;-</span> <span class="va">labeled_proj</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">test.ids</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co"># Histogram of testing set to show sampling was successful. </span></span>
-<span><span class="va">test_hist</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">ancestry.test</span><span class="op">)</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">ancestry.test</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">test_hist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">ancestry.test</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ancestry.test</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Remove the `test.ids` from `g_1000` and `ancestry_info` data objects. </span></span>
 <span><span class="va">ids_to_remove</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">test.ids</span>, use.names <span class="op">=</span> <span class="cn">FALSE</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span><span class="op">[</span><span class="op">-</span><span class="va">ids_to_remove</span>,<span class="op">]</span></span>
-<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="va">ancestry_info</span><span class="op">[</span><span class="op">-</span><span class="va">ids_to_remove</span>,<span class="op">]</span></span>
-<span></span>
-<span><span class="co"># Covert Ancestry value to a factor instead of categorical value. </span></span>
-<span><span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span></code></pre>
-<p>Now that the files are correctly formatted, we are able to run a
-random forest classification on out Ancestry data object. The
-documentation is below.</p>
-<pre><code><span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu">randomForest</span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
-<span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
-<span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
-<span>                   ntree <span class="op">=</span> <span class="fl">750</span>,</span>
-<span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">rf</span></span></code></pre>
-<div class="figure">
-<img src="rfLarge.png" alt=""><p class="caption">This is an example random forest classification model
-that builds 500 decision trees, and has an mtry of 4 (4 input features
-are considered at any moment during the decision tree construction
-process). This model has an out-of-bag error rate of 14.24%, meaning
-this random forest has an accuracy of 85.76% in classifying ancestry.
-The confusion matrix displays the number of correct classifications for
-each ancestry along the diagonal. Any values outside the diagonal are
-misclassifications for that other ancestry. For example, the African
-Caribbean in Barbados (ACB) ancestry was correctly classified for 57
-samples, but was misclassified as African Ancestry in Southwest United
-States (ASW) 19 times, as Esan in Nigeria (ESN) 1 time, and Yoruba in
-Ibadan, Nigeria (YRI) 4 times. The class error is the amount of
-misclassification you get for each ancestry.</p>
+<span><span class="va">test_proj_1000g</span> <span class="op">&lt;-</span> <span class="va">labeled_proj</span><span class="op">[</span><span class="op">-</span><span class="va">ids_to_remove</span>,<span class="op">]</span></span></code></pre></div>
+<p>Then, we can train the random forest.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">superpop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">superpopulation_code</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                              data <span class="op">=</span> <span class="va">super_proj1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>, <span class="fl">23</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                              method <span class="op">=</span> <span class="st">"rf"</span>, </span>
+<span>                              ntree <span class="op">=</span> <span class="fl">750</span>,</span>
+<span>                              importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>Below provides documentation for a heatmap of the ancestries.<br>
-From the heatmap, you may see that there are some false estimations. The
-next section will allow us to tune the random forest in an attempt to
-improve accuracy.</p>
-<pre><code><span><span class="va">my_rf</span> <span class="op">&lt;-</span> <span class="va">rf</span><span class="op">$</span><span class="va">confusion</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="va">my_rf</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">27</span><span class="op">)</span><span class="op">]</span>, scale <span class="op">=</span> <span class="st">'column'</span>, trace <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span></span></code></pre>
+<div class="section level4">
+<h4 id="predicting-ancestries-of-new-study-data">Predicting ancestries of new study data<a class="anchor" aria-label="anchor" href="#predicting-ancestries-of-new-study-data"></a>
+</h4>
+<p>To predict newdata, you need to project the newdata onto the
+principal components. This is done with the –score function in plink2
+which can be inputted into the random forest algorithm.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> newdata </span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>       <span class="ex">--read-freq</span> all_hg38.pca.acount </span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>       <span class="ex">--score</span> all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize </span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>       <span class="ex">--score-col-nums</span> 7-26 <span class="at">--out</span> all_hg38.projection</span></code></pre></div>
+<p>Then we can clean the data in preparation to be used for training the
+random forest algorithm.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">package.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/find.package.html" class="external-link">find.package</a></span><span class="op">(</span><span class="st">'plinkQC'</span><span class="op">)</span></span>
+<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>,<span class="st">"extdata/Genomes1000_ID2Pop.txt"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">superpop</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>, <span class="st">"extdata/AncestryGeoLocations.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
+<span>  file<span class="op">=</span><span class="st">"all_hg38.projection"</span>, </span>
+<span>  sep<span class="op">=</span><span class="st">'\t'</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="va">proj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ALLELE_CT</span>, <span class="va">NAMED_ALLELE_DOSAGE_SUM</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fam_ID"</span>, <span class="st">"ID"</span>, <span class="st">"Ancestry"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">superpop_code</span> <span class="op">&lt;-</span> <span class="va">superpop</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ancestry</span>, <span class="va">superpopulation_code</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">labeled_proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">proj</span>, <span class="va">ancestry_info</span><span class="op">)</span></span>
+<span><span class="va">super_proj1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">labeled_proj</span>, <span class="va">superpop_code</span><span class="op">)</span></span>
+<span><span class="va">super_proj1000</span><span class="op">$</span><span class="va">superpopulation_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">super_proj1000</span><span class="op">$</span><span class="va">superpopulation_code</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">superpop</span>, <span class="va">super_proj1000</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="evalulating-and-tuning-classification">Evalulating and Tuning Classification<a class="anchor" aria-label="anchor" href="#evalulating-and-tuning-classification"></a>
+</h4>
+<p>To evaluate the accuracy of the model, a commonly used metric is the
+out-of-bag error rate and confusion matrix. The confusion matrix
+displays the number of correct classifications for each ancestry along
+the diagonal. Any values outside the diagonal are misclassifications for
+that other ancestry. A summary of these metrics can be seen through:</p>
+<pre><code><span><span class="va">superpop</span></span></code></pre>
+<p>And we can visualize the confusion matrix as a heatmap.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">my_rf</span> <span class="op">&lt;-</span> <span class="va">rf</span><span class="op">$</span><span class="va">confusion</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="va">my_rf</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">27</span><span class="op">)</span><span class="op">]</span>, scale <span class="op">=</span> <span class="st">'column'</span>, trace <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -506,24 +337,25 @@ important for your dataset to test and find the point of diminishing
 returns. For the example below of the 1000 Genomes set, 500-1000 trees
 allows accurate predictions to be made, while also staying
 computationally efficient.</p>
-<pre><code><span><span class="va">rf_100_trees</span> <span class="op">&lt;-</span> <span class="fu">randomForest</span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rf_100_trees</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                   ntree <span class="op">=</span> <span class="fl">100</span>, </span>
 <span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
 <span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">rf_500_trees</span> <span class="op">&lt;-</span> <span class="fu">randomForest</span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span><span class="va">rf_500_trees</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                   ntree <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
 <span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  </span>
 <span></span>
-<span><span class="va">rf_10000_trees</span> <span class="op">&lt;-</span> <span class="fu">randomForest</span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span><span class="va">rf_10000_trees</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                   ntree <span class="op">=</span> <span class="fl">10000</span>, </span>
 <span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
 <span>                   mtry <span class="op">=</span> <span class="va">best_mtry</span>,</span>
-<span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
+<span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="mtry">Mtry<a class="anchor" aria-label="anchor" href="#mtry"></a>
@@ -556,13 +388,531 @@ that much for the search to continue. The <code>trace</code> specifies
 whether to print the progress of the search, and <code>plot</code> says
 whether to plot the OOB error as a function of mtry. We can then build
 the random forest model again using the best saved mtry value.</p>
-<pre><code><span><span class="co"># This first line will provide the best mtry </span></span>
-<span><span class="va">mtry</span><span class="op">&lt;-</span> <span class="fu">tuneRF</span><span class="op">(</span>x <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span>, </span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># This first line will provide the best mtry </span></span>
+<span><span class="va">mtry</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/tuneRF.html" class="external-link">tuneRF</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span>, </span>
 <span>              stepFactor <span class="op">=</span> <span class="fl">1.5</span>, improve <span class="op">=</span> <span class="fl">0.01</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">best_mtry</span> <span class="op">&lt;-</span> <span class="va">mtry</span><span class="op">[</span><span class="va">mtry</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">mtry</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">rf_mtry</span> <span class="op">&lt;-</span> <span class="fu">randomForest</span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span><span class="va">rf_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                        data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                        mtry <span class="op">=</span> <span class="va">best_mtry</span>, </span>
+<span>                        ntree <span class="op">=</span> <span class="fl">1500</span>,</span>
+<span>                        method <span class="op">=</span> <span class="st">"rf"</span>, </span>
+<span>                        importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">rf_mtry</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="k-fold-cross-validation">K-fold Cross Validation<a class="anchor" aria-label="anchor" href="#k-fold-cross-validation"></a>
+</h4>
+<p>Cross-validation is used to estimate the skill of a machine learning
+model on unseen data. When tuning this RF model, k-fold cross validation
+is used to split bootstrapped datasets into random groups, holding one
+group as test data and training the different models (the individual
+decision trees) on the remaining groups, where ‘k’ is the number of
+folds/groups in the dataset. Using k=5 or k=10 is common and usually
+arbitrarily chosen, depending on the size of the dataset. A higher
+number of folds tends to lead to a more accurate model as you are
+splitting. In the example below, k=10 for 10-fold cross-validation was
+used, meaning there were 10 iterations of the model for each of the 500
+decision trees, each using a different group as the test set and the
+remaining 9 groups as training data for the model. After all 10
+iterations were complete, the resulting iterations are averaged to find
+the final cross-validation model which is our random forest model.</p>
+<p>It is important to test different values of k as there exists a
+tradeoff between model accuracy and computational expense. Each
+iteration requires the entire model to run, so this can get very
+computationally expensive depending on the size of the dataset. Below is
+the documentation for two different values of k for k-fold cross
+validation.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">trainControl_5</span> <span class="op">&lt;-</span> <span class="fu">trainControl</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"cv"</span>,</span>
+<span>                          number <span class="op">=</span> <span class="fl">5</span>, </span>
+<span>                          search <span class="op">=</span> <span class="st">"grid"</span><span class="op">)</span></span>
+<span>                          </span>
+<span><span class="va">forest_5</span> <span class="op">&lt;-</span> <span class="fu">train</span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>               data<span class="op">=</span><span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>               method <span class="op">=</span> <span class="st">"rf"</span>,</span>
+<span>               metric <span class="op">=</span> <span class="st">"Accuracy"</span>,</span>
+<span>               trControl <span class="op">=</span> <span class="va">trainControl_5</span></span>
+<span>               <span class="op">)</span></span>
+<span><span class="co"># Print out the model details                </span></span>
+<span><span class="va">forest_5</span><span class="op">$</span><span class="va">finalModel</span></span>
+<span>                      </span>
+<span><span class="co"># Now for 10-fold cross validation    </span></span>
+<span><span class="va">trainControl_10</span> <span class="op">&lt;-</span> <span class="fu">trainControl</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"cv"</span>,</span>
+<span>                          number <span class="op">=</span> <span class="fl">10</span>, </span>
+<span>                          search <span class="op">=</span> <span class="st">"grid"</span><span class="op">)</span></span>
+<span><span class="va">forest_10</span> <span class="op">&lt;-</span> <span class="fu">train</span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>               data<span class="op">=</span><span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>               method <span class="op">=</span> <span class="st">"rf"</span>,</span>
+<span>               metric <span class="op">=</span> <span class="st">"Accuracy"</span>,</span>
+<span>               trControl <span class="op">=</span> <span class="va">trainControl_10</span></span>
+<span>               <span class="op">)</span>   </span>
+<span>               </span>
+<span><span class="co"># Print out model details</span></span>
+<span><span class="va">rf_10_fold_cv</span> <span class="op">&lt;-</span> <span class="va">forest_10</span><span class="op">$</span><span class="va">finalModel</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="evaluatinginterpretting-the-rf">Evaluating/Interpretting the RF<a class="anchor" aria-label="anchor" href="#evaluatinginterpretting-the-rf"></a>
+</h3>
+<p>Once you have found a successful OOB error rate, you can use the
+below package to find out important information regarding your tree. The
+below documentation builds a decision tree using categorical aspects to
+classify the data. The PC values for each sample are provided in our
+1000 Genomes reference dataset file, where each sample has values for 20
+distinct PCs. We ask if a certain sample’s value for a specific PC is
+less than or greater than a given numer. Based on that answer, it is
+either classified as a specific ancestry or needs to undergo more
+investigation to classify it correctly. For comprehensability, this is
+only a subset of a decision tree the random forest builds as classifying
+all 26 ancestries builds quite a complicated and cluttered plot.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># This is a visual of the random forest being made. </span></span>
+<span><span class="co"># https://github.com/araastat/reprtree</span></span>
+<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu">plot.getTree</span><span class="op">(</span><span class="va">rf_mtry</span><span class="op">)</span></span>
+<span><span class="co"># Two different plots </span></span>
+<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu">plot.getTree</span><span class="op">(</span><span class="va">rf_mtry</span>, k<span class="op">=</span><span class="fl">1</span>, d<span class="op">=</span><span class="fl">5</span><span class="op">)</span> </span>
+<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu">plot.getTree</span><span class="op">(</span><span class="va">rf_mtry</span>, k<span class="op">=</span><span class="fl">1</span>, d<span class="op">=</span><span class="fl">6</span><span class="op">)</span> </span></code></pre></div>
+<div class="section level4">
+<h4 id="older-stuff-moved-down-for-ease-of-access">Older stuff (moved down for ease of access)<a class="anchor" aria-label="anchor" href="#older-stuff-moved-down-for-ease-of-access"></a>
+</h4>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="ancestry-estimation">Ancestry estimation<a class="anchor" aria-label="anchor" href="#ancestry-estimation"></a>
+</h2>
+<p>The identification of individuals of divergent ancestry can be
+achieved by combining the genotypes of the study population with
+genotypes of a reference dataset consisting of individuals from known
+ethnicities (for instance individuals from the Hapmap or 1000 genomes
+study <span class="citation">[6]</span>). Principal componeanalysis
+(PCA) on this combined genotype panel can then be used to detect
+population structure down to the level of the reference dataset (for
+Hapmap and 1000 Genomes, this is down to large-scale continental
+ancestry).</p>
+<p>In the following, the workflow for combining a study dataset with the
+reference samples, conducting PCA and estimating ancestry is
+demonstrated. The study dataset consists of 200 individuals and 10,000
+genetic markers and is provided with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>l</mi><mi>i</mi><mi>n</mi><mi>k</mi><mi>Q</mi><mi>C</mi></mrow><annotation encoding="application/x-tex">plinkQC</annotation></semantics></math>
+in <code>file.path(find.package('plinkQC'),'extdata')</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="workflow-1">Workflow<a class="anchor" aria-label="anchor" href="#workflow-1"></a>
+</h2>
+<div class="section level3">
+<h3 id="download-reference-data">Download reference data<a class="anchor" aria-label="anchor" href="#download-reference-data"></a>
+</h3>
+<p>A suitable reference dataset should be downloaded and if necessary,
+re-formated into PLINK format. Vignettes <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html">‘Processing
+HapMap III reference data for ancestry estimation’</a> and <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html">‘Processing
+1000Genomes reference data for ancestry estimation’</a>, show the
+download and processing of the HapMap phase III and 1000Genomes phase
+III dataset, respectively. In this example, we will use the 1000Genomes
+data as the reference dataset.</p>
+</div>
+<div class="section level3">
+<h3 id="set-up">Set-up<a class="anchor" aria-label="anchor" href="#set-up"></a>
+</h3>
+<p>We will first set up some bash variables and create directories
+needed; storing the names and directories of the reference and study
+will make it easy to use updated versions of the reference or new
+datasets in the future. We create a directory named ‘qcdir’ for the
+study data. In order to keep the data directory tidy, we’ll create a
+directory for the log files and move them to the log directory here
+after each analysis step. This is useful to keep the PLINK log-files for
+future reference. Once you have created ‘qcdir’, be sure to copy the
+data.bim, data.bed, and data.fam files into your directory. If you are
+using HapMap III reference data, be sure to use the correct variable
+name; refname=‘HapMapIII’.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="va">qcdir</span><span class="op">=</span>~/qcdir</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="st">'data'</span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="va">refname</span><span class="op">=</span><span class="st">'all_hg38'</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="match-study-genotypes-and-reference-data">Match study genotypes and reference data<a class="anchor" aria-label="anchor" href="#match-study-genotypes-and-reference-data"></a>
+</h3>
+<p>In order to compute joint principal components of the reference and
+study population, we will need to combine the two datasets. The plink
+–merge function enables this merge, but requires the variants in the
+datasets to be matching by chromosome, position and alleles. The
+following sections show how to extract the relevant data from the
+reference and study dataset and how to filter matching variants.</p>
+<div class="section level4">
+<h4 id="filter-reference-and-study-data-for-non-a-t-or-g-c-snps">Filter reference and study data for non A-T or G-C SNPs<a class="anchor" aria-label="anchor" href="#filter-reference-and-study-data-for-non-a-t-or-g-c-snps"></a>
+</h4>
+<p>We will use an awk script to find non-A/T and non-G/C SNPs, as these
+SNPs are more difficult to align, and remove them from both the
+reference and study data sets. In addition, we will only keep the
+autosomes (chr 1-22), only keep snps (snps-only), of those, keep only
+the biallelic ones (max-alleles 2), and remove any duplicates
+(rm-dup).</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps</span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>    <span class="va">$refdir</span>/<span class="va">$refname</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps</span>
+<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a>   </span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$refdir</span>/<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb23-12"><a href="#cb23-12" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
+<span id="cb23-13"><a href="#cb23-13" tabindex="-1"></a>      <span class="at">--snps-only</span> just-acgt <span class="dt">\</span></span>
+<span id="cb23-14"><a href="#cb23-14" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps <span class="dt">\</span></span>
+<span id="cb23-15"><a href="#cb23-15" tabindex="-1"></a>      <span class="at">--chr</span> 1-22 <span class="dt">\</span></span>
+<span id="cb23-16"><a href="#cb23-16" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb23-17"><a href="#cb23-17" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps</span>
+<span id="cb23-18"><a href="#cb23-18" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.no_ac_gt_snps.log</span>
+<span id="cb23-19"><a href="#cb23-19" tabindex="-1"></a></span>
+<span id="cb23-20"><a href="#cb23-20" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span> <span class="dt">\</span></span>
+<span id="cb23-21"><a href="#cb23-21" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb23-22"><a href="#cb23-22" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
+<span id="cb23-23"><a href="#cb23-23" tabindex="-1"></a>      <span class="at">--snps-only</span> just-acgt <span class="dt">\</span></span>
+<span id="cb23-24"><a href="#cb23-24" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps <span class="dt">\</span></span>
+<span id="cb23-25"><a href="#cb23-25" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb23-26"><a href="#cb23-26" tabindex="-1"></a>      <span class="at">--chr</span> 1-22 <span class="dt">\</span></span>
+<span id="cb23-27"><a href="#cb23-27" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> <span class="dt">\</span></span>
+<span id="cb23-28"><a href="#cb23-28" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps</span>
+<span id="cb23-29"><a href="#cb23-29" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.no_ac_gt_snps.log</span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="rename-variant-identifiers-to-common-scheme">Rename Variant Identifiers to common scheme<a class="anchor" aria-label="anchor" href="#rename-variant-identifiers-to-common-scheme"></a>
+</h4>
+<p>Variant identifiers can vary between studies and/or reference sets.
+For computing the genetic PC, the annotation is not important, however,
+merging the files via PLINK will only work for variants with perfectly
+matching attributes. For instance, commonly used identifiers are either
+rsIDs or a name constructed from chr-position-alleles. Here, we must
+ensure the study and reference sets use the same identifiers in order to
+merge them by renaming all variants using their chromosome and position,
+followed by the genome build. As this might introduce additional
+duplicates (e.g. identifiers that now are identical because of
+tri-allelic variants that could not be caught in the previous step), we
+will also remove duplicates again.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps <span class="dt">\</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> @:#<span class="pp">[</span><span class="ss">hg38</span><span class="pp">]</span> <span class="dt">\</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps <span class="dt">\</span></span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> @:#<span class="pp">[</span><span class="ss">hg38</span><span class="pp">]</span> <span class="dt">\</span></span>
+<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed</span>
+<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="prune-study-data">Prune study data<a class="anchor" aria-label="anchor" href="#prune-study-data"></a>
+</h4>
+<p>We will conduct principal component analysis on genetic variants that
+are pruned for variants in linkage disequilibrium (LD) with an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>r</mi><mn>2</mn></msup><mo>&gt;</mo><mn>0.2</mn></mrow><annotation encoding="application/x-tex">r^2 &gt;0.2</annotation></semantics></math>
+in a 50kb window. The LD-pruned dataset is generated below, using
+<code>plink --indep-pairwise</code> to compute the LD-variants;
+additionally <code>exclude range</code> is used to remove genomic ranges
+of known high-LD structure. This file was originally provided by <span class="citation">[1]</span> and is available in
+<code>file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')</code>.
+If there has been an update in reference data, this will need to be
+updated as well.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="va">highld</span><span class="op">=</span><span class="st">'high-LD-regions-hg38-GRCh38.txt'</span></span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed <span class="dt">\</span></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>      <span class="at">--exclude</span> range  <span class="va">$qcdir</span>/<span class="va">$highld</span> <span class="dt">\</span></span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>      <span class="at">--indep-pairwise</span> 50 5 0.2 <span class="dt">\</span></span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.renamed.prune.log</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed <span class="dt">\</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.prune.in <span class="dt">\</span></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.pruned.log</span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="filter-reference-data-for-the-same-snp-set-as-in-study">Filter reference data for the same SNP set as in study<a class="anchor" aria-label="anchor" href="#filter-reference-data-for-the-same-snp-set-as-in-study"></a>
+</h4>
+<p>We will use the list of pruned variants from the study sample to
+reduce the reference dataset to the size of the study samples:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed <span class="dt">\</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.prune.in <span class="dt">\</span></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned</span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.pruned.log</span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="merge-study-genotypes-and-reference-data">Merge study genotypes and reference data<a class="anchor" aria-label="anchor" href="#merge-study-genotypes-and-reference-data"></a>
+</h3>
+<p>The matching study and reference dataset can now be merged into a
+combined dataset with plink –bmerge. If all steps outlined above were
+conducted successfully, no mismatch errors should occur.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned <span class="dt">\</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>      <span class="at">--merge-mode</span> 6</span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.merge.<span class="va">$refname</span>.missnp.log</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned  <span class="dt">\</span></span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.missnp <span class="dt">\</span></span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span></span>
+<span id="cb28-12"><a href="#cb28-12" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="pca-on-the-merged-data">PCA on the merged data<a class="anchor" aria-label="anchor" href="#pca-on-the-merged-data"></a>
+</h3>
+<p>We can now run principal component analysis on the combined dataset
+using <code>plink --pca</code> which returns a .eigenvec file with the
+family and individual ID in columns 1 and 2, followed by the first 20
+principal components.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>      <span class="at">--pca</span> <span class="dt">\</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="check-ancestry">Check ancestry<a class="anchor" aria-label="anchor" href="#check-ancestry"></a>
+</h3>
+<p>We can use the .eigenvec file to estimate the ancestry of the study
+samples. Identifying individuals of divergent ancestry is implemented in
+<code>check_ancestry</code>. Currently, check ancestry only supports
+automatic selection of individuals of European descent. It uses
+principal components 1 and 2 to find the center of the known European
+reference samples. All study samples whose Euclidean distance from the
+centre falls outside the radius specified by the maximum Euclidean
+distance of the reference samples multiplied by the chosen
+<code>europeanTh</code> are considered non-European.
+<code>check_ancestry</code> shows the result of the ancestry analysis in
+a scatter plot of PC1 versus PC2, colour-coded for samples of the
+reference populations and the study population. Reminder, if you are
+using HapMapIII reference data, refname will be the reference name you
+have used previously. Also, the files to use are “/HapMap_ID2Pop.txt”
+instead of the Genomes1000_ID2Pop and “HapMap_PopColors.txt” instead of
+Genomes1000_PopColors.txt.</p>
+<p>Note: this vignette provides the 1000Genomes annotation files, or the
+HapMapIII annotation files. If you choose to use either 1000Genomes or
+HapMapIII reference population data, you can simply use our color
+mapping files and it should work.<br>
+If not, you must provide it to the function. An example of the color
+scheme for the 1000 Genomes reference data is found in
+‘1000Genomes_PopColors.txt’.</p>
+<p>From within R, run the following command to the ancestry check. This
+is for the 1000 Genomes Data.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://meyer-lab-cshl.github.io/plinkQC/">plinkQC</a></span><span class="op">)</span></span>
+<span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package<span class="op">=</span><span class="st">"plinkQC"</span><span class="op">)</span></span>
+<span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="st">"~/qcdir"</span></span>
+<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data'</span></span>
+<span><span class="va">refname</span> <span class="op">&lt;-</span> <span class="st">'all_hg38'</span></span>
+<span><span class="va">prefixMergedDataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"."</span>, <span class="va">refname</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">exclude_ancestry</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu"><a href="../reference/evaluate_check_ancestry.html">evaluate_check_ancestry</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
+<span>                            prefixMergedDataset<span class="op">=</span><span class="va">prefixMergedDataset</span>,</span>
+<span>                            refSamplesFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">indir</span>, </span>
+<span>                                                 <span class="st">"/Genomes1000_ID2Pop.txt"</span>,</span>
+<span>                                                 sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>, </span>
+<span>                            refColorsFile<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">indir</span>, </span>
+<span>                                                <span class="st">"/Genomes1000_PopColors.txt"</span>,</span>
+<span>                                                sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>,</span>
+<span>                            interactive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="checkAncestry.png" width="500px" style="display: block; margin: auto;"></p>
+<p>After these steps, this .eigenvec file can be used to build a random
+forest.<br>
+The steps for this process are described in [link next vignette]. For
+now, I am putting the Random Forest documentation here.</p>
+</div>
+<div class="section level3">
+<h3 id="random-forest-classification">Random Forest Classification<a class="anchor" aria-label="anchor" href="#random-forest-classification"></a>
+</h3>
+<p>The previous <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry
+estimation vignette</a> performed PCA from the combined study and
+reference dataset and identified individuals of European descent based
+on clustering of data in the first and second PC space. In this two
+dimensional space, there is no adequate identification of individuals of
+other ancestries. In this vignette, we will train a random forest
+classifier that uses up to 20 PCs to sufficiently estimate the study
+samples’ ancestry based on any ancestry in the reference dataset.</p>
+<p>We use the .eigenvec file that was created when preparing files for
+ancestry estimation, and read in its dataframe. The file contains the
+eigenvectors for the PCA on the LD-pruned genotype data. The .eigenvec
+file only included the eigenvalues per PC for each individual and did
+not include any information regarding individual’s ancestries.
+Therefore, the file available in the plinkQC download, which contains a
+dataframe with each individual’s ID, their family ID, and their
+associated ancestry must be obtained and read in, as obtained from the
+1000 Genomes database. These two files are to be joined by ID and
+filtered to remove any IDs where no genetic data were available.</p>
+<p>The file paths must change!!!</p>
+<pre><code>Definitely do not need all of these: 
+
+library(plinkQC)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(randomForest)
+require(caTools)
+library(caret)
+library(tidyverse)
+library(pipeR)
+library(rlist)</code></pre>
+<p>Here, we will read in both files with corresponding data frames.</p>
+<pre><code><span><span class="co"># Read in both data frames </span></span>
+<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="st">'~/Ancestry/build_forest/train_data'</span>, col_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="st">"~/Ancestry/build_forest/Genomes1000_ID2Pop.txt"</span><span class="op">)</span></span></code></pre>
+<p>The PC, training data, and ancestry files are correctly formatted,
+the ancestry file is filtered to remove IDs that have no corresponding
+genetic data, and the files are then joined by ID.</p>
+<pre><code><span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">X1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">g_1000</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fam_ID"</span>, <span class="st">"ID"</span>, <span class="st">"Ancestry"</span><span class="op">)</span></span>
+<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="va">ancestry_info</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">$</span><span class="va">ID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">g_1000</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span>
+<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span></span></code></pre>
+<p>The documentation below provides visuals of ancestry data for your
+understanding by making a histogram, <code>hist</code>, of individuals
+per ancestry in our data set. In a random forest classification, the
+original data set is split into training and testing subsets. Below, 20
+individuals from each ancestry are chosen at random to avoid any under
+or over representation on one ancestry during this split, shown in
+<code>test_hist</code>. These 20 individuals are then saved and removed
+from the data set to create two distinct sets, and the ancestries are
+converted into a factor instead of a categorical value.</p>
+<pre><code><span><span class="va">ancestries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span>
+<span><span class="va">hist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">ancestries</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ancestries</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Sample 20 ancestry sepcific individuals</span></span>
+<span><span class="va">n_individuals</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span><span class="op">)</span>, <span class="va">ancestry_info</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># I changed this to use g_1000 instead of ancestry_info, because ancestry_info</span></span>
+<span><span class="co"># was creating samples that were above the 2584 samples that are in g_1000</span></span>
+<span></span>
+<span><span class="va">test.ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">idx</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">n_individuals</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># For each population, it extracts the ids that were sampled above</span></span>
+<span><span class="va">ancestry.test</span> <span class="op">&lt;-</span> <span class="va">ancestry_info</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">test.ids</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co"># Histogram of testing set to show sampling was successful. </span></span>
+<span><span class="va">test_hist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">ancestry.test</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ancestry.test</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Remove the `test.ids` from `g_1000` and `ancestry_info` data objects. </span></span>
+<span><span class="va">ids_to_remove</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">test.ids</span>, use.names <span class="op">=</span> <span class="cn">FALSE</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span><span class="op">[</span><span class="op">-</span><span class="va">ids_to_remove</span>,<span class="op">]</span></span>
+<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="va">ancestry_info</span><span class="op">[</span><span class="op">-</span><span class="va">ids_to_remove</span>,<span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Covert Ancestry value to a factor instead of categorical value. </span></span>
+<span><span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span></code></pre>
+<p>Now that the files are correctly formatted, we are able to run a
+random forest classification on out Ancestry data object. The
+documentation is below.</p>
+<pre><code><span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
+<span>                   ntree <span class="op">=</span> <span class="fl">750</span>,</span>
+<span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">rf</span></span></code></pre>
+<p>Below provides documentation for a heatmap of the ancestries.<br>
+From the heatmap, you may see that there are some false estimations. The
+next section will allow us to tune the random forest in an attempt to
+improve accuracy.</p>
+<pre><code><span><span class="va">my_rf</span> <span class="op">&lt;-</span> <span class="va">rf</span><span class="op">$</span><span class="va">confusion</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="va">my_rf</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">27</span><span class="op">)</span><span class="op">]</span>, scale <span class="op">=</span> <span class="st">'column'</span>, trace <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span></span></code></pre>
+</div>
+</div>
+<div class="section level2">
+<h2 id="parameter-tuning-1">Parameter Tuning<a class="anchor" aria-label="anchor" href="#parameter-tuning-1"></a>
+</h2>
+<p>Tuning the parameters for this random forest is crucial in building a
+machine-learning model to produce the best forest, in this case having
+the highest accuracy.</p>
+<div class="section level4">
+<h4 id="number-of-trees-1">Number of Trees<a class="anchor" aria-label="anchor" href="#number-of-trees-1"></a>
+</h4>
+<p>A random forest model is comprised of building several trees and the
+‘Number of trees’ parameter decides exactly how many decision trees will
+constitute the random forest. Although there exists a positive
+relationship between the number of trees and predictive performance of
+the model, there exists a point where continuing to increase the number
+of trees will no longer find you a better prediction while elongating
+computational efficiency. There also exists a tradeoff between
+predictive performance and computational efficiency. Excess trees also
+pose a possible issue of overfitting as more trees are trained. It is
+important for your dataset to test and find the point of diminishing
+returns. For the example below of the 1000 Genomes set, 500-1000 trees
+allows accurate predictions to be made, while also staying
+computationally efficient.</p>
+<pre><code><span><span class="va">rf_100_trees</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                   ntree <span class="op">=</span> <span class="fl">100</span>, </span>
+<span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
+<span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">rf_500_trees</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                   ntree <span class="op">=</span> <span class="fl">500</span>, </span>
+<span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
+<span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  </span>
+<span></span>
+<span><span class="va">rf_10000_trees</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                   ntree <span class="op">=</span> <span class="fl">10000</span>, </span>
+<span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
+<span>                   mtry <span class="op">=</span> <span class="va">best_mtry</span>,</span>
+<span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="mtry-1">Mtry<a class="anchor" aria-label="anchor" href="#mtry-1"></a>
+</h3>
+<p>The mrty parameter controls the number of variables tried at each
+split. During decision tree construcrion process, the confirmation that
+no two trees look exactly the same must be investiagted. More
+specifically, this mtry parameter controls the number of input features
+a decision tree is able to consider at any moment during tree
+construction and controls how much randomness is added during the
+process. Testing different values of mtry is crucial and can greatly
+impact the model’s performance. For every new split that is added as a
+node to a decision tree, mtry controls how many of the PC variables are
+allowed to be considered for each successive split.</p>
+<p>If the value of mtry is too large and each model has access to all
+features as every split, there will not be as much randomness in the
+model and the decision trees may look very similar to each other,
+reducing the benefits of building multiple independent decision trees.
+Two common heuristics for choosing an mtry value is for the value of the
+parameter to either be the square root of or log base 2 of the total
+number of features. For the example below, those values end up being
+about 4.47 and 4.32, respectively; 4 was chosen to avoid the effect of a
+large mtry that diminishes the randomness in the model.</p>
+<p>Here, three mtry values will be tested and the best found value will
+be the one with the smallest OOB error, and will be saved into the
+<code>best_mtry</code> variable. At each iteration, the mtry will be
+inflated or deflated by the stepFactor value. The <code>improve</code>
+specifies the relative improvement in OOB error rate must be improved by
+that much for the search to continue. The <code>trace</code> specifies
+whether to print the progress of the search, and <code>plot</code> says
+whether to plot the OOB error as a function of mtry. We can then build
+the random forest model again using the best saved mtry value.</p>
+<pre><code><span><span class="co"># This first line will provide the best mtry </span></span>
+<span><span class="va">mtry</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/tuneRF.html" class="external-link">tuneRF</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span>, </span>
+<span>              stepFactor <span class="op">=</span> <span class="fl">1.5</span>, improve <span class="op">=</span> <span class="fl">0.01</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">best_mtry</span> <span class="op">&lt;-</span> <span class="va">mtry</span><span class="op">[</span><span class="va">mtry</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">mtry</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span>, <span class="fl">1</span><span class="op">]</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">rf_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>                        data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                        mtry <span class="op">=</span> <span class="va">best_mtry</span>, </span>
 <span>                        ntree <span class="op">=</span> <span class="fl">1500</span>,</span>
@@ -570,7 +920,7 @@ the random forest model again using the best saved mtry value.</p>
 <span>                        importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">rf_mtry</span></span></code></pre>
 <div class="section level4">
-<h4 id="k-fold-cross-validation">K-fold Cross Validation<a class="anchor" aria-label="anchor" href="#k-fold-cross-validation"></a>
+<h4 id="k-fold-cross-validation-1">K-fold Cross Validation<a class="anchor" aria-label="anchor" href="#k-fold-cross-validation-1"></a>
 </h4>
 <p>Cross-validation is used to estimate the skill of a machine learning
 model on unseen data. When tuning this RF model, k-fold cross validation
@@ -622,7 +972,7 @@ validation.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="evaluatinginterpretting-the-rf">Evaluating/Interpretting the RF<a class="anchor" aria-label="anchor" href="#evaluatinginterpretting-the-rf"></a>
+<h3 id="evaluatinginterpretting-the-rf-1">Evaluating/Interpretting the RF<a class="anchor" aria-label="anchor" href="#evaluatinginterpretting-the-rf-1"></a>
 </h3>
 <p>Once you have found a successful OOB error rate, you can use the
 below package to find out important information regarding your tree. The
@@ -637,34 +987,38 @@ only a subset of a decision tree the random forest builds as classifying
 all 26 ancestries builds quite a complicated and cluttered plot.</p>
 <pre><code><span><span class="co"># This is a visual of the random forest being made. </span></span>
 <span><span class="co"># https://github.com/araastat/reprtree</span></span>
-<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/reprtree/man/plot.getTree.html" class="external-link">plot.getTree</a></span><span class="op">(</span><span class="va">rf_mtry</span><span class="op">)</span></span>
+<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu">plot.getTree</span><span class="op">(</span><span class="va">rf_mtry</span><span class="op">)</span></span>
 <span><span class="co"># Two different plots </span></span>
-<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/reprtree/man/plot.getTree.html" class="external-link">plot.getTree</a></span><span class="op">(</span><span class="va">rf_mtry</span>, k<span class="op">=</span><span class="fl">1</span>, d<span class="op">=</span><span class="fl">5</span><span class="op">)</span> </span>
-<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/reprtree/man/plot.getTree.html" class="external-link">plot.getTree</a></span><span class="op">(</span><span class="va">rf_mtry</span>, k<span class="op">=</span><span class="fl">1</span>, d<span class="op">=</span><span class="fl">6</span><span class="op">)</span> </span></code></pre>
-<p><img src="broad.png" alt="This shows a subset of categorical aspects of the data that are used to find true/false answers. To correctly classify a sample the Luhya in Webuye, Kenya ancestry (LWK), we see we only need to investigate whether the PC value for PC 8 is more or less than 0.04457765. If it is not smaller than that value, it is classified as LWK ancestry. This continues on to classify the remaining ancestry groups.">
-## Making a random forest to classify superpopulation</p>
-<pre><code><span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="fu">read_delim</span><span class="op">(</span><span class="st">'~/Ancestry/build_forest/train_data'</span>, col_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="fu">read_delim</span><span class="op">(</span><span class="st">"~/Ancestry/build_forest/Genomes1000_ID2Pop.txt"</span><span class="op">)</span></span>
-<span><span class="va">broader_ancestries</span> <span class="op">&lt;-</span> <span class="fu">read_delim</span><span class="op">(</span><span class="st">"~/Ancestry/build_forest/AncestryGeoLocations.csv"</span><span class="op">)</span></span>
+<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu">plot.getTree</span><span class="op">(</span><span class="va">rf_mtry</span>, k<span class="op">=</span><span class="fl">1</span>, d<span class="op">=</span><span class="fl">5</span><span class="op">)</span> </span>
+<span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu">plot.getTree</span><span class="op">(</span><span class="va">rf_mtry</span>, k<span class="op">=</span><span class="fl">1</span>, d<span class="op">=</span><span class="fl">6</span><span class="op">)</span> </span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="making-a-random-forest-to-classify-superpopulation">Making a random forest to classify superpopulation<a class="anchor" aria-label="anchor" href="#making-a-random-forest-to-classify-superpopulation"></a>
+</h3>
+<pre><code><span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="st">'~/Ancestry/build_forest/train_data'</span>, col_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="st">"~/Ancestry/build_forest/Genomes1000_ID2Pop.txt"</span><span class="op">)</span></span>
+<span><span class="va">broader_ancestries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="st">"~/Ancestry/build_forest/AncestryGeoLocations.csv"</span><span class="op">)</span></span>
+<span><span class="co"># This line below is for the map construction visual</span></span>
 <span><span class="va">broader_ancestries</span><span class="op">$</span><span class="va">latitude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">broader_ancestries</span><span class="op">$</span><span class="va">latitude</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">X1</span><span class="op">)</span></span>
+<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">X1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">g_1000</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fam_ID"</span>, <span class="st">"ID"</span>, <span class="st">"Ancestry"</span><span class="op">)</span></span>
-<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="va">ancestry_info</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">$</span><span class="va">ID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">g_1000</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span>
+<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="va">ancestry_info</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">$</span><span class="va">ID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">g_1000</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op">%&gt;%</span>  <span class="co">#t    raining data</span></span>
-<span>  <span class="fu">left_join</span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span></span>
+<span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="co">#t    raining data</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df2</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">right_join</span><span class="op">(</span><span class="va">broader_ancestries</span>, by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ancestry"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># These are again for the map construction - but also useful in building rf for superpopulation</span></span>
+<span><span class="va">df_superpop</span> <span class="op">&lt;-</span> <span class="va">g_1000</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">right_join</a></span><span class="op">(</span><span class="va">broader_ancestries</span>, by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ancestry"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df_superpop</span><span class="op">$</span><span class="va">superpopulation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">df_superpop</span><span class="op">$</span><span class="va">superpopulation</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df2</span><span class="op">$</span><span class="va">superpopulation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">df2</span><span class="op">$</span><span class="va">superpopulation</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">rf_superpop</span> <span class="op">&lt;-</span> <span class="fu">randomForest</span><span class="op">(</span><span class="va">superpopulation</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span><span class="co"># Ignore - this needs to be fixed</span></span>
+<span><span class="va">rf_superpop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">superpopulation</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>                   data <span class="op">=</span> <span class="va">df2</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">22</span>, <span class="fl">23</span>, <span class="fl">24</span>, <span class="fl">25</span>, <span class="fl">26</span>, <span class="fl">27</span>, <span class="fl">29</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                   method <span class="op">=</span> <span class="st">"rf"</span>, </span>
 <span>                   importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
@@ -683,7 +1037,7 @@ Genomes Population Database on Map</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://r-spatial.github.io/sf/" class="external-link">"sf"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://docs.ropensci.org/rnaturalearth/" class="external-link">"rnaturalearth"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"RColorBrewer"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ropenscilabs/rnaturalearthdata" class="external-link">"rnaturalearthdata"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://docs.ropensci.org/rnaturalearthdata/" class="external-link">"rnaturalearthdata"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">g_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="st">'~/Ancestry/build_forest/train_data'</span>, col_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="st">"~/Ancestry/build_forest/Genomes1000_ID2Pop.txt"</span><span class="op">)</span></span>
@@ -727,15 +1081,23 @@ Genomes Population Database on Map</p>
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body">
-<div id="ref-HapMap2005" class="csl-entry">
+<div id="ref-Anderson2010" class="csl-entry">
 <div class="csl-left-margin">1. </div>
+<div class="csl-right-inline">Anderson CA, Pettersson FH, Clarke GM, Cardon
+LR, Morris AP, Zondervan KT. <span class="nocase">Data quality control
+in genetic case-control association studies.</span> Nature Protocols.
+2010;5: 1564–73. doi:<a href="https://doi.org/10.1038/nprot.2010.116" class="external-link">10.1038/nprot.2010.116</a>
+</div>
+</div>
+<div id="ref-HapMap2005" class="csl-entry">
+<div class="csl-left-margin">2. </div>
 <div class="csl-right-inline">The
 International HapMap Consortium. <span class="nocase">A haplotype map of
 the human genome.</span> Nature. 2005;437: 1299–320. doi:<a href="https://doi.org/10.1038/nature04226" class="external-link">10.1038/nature04226</a>
 </div>
 </div>
 <div id="ref-HapMap2007" class="csl-entry">
-<div class="csl-left-margin">2. </div>
+<div class="csl-left-margin">3. </div>
 <div class="csl-right-inline">The
 International HapMap Consortium. <span class="nocase">A second
 generation human haplotype map of over 3.1 million SNPs</span>. Nature.
@@ -743,7 +1105,7 @@ generation human haplotype map of over 3.1 million SNPs</span>. Nature.
 </div>
 </div>
 <div id="ref-HapMap2010" class="csl-entry">
-<div class="csl-left-margin">3. </div>
+<div class="csl-left-margin">4. </div>
 <div class="csl-right-inline">The
 International HapMap Consortium. <span class="nocase">Integrating common
 and rare genetic variation in diverse human populations</span>. Nature.
@@ -751,7 +1113,7 @@ and rare genetic variation in diverse human populations</span>. Nature.
 </div>
 </div>
 <div id="ref-a1000Genomes2015" class="csl-entry">
-<div class="csl-left-margin">4. </div>
+<div class="csl-left-margin">5. </div>
 <div class="csl-right-inline">1000
 Genomes Project Consortium. <span class="nocase">An integrated map of
 structural variation in 2,504 human genomes</span>. Nature. 2015;526:
@@ -759,51 +1121,34 @@ structural variation in 2,504 human genomes</span>. Nature. 2015;526:
 </div>
 </div>
 <div id="ref-b1000Genomes2015" class="csl-entry">
-<div class="csl-left-margin">5. </div>
+<div class="csl-left-margin">6. </div>
 <div class="csl-right-inline">1000
 Genomes Project Consortium. <span class="nocase">A global reference for
 human genetic variation</span>. Nature. 2015;526: 75–81. doi:<a href="https://doi.org/10.1038/nature15393" class="external-link">10.1038/nature15393</a>
 </div>
 </div>
-<div id="ref-Anderson2010" class="csl-entry">
-<div class="csl-left-margin">6. </div>
-<div class="csl-right-inline">Anderson CA, Pettersson FH, Clarke GM, Cardon
-LR, Morris AP, Zondervan KT. <span class="nocase">Data quality control
-in genetic case-control association studies.</span> Nature Protocols.
-2010;5: 1564–73. doi:<a href="https://doi.org/10.1038/nprot.2010.116" class="external-link">10.1038/nprot.2010.116</a>
 </div>
 </div>
-</div>
-</div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Hannah Meyer.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Hannah Meyer.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
-  
 
 
-  
+
 
   </body>
 </html>
