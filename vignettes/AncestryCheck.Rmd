@@ -23,11 +23,14 @@ knitr::opts_chunk$set(
 ```
 
 ## Running Random Forest Classification
-
 This package contains a classier to predict the ancestry of samples. This works 
 through a random forest algorithm trained on the principal components of
 cleaned genomics data from the [1000 genomes dataset](https://www.internationalgenome.org/data/).
-For this portion of the package, [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed. 
+This method is based off the ancestry identification scheme used in the [Pan-UK 
+BioBank analysis](https://pan.ukbb.broadinstitute.org/). 
+
+[Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of 
+the package. 
 
 ### Workflow
 
@@ -168,8 +171,7 @@ plink2 --pfile filtered_hg38.pruned
 
 ```
 
-From this, this will be used to train the random forest algorithm in R. The 
-information about the samples is included in the extdata/ folder of the package. 
+From this, this will be used to train the random forest algorithm in R. 
 ```{r, eval = FALSE}
 library(tidyverse)
 library(randomForest)
