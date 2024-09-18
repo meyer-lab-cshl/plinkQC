@@ -23,14 +23,23 @@ knitr::opts_chunk$set(
 ```
 
 ## Running Random Forest Classification
-This package contains a classier to predict the ancestry of samples. This works 
+This package contains a function to predict ancestry of samples. This works 
 through a random forest algorithm trained on the principal components of
 cleaned genomics data from the [1000 genomes dataset](https://www.internationalgenome.org/data/).
 This method is based off the ancestry identification scheme used in the [Pan-UK 
 BioBank analysis](https://pan.ukbb.broadinstitute.org/). 
 
 [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of 
-the package. 
+the package. In addition, there is a data repository containing necessary files for
+running the provided pre-trained classier here: https://github.com/meyer-lab-cshl/plinkQCAncestryData/tree/main. [Git Large File Storage extention] (https://git-lfs.com/) needs to be pre-installed to get the correct files.  
+This can be downloaded from github with:
+```{bash installing github, eval=FALSE}
+git clone git@github.com:meyer-lab-cshl/plinkQCAncestryData.git
+```
+
+If the zip folder downloaded is a smaller size than the expected 251.3MB, run 
+`git lfs fetch` to make sure the correct file gets downloaded. Then, unzip the folder
+for future. 
 
 ### Workflow
 
@@ -42,6 +51,7 @@ indir <- file.path(package.dir, 'extdata')
 qcdir <- tempdir()
 name <- 'data.hg38'
 path2plink2 <- "/Users/syed/bin/plink2"
+path2load_mat <- "/Users/syed/Documents/loading_matrix"
 ```
 
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
@@ -64,7 +74,8 @@ name <- paste0(name, ".renamed")
 After correctly formatting the data, we can use the provided function to return the sample ids and predicted ancestry. 
 ``` {R ancestry identification, eval = FALSE}
 ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
-                                      path2plink2 = path2plink2) 
+                                      path2plink2 = path2plink2, 
+                                      path2load_mat = path2load_mat) 
 head(ancestries)
 ```
 
@@ -177,108 +188,96 @@ library(tidyverse)
 library(randomForest)
 
 filepath <- '~/qcdir/filtered_hg38.projection.sscore'
-proj_1000g <- read.csv(
+proj <- read.csv(
   file= filepath,
   sep='\t', header = TRUE)
 
 package.dir <- find.package('plinkQC')
 ancestry_info <- 
   read_delim(file.path(package.dir,"extdata/Genomes1000_ID2Pop.txt"))
+superpop <- 
+  read_delim(file.path(package.dir,"extdata/AncestryGeoLocations.csv"))
 ```
 
-We divide up the data into a testing and training portion. Since there is not an 
-even representation of each ancestral group within the data, we will sample the data
-to ensure there is an even representation of each ancestral group in the testing 
-portion to ensure our model works well on each of the groups. 
+We divide up the data into a 70% training portion and 30% testing portion.
+To ensure a balanced model, we will sample the data to ensure an even representation of each ancestral superpopulation group in the testing portion of the data.
+For a roughly 70% split of the data, this is 448 samples in each of the five ancestral groups.
+
 
 ``` {r, eval = FALSE}
-proj_1000g <- proj_1000g %>%
+proj <- proj %>%
   select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
-colnames(proj_1000g) <- c("ID", paste0("PC", 1:20))
-colnames(ancestry_info) <- c("Fam_ID", "ID", "Ancestry")
+colnames(proj) <- c("IID", paste0("PC", 1:20))
 
-labeled_proj <- merge(proj_1000g, ancestry_info)
+#turning ancestry info to have the superpopulation
+labeled_proj <- merge(proj, superpop_id)
 
-n_individuals <- 20
+n_individuals <- 448
 set.seed(123)
 idx <- split(seq(nrow(labeled_proj)), labeled_proj$Ancestry)
 
-test.ids <- lapply(idx, function(i) {
+train.ids <- lapply(idx, function(i) {
   sample(i, n_individuals)
 })
 
-# For each population, it extracts the ids that were sampled above
-ancestry.test <- labeled_proj$Ancestry[unlist(test.ids)]
-# Histogram of testing set to show sampling was successful. 
-test_hist <- ggplot(data.frame(ancestry.test), aes(x = ancestry.test)) + geom_bar()
-
-# Remove the `test.ids` from `g_1000` and `ancestry_info` data objects. 
-ids_to_remove <- unlist(test.ids, use.names = FALSE, recursive = FALSE)
-test_proj_1000g <- labeled_proj[-ids_to_remove,]
+ids_to_keeps<- unlist(train.ids, use.names = FALSE, recursive = FALSE)
+train_proj_1000g <- labeled_proj[ids_to_keeps,]
 
 ```
 
 Then, we can train the random forest.
 ```{r, eval = FALSE}
-superpop <- randomForest(superpopulation_code ~ .,
-                              data = super_proj1000[,-c(1,2, 23)], 
-                              method = "rf", 
-                              ntree = 750,
-                              importance = TRUE)
+train_proj_1000g$Ancestry <- factor(train_proj_1000g$Ancestry)
+
+ancestry_rf <- randomForest(Ancestry ~ .,
+                        data = train_proj_1000g[,-c(2,23)], 
+                        method = "rf", 
+                        ntree = 750,
+                        importance = TRUE)
+ancestry_rf
+
 ```
 
 ### Predicting ancestries of new study data
 
-To predict newdata, you need to project the newdata onto the principal components. 
-This is done with the --score function in plink2 which can be inputted into the 
-random forest algorithm. 
+To predict the ancestries of a new study dataset with our trained random forest, 
+you need to project the newdata onto the principal components of the reference dataset. 
+This is done with the --score function in plink2. The projection is then used as 
+an input for the random forest. 
 ```{bash project newdata, eval=FALSE}
 plink2 --pfile newdata 
        --read-freq all_hg38.pca.acount 
        --score all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize 
-       --score-col-nums 7-26 --out all_hg38.projection
+       --score-col-nums 7-26 --out newdata.projection
 ```
 
 Then we can clean the data in preparation to be used for training the random forest
 algorithm. 
 
 ```{r, eval = FALSE}
-package.dir <- find.package('plinkQC')
-ancestry_info <- 
-  read_delim(file.path(package.dir,"extdata/Genomes1000_ID2Pop.txt"))
-superpop <- 
-  read_csv(file.path(package.dir, "extdata/AncestryGeoLocations.csv"))
-proj <- read.csv(
-  file="all_hg38.projection", 
+filepath <- "Insert path to newdata.sscore here"
+newdata <- read.csv(
+  file= filepath, 
   sep='\t', header = TRUE)
 
-proj <- proj %>%
+newdata <- newdata %>%
   select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
-colnames(proj) <- c("ID", paste0("PC", 1:20))
-colnames(ancestry_info) <- c("Fam_ID", "ID", "Ancestry")
+colnames(newdata) <- c("ID", paste0("PC", 1:20))
 
-superpop_code <- superpop %>%
-  select(c(Ancestry, superpopulation_code))
-
-labeled_proj <- merge(proj, ancestry_info)
-super_proj1000 <- merge(labeled_proj, superpop_code)
-super_proj1000$superpopulation_code <- factor(super_proj1000$superpopulation_code)
-
-predictions <- predict(superpop, super_proj1000)
+predictions <- predict(ancestry_rf, newdata)
 ```
 
 ### Evalulating and Tuning Classification
 To evaluate the accuracy of the model, a commonly used metric is the out-of-bag 
 error rate and confusion matrix. The confusion matrix displays the number of correct classifications for each ancestry along the diagonal. Any values outside the diagonal are misclassifications for that other ancestry. A summary of these metrics can be seen through:
-```
-superpop
+``` {R, eval = FALSE}
+ancestry_rf
 ```
 And we can visualize the confusion matrix as a heatmap.
 ```{r, eval = FALSE}
-my_rf <- rf$confusion
+my_rf <- ancestry_rf$confusion
 heatmap(my_rf[,-c(27)], scale = 'column', trace = 'none')
 ```
-
 
 # Parameter Tuning
 Tuning the parameters for this random forest is crucial in building a 
@@ -419,7 +418,7 @@ to find out important information regarding your tree. The below documentation
 builds a decision tree using categorical aspects to classify the data. The PC 
 values for each sample are provided in our 1000 Genomes reference dataset file, 
 where each sample has values for 20 distinct PCs. We ask if a certain sample's
-value for a specific PC is less than or greater than a given numer.  Based on
+value for a specific PC is less than or greater than a given number.  Based on
 that answer, it is either classified as a specific ancestry or needs to undergo
 more investigation to classify it correctly. For comprehensability, this is only
 a subset of a decision tree the random forest builds as classifying all 26 

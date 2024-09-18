@@ -73,6 +73,8 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' default is qcdir=indir.  
 #' @param name [character] Prefix of PLINK 2.0 files, i.e. name.pgen, name.pvar, 
 #' name.psam
+#' @param path2load_mat [character] /path/to/directory where loading matrices are 
+#' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData
 #' @inheritParams checkPlink2
 #' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
@@ -94,29 +96,44 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' }
 superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     path2plink2=NULL,
+                                    path2load_mat=NULL,
                                     keep_individuals=NULL,
                                     remove_individuals=NULL,
                                     exclude_markers=NULL,
                                     extract_markers=NULL,
                                     showPlinkOutput=TRUE) {
+  
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
 
   checkFormatPlink2(prefix)
   path2plink2 <- checkPlink2(path2plink2)
-  
-  pca_files <- tempdir()
-  ref_pca_acount <- system.file("extdata", 'all_hg38_0821.acount.RDS',
-                                    package="plinkQC")
-  ref_pca_eigen_allele <- system.file("extdata", 'all_hg38_0821.eigenvec.allele.RDS',
-                                package="plinkQC")
-  acount_file <- readRDS(ref_pca_acount)
-  eigen_file <- readRDS(ref_pca_eigen_allele)
-  write.table(acount_file, file = file.path(pca_files, "all_hg38.acount"),
-            sep = "\t", quote = FALSE, row.names = FALSE)
-  write.table(eigen_file, file = file.path(pca_files, "all_hg38.eigenvec.allele"),
-              sep = "\t", quote = FALSE, row.names = FALSE)
-  
+  checkLoadingMat(path2load_mat)
+   
+#  pca_files <- tempdir()
+# 
+#   ref_pca_acount <- system.file("extdata", 'all_hg38.pca.acount.zip',
+#                                     package="plinkQCAncestryData")
+#   ref_pca_eigen_allele <- system.file("extdata", 'all_hg38.pca.eigenvec.allele.zip',
+#                                 package="plinkQCAncestryData")
+#   unzip(ref_pca_acount, overwrite = FALSE, exdir = pca_files)
+#   unzip(ref_pca_eigen_allele, overwrite = FALSE, exdir = pca_files)
+#   
+
+  # ref_pca_acount <- system.file("extdata", 'all_hg38_acount.RDS',
+  #                                    package="plinkQCAncestryData")
+  # ref_pca_eigen_allele <- system.file("extdata", 'all_hg38_allele.RDS',
+  #                                package="plinkQCAncestryData")
+  # 
+  #ref_pca_acount <- "../plinkQC_validation/eigenvectors/founders_inc/all_hg38_acount.RDS"
+  #ref_pca_eigen_allele <- "../plinkQC_validation/eigenvectors/founders_inc/all_hg38_allele.RDS"
+  #acount_file <- readRDS(ref_pca_acount)
+  #eigen_file <- readRDS(ref_pca_eigen_allele)
+  # write.table(acount_file, file = file.path(pca_files, "all_hg38.acount"),
+  #           sep = "\t", quote = FALSE, row.names = FALSE)
+  # write.table(eigen_file, file = file.path(pca_files, "all_hg38.eigenvec.allele"),
+  #             sep = "\t", quote = FALSE, row.names = FALSE)
+
   if (showPlinkOutput) {
     showPlinkOutput = ""
   }
@@ -131,8 +148,8 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   system2(path2plink2, 
           args=c("--pfile", prefix,
                  args_filter,
-                 "--read-freq", file.path(pca_files, "all_hg38.acount"),
-                 "--score", file.path(pca_files, "all_hg38.eigenvec.allele"),
+                 "--read-freq", makepath(path2load_mat, "all_hg38.pca.acount"),
+                 "--score", makepath(path2load_mat, "all_hg38.pca.eigenvec.allele"),
                  "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
                  "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
@@ -140,15 +157,18 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   proj <- read.csv(paste0(out,".sscore"), 
                    sep='\t', header = TRUE)
 
-  colnames(proj) <- c("ID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
+  colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
   
   #load RF
-  rf_path <- system.file("extdata", 'superpop_rf_0821.rds',
+  rf_path <- system.file("extdata", 'superpop_rf_0909.RDS',
               package="plinkQC")
   superpop <- readRDS(rf_path)
   predictions <- predict(superpop, proj)
-  names(predictions) <- proj$ID
-  return(data.frame(predictions))
+  names(predictions) <- proj$IID
+  
+  predictions <- data.frame(predictions)
+  
+  return(predictions)
 }
 
 
@@ -199,7 +219,7 @@ rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
   else {
     showPlinkOutput = FALSE 
   }
-  
+   
   system2(path2plink2, 
           args=c("--pfile", prefix,
                  "--set-all-var-ids", paste0('"', format, '"'),
@@ -209,5 +229,16 @@ rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 }
 
-  
-  
+
+
+checkLoadingMat <- function(path2load_mat) {
+  if (!file.exists(makepath(path2load_mat, "all_hg38.pca.acount"))) {
+    stop("The file all_hg38.pca.acount is not found in the path given. Please 
+         check that the file path is correct")
+  }
+  if (!file.exists(makepath(path2load_mat, "all_hg38.pca.eigenvec.allele"))) {
+    stop("The file all_hg38.pca.eigenvec.allele is not found in the path given. 
+    Please check that the file path is correct")
+  }
+}
+
