@@ -77,6 +77,9 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData
 #' @inheritParams checkPlink2
 #' @inheritParams checkFiltering
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param title_size [integer] Size for plot title.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -101,6 +104,9 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     remove_individuals=NULL,
                                     exclude_markers=NULL,
                                     extract_markers=NULL,
+                                    axis_text_size = 5,
+                                    axis_title_size = 7,
+                                    title_size = 9,
                                     showPlinkOutput=TRUE) {
   
   prefix <- makepath(indir, name)
@@ -109,30 +115,6 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   checkFormatPlink2(prefix)
   path2plink2 <- checkPlink2(path2plink2)
   checkLoadingMat(path2load_mat)
-   
-#  pca_files <- tempdir()
-# 
-#   ref_pca_acount <- system.file("extdata", 'all_hg38.pca.acount.zip',
-#                                     package="plinkQCAncestryData")
-#   ref_pca_eigen_allele <- system.file("extdata", 'all_hg38.pca.eigenvec.allele.zip',
-#                                 package="plinkQCAncestryData")
-#   unzip(ref_pca_acount, overwrite = FALSE, exdir = pca_files)
-#   unzip(ref_pca_eigen_allele, overwrite = FALSE, exdir = pca_files)
-#   
-
-  # ref_pca_acount <- system.file("extdata", 'all_hg38_acount.RDS',
-  #                                    package="plinkQCAncestryData")
-  # ref_pca_eigen_allele <- system.file("extdata", 'all_hg38_allele.RDS',
-  #                                package="plinkQCAncestryData")
-  # 
-  #ref_pca_acount <- "../plinkQC_validation/eigenvectors/founders_inc/all_hg38_acount.RDS"
-  #ref_pca_eigen_allele <- "../plinkQC_validation/eigenvectors/founders_inc/all_hg38_allele.RDS"
-  #acount_file <- readRDS(ref_pca_acount)
-  #eigen_file <- readRDS(ref_pca_eigen_allele)
-  # write.table(acount_file, file = file.path(pca_files, "all_hg38.acount"),
-  #           sep = "\t", quote = FALSE, row.names = FALSE)
-  # write.table(eigen_file, file = file.path(pca_files, "all_hg38.eigenvec.allele"),
-  #             sep = "\t", quote = FALSE, row.names = FALSE)
 
   if (showPlinkOutput) {
     showPlinkOutput = ""
@@ -168,7 +150,15 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   
   predictions <- data.frame(predictions)
   
-  return(predictions)
+  p_ancestry <- 
+    ggplot(predictions, aes(x = predictions, fill = predictions)) + geom_bar() + 
+    xlab("Ancestral Prediction") + ylab("Count") + 
+    theme_bw() + 
+    theme(legend.position = "none",
+          title = element_text(size = title_size),
+          axis.text = element_text(size = axis_text_size),
+          axis.title = element_text(size = axis_title_size))
+  return(list(predictions=predictions, p_ancestry = p_ancestry))
 }
 
 

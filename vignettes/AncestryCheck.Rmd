@@ -31,15 +31,14 @@ BioBank analysis](https://pan.ukbb.broadinstitute.org/).
 
 [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of 
 the package. In addition, there is a data repository containing necessary files for
-running the provided pre-trained classier here: https://github.com/meyer-lab-cshl/plinkQCAncestryData/tree/main. [Git Large File Storage extention] (https://git-lfs.com/) needs to be pre-installed to get the correct files.  
+running the provided pre-trained classier here: https://github.com/meyer-lab-cshl/plinkQCAncestryData/tree/main. [Git Large File Storage extention](https://git-lfs.com/) needs to be pre-installed to get the correct files.  
 This can be downloaded from github with:
 ```{bash installing github, eval=FALSE}
 git clone git@github.com:meyer-lab-cshl/plinkQCAncestryData.git
 ```
 
 If the zip folder downloaded is a smaller size than the expected 251.3MB, run 
-`git lfs fetch` to make sure the correct file gets downloaded. Then, unzip the folder
-for future. 
+`git lfs fetch` to make sure the correct file gets downloaded. Unzip the file for future use. 
 
 ### Workflow
 
@@ -76,7 +75,7 @@ After correctly formatting the data, we can use the provided function to return 
 ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
                                       path2plink2 = path2plink2, 
                                       path2load_mat = path2load_mat) 
-head(ancestries)
+head(ancestries$predictions)
 ```
 
 ## Training Your Own Random Forest Classifier 
