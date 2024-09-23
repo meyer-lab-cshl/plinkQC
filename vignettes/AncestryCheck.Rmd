@@ -136,6 +136,8 @@ plink2 --pfile $qcdir/filtered_hg38\
        --nonfounders \
        --make-pgen \
        --out $qcdir/filtered_hg38.maf
+
+mv $qcdir/filtered_hg38.renamed.maf $qcdir/plink_log
 ```
 
 We will conduct principal component analysis on genetic variants that are
@@ -160,6 +162,8 @@ plink2 --pfile filtered_hg38.renamed \
        --extract filtered_hg38.renamed.prune.in \
        --make-pgen \
        --out filtered_hg38.pruned
+
+mv $qcdir/filtered_hg38.pruned $qcdir/plink_log
 ```
 
 After filtering out the low minor allele frequency and pruning, we will extract the principal
@@ -170,6 +174,8 @@ plink2 --pfile filtered_hg38.pruned \
        --freq counts \
        --pca allele-wts 20 \
        --out filtered_hg38.pruned.pca
+       
+mv $qcdir/filtered_hg38.pruned.pca $qcdir/plink_log
 ```
 
 After running a PCA, we will project the original dataset onto the principal components.
@@ -208,7 +214,6 @@ proj <- proj %>%
   select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
 colnames(proj) <- c("IID", paste0("PC", 1:20))
 
-#turning ancestry info to have the superpopulation
 labeled_proj <- merge(proj, superpop_id)
 
 n_individuals <- 448
@@ -250,9 +255,7 @@ plink2 --pfile newdata
        --score-col-nums 7-26 --out newdata.projection
 ```
 
-Then we can clean the data in preparation to be used for training the random forest
-algorithm. 
-
+Then, we can use the random forest to predict the ancestry of the newdata. 
 ```{r, eval = FALSE}
 filepath <- "Insert path to newdata.sscore here"
 newdata <- read.csv(
@@ -297,19 +300,19 @@ below of the 1000 Genomes set, 500-1000 trees allows accurate predictions to be
 made, while also staying computationally efficient. 
 ```{r, eval = FALSE}
 rf_100_trees <- randomForest(Ancestry ~ .,
-                   data = g_1000[,-c(1,21,22)], 
+                   data = train_proj_1000g[,-c(1,21,22)], 
                    ntree = 100, 
                    method = "rf", 
                    importance = TRUE)
 
 rf_500_trees <- randomForest(Ancestry ~ .,
-                   data = g_1000[,-c(1,21,22)], 
+                   data = train_proj_1000g[,-c(1,21,22)], 
                    ntree = 500, 
                    method = "rf", 
                    importance = TRUE)  
 
 rf_10000_trees <- randomForest(Ancestry ~ .,
-                   data = g_1000[,-c(1,21,22)], 
+                   data = train_proj_1000g[,-c(1,21,22)], 
                    ntree = 10000, 
                    method = "rf", 
                    mtry = best_mtry,
@@ -345,13 +348,13 @@ a function of mtry.  We can then build the random forest model again using the
 best saved mtry value. 
 ```{r, eval = FALSE}
 # This first line will provide the best mtry 
-mtry<- tuneRF(x = g_1000[,-c(1,21,22)], y = g_1000$Ancestry, 
+mtry<- tuneRF(x = train_proj_1000g[,-c(1,21,22)], y = train_proj_1000g$Ancestry, 
               stepFactor = 1.5, improve = 0.01, trace = TRUE, plot = TRUE)
 best_mtry <- mtry[mtry[, 2] == min(mtry[, 2]), 1]
 
 set.seed(123)
 rf_mtry <- randomForest(Ancestry ~ .,
-                        data = g_1000[,-c(1,21,22)], 
+                        data = train_proj_1000g[,-c(1,21,22)], 
                         mtry = best_mtry, 
                         ntree = 1500,
                         method = "rf", 
@@ -379,13 +382,15 @@ k for k-fold cross validation.
 
 
 ```{r, eval = FALSE}
+library(caret)
+
 set.seed(123)
 trainControl_5 <- trainControl(method = "cv",
                           number = 5, 
                           search = "grid")
                           
 forest_5 <- train(Ancestry ~ .,
-               data=g_1000[,-c(1,21,22)], 
+               data=train_proj_1000g[,-c(1,21,22)], 
                method = "rf",
                metric = "Accuracy",
                trControl = trainControl_5
@@ -398,7 +403,7 @@ trainControl_10 <- trainControl(method = "cv",
                           number = 10, 
                           search = "grid")
 forest_10 <- train(Ancestry ~ .,
-               data=g_1000[,-c(1,21,22)], 
+               data=train_proj_1000g[,-c(1,21,22)], 
                method = "rf",
                metric = "Accuracy",
                trControl = trainControl_10
