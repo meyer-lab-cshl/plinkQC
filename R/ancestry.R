@@ -142,13 +142,18 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
   
   #load RF
-  rf_path <- system.file("extdata", 'superpop_rf_0909.RDS',
-              package="plinkQC")
-  superpop <- readRDS(rf_path)
+  #rf_path <- system.file("extdata", 'superpop_rf_0909.RDS',
+  #            package="plinkQC")
+  #superpop <- readRDS(rf_path)
+  superpop <- readRDS("../plinkQC_validation/10_16_24_cross_validate_rf.rds")
+  print(superpop)
   predictions <- predict(superpop, proj)
-  names(predictions) <- proj$IID
   
-  predictions <- data.frame(predictions)
+  #NEED TO DOUBLE CHECK IF THIS SHOULD BE IID OR NOT
+  predictions <- data.frame(ID =  proj$IID, pred_ancestry = predictions)
+  
+  #predictions <- data.frame(predictions)
+  #colnames(predictions) <- c("ID", "predicted_ancestry")
   
   p_ancestry <- 
     ggplot(predictions, aes(x = predictions, fill = predictions)) + geom_bar() + 
