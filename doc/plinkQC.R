@@ -13,8 +13,7 @@ name <- 'data'
 path2plink <- "/Users/hannah/bin/plink"
 
 ## ----copy files---------------------------------------------------------------
-system(paste("cp", file.path(package.dir, 'extdata/data.HapMapIII.eigenvec'),
-             qcdir))
+file.copy(file.path(package.dir, 'extdata/data.HapMapIII.eigenvec'), qcdir)
 
 ## ----individual QC,  eval=FALSE, fig.height=12, fig.width=9-------------------
 #  fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,

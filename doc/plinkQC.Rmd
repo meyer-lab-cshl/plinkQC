@@ -16,7 +16,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 ```{r setup, include = FALSE}
 library(plinkQC)
 knitr::opts_chunk$set(
@@ -52,10 +51,18 @@ generate a new, clean dataset. Removal of individuals based on relationship
 status is optimised to retain as many individuals as possible in the study.
 
 *plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
- (version $\ge$  1.9), which has to be manually installed prior to the usage of
+ (**version 1.9**), which has to be manually installed prior to the usage of
  *plinkQC*. It assumes the genotype have already been determined from the
  original probe intensity data of the genotype array and is available in
 [plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
+
+**Note**: [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/) is still in alpha
+status with many re-implementations and updates, including output file changes.
+While these changes are ongoing, *plinkQC* will rely on users using PLINK 1.9.
+I will monitor PLINK 2.0 changes and check compatibility with `plinkQC`. If
+users require specific PLINK 2.0 output, I recommend using the [Step-by-Step]
+approach described below and manually saving to
+the output files expected from PLINK 1.9.
 
 The protocol is implemented in three main functions, the per-individual quality
 control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
@@ -126,8 +133,7 @@ the `qcdir` will often be the same as the `indir` and this step will not be
 required.
 
 ```{r copy files}
-system(paste("cp", file.path(package.dir, 'extdata/data.HapMapIII.eigenvec'),
-             qcdir))
+file.copy(file.path(package.dir, 'extdata/data.HapMapIII.eigenvec'), qcdir)
 ```
 
 `perIndividualQC` displays the results of the quality control steps in a
@@ -239,11 +245,11 @@ knitr::include_graphics("checkSex.png")
 The identification of individuals with outlying missing genotype and/or
 heterozygosity rates helps to detect samples with poor DNA quality and/or
 concentration that should be excluded from the study. Typically, individuals
-with more than 3-7\% of their genotype calles missing are removed. Outlying
+with more than 3-7\% of their genotype calls missing are removed. Outlying
 heterozygosity rates are judged relative to the overall heterozygosity rates in
 the study, and individuals whose rates are more than a few standard deviations
 (sd) from the mean heterozygosity rate are removed. A typical quality control
-for outlying heterozygoisty rates would remove individuals who are three sd away
+for outlying heterozygosity rates would remove individuals who are three sd away
 from the mean rate.
 Identifying related individuals with outlying missing genotype and/or
 heterozygosity rates is implemented in `check_het_and_miss`.
@@ -264,7 +270,7 @@ knitr::include_graphics("checkHetImiss.png")
 ## Related individuals
 Depending on the future use of the genotypes, it might required to remove any
 related individuals from the study. Related individuals can be identified by
-their proporting of shared alleles at the genotyped markers (identity by
+their proportion of shared alleles at the genotyped markers (identity by
 descend, IBD). Standardly, individuals with second-degree relatedness or higher
 will be excluded. 
 Identifying related individuals is implemented in `check_relatedness`. It finds
@@ -340,6 +346,7 @@ fail_snpmissing <- check_snp_missingness(indir=indir, qcdir=qcdir, name=name,
 ```{r load snp missing, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("snpmissingness.png")
 ```
+
 ## Markers with deviation from HWE
 Markers with strong deviation from HWE might be indicative of genotyping or
 genotype-calling errors. As serious genotyping errors often yield

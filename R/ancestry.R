@@ -58,7 +58,7 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 }
 
-#' Predicting sample superpopualation ancestry 
+#' Predicting sample superpopulation ancestry 
 #' 
 #' Predicts the ancestry of inputted samples using plink2. This program utilizes a random 
 #' forest algorithm that was trained on the 1000 genomes dataset to predict the 
@@ -77,15 +77,19 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData
 #' @inheritParams checkPlink2
 #' @inheritParams checkFiltering
+#' @param usethreshold [logical] If TRUE, the model will only return predictions 
+#' above a certain threshold
+#' @param threshold [integer] The threshold (between 0 and 1) of confidence the 
+#' model needs to have in a prediction to be returned
 #' @param axis_text_size [integer] Size for axis text.
 #' @param axis_title_size [integer] Size for axis title.
 #' @param title_size [integer] Size for plot title.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @return A named [factor] with five different levels AFR, AMR, EAS, EUR, and SAS that
-#' correspond to the ancestry that a sample comes from and the names corresponds
-#' to the IDs.
+#' @return A named [factor] with five different levels AFR, AMR, EAS, EUR, and 
+#' SAS that correspond to the ancestry that a sample comes from and the names 
+#' corresponds to the IDs.
 #' @export 
 #' @examples
 #' indir <- system.file("extdata", package="plinkQC")
@@ -100,6 +104,8 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     path2plink2=NULL,
                                     path2load_mat=NULL,
+                                    usethreshold = TRUE,
+                                    threshold = 0.9,
                                     keep_individuals=NULL,
                                     remove_individuals=NULL,
                                     exclude_markers=NULL,
@@ -114,7 +120,7 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
 
   checkFormatPlink2(prefix)
   path2plink2 <- checkPlink2(path2plink2)
-  checkLoadingMat(path2load_mat)
+  #checkLoadingMat(path2load_mat)
 
   if (showPlinkOutput) {
     showPlinkOutput = ""
@@ -127,14 +133,25 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                 extract_markers, exclude_markers) 
   
   if (verbose) message("Projecting data on 1000G PC space via Plink2 --score")
-  system2(path2plink2, 
+  system2(path2plink2,
           args=c("--pfile", prefix,
                  args_filter,
-                 "--read-freq", makepath(path2load_mat, "all_hg38.pca.acount"),
-                 "--score", makepath(path2load_mat, "all_hg38.pca.eigenvec.allele"),
+                 "--extract", makepath(path2load_mat, "loading_variants.txt"),
+                 "--read-freq", makepath(path2load_mat, "unrel_hg38.maf.pruned.pca.acount"),
+                 "--score", makepath(path2load_mat, "unrel_hg38.maf.pruned.pca.eigenvec.allele"),
                  "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
                  "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
+
+  # system2(path2plink2, 
+  #         args=c("--pfile", prefix,
+  #                args_filter,
+  #                "--read-freq", "../plinkQC_validation/plinkQC_filtered/unrel_hg38.maf.pruned.pca.acount",
+  #                "--score", "../plinkQC_validation/plinkQC_filtered/unrel_hg38.maf.pruned.pca.eigenvec.allele",
+  #                "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
+  #                "--out", out),
+  #         stdout = showPlinkOutput, stderr = showPlinkOutput)
+  # 
 
   proj <- read.csv(paste0(out,".sscore"), 
                    sep='\t', header = TRUE)
@@ -145,25 +162,31 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   #rf_path <- system.file("extdata", 'superpop_rf_0909.RDS',
   #            package="plinkQC")
   #superpop <- readRDS(rf_path)
-  superpop <- readRDS("../plinkQC_validation/10_16_24_cross_validate_rf.rds")
-  print(superpop)
-  predictions <- predict(superpop, proj)
+  superpop <- readRDS("../plinkQC_validation/forest5_finalModel.rds")
+  #print(superpop)
+  predictions <- predict(superpop, proj, type = "prob")
   
   #NEED TO DOUBLE CHECK IF THIS SHOULD BE IID OR NOT
-  predictions <- data.frame(ID =  proj$IID, pred_ancestry = predictions)
+  #predictions <- data.frame(ID =  proj$IID, pred_ancestry = predictions)
   
-  #predictions <- data.frame(predictions)
-  #colnames(predictions) <- c("ID", "predicted_ancestry")
+  predictions <- data.frame(predictions)
+  predictions$ID <- proj$IID
+  if (threshold) {
+    #need to make a dataset containing IDs that have 
+  }
   
-  p_ancestry <- 
-    ggplot(predictions, aes(x = predictions, fill = predictions)) + geom_bar() + 
-    xlab("Ancestral Prediction") + ylab("Count") + 
-    theme_bw() + 
-    theme(legend.position = "none",
-          title = element_text(size = title_size),
-          axis.text = element_text(size = axis_text_size),
-          axis.title = element_text(size = axis_title_size))
-  return(list(predictions=predictions, p_ancestry = p_ancestry))
+  return(predictions)
+  
+  
+  # p_ancestry <- 
+  #   ggplot(predictions, aes(x = predictions, fill = predictions)) + geom_bar() + 
+  #   xlab("Ancestral Prediction") + ylab("Count") + 
+  #   theme_bw() + 
+  #   theme(legend.position = "none",
+  #         title = element_text(size = title_size),
+  #         axis.text = element_text(size = axis_text_size),
+  #         axis.title = element_text(size = axis_title_size))
+  # return(list(predictions=predictions, p_ancestry = p_ancestry))
 }
 
 
@@ -227,13 +250,13 @@ rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
 
 
 checkLoadingMat <- function(path2load_mat) {
-  if (!file.exists(makepath(path2load_mat, "all_hg38.pca.acount"))) {
-    stop("The file all_hg38.pca.acount is not found in the path given. Please 
-         check that the file path is correct")
+  if (!file.exists(makepath(path2load_mat, "unrel_hg38.maf.pruned.pca.acount"))) {
+    stop("The file unrel_hg38.maf.pruned.pca.acount is not found in the path 
+         given for path2load_mat. Please check that the file path is correct")
   }
-  if (!file.exists(makepath(path2load_mat, "all_hg38.pca.eigenvec.allele"))) {
-    stop("The file all_hg38.pca.eigenvec.allele is not found in the path given. 
-    Please check that the file path is correct")
+  if (!file.exists(makepath(path2load_mat, "unrel_hg38.maf.pruned.pca.eigenvec.allele"))) {
+    stop("The file unrel_hg38.maf.pruned.pca.eigenvec.allele is not found in the 
+         path given for path2load_mat. Please check that the file path is correct")
   }
 }
 

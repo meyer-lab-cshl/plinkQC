@@ -36,7 +36,8 @@ The following vignette shows the processing steps required to use samples of the
 1000 Genomes study [@a1000Genomes2015],[@b1000Genomes2015] as a reference
 dataset. Using the 1000 Genomes reference, population structure down to
 large-scale continental ancestry can be detected. A step-by-step instruction on
-how to conduct this ancestry analysis is described in this [vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+how to conduct this ancestry analysis is described in this
+[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
 
 
 # Workflow
@@ -64,45 +65,62 @@ corresponds to v1.9, whereas `plink2` corresponds to v2.
 1000 Genomes phase III (1000GenomesIII) is available in
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) at https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3.
 In addition, a sample file with information about the individuals' ancestry
-is available and shoud be downloaded as in input for `plinkQC::chec_Ancestry()`.
+is available and should be downloaded as in input for `plinkQC::check_ancestry()`.
 The following code chunk downloads and decompresses the data.
 The genome build of
 these files is the same as the original release of the 1000GenomesIII, namely
 CGRCh37. 
 
-NB: CGRCh38 positions in vcf format can be found [here](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/)
+NB: CGRCh38 positions in vcf format can be found [here](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/).
 The remainder of this vignette will however look at the data processing required
 for the 1000GenomesIII available in
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen).
+
+NB: the links to the files below are the three boldfaced links on this page:
+https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3. The dropbox links
+have been updated in the past, which means the links below where outdated.
+Please refer to the original site and open an issue on github if you notice
+a change. Thank you!
 ```{bash download, eval=FALSE}
 cd $refdir
 
-pgen=https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst?dl=1
-pvar=https://www.dropbox.com/s/0nz9ey756xfocjm/all_phase3.pvar.zst?dl=1
-sample=https://www.dropbox.com/s/yozrzsdrwqej63q/phase3_corrected.psam?dl=1
+pgen=https://www.dropbox.com/s/j72j6uciq5zuzii/all_hg38.pgen.zst?dl=1
+pvar=https://www.dropbox.com/s/vx09262b4k1kszy/all_hg38.pvar.zst?dl=1
+sample=https://www.dropbox.com/s/2e87z6nc4qexjjm/all_hg38.psam?dl=1
 
 wget $pgen
-mv 'all_phase3.pgen.zst?dl=1' all_phase3.pgen.zst
-plink2 --zst-decompress all_phase3.pgen.zst > all_phase3.pgen
+mv 'all_hg38.pgen.zst?dl=1' all_hg38.pgen.zst
+plink2 --zst-decompress all_hg38.pgen.zst > all_hg38.pgen
 
 wget $pvar
-mv 'all_phase3.pvar.zst?dl=1' all_phase3.pvar.zst
+mv 'all_hg38.pvar.zst?dl=1' all_hg38.pvar.zst
 
 wget $sample
-mv 'phase3_corrected.psam?dl=1' all_phase3.psam
+mv 'all_hg38.psam?dl=1' all_hg38.psam
 ```
 
+fter these steps, the 1000 Genomes dataset can be used 
+for inferring study ancestry as described in the corresponding
+[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+
+
+
+I think I should delete this?
 ## Convert 1000 Genomes phase 3 data to plink 1 binary format
 We then convert the
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) to the
 (at the moment) more standardly used
 [PLINK 1 binary format](https://www.cog-genomics.org/plink/1.9/inputbped).
 ```{bash convert, eval=FALSE}
-plink2 --pfile $refdir/all_phase3 vzs\
-      --max-alleles 2
+plink2 --pfile $refdir/all_hg38 vzs\
+      --max-alleles 2 \
       --make-bed \
-      --out $refdir/all_phase3
-mv $refdir/all_phase3.log $refdir/log
+      --allow-extra-chr 0 \
+      --out $refdir/all_hg38
+mv $refdir/all_hg38.log $refdir/plink_log/all_hg38_convert.log
 ```
 
+ 
+A
 # References
+

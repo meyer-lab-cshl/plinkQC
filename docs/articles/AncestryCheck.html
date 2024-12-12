@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Maha Syed and
 Caroline Walter</h4>
             
-            <h4 data-toc-skip class="date">2024-09-05</h4>
+            <h4 data-toc-skip class="date">2024-09-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/AncestryCheck.Rmd" class="external-link"><code>vignettes/AncestryCheck.Rmd</code></a></small>
       <div class="d-none name"><code>AncestryCheck.Rmd</code></div>
@@ -73,26 +73,36 @@ Caroline Walter</h4>
 <div class="section level3">
 <h3 id="running-random-forest-classification">Running Random Forest Classification<a class="anchor" aria-label="anchor" href="#running-random-forest-classification"></a>
 </h3>
-<p>This package contains a classier to predict the ancestry of samples.
-This works through a random forest algorithm trained on the principal
+<p>This package contains a function to predict ancestry of samples. This
+works through a random forest algorithm trained on the principal
 components of cleaned genomics data from the <a href="https://www.internationalgenome.org/data/" class="external-link">1000 genomes
 dataset</a>. This method is based off the ancestry identification scheme
 used in the <a href="https://pan.ukbb.broadinstitute.org/" class="external-link">Pan-UK
 BioBank analysis</a>.</p>
 <p><a href="https://www.cog-genomics.org/plink/2.0/" class="external-link">Plink v2</a> is
-needed for this portion of the package.</p>
+needed for this portion of the package. In addition, there is a data
+repository containing necessary files for running the provided
+pre-trained classier here: <a href="https://github.com/meyer-lab-cshl/plinkQCAncestryData/tree/main" class="external-link uri">https://github.com/meyer-lab-cshl/plinkQCAncestryData/tree/main</a>.
+<a href="https://git-lfs.com/" class="external-link">Git Large File Storage extention</a>
+needs to be pre-installed to get the correct files.<br>
+This can be downloaded from github with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">git</span> clone git@github.com:meyer-lab-cshl/plinkQCAncestryData.git</span></code></pre></div>
+<p>If the zip folder downloaded is a smaller size than the expected
+251.3MB, run <code>git lfs fetch</code> to make sure the correct file
+gets downloaded. Unzip the file for future use.</p>
 <div class="section level4">
 <h4 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h4>
 <p>To begin with this is an example of how to run the classifier with a
 provided test data set. We will set up a temporary directory for
 qcdir.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">package.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/find.package.html" class="external-link">find.package</a></span><span class="op">(</span><span class="st">'plinkQC'</span><span class="op">)</span></span>
 <span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>, <span class="st">'extdata'</span><span class="op">)</span></span>
 <span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data.hg38'</span></span>
-<span><span class="va">path2plink2</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink2"</span></span></code></pre></div>
+<span><span class="va">path2plink2</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink2"</span></span>
+<span><span class="va">path2load_mat</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/Documents/loading_matrix"</span></span></code></pre></div>
 <p>Before use, the study data should be in the new hg38 annotation.
 USCS’s <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a>
 tool may be needed to map variants from one annotation to another. More
@@ -102,7 +112,7 @@ psam files), and the variants identifiers should be formatted similar to
 the following example: 1:12345[hg38]. We can use the included functions
 convert_to_plink2() and rename_variant_identifiers() to correctly format
 genomic data that is in the hg38 annotation.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/convert_to_plink2.html">convert_to_plink2</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
 <span>                  path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
@@ -110,9 +120,10 @@ genomic data that is in the hg38 annotation.</p>
 <span><span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">".renamed"</span><span class="op">)</span></span></code></pre></div>
 <p>After correctly formatting the data, we can use the provided function
 to return the sample ids and predicted ancestry.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ancestries</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/superpop_classification.html">superpop_classification</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
-<span>                                      path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span> </span>
+<span>                                      path2plink2 <span class="op">=</span> <span class="va">path2plink2</span>, </span>
+<span>                                      path2load_mat <span class="op">=</span> <span class="va">path2load_mat</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ancestries</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -130,11 +141,11 @@ included in the package as an example for the workflow.</p>
 <div class="section level4">
 <h4 id="setting-up-bash-script">Setting up Bash Script<a class="anchor" aria-label="anchor" href="#setting-up-bash-script"></a>
 </h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="va">qcdir</span><span class="op">=</span><span class="st">'~/qcdir'</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="st">'data.hg38'</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-r</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="va">qcdir</span><span class="op">=</span><span class="st">'~/qcdir'</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="st">'data.hg38'</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-r</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="putting-study-data-in-qcdir">Putting study data in qcdir<a class="anchor" aria-label="anchor" href="#putting-study-data-in-qcdir"></a>
@@ -149,36 +160,36 @@ been moved.</p>
 <p>Variant identifiers can vary between studies. To ensure that the data
 can be properly processed, we will rename the variant identifiers to a
 common scheme based on chromosome number and basepair location.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/all_hg38 <span class="dt">\</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> <span class="st">"@:#[hg38]"</span> <span class="dt">\</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>      <span class="at">--make-pgen</span> <span class="dt">\</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/all_hg38.renamed</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>      </span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span> <span class="dt">\</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> <span class="st">"@:#[hg38]"</span> <span class="dt">\</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>      <span class="at">--make-pgen</span> <span class="dt">\</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/all_hg38.renamed.log <span class="va">$qcdir</span>/plink_log</span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/all_hg38 <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> <span class="st">"@:#[hg38]"</span> <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>      <span class="at">--make-pgen</span> <span class="dt">\</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/all_hg38.renamed</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>      </span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span> <span class="dt">\</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> <span class="st">"@:#[hg38]"</span> <span class="dt">\</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>      <span class="at">--make-pgen</span> <span class="dt">\</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/all_hg38.renamed.log <span class="va">$qcdir</span>/plink_log</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="filtering-out-the-shared-snps-between-the-study-dataset-and-reference-1000g-dataset">Filtering out the shared SNPs between the study dataset and
 reference 1000G dataset<a class="anchor" aria-label="anchor" href="#filtering-out-the-shared-snps-between-the-study-dataset-and-reference-1000g-dataset"></a>
 </h4>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$qcdir</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print $3}'</span> <span class="va">$name</span>.pvar <span class="op">&gt;</span> <span class="va">$name</span>.varids.txt</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> all_hg38 <span class="at">--keep</span> <span class="va">$name</span>.varids.txt <span class="at">--make-pgen</span> <span class="at">--out</span> filtered_hg38</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$qcdir</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print $3}'</span> <span class="va">$name</span>.pvar <span class="op">&gt;</span> <span class="va">$name</span>.varids.txt</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> all_hg38 <span class="at">--keep</span> <span class="va">$name</span>.varids.txt <span class="at">--make-pgen</span> <span class="at">--out</span> filtered_hg38</span></code></pre></div>
 <p>Then, we will remove variants with a low minor allele count with the
 –maf function of plink 2.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> <span class="va">$qcdir</span>/filtered_hg38<span class="dt">\</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>       <span class="at">--maf</span> <span class="dt">\</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>       <span class="at">--nonfounders</span> <span class="dt">\</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>       <span class="at">--make-pgen</span> <span class="dt">\</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>       <span class="at">--out</span> <span class="va">$qcdir</span>/filtered_hg38.maf</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> <span class="va">$qcdir</span>/filtered_hg38<span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>       <span class="at">--maf</span> <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>       <span class="at">--nonfounders</span> <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>       <span class="at">--make-pgen</span> <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>       <span class="at">--out</span> <span class="va">$qcdir</span>/filtered_hg38.maf</span></code></pre></div>
 <p>We will conduct principal component analysis on genetic variants that
 are pruned for variants in linkage disequilibrium (LD) with an
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>r</mi><mn>2</mn></msup><mo>&gt;</mo><mn>0.2</mn></mrow><annotation encoding="application/x-tex">r^2 &gt;0.2</annotation></semantics></math>
@@ -189,116 +200,105 @@ of known high-LD structure. This file was originally provided by <span class="ci
 <code>file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')</code>.
 If there has been an update in reference data, this will need to be
 updated as well.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>highld<span class="ot">=</span><span class="st">'high-LD-regions-hg38-GRCh38.txt'</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>plink2 <span class="sc">--</span>pfile filtered_hg38.renamed\</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>       <span class="sc">--</span>exclude range <span class="sc">$</span>qcdir<span class="sc">/</span><span class="er">$</span>highld \</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>       <span class="sc">--</span>indep<span class="sc">-</span>pairwise <span class="dv">50</span> <span class="dv">5</span> <span class="fl">0.2</span> \</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>       <span class="sc">--</span>out filtered_hg38.renamed</span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>plink2 <span class="sc">--</span>pfile filtered_hg38.renamed \</span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>       <span class="sc">--</span>extract filtered_hg38.renamed.prune.in \</span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>       <span class="sc">--</span>make<span class="sc">-</span>pgen \</span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>       <span class="sc">--</span>out filtered_hg38.pruned</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>highld<span class="ot">=</span><span class="st">'high-LD-regions-hg38-GRCh38.txt'</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>plink2 <span class="sc">--</span>pfile filtered_hg38.renamed\</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>       <span class="sc">--</span>exclude range <span class="sc">$</span>qcdir<span class="sc">/</span><span class="er">$</span>highld \</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>       <span class="sc">--</span>indep<span class="sc">-</span>pairwise <span class="dv">50</span> <span class="dv">5</span> <span class="fl">0.2</span> \</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>       <span class="sc">--</span>out filtered_hg38.renamed</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>plink2 <span class="sc">--</span>pfile filtered_hg38.renamed \</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>       <span class="sc">--</span>extract filtered_hg38.renamed.prune.in \</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>       <span class="sc">--</span>make<span class="sc">-</span>pgen \</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>       <span class="sc">--</span>out filtered_hg38.pruned</span></code></pre></div>
 <p>After filtering out the low minor allele frequency and pruning, we
 will extract the principal components from the data.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> filtered_hg38.pruned <span class="dt">\</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>       <span class="at">--nonfounders</span> <span class="dt">\</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>       <span class="at">--freq</span> counts <span class="dt">\</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>       <span class="at">--pca</span> allele-wts 20 <span class="dt">\</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>       <span class="at">--out</span> filtered_hg38.pruned.pca</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> filtered_hg38.pruned <span class="dt">\</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>       <span class="at">--nonfounders</span> <span class="dt">\</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>       <span class="at">--freq</span> counts <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>       <span class="at">--pca</span> allele-wts 20 <span class="dt">\</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>       <span class="at">--out</span> filtered_hg38.pruned.pca</span></code></pre></div>
 <p>After running a PCA, we will project the original dataset onto the
 principal components.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> filtered_hg38.pruned </span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>       <span class="ex">--read-freq</span> all_hg38.pca.acount </span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>       <span class="ex">--score</span> all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize </span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>       <span class="ex">--score-col-nums</span> 7-26 <span class="at">--out</span> filtered_hg38.projection</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> filtered_hg38.pruned </span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>       <span class="ex">--read-freq</span> all_hg38.pca.acount </span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>       <span class="ex">--score</span> all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize </span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>       <span class="ex">--score-col-nums</span> 7-26 <span class="at">--out</span> filtered_hg38.projection</span></code></pre></div>
 <p>From this, this will be used to train the random forest algorithm in
 R.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="st">'~/qcdir/filtered_hg38.projection.sscore'</span></span>
-<span><span class="va">proj_1000g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
+<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
 <span>  file<span class="op">=</span> <span class="va">filepath</span>,</span>
 <span>  sep<span class="op">=</span><span class="st">'\t'</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">package.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/find.package.html" class="external-link">find.package</a></span><span class="op">(</span><span class="st">'plinkQC'</span><span class="op">)</span></span>
 <span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>,<span class="st">"extdata/Genomes1000_ID2Pop.txt"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We divide up the data into a testing and training portion. Since
-there is not an even representation of each ancestral group within the
-data, we will sample the data to ensure there is an even representation
-of each ancestral group in the testing portion to ensure our model works
-well on each of the groups.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">proj_1000g</span> <span class="op">&lt;-</span> <span class="va">proj_1000g</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>,<span class="st">"extdata/Genomes1000_ID2Pop.txt"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">superpop</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>,<span class="st">"extdata/AncestryGeoLocations.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>We divide up the data into a 70% training portion and 30% testing
+portion. To ensure a balanced model, we will sample the data to ensure
+an even representation of each ancestral superpopulation group in the
+testing portion of the data. For a roughly 70% split of the data, this
+is 448 samples in each of the five ancestral groups.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="va">proj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ALLELE_CT</span>, <span class="va">NAMED_ALLELE_DOSAGE_SUM</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">proj_1000g</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fam_ID"</span>, <span class="st">"ID"</span>, <span class="st">"Ancestry"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"IID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">labeled_proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">proj_1000g</span>, <span class="va">ancestry_info</span><span class="op">)</span></span>
+<span><span class="co">#turning ancestry info to have the superpopulation</span></span>
+<span><span class="va">labeled_proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">proj</span>, <span class="va">superpop_id</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">n_individuals</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
+<span><span class="va">n_individuals</span> <span class="op">&lt;-</span> <span class="fl">448</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">labeled_proj</span><span class="op">)</span><span class="op">)</span>, <span class="va">labeled_proj</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">test.ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">idx</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">train.ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">idx</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">n_individuals</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># For each population, it extracts the ids that were sampled above</span></span>
-<span><span class="va">ancestry.test</span> <span class="op">&lt;-</span> <span class="va">labeled_proj</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">test.ids</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co"># Histogram of testing set to show sampling was successful. </span></span>
-<span><span class="va">test_hist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">ancestry.test</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ancestry.test</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Remove the `test.ids` from `g_1000` and `ancestry_info` data objects. </span></span>
-<span><span class="va">ids_to_remove</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">test.ids</span>, use.names <span class="op">=</span> <span class="cn">FALSE</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">test_proj_1000g</span> <span class="op">&lt;-</span> <span class="va">labeled_proj</span><span class="op">[</span><span class="op">-</span><span class="va">ids_to_remove</span>,<span class="op">]</span></span></code></pre></div>
+<span><span class="va">ids_to_keeps</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">train.ids</span>, use.names <span class="op">=</span> <span class="cn">FALSE</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">train_proj_1000g</span> <span class="op">&lt;-</span> <span class="va">labeled_proj</span><span class="op">[</span><span class="va">ids_to_keeps</span>,<span class="op">]</span></span></code></pre></div>
 <p>Then, we can train the random forest.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">superpop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">superpopulation_code</span> <span class="op">~</span> <span class="va">.</span>,</span>
-<span>                              data <span class="op">=</span> <span class="va">super_proj1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>, <span class="fl">23</span><span class="op">)</span><span class="op">]</span>, </span>
-<span>                              method <span class="op">=</span> <span class="st">"rf"</span>, </span>
-<span>                              ntree <span class="op">=</span> <span class="fl">750</span>,</span>
-<span>                              importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">train_proj_1000g</span><span class="op">$</span><span class="va">Ancestry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">train_proj_1000g</span><span class="op">$</span><span class="va">Ancestry</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ancestry_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                        data <span class="op">=</span> <span class="va">train_proj_1000g</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">23</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                        method <span class="op">=</span> <span class="st">"rf"</span>, </span>
+<span>                        ntree <span class="op">=</span> <span class="fl">750</span>,</span>
+<span>                        importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">ancestry_rf</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="predicting-ancestries-of-new-study-data">Predicting ancestries of new study data<a class="anchor" aria-label="anchor" href="#predicting-ancestries-of-new-study-data"></a>
 </h4>
-<p>To predict newdata, you need to project the newdata onto the
-principal components. This is done with the –score function in plink2
-which can be inputted into the random forest algorithm.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> newdata </span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>       <span class="ex">--read-freq</span> all_hg38.pca.acount </span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>       <span class="ex">--score</span> all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize </span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>       <span class="ex">--score-col-nums</span> 7-26 <span class="at">--out</span> all_hg38.projection</span></code></pre></div>
+<p>To predict the ancestries of a new study dataset with our trained
+random forest, you need to project the newdata onto the principal
+components of the reference dataset. This is done with the –score
+function in plink2. The projection is then used as an input for the
+random forest.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> newdata </span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>       <span class="ex">--read-freq</span> all_hg38.pca.acount </span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>       <span class="ex">--score</span> all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize </span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>       <span class="ex">--score-col-nums</span> 7-26 <span class="at">--out</span> newdata.projection</span></code></pre></div>
 <p>Then we can clean the data in preparation to be used for training the
 random forest algorithm.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">package.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/find.package.html" class="external-link">find.package</a></span><span class="op">(</span><span class="st">'plinkQC'</span><span class="op">)</span></span>
-<span><span class="va">ancestry_info</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>,<span class="st">"extdata/Genomes1000_ID2Pop.txt"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">superpop</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>, <span class="st">"extdata/AncestryGeoLocations.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
-<span>  file<span class="op">=</span><span class="st">"all_hg38.projection"</span>, </span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="st">"Insert path to newdata.sscore here"</span></span>
+<span><span class="va">newdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
+<span>  file<span class="op">=</span> <span class="va">filepath</span>, </span>
 <span>  sep<span class="op">=</span><span class="st">'\t'</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="va">proj</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">newdata</span> <span class="op">&lt;-</span> <span class="va">newdata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ALLELE_CT</span>, <span class="va">NAMED_ALLELE_DOSAGE_SUM</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">ancestry_info</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fam_ID"</span>, <span class="st">"ID"</span>, <span class="st">"Ancestry"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">newdata</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"PC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">superpop_code</span> <span class="op">&lt;-</span> <span class="va">superpop</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ancestry</span>, <span class="va">superpopulation_code</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">labeled_proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">proj</span>, <span class="va">ancestry_info</span><span class="op">)</span></span>
-<span><span class="va">super_proj1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">labeled_proj</span>, <span class="va">superpop_code</span><span class="op">)</span></span>
-<span><span class="va">super_proj1000</span><span class="op">$</span><span class="va">superpopulation_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">super_proj1000</span><span class="op">$</span><span class="va">superpopulation_code</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">superpop</span>, <span class="va">super_proj1000</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">ancestry_rf</span>, <span class="va">newdata</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="evalulating-and-tuning-classification">Evalulating and Tuning Classification<a class="anchor" aria-label="anchor" href="#evalulating-and-tuning-classification"></a>
@@ -308,10 +308,11 @@ out-of-bag error rate and confusion matrix. The confusion matrix
 displays the number of correct classifications for each ancestry along
 the diagonal. Any values outside the diagonal are misclassifications for
 that other ancestry. A summary of these metrics can be seen through:</p>
-<pre><code><span><span class="va">superpop</span></span></code></pre>
-<p>And we can visualize the confusion matrix as a heatmap.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_rf</span> <span class="op">&lt;-</span> <span class="va">rf</span><span class="op">$</span><span class="va">confusion</span></span>
+<code class="sourceCode R"><span><span class="va">ancestry_rf</span></span></code></pre></div>
+<p>And we can visualize the confusion matrix as a heatmap.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">my_rf</span> <span class="op">&lt;-</span> <span class="va">ancestry_rf</span><span class="op">$</span><span class="va">confusion</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="va">my_rf</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">27</span><span class="op">)</span><span class="op">]</span>, scale <span class="op">=</span> <span class="st">'column'</span>, trace <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -337,7 +338,7 @@ important for your dataset to test and find the point of diminishing
 returns. For the example below of the 1000 Genomes set, 500-1000 trees
 allows accurate predictions to be made, while also staying
 computationally efficient.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rf_100_trees</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ancestry</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>                   data <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>                   ntree <span class="op">=</span> <span class="fl">100</span>, </span>
@@ -388,7 +389,7 @@ that much for the search to continue. The <code>trace</code> specifies
 whether to print the progress of the search, and <code>plot</code> says
 whether to plot the OOB error as a function of mtry. We can then build
 the random forest model again using the best saved mtry value.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This first line will provide the best mtry </span></span>
 <span><span class="va">mtry</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/tuneRF.html" class="external-link">tuneRF</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">g_1000</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">21</span>,<span class="fl">22</span><span class="op">)</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">g_1000</span><span class="op">$</span><span class="va">Ancestry</span>, </span>
 <span>              stepFactor <span class="op">=</span> <span class="fl">1.5</span>, improve <span class="op">=</span> <span class="fl">0.01</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -425,7 +426,7 @@ iteration requires the entire model to run, so this can get very
 computationally expensive depending on the size of the dataset. Below is
 the documentation for two different values of k for k-fold cross
 validation.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">trainControl_5</span> <span class="op">&lt;-</span> <span class="fu">trainControl</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"cv"</span>,</span>
 <span>                          number <span class="op">=</span> <span class="fl">5</span>, </span>
@@ -464,12 +465,12 @@ below documentation builds a decision tree using categorical aspects to
 classify the data. The PC values for each sample are provided in our
 1000 Genomes reference dataset file, where each sample has values for 20
 distinct PCs. We ask if a certain sample’s value for a specific PC is
-less than or greater than a given numer. Based on that answer, it is
+less than or greater than a given number. Based on that answer, it is
 either classified as a specific ancestry or needs to undergo more
 investigation to classify it correctly. For comprehensability, this is
 only a subset of a decision tree the random forest builds as classifying
 all 26 ancestries builds quite a complicated and cluttered plot.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This is a visual of the random forest being made. </span></span>
 <span><span class="co"># https://github.com/araastat/reprtree</span></span>
 <span><span class="fu">reprtree</span><span class="fu">:::</span><span class="fu">plot.getTree</span><span class="op">(</span><span class="va">rf_mtry</span><span class="op">)</span></span>
@@ -529,12 +530,12 @@ future reference. Once you have created ‘qcdir’, be sure to copy the
 data.bim, data.bed, and data.fam files into your directory. If you are
 using HapMap III reference data, be sure to use the correct variable
 name; refname=‘HapMapIII’.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="va">qcdir</span><span class="op">=</span>~/qcdir</span>
-<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
-<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="st">'data'</span></span>
-<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="va">refname</span><span class="op">=</span><span class="st">'all_hg38'</span></span>
-<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="va">qcdir</span><span class="op">=</span>~/qcdir</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="va">refdir</span><span class="op">=</span>~/reference</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="st">'data'</span></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a><span class="va">refname</span><span class="op">=</span><span class="st">'all_hg38'</span></span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="match-study-genotypes-and-reference-data">Match study genotypes and reference data<a class="anchor" aria-label="anchor" href="#match-study-genotypes-and-reference-data"></a>
@@ -554,35 +555,35 @@ reference and study data sets. In addition, we will only keep the
 autosomes (chr 1-22), only keep snps (snps-only), of those, keep only
 the biallelic ones (max-alleles 2), and remove any duplicates
 (rm-dup).</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
-<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
-<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps</span>
-<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
-<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
-<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>    <span class="va">$refdir</span>/<span class="va">$refname</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps</span>
-<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a>   </span>
-<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$refdir</span>/<span class="va">$refname</span> <span class="dt">\</span></span>
-<span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb23-12"><a href="#cb23-12" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
-<span id="cb23-13"><a href="#cb23-13" tabindex="-1"></a>      <span class="at">--snps-only</span> just-acgt <span class="dt">\</span></span>
-<span id="cb23-14"><a href="#cb23-14" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps <span class="dt">\</span></span>
-<span id="cb23-15"><a href="#cb23-15" tabindex="-1"></a>      <span class="at">--chr</span> 1-22 <span class="dt">\</span></span>
-<span id="cb23-16"><a href="#cb23-16" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb23-17"><a href="#cb23-17" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps</span>
-<span id="cb23-18"><a href="#cb23-18" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.no_ac_gt_snps.log</span>
-<span id="cb23-19"><a href="#cb23-19" tabindex="-1"></a></span>
-<span id="cb23-20"><a href="#cb23-20" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span> <span class="dt">\</span></span>
-<span id="cb23-21"><a href="#cb23-21" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb23-22"><a href="#cb23-22" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
-<span id="cb23-23"><a href="#cb23-23" tabindex="-1"></a>      <span class="at">--snps-only</span> just-acgt <span class="dt">\</span></span>
-<span id="cb23-24"><a href="#cb23-24" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps <span class="dt">\</span></span>
-<span id="cb23-25"><a href="#cb23-25" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb23-26"><a href="#cb23-26" tabindex="-1"></a>      <span class="at">--chr</span> 1-22 <span class="dt">\</span></span>
-<span id="cb23-27"><a href="#cb23-27" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> <span class="dt">\</span></span>
-<span id="cb23-28"><a href="#cb23-28" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps</span>
-<span id="cb23-29"><a href="#cb23-29" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.no_ac_gt_snps.log</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \</span></span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a><span class="st">                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}'</span> <span class="dt">\</span></span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>    <span class="va">$refdir</span>/<span class="va">$refname</span>.bim  <span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>    <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps</span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>   </span>
+<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$refdir</span>/<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
+<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a>      <span class="at">--snps-only</span> just-acgt <span class="dt">\</span></span>
+<span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.ac_gt_snps <span class="dt">\</span></span>
+<span id="cb24-15"><a href="#cb24-15" tabindex="-1"></a>      <span class="at">--chr</span> 1-22 <span class="dt">\</span></span>
+<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb24-17"><a href="#cb24-17" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps</span>
+<span id="cb24-18"><a href="#cb24-18" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.no_ac_gt_snps.log</span>
+<span id="cb24-19"><a href="#cb24-19" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span> <span class="dt">\</span></span>
+<span id="cb24-21"><a href="#cb24-21" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb24-22"><a href="#cb24-22" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>
+<span id="cb24-23"><a href="#cb24-23" tabindex="-1"></a>      <span class="at">--snps-only</span> just-acgt <span class="dt">\</span></span>
+<span id="cb24-24"><a href="#cb24-24" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.ac_gt_snps <span class="dt">\</span></span>
+<span id="cb24-25"><a href="#cb24-25" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb24-26"><a href="#cb24-26" tabindex="-1"></a>      <span class="at">--chr</span> 1-22 <span class="dt">\</span></span>
+<span id="cb24-27"><a href="#cb24-27" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> <span class="dt">\</span></span>
+<span id="cb24-28"><a href="#cb24-28" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps</span>
+<span id="cb24-29"><a href="#cb24-29" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.no_ac_gt_snps.log</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="rename-variant-identifiers-to-common-scheme">Rename Variant Identifiers to common scheme<a class="anchor" aria-label="anchor" href="#rename-variant-identifiers-to-common-scheme"></a>
@@ -598,19 +599,19 @@ followed by the genome build. As this might introduce additional
 duplicates (e.g. identifiers that now are identical because of
 tri-allelic variants that could not be caught in the previous step), we
 will also remove duplicates again.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps <span class="dt">\</span></span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> @:#<span class="pp">[</span><span class="ss">hg38</span><span class="pp">]</span> <span class="dt">\</span></span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
-<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span>
-<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps <span class="dt">\</span></span>
-<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> @:#<span class="pp">[</span><span class="ss">hg38</span><span class="pp">]</span> <span class="dt">\</span></span>
-<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
-<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed</span>
-<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.no_ac_gt_snps <span class="dt">\</span></span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> @:#<span class="pp">[</span><span class="ss">hg38</span><span class="pp">]</span> <span class="dt">\</span></span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.no_ac_gt_snps <span class="dt">\</span></span>
+<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>      <span class="at">--set-all-var-ids</span> @:#<span class="pp">[</span><span class="ss">hg38</span><span class="pp">]</span> <span class="dt">\</span></span>
+<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a>      <span class="at">--rm-dup</span> exclude-all <span class="dt">\</span></span>
+<span id="cb25-11"><a href="#cb25-11" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb25-12"><a href="#cb25-12" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed</span>
+<span id="cb25-13"><a href="#cb25-13" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="prune-study-data">Prune study data<a class="anchor" aria-label="anchor" href="#prune-study-data"></a>
@@ -625,29 +626,29 @@ of known high-LD structure. This file was originally provided by <span class="ci
 <code>file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')</code>.
 If there has been an update in reference data, this will need to be
 updated as well.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="va">highld</span><span class="op">=</span><span class="st">'high-LD-regions-hg38-GRCh38.txt'</span></span>
-<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed <span class="dt">\</span></span>
-<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>      <span class="at">--exclude</span> range  <span class="va">$qcdir</span>/<span class="va">$highld</span> <span class="dt">\</span></span>
-<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>      <span class="at">--indep-pairwise</span> 50 5 0.2 <span class="dt">\</span></span>
-<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
-<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.renamed.prune.log</span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed <span class="dt">\</span></span>
-<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.prune.in <span class="dt">\</span></span>
-<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned</span>
-<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.pruned.log</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="va">highld</span><span class="op">=</span><span class="st">'high-LD-regions-hg38-GRCh38.txt'</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed <span class="dt">\</span></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>      <span class="at">--exclude</span> range  <span class="va">$qcdir</span>/<span class="va">$highld</span> <span class="dt">\</span></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>      <span class="at">--indep-pairwise</span> 50 5 0.2 <span class="dt">\</span></span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.renamed.prune.log</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed <span class="dt">\</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.prune.in <span class="dt">\</span></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned</span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.pruned.log</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="filter-reference-data-for-the-same-snp-set-as-in-study">Filter reference data for the same SNP set as in study<a class="anchor" aria-label="anchor" href="#filter-reference-data-for-the-same-snp-set-as-in-study"></a>
 </h4>
 <p>We will use the list of pruned variants from the study sample to
 reduce the reference dataset to the size of the study samples:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed <span class="dt">\</span></span>
-<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.prune.in <span class="dt">\</span></span>
-<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned</span>
-<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.pruned.log</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.renamed <span class="dt">\</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>      <span class="at">--extract</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.renamed.prune.in <span class="dt">\</span></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned</span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="fu">mv</span>  <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned.log <span class="va">$qcdir</span>/plink_log/<span class="va">$refname</span>.pruned.log</span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -656,18 +657,18 @@ reduce the reference dataset to the size of the study samples:</p>
 <p>The matching study and reference dataset can now be merged into a
 combined dataset with plink –bmerge. If all steps outlined above were
 conducted successfully, no mismatch errors should occur.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned <span class="dt">\</span></span>
-<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
-<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
-<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>      <span class="at">--merge-mode</span> 6</span>
-<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.merge.<span class="va">$refname</span>.missnp.log</span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a></span>
-<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned  <span class="dt">\</span></span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
-<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.missnp <span class="dt">\</span></span>
-<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
-<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span></span>
-<span id="cb28-12"><a href="#cb28-12" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned <span class="dt">\</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>      <span class="at">--merge-mode</span> 6</span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log/<span class="va">$name</span>.merge.<span class="va">$refname</span>.missnp.log</span>
+<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.pruned  <span class="dt">\</span></span>
+<span id="cb29-8"><a href="#cb29-8" tabindex="-1"></a>      <span class="at">--bmerge</span> <span class="va">$qcdir</span>/<span class="va">$refname</span>.pruned <span class="dt">\</span></span>
+<span id="cb29-9"><a href="#cb29-9" tabindex="-1"></a>      <span class="at">--exclude</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.missnp <span class="dt">\</span></span>
+<span id="cb29-10"><a href="#cb29-10" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb29-11"><a href="#cb29-11" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span></span>
+<span id="cb29-12"><a href="#cb29-12" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="pca-on-the-merged-data">PCA on the merged data<a class="anchor" aria-label="anchor" href="#pca-on-the-merged-data"></a>
@@ -676,10 +677,10 @@ conducted successfully, no mismatch errors should occur.</p>
 using <code>plink --pca</code> which returns a .eigenvec file with the
 family and individual ID in columns 1 and 2, followed by the first 20
 principal components.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
-<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>      <span class="at">--pca</span> <span class="dt">\</span></span>
-<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span></span>
-<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.merge.<span class="va">$refname</span> <span class="dt">\</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>      <span class="at">--pca</span> <span class="dt">\</span></span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span></span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$qcdir</span>/<span class="va">$name</span>.<span class="va">$refname</span>.log <span class="va">$qcdir</span>/plink_log</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="check-ancestry">Check ancestry<a class="anchor" aria-label="anchor" href="#check-ancestry"></a>
@@ -709,7 +710,7 @@ scheme for the 1000 Genomes reference data is found in
 ‘1000Genomes_PopColors.txt’.</p>
 <p>From within R, run the following command to the ancestry check. This
 is for the 1000 Genomes Data.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://meyer-lab-cshl.github.io/plinkQC/">plinkQC</a></span><span class="op">)</span></span>
 <span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package<span class="op">=</span><span class="st">"plinkQC"</span><span class="op">)</span></span>
 <span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="st">"~/qcdir"</span></span>
