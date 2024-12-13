@@ -51,4 +51,11 @@ test_that("Throws error if pathtoplink isn't right", {
   
 })
 
+test_that("Testing that the loading matrix path will not run if the path is not correct", {
+  expect_error(checkLoadingMat(path2load_mat = "Nothing"),
+               "not found in the path given")
+  
+})
+
+
 

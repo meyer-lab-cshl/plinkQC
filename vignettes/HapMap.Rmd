@@ -70,7 +70,7 @@ wget $ftp/$prefix.map.bz2
 bunzip2 $prefix.map.bz2
 
 wget $ftp/$prefix.ped.bz2
-bunzip2 $prefix.per.bz2
+bunzip2 $prefix.ped.bz2
 
 wget $ftp/relationships_w_pops_121708.txt
 ```

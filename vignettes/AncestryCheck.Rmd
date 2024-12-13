@@ -547,7 +547,7 @@ also remove duplicates again.
 
 ```{bash, eval=FALSE}
 plink2 --bfile  $qcdir/$name.no_ac_gt_snps \
-      --set-all-var-ids @:#[hg38] \
+      --set-all-var-ids "@:#[hg38]" \
       --rm-dup exclude-all \
       --make-bed \
       --out $qcdir/$name.renamed

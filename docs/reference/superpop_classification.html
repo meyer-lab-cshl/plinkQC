@@ -63,6 +63,7 @@ identifiers in the format of 1:12345[hg38] is needed for the function to work</p
 <span>  qcdir <span class="op">=</span> <span class="va">indir</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  path2plink2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  path2load_mat <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  keep_individuals <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  remove_individuals <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exclude_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -102,6 +103,11 @@ plink 2 should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href="https://rdrr.io/pkg/sys/man/exec.html" class="external-link">exec</a></code>('plink').</p></dd>
+
+
+<dt id="arg-path-load-mat">path2load_mat<a class="anchor" aria-label="anchor" href="#arg-path-load-mat"></a></dt>
+<dd><p>[character] /path/to/directory where loading matrices are
+kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData</p></dd>
 
 
 <dt id="arg-keep-individuals">keep_individuals<a class="anchor" aria-label="anchor" href="#arg-keep-individuals"></a></dt>
