@@ -56,6 +56,8 @@ path2load_mat <- "/Users/syed/Documents/loading_matrix"
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
 may be needed to map variants from one annotation to another. More details on how
 to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd).
+We recommend using ```check_relatedness``` on the reference to filter our related samples. 
+This prevents data leakage between the training and testing datasets while training. 
 
 In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
 and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
@@ -80,11 +82,11 @@ head(ancestries$predictions)
 
 ## Training Your Own Random Forest Classifier 
 
-Sometimes there might not be enough overlap between the SNPs in the study dataset
-and the trained random forest algorithm for a accurate prediction. In this case,
+Based on the microchip used in the study data, there might not be a large enough 
+overlap in the SNPs sequenced to gain accurate predictions. In this case,
 we recommend training your own random forest. To do so, we will first need to set 
 up the needed bash variables and download the 1000 genomes dataset into qcdir which is described in 
-detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.Rmd). We will use a test study dataset included in the package as an example for the workflow. 
+detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.Rmd). We will use a test study dataset included in the package as an example for the workflow.  
 
 ### Setting up Bash Script
 ``` {bash setting up bash, eval = FALSE}
@@ -98,6 +100,85 @@ mkdir -r $qcdir/plink_log
 ### Putting study data in qcdir
 Copy your study dataset to the qcdir folder. In this example, we are assuming that 
 the provided test dataset included with the package has been moved. 
+
+# Workflow
+## Download reference data
+A suitable reference dataset should be downloaded and if necessary, re-formated
+into PLINK format. Vignettes
+['Processing HapMap III reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html) and 
+['Processing 1000Genomes  reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html),
+show the download and processing of the HapMap phase III and 1000Genomes phase
+III dataset, respectively. In this example, we will use the 1000Genomes data as
+the reference dataset.
+We recommend using plink's <code>checkrelatedness function on the reference data to pre
+
+## Set-up
+We will first set up some bash variables and create directories needed; storing
+the names and directories of the reference and study will make it easy to use 
+updated versions of the reference or new datasets in the future. We create a 
+directory named 'qcdir' for the study data. 
+In order to keep the data directory tidy, we'll create a directory for the log 
+files and move them to the log directory here after each analysis step. This
+is useful to keep the PLINK log-files for future reference. 
+Once you have created 'qcdir', be sure to copy the data.bim, data.bed, 
+and data.fam files into your directory. If you are using HapMap III reference 
+data, be sure to use the correct variable name; refname='HapMapIII'.  
+
+```{bash setup, eval=FALSE}
+qcdir=~/qcdir
+refdir=~/reference
+name='data'
+refname='all_hg38'
+
+mkdir -p $qcdir/plink_log
+```
+
+## Match study genotypes and reference data
+In order to compute joint principal components of the reference and study
+population, we will need to combine the two datasets. The plink --merge
+function enables this merge, but requires the variants in the datasets to be
+matching by chromosome, position and alleles. The following sections show how
+to extract the relevant data from the reference and study dataset and how to
+filter matching variants.
+
+### Filter reference and study data for non A-T or G-C SNPs
+We will use an awk script to find non-A/T and non-G/C SNPs, as these SNPs are more
+difficult to align, and remove them from both the reference and study data sets.
+In addition, we will only keep the autosomes (chr 1-22), only keep snps (snps-only),
+of those, keep only the biallelic ones (max-alleles 2), and remove any duplicates
+(rm-dup). The data should start off in Plink 1.9 data format.
+
+```{bash filter at and gc snps, eval=FALSE}
+awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
+                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}' \
+    $qcdir/$name.bim  > \
+    $qcdir/$name.ac_gt_snps
+awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
+                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}' \
+    $refdir/$refname.bim  > \
+    $qcdir/$refname.ac_gt_snps
+   
+plink2 --bfile  $refdir/$refname \
+      --rm-dup exclude-all \
+      --max-alleles 2 \
+      --snps-only just-acgt \
+      --exclude $qcdir/$refname.ac_gt_snps \
+      --chr 1-22 \
+      --make-bed \
+      --out $qcdir/$refname.no_ac_gt_snps
+mv  $qcdir/$refname.no_ac_gt_snps.log $qcdir/plink_log/$refname.no_ac_gt_snps.log
+
+plink2 --bfile  $qcdir/$name \
+      --rm-dup exclude-all \
+      --max-alleles 2 \
+      --snps-only just-acgt \
+      --exclude $qcdir/$name.ac_gt_snps \
+      --make-bed \
+      --chr 1-22 \
+      --allow-extra-chr \
+      --out $qcdir/$name.no_ac_gt_snps
+mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
+```
 
 ### Renaming variant identifiers
 Variant identifiers can vary between studies. To ensure that the data can be properly processed,
@@ -125,13 +206,14 @@ mv $qcdir/$name.renamed.log $qcdir/plink_log
 cd $qcdir
 awk '{print $3}' $name.pvar > $name.varids.txt
 
-plink2 --pfile all_hg38 --keep $name.varids.txt --make-pgen --out filtered_hg38
-
+plink2 --pfile all_hg38 --extract $name.varids.txt --make-pgen --out filtered_hg38
 ```
+
+### Removing rare variants
 
 Then, we will remove variants with a low minor allele count with the --maf function of plink 2. 
 ```{bash low MAF, eval=FALSE}
-plink2 --pfile $qcdir/filtered_hg38\
+plink2 --pfile $qcdir/filtered_hg38 \
        --maf \
        --nonfounders \
        --make-pgen \
@@ -139,6 +221,9 @@ plink2 --pfile $qcdir/filtered_hg38\
 
 mv $qcdir/filtered_hg38.renamed.maf $qcdir/plink_log
 ```
+
+
+### Conducting PCA
 
 We will conduct principal component analysis on genetic variants that are
 pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
@@ -187,6 +272,8 @@ plink2 --pfile filtered_hg38.pruned
 
 ```
 
+### Training random forest classifier in R
+
 From this, this will be used to train the random forest algorithm in R. 
 ```{r, eval = FALSE}
 library(tidyverse)
@@ -205,9 +292,7 @@ superpop <-
 ```
 
 We divide up the data into a 70% training portion and 30% testing portion.
-To ensure a balanced model, we will sample the data to ensure an even representation of each ancestral superpopulation group in the testing portion of the data.
-For a roughly 70% split of the data, this is 448 samples in each of the five ancestral groups.
-
+To ensure a balanced model, we will sample the data to ensure an even representation of each ancestral superpopulation group in the testing portion of the data. The number of inidividuals from each group that is chosen will have to adjusted for the size of the reference dataset. For the 1000 genomes dataset, we use 448 samples in each of the five ancestral groups for a roughly 70% of the data. 
 
 ``` {r, eval = FALSE}
 proj <- proj %>%
@@ -229,7 +314,8 @@ train_proj_1000g <- labeled_proj[ids_to_keeps,]
 
 ```
 
-Then, we can train the random forest.
+Then, we can train the random forest. We are putting in a starting value for the parameter but we 
+recommend utilizing a grid search (described in detail more below) to determine the optimal values. 
 ```{r, eval = FALSE}
 train_proj_1000g$Ancestry <- factor(train_proj_1000g$Ancestry)
 
@@ -283,8 +369,38 @@ heatmap(my_rf[,-c(27)], scale = 'column', trace = 'none')
 
 # Parameter Tuning
 Tuning the parameters for this random forest is crucial in building a 
-machine-learning model to produce the best forest, in this case having the 
-highest accuracy.
+machine-learning model to produce the best forest. In this case, having the 
+highest accuracy. 
+
+## Grid Search 
+There are different optimization techniques to determine the parameters for a random forest.
+A simple one to implement is a grid-search in where models with different parameters are initialized. 
+Based on their performance, the optimal parameters can be determined. The parameters tested
+in a grid search are the number of principal components included and the number of trees.
+Within the parameter values of the number of principal components and number of trees, cross-validation
+is done to determine the mtry variable. 
+
+```{r, eval = FALSE}
+train_results <- data.frame(mtry = c(0), ntrees = c(0), num_pc = c(0), acc = c(0))
+train_proj_noids <- train_proj_1000g[,-c(1)]
+for (PC_inc in c(1:20)) {
+  for (ntree in c(1, 5)) {
+    set.seed(123)
+    fit <- train(Pop~., data=train_proj_noids[,c(1:PC_inc,21)], 
+                 method="rf", metric="Accuracy",
+                 trControl=control, ntree=ntree)
+    train_proj_1000g <- rbind(train_proj_1000g, 
+                     data.frame(mtry = fit$results$mtry, 
+                                ntrees = rep(ntree, nrow(fit$results)),
+                                num_pc = rep(PC_inc, nrow(fit$results)),
+                                acc = fit$results$Accuracy))
+  }
+}
+
+
+
+```
+
 
 ### Number of Trees 
 A random forest model is comprised of building several trees and the 'Number of 
@@ -477,7 +593,7 @@ Once you have created 'qcdir', be sure to copy the data.bim, data.bed,
 and data.fam files into your directory. If you are using HapMap III reference 
 data, be sure to use the correct variable name; refname='HapMapIII'.  
 
-```{bash setup, eval=FALSE}
+```{bash oldsetup, eval=FALSE}
 qcdir=~/qcdir
 refdir=~/reference
 name='data'
@@ -568,7 +684,7 @@ window. The LD-pruned dataset is generated below, using `plink --indep-pairwise`
 to compute the LD-variants; additionally `exclude range` is used to remove genomic
 ranges of known high-LD structure. This file was originally provided by
 @Anderson2010 and is available in
-`file.path(find.package('plinkQC'),'extdata',' high-LD-regions-hg38-GRCh38.txt')`.
+`file.path(find.package('plinkQC'),'extdata','high-LD-regions-hg38-GRCh38.txt')`.
 If there has been an update in reference data, this will need to be updated as 
 well. 
 

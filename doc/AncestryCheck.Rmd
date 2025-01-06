@@ -80,8 +80,8 @@ head(ancestries$predictions)
 
 ## Training Your Own Random Forest Classifier 
 
-Sometimes there might not be enough overlap between the SNPs in the study dataset
-and the trained random forest algorithm for a accurate prediction. In this case,
+Based on the microchip used in the study data, there might not be a large enough 
+overlap in the SNPs sequenced to gain accurate predictions. In this case,
 we recommend training your own random forest. To do so, we will first need to set 
 up the needed bash variables and download the 1000 genomes dataset into qcdir which is described in 
 detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.Rmd). We will use a test study dataset included in the package as an example for the workflow. 
@@ -229,7 +229,8 @@ train_proj_1000g <- labeled_proj[ids_to_keeps,]
 
 ```
 
-Then, we can train the random forest.
+Then, we can train the random forest. We are putting in a starting value for the parameter but we 
+recommend utilizing a grid search (described in detail more below) to determine the optimal values. 
 ```{r, eval = FALSE}
 train_proj_1000g$Ancestry <- factor(train_proj_1000g$Ancestry)
 
@@ -283,8 +284,19 @@ heatmap(my_rf[,-c(27)], scale = 'column', trace = 'none')
 
 # Parameter Tuning
 Tuning the parameters for this random forest is crucial in building a 
-machine-learning model to produce the best forest, in this case having the 
-highest accuracy.
+machine-learning model to produce the best forest. In this case, having the 
+highest accuracy. 
+
+## Grid Search 
+There are different optimization techniques to determine the parameters for a random forest.
+A simple one to implement is a grid-search in where models with different parameters are initialized. 
+Based on their performance, the optimal parameters can be determined. The parameters tested
+in a grid search are the number of principal components included and the number of trees.
+Within the parameter values of the number of principal components and number of trees, cross-validation
+is done to determine the mtry variable. 
+
+
+
 
 ### Number of Trees 
 A random forest model is comprised of building several trees and the 'Number of 
@@ -547,7 +559,7 @@ also remove duplicates again.
 
 ```{bash, eval=FALSE}
 plink2 --bfile  $qcdir/$name.no_ac_gt_snps \
-      --set-all-var-ids @:#[hg38] \
+      --set-all-var-ids "@:#[hg38]" \
       --rm-dup exclude-all \
       --make-bed \
       --out $qcdir/$name.renamed
