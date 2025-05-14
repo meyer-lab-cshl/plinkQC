@@ -367,6 +367,9 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
 
     highRelatedMultiple <- highRelated[highRelated$IID1 %in% multipleRelative |
                                         highRelated$IID2 %in% multipleRelative,]
+    uniqueIIDsinfam <-  unique(c(highRelatedMultiple$IID1,highRelatedMultiple$IID2))
+    
+    singleRelative <- setdiff(singleRelative, uniqueIIDsinfam)
     highRelatedSingle <- highRelated[highRelated$IID1 %in% singleRelative &
                                        highRelated$IID2 %in% singleRelative,]
 
@@ -398,47 +401,31 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     }
 
     if(length(multipleRelative) != 0) {
-        relatedPerID <- lapply(multipleRelative, function(x) {
-            tmp <- highRelatedMultiple[rowSums(
-                cbind(highRelatedMultiple$IID1 %in% x,
-                      highRelatedMultiple$IID2 %in% x)) != 0,1:2]
-            rel <- unique(unlist(tmp))
-            return(rel)
-        })
-        names(relatedPerID) <- multipleRelative
-
-        keepIDs_multiple <- lapply(relatedPerID, function(x) {
-            pairwise <- t(combn(x, 2))
-            index <- (highRelatedMultiple$IID1 %in% pairwise[,1] &
-                          highRelatedMultiple$IID2 %in% pairwise[,2]) |
-                (highRelatedMultiple$IID1 %in% pairwise[,2] &
-                     highRelatedMultiple$IID2 %in% pairwise[,1])
-            combination <- highRelatedMultiple[index,]
-            combination_graph <- igraph::graph_from_data_frame(combination,
-                                                               directed=FALSE)
-            all_iv_set <- igraph::ivs(combination_graph)
-            length_iv_set <- sapply(all_iv_set, function(x) length(x))
-
-            if (all(length_iv_set == 1)) {
-                # check how often they occurr elsewhere
-                occurrence <- sapply(x, function(id) {
-                    sum(sapply(relatedPerID, function(idlist) id %in% idlist))
-                })
-                # if occurrence the same everywhere, pick the first, else keep
-                # the one with minimum occurrence elsewhere
-                if (length(unique(occurrence)) == 1) {
-                    nonRelated <- sort(x)[1]
-                } else {
-                    nonRelated <- names(occurrence)[which.min(occurrence)]
-                }
-            } else {
-                nonRelated <- all_iv_set[which.max(length_iv_set)]
-            }
-            return(nonRelated)
-        })
-        keepIDs_multiple <- unique(unlist(keepIDs_multiple))
-        failIDs_multiple <- c(multipleRelative[!multipleRelative %in%
-                                                   keepIDs_multiple])
+      combination_graph <- igraph::graph_from_data_frame(highRelatedMultiple, 
+                                                         directed = FALSE)
+      families = igraph::components(combination_graph)
+      family_mapping <- data.frame(id = names(families$membership), 
+                                   family_id = families$membership)
+      fam_num <- c(1:max(family_mapping$family_id))
+      
+      browser()
+      nonrelated_perfam <- lapply(fam_num, function(x) {
+        #ids in the family
+        ids <- family_mapping$id[family_mapping$family_id == x]
+        #then grab a portion of high related multiple that takes in those ids
+        comb_table <- highRelatedMultiple %>% 
+          filter(IID1 %in% ids & IID2 %in% ids) %>%
+          igraph::graph_from_data_frame(directed = FALSE)
+        largest_iv_set <- igraph::largest_ivs(comb_table)
+        unrel <- largest_iv_set[1]
+        return(unrel)
+      })
+      
+      keepIDs_multiple <- names(unlist(nonrelated_perfam))
+      
+      #fail ids are the IDs that are NOT in the 
+      failIDs_multiple <- c(uniqueIIDsinfam[!uniqueIIDsinfam %in%
+                                               keepIDs_multiple])
     } else {
         failIDs_multiple <- NULL
     }
