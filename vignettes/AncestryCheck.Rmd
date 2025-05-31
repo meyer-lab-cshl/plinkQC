@@ -184,13 +184,13 @@ mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 Variant identifiers can vary between studies. To ensure that the data can be properly processed,
 we will rename the variant identifiers to a common scheme based on chromosome number and basepair location.
 ``` {bash renaming, eval = FALSE}
-plink2 --bfile  $qcdir/all_hg38 \
+plink2 --bfile  $qcdir/$refname.no_ac_gt_snps \
       --set-all-var-ids "@:#[hg38]" \
       --rm-dup exclude-all \
       --make-pgen \
-      --out $qcdir/all_hg38.renamed
+      --out $qcdir/$refname.renamed
       
-plink2 --bfile  $qcdir/$name \
+plink2 --bfile  $qcdir/$name.no_ac_gt_snps \
       --set-all-var-ids "@:#[hg38]" \
       --rm-dup exclude-all \
       --make-pgen \
@@ -204,20 +204,20 @@ mv $qcdir/$name.renamed.log $qcdir/plink_log
 
 ```{bash filter study SNPs, eval=FALSE}
 cd $qcdir
-awk '{print $3}' $name.pvar > $name.varids.txt
+awk '{print $3}' $name.renamed.pvar > $name.renamed.varids.txt
 
-plink2 --pfile all_hg38 --extract $name.varids.txt --make-pgen --out filtered_hg38
+plink2 --pfile $refname.renamed --extract $name.renamed.varids.txt --make-pgen --out $refname.renamed.studysnps
 ```
 
-### Removing rare variants
+### Removing rare variants and pruning
 
 Then, we will remove variants with a low minor allele count with the --maf function of plink 2. 
 ```{bash low MAF, eval=FALSE}
-plink2 --pfile $qcdir/filtered_hg38 \
+plink2 --pfile $qcdir/$refname.renamed.studysnps \
        --maf \
        --nonfounders \
        --make-pgen \
-       --out $qcdir/filtered_hg38.maf
+       --out $qcdir/$refname.renamed.studysnps.maf
 
 mv $qcdir/filtered_hg38.renamed.maf $qcdir/plink_log
 ```
@@ -235,10 +235,10 @@ ranges of known high-LD structure. This file was originally provided by
 If there has been an update in reference data, this will need to be updated as 
 well. 
 
-``` {R prune ref, eval = FALSE}
+``` {bash prune ref, eval = FALSE}
 highld='high-LD-regions-hg38-GRCh38.txt'
 
-plink2 --pfile filtered_hg38.renamed\
+plink2 --pfile $refname.renamed.studysnps.maf\
        --exclude range $qcdir/$highld \
        --indep-pairwise 50 5 0.2 \
        --out filtered_hg38.renamed
@@ -555,251 +555,7 @@ reprtree:::plot.getTree(rf_mtry, k=1, d=6)
 
 
 
-### Older stuff (moved down for ease of access)
-# Ancestry estimation
-The identification of individuals of divergent ancestry can be achieved by
-combining the genotypes of the study population with genotypes of a reference
-dataset consisting of individuals from known ethnicities (for instance
-individuals from the Hapmap or 1000 genomes study [@HapMap2005,@HapMap2007,
-@HapMap2010,@a1000Genomes2015,@b1000Genomes2015]). Principal componeanalysis 
-(PCA) on this combined genotype panel can then be used to detect
-population structure down to the level of the reference dataset (for Hapmap and
-1000 Genomes, this is down to large-scale continental ancestry).
 
-In the following, the workflow for combining a study dataset with the
-reference samples, conducting PCA and estimating ancestry is demonstrated.
-The study dataset consists of 200 individuals and 10,000 genetic markers and
-is provided with $plinkQC$ in `file.path(find.package('plinkQC'),'extdata')`.
-
-# Workflow
-## Download reference data
-A suitable reference dataset should be downloaded and if necessary, re-formated
-into PLINK format. Vignettes
-['Processing HapMap III reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html) and 
-['Processing 1000Genomes  reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html),
-show the download and processing of the HapMap phase III and 1000Genomes phase
-III dataset, respectively. In this example, we will use the 1000Genomes data as
-the reference dataset.
-
-## Set-up
-We will first set up some bash variables and create directories needed; storing
-the names and directories of the reference and study will make it easy to use 
-updated versions of the reference or new datasets in the future. We create a 
-directory named 'qcdir' for the study data. 
-In order to keep the data directory tidy, we'll create a directory for the log 
-files and move them to the log directory here after each analysis step. This
-is useful to keep the PLINK log-files for future reference. 
-Once you have created 'qcdir', be sure to copy the data.bim, data.bed, 
-and data.fam files into your directory. If you are using HapMap III reference 
-data, be sure to use the correct variable name; refname='HapMapIII'.  
-
-```{bash oldsetup, eval=FALSE}
-qcdir=~/qcdir
-refdir=~/reference
-name='data'
-refname='all_hg38'
-
-mkdir -p $qcdir/plink_log
-```
-
-## Match study genotypes and reference data
-In order to compute joint principal components of the reference and study
-population, we will need to combine the two datasets. The plink --merge
-function enables this merge, but requires the variants in the datasets to be
-matching by chromosome, position and alleles. The following sections show how
-to extract the relevant data from the reference and study dataset and how to
-filter matching variants.
-
-### Filter reference and study data for non A-T or G-C SNPs
-We will use an awk script to find non-A/T and non-G/C SNPs, as these SNPs are more
-difficult to align, and remove them from both the reference and study data sets.
-In addition, we will only keep the autosomes (chr 1-22), only keep snps (snps-only),
-of those, keep only the biallelic ones (max-alleles 2), and remove any duplicates
-(rm-dup).
-
-```{bash filter at and gc snps, eval=FALSE}
-awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
-                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}' \
-    $qcdir/$name.bim  > \
-    $qcdir/$name.ac_gt_snps
-awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
-                        || $5$6 == "AT" || $5$6 == "TA")  {print $2}' \
-    $refdir/$refname.bim  > \
-    $qcdir/$refname.ac_gt_snps
-   
-plink2 --bfile  $refdir/$refname \
-      --rm-dup exclude-all \
-      --max-alleles 2 \
-      --snps-only just-acgt \
-      --exclude $qcdir/$refname.ac_gt_snps \
-      --chr 1-22 \
-      --make-bed \
-      --out $qcdir/$refname.no_ac_gt_snps
-mv  $qcdir/$refname.no_ac_gt_snps.log $qcdir/plink_log/$refname.no_ac_gt_snps.log
-
-plink2 --bfile  $qcdir/$name \
-      --rm-dup exclude-all \
-      --max-alleles 2 \
-      --snps-only just-acgt \
-      --exclude $qcdir/$name.ac_gt_snps \
-      --make-bed \
-      --chr 1-22 \
-      --allow-extra-chr \
-      --out $qcdir/$name.no_ac_gt_snps
-mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
-```
-
-### Rename Variant Identifiers to common scheme
-Variant identifiers can vary between studies and/or reference sets. For 
-computing the genetic PC, the annotation is not important, however, merging the
-files via PLINK will only work for variants with perfectly matching attributes. 
-For instance, commonly used identifiers are either rsIDs or a name constructed 
-from chr-position-alleles. Here, we must ensure the study and reference sets 
-use the same identifiers in order to merge them by renaming all variants using 
-their chromosome and position, followed by the genome build. As this might 
-introduce additional duplicates (e.g. identifiers that now are identical because
-of tri-allelic variants that could not be caught in the previous step), we will 
-also remove duplicates again.
-
-```{bash, eval=FALSE}
-plink2 --bfile  $qcdir/$name.no_ac_gt_snps \
-      --set-all-var-ids "@:#[hg38]" \
-      --rm-dup exclude-all \
-      --make-bed \
-      --out $qcdir/$name.renamed
-mv  $qcdir/$name.renamed.log $qcdir/plink_log
-
-plink2 --bfile  $qcdir/$refname.no_ac_gt_snps \
-      --set-all-var-ids @:#[hg38] \
-      --rm-dup exclude-all \
-      --make-bed \
-      --out $qcdir/$refname.renamed
-mv  $qcdir/$refname.renamed.log $qcdir/plink_log
-```
-
-### Prune study data
-We will conduct principal component analysis on genetic variants that are
-pruned for variants in linkage disequilibrium (LD) with an $r^2 >0.2$ in a 50kb
-window. The LD-pruned dataset is generated below, using `plink --indep-pairwise`
-to compute the LD-variants; additionally `exclude range` is used to remove genomic
-ranges of known high-LD structure. This file was originally provided by
-@Anderson2010 and is available in
-`file.path(find.package('plinkQC'),'extdata','high-LD-regions-hg38-GRCh38.txt')`.
-If there has been an update in reference data, this will need to be updated as 
-well. 
-
-```{bash prune study, eval=FALSE}
-highld='high-LD-regions-hg38-GRCh38.txt'
-
-plink --bfile  $qcdir/$name.renamed \
-      --exclude range  $qcdir/$highld \
-      --indep-pairwise 50 5 0.2 \
-      --out $qcdir/$name.renamed
-mv  $qcdir/$name.renamed.log $qcdir/plink_log/$name.renamed.prune.log
-
-```
-
-```{bash rename, eval=FALSE}
-plink --bfile  $qcdir/$name.renamed \
-      --extract $qcdir/$name.renamed.prune.in \
-      --make-bed \
-      --out $qcdir/$name.pruned
-mv  $qcdir/$name.pruned.log $qcdir/plink_log/$name.pruned.log
-```
-
-### Filter reference data for the same SNP set as in study
-We will use the list of pruned variants from the study sample to reduce the 
-reference dataset to the size of the study samples:
-
-```{bash filter SNPs, eval=FALSE}
-plink --bfile  $qcdir/$refname.renamed \
-      --extract $qcdir/$name.renamed.prune.in \
-      --make-bed \
-      --out $qcdir/$refname.pruned
-mv  $qcdir/$refname.pruned.log $qcdir/plink_log/$refname.pruned.log
-```
-
-## Merge study genotypes and reference data
-The matching study and reference dataset can now be merged into a combined 
-dataset with plink --bmerge. If all steps outlined above were conducted
-successfully, no mismatch errors should occur.
-```{bash merge, eval=FALSE}
-plink --bfile $qcdir/$name.pruned \
-      --bmerge $qcdir/$refname.pruned \
-      --out $qcdir/$name.merge.$refname \
-      --merge-mode 6
-mv $qcdir/$name.merge.$refname.log $qcdir/plink_log/$name.merge.$refname.missnp.log
-
-plink --bfile $qcdir/$name.pruned  \
-      --bmerge $qcdir/$refname.pruned \
-      --exclude $qcdir/$name.merge.$refname.missnp \
-      --make-bed \
-      --out $qcdir/$name.merge.$refname
-mv $qcdir/$name.merge.$refname.log $qcdir/plink_log
-```
-
-## PCA on the merged data
-We can now run principal component analysis on the combined dataset using
-`plink --pca` which returns a .eigenvec file with the family and individual ID
-in columns 1 and 2, followed by the first 20 principal components. 
-```{bash pca, eval=FALSE}
-plink --bfile $qcdir/$name.merge.$refname \
-      --pca \
-      --out $qcdir/$name.$refname
-mv $qcdir/$name.$refname.log $qcdir/plink_log
-```
-
-## Check ancestry
-We can use the .eigenvec file to estimate the ancestry of the study samples.
-Identifying individuals of divergent ancestry is implemented in
-`check_ancestry`. Currently, check ancestry only supports automatic selection of
-individuals of European descent. It uses principal components 1
-and 2 to find the center of the known European reference samples. All study
-samples whose Euclidean distance from the centre falls outside the radius
-specified by the maximum Euclidean distance of the reference samples multiplied
-by the chosen `europeanTh` are considered non-European. `check_ancestry` shows
-the result of the ancestry analysis in a scatter plot of PC1 versus
-PC2, colour-coded for samples of the reference populations and the study
-population. Reminder, if you are using HapMapIII reference data, refname will
-be the reference name you have used previously. Also, the files to use are 
-"/HapMap_ID2Pop.txt" instead of the Genomes1000_ID2Pop and 
-"HapMap_PopColors.txt" instead of Genomes1000_PopColors.txt.
-
-Note: this vignette provides the 1000Genomes annotation files, or the HapMapIII 
-annotation files. If you choose to use either 1000Genomes or HapMapIII reference 
-population data, you can simply use our color mapping files and it should work.  
-If not, you must provide it to the function.  An example of the color scheme 
-for the 1000 Genomes reference data is found in '1000Genomes_PopColors.txt'.  
-
-From within R, run the following command to the ancestry check.  This is for 
-the 1000 Genomes Data. 
-```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
-library(plinkQC)
-indir <- system.file("extdata", package="plinkQC")
-qcdir <- "~/qcdir"
-name <- 'data'
-refname <- 'all_hg38'
-prefixMergedDataset <- paste(name, ".", refname, sep="")
-
-exclude_ancestry <-
-    evaluate_check_ancestry(indir=qcdir, name=name,
-                            prefixMergedDataset=prefixMergedDataset,
-                            refSamplesFile=paste(indir, 
-                                                 "/Genomes1000_ID2Pop.txt",
-                                                 sep=""), 
-                            refColorsFile=paste(indir, 
-                                                "/Genomes1000_PopColors.txt",
-                                                sep=""),
-                            interactive=TRUE)
-```
-```{r load ancestry, out.width = "500px", echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkAncestry.png")
-```
-
-
-After these steps, this .eigenvec file can be used to build a random forest.  
-The steps for this process are described in [link next vignette]. 
-For now, I am putting the Random Forest documentation here. 
 
 ## Random Forest Classification 
 The previous [Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html) 
