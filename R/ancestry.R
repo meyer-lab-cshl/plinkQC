@@ -133,49 +133,53 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                 extract_markers, exclude_markers) 
   
   if (verbose) message("Projecting data on 1000G PC space via Plink2 --score")
+  # system2(path2plink2,
+  #         args=c("--pfile", prefix,
+  #                args_filter,
+  #               #"--extract", makepath(path2load_mat, "loading_variants.txt"),
+  #                "--snps-only",
+  #                "--max-alleles 2",
+  #                "--read-freq", paste0(path2load_mat, ".acount"),
+  #                "--score", paste0(path2load_mat, ".eigenvec.allele"),
+  #                "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
+  #                "--out", out),
+  #         stdout = showPlinkOutput, stderr = showPlinkOutput)
+
   system2(path2plink2,
           args=c("--pfile", prefix,
                  args_filter,
-                 "--extract", makepath(path2load_mat, "loading_variants.txt"),
-                 "--read-freq", makepath(path2load_mat, "unrel_hg38.maf.pruned.pca.acount"),
-                 "--score", makepath(path2load_mat, "unrel_hg38.maf.pruned.pca.eigenvec.allele"),
+                 "--snps-only",
+                 "--max-alleles 2",
+                 "--chr 1-22",
+                 "--read-freq", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.nolowmaf.pca.acount",
+                 "--score", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.nolowmaf.pca.eigenvec.allele",
                  "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
                  "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 
-  # system2(path2plink2, 
-  #         args=c("--pfile", prefix,
-  #                args_filter,
-  #                "--read-freq", "../plinkQC_validation/plinkQC_filtered/unrel_hg38.maf.pruned.pca.acount",
-  #                "--score", "../plinkQC_validation/plinkQC_filtered/unrel_hg38.maf.pruned.pca.eigenvec.allele",
-  #                "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
-  #                "--out", out),
-  #         stdout = showPlinkOutput, stderr = showPlinkOutput)
-  # 
 
   proj <- read.csv(paste0(out,".sscore"), 
                    sep='\t', header = TRUE)
 
-  colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
-  
+  colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", "something", paste0("PC", 1:20))
   #load RF
   #rf_path <- system.file("extdata", 'superpop_rf_0909.RDS',
   #            package="plinkQC")
   #superpop <- readRDS(rf_path)
-  superpop <- readRDS("../plinkQC_validation/forest5_finalModel.rds")
+  superpop <- readRDS("../plinkQC_validation/harmonized_ref_70training.rds")
   #print(superpop)
-  predictions <- predict(superpop, proj, type = "prob")
+  predictions <- predict(superpop, proj)
   
   #NEED TO DOUBLE CHECK IF THIS SHOULD BE IID OR NOT
   #predictions <- data.frame(ID =  proj$IID, pred_ancestry = predictions)
   
   predictions <- data.frame(predictions)
-  predictions$ID <- proj$IID
-  if (threshold) {
+  prediction_result <- data.frame(IID = proj["IID"], predictions = predictions)
+  #if (threshold) {
     #need to make a dataset containing IDs that have 
-  }
+  #}
   
-  return(predictions)
+  return(prediction_result)
   
   
   # p_ancestry <- 
@@ -240,6 +244,9 @@ rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
    
   system2(path2plink2, 
           args=c("--pfile", prefix,
+                 "--snps-only",
+                 "--max-alleles 2",
+                 "--chr 1-22",
                  "--set-all-var-ids", paste0('"', format, '"'),
                  "--rm-dup exclude-all",
                  "--make-pgen",

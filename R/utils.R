@@ -300,7 +300,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
 
     relatedness_original <- relatedness_original[keepIndex,]
     relatedness <- relatedness[keepIndex,]
-
+    
     # individuals with at least one pair-wise comparison > relatednessTh
     highRelated <- dplyr::filter(relatedness, .data$M > relatednessTh)
     if (nrow(highRelated) == 0) {
@@ -408,7 +408,6 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
                                    family_id = families$membership)
       fam_num <- c(1:max(family_mapping$family_id))
       
-      browser()
       nonrelated_perfam <- lapply(fam_num, function(x) {
         #ids in the family
         ids <- family_mapping$id[family_mapping$family_id == x]
@@ -417,7 +416,20 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
           filter(IID1 %in% ids & IID2 %in% ids) %>%
           igraph::graph_from_data_frame(directed = FALSE)
         largest_iv_set <- igraph::largest_ivs(comb_table)
-        unrel <- largest_iv_set[1]
+        
+        if (length(largest_iv_set) != 1) {
+          criterans <- sapply(largest_iv_set, function(x) {
+            idnames = names(x)
+            med = median(otherCriterion$M[otherCriterion$IID %in% idnames])
+            return(med)})
+          index = evaluateDirectionlisttest(criterans, 
+                                            direction = otherCriterionThDirection)
+        }
+        
+        else {
+          index = 1}
+        
+        unrel <- largest_iv_set[index]
         return(unrel)
       })
       
@@ -480,6 +492,21 @@ evaluateDirection <- function(x, y, direction) {
     else if (direction == 'lt') x < y
     else if (direction == 'eq') x == y
     else stop(direction, " as direction in evaluateDirection not known.")
+}
+
+
+evaluateDirectionlist <- function(x, direction) {
+  if (direction == 'ge') {
+    return(which.max(x))}
+  else if (direction == 'le') {
+    return(which.min(x))}
+  else if (direction == 'gt') {
+    return(which.max(x))}
+  else if (direction == 'lt') {
+    return(which.min(x))}
+  else if (direction == 'eq') {
+    {return(1)}}
+  else stop(direction, " as direction in evaluateDirection not known.")
 }
 
 makepath <- function(directory, name) {
