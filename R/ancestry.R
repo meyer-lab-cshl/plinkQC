@@ -151,8 +151,8 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                  "--snps-only",
                  "--max-alleles 2",
                  "--chr 1-22",
-                 "--read-freq", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.nolowmaf.pca.acount",
-                 "--score", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.nolowmaf.pca.eigenvec.allele",
+                 "--read-freq", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.pruned.pca.acount",
+                 "--score", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.pruned.pca.eigenvec.allele",
                  "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
                  "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
@@ -166,7 +166,7 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   #rf_path <- system.file("extdata", 'superpop_rf_0909.RDS',
   #            package="plinkQC")
   #superpop <- readRDS(rf_path)
-  superpop <- readRDS("../plinkQC_validation/harmonized_ref_70training.rds")
+  superpop <- readRDS("../plinkQC_validation/harmonized_pruned_ref.rds")
   #print(superpop)
   predictions <- predict(superpop, proj)
   
