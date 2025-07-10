@@ -422,7 +422,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
             idnames = names(x)
             med = median(otherCriterion$M[otherCriterion$IID %in% idnames])
             return(med)})
-          index = evaluateDirectionlisttest(criterans, 
+          index = evaluateDirectionlist(criterans, 
                                             direction = otherCriterionThDirection)
         }
         
