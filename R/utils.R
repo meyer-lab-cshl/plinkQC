@@ -350,10 +350,8 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         highRelated <- highRelated[!(highRelated$IID1 %in% failIDs_other |
                                          highRelated$IID2 %in% failIDs_other), ]
         if (nrow(highRelated) == 0) {
-            if (verbose) {
-                message("Relatedness cannot be evaluated as all individuals ",
+            message("Relatedness cannot be evaluated as all individuals ",
                         "involved fail due to otherCriterion")
-            }
             return(list(relatednessFails=NULL, failIDs=NULL))
         }
         uniqueIIDs <- unique(c(highRelated$IID1, highRelated$IID2))
@@ -400,6 +398,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         failIDs_single <- NULL
     }
 
+    
     if(length(multipleRelative) != 0) {
       combination_graph <- igraph::graph_from_data_frame(highRelatedMultiple, 
                                                          directed = FALSE)

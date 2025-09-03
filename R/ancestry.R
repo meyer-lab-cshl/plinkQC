@@ -133,30 +133,30 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                 extract_markers, exclude_markers) 
   
   if (verbose) message("Projecting data on 1000G PC space via Plink2 --score")
-  # system2(path2plink2,
-  #         args=c("--pfile", prefix,
-  #                args_filter,
-  #               #"--extract", makepath(path2load_mat, "loading_variants.txt"),
-  #                "--snps-only",
-  #                "--max-alleles 2",
-  #                "--read-freq", paste0(path2load_mat, ".acount"),
-  #                "--score", paste0(path2load_mat, ".eigenvec.allele"),
-  #                "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
-  #                "--out", out),
-  #         stdout = showPlinkOutput, stderr = showPlinkOutput)
-
   system2(path2plink2,
           args=c("--pfile", prefix,
                  args_filter,
+                #"--extract", makepath(path2load_mat, "loading_variants.txt"),
                  "--snps-only",
                  "--max-alleles 2",
-                 "--chr 1-22",
-                 "--read-freq", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.pruned.pca.acount",
-                 "--score", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.pruned.pca.eigenvec.allele",
+                 "--read-freq", paste0(path2load_mat, ".acount"),
+                 "--score", paste0(path2load_mat, ".eigenvec.allele"),
                  "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
                  "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 
+  # system2(path2plink2,
+  #         args=c("--pfile", prefix,
+  #                args_filter,
+  #                "--snps-only",
+  #                "--max-alleles 2",
+  #                "--chr 1-22",
+  #                "--read-freq", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.pruned.pca.acount",
+  #                "--score", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.pruned.pca.eigenvec.allele",
+  #                "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
+  #                "--out", out),
+  #         stdout = showPlinkOutput, stderr = showPlinkOutput)
+  # 
 
   proj <- read.csv(paste0(out,".sscore"), 
                    sep='\t', header = TRUE)
@@ -165,8 +165,10 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   #load RF
   #rf_path <- system.file("extdata", 'superpop_rf_0909.RDS',
   #            package="plinkQC")
-  #superpop <- readRDS(rf_path)
-  superpop <- readRDS("../plinkQC_validation/harmonized_pruned_ref.rds")
+  rf_path <- system.file("extdata", 'harmonized_pruned_ref.rds',
+                                    package="plinkQC")
+  superpop <- readRDS(rf_path)
+  #superpop <- readRDS("../plinkQC_validation/harmonized_pruned_ref.rds")
   #print(superpop)
   predictions <- predict(superpop, proj)
   
@@ -175,9 +177,6 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   
   predictions <- data.frame(predictions)
   prediction_result <- data.frame(IID = proj["IID"], predictions = predictions)
-  #if (threshold) {
-    #need to make a dataset containing IDs that have 
-  #}
   
   return(prediction_result)
   

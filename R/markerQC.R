@@ -836,3 +836,85 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
     fail_maf <- maf[maf$MAF < mafTh,]
     return(list(fail_maf=fail_maf, p_maf=p_maf))
 }
+
+
+
+#Pruning SNPs in linkage disequilibirum 
+check_ld <- function(indir, name, qcdir=indir,
+                                  path2plink=NULL,
+                                  filter_high_ldregion=TRUE,
+                                  high_ldregion_file=NULL,
+                                  genomebuild='hg19',
+                                  showPlinkOutput=TRUE,
+                                  keep_individuals=NULL,
+                                  remove_individuals=NULL,
+                                  exclude_markers=NULL,
+                                  extract_markers=NULL,
+                                  verbose=FALSE) {
+  
+  prefix <- makepath(indir, name)
+  out <- makepath(qcdir, name)
+  
+  checkFormat(prefix)
+  path2plink <- checkPlink(path2plink)
+  args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                extract_markers, exclude_markers)
+  if (filter_high_ldregion) {
+    if (!is.null(high_ldregion_file)) {
+      if (!file.exists(high_ldregion_file)) {
+        stop("high_ldregion_file (", high_ldregion_file ,
+             ") cannot be read")
+      }
+      highld <- data.table::fread(high_ldregion_file, sep=" ",
+                                  header=FALSE, data.table=FALSE)
+      if(ncol(highld) != 4) {
+        stop("high_ldregion_file (", high_ldregion_file ,
+             ") is incorrectly formated: ",
+             "contains more/less than 4 columns")
+      }
+      if(any(grepl("chr", highld[,1]))) {
+        stop("high_ldregion_file (", high_ldregion_file ,
+             ") is incorrectly formated: ",
+             "chromosome specification in first column",
+             "cannot contain 'chr'")
+      }
+      if (verbose) message(paste("Using", high_ldregion_file, "coordinates for pruning of",
+                                 "high-ld regions"))
+    } else {
+      if (tolower(genomebuild) == 'hg18' || tolower(genomebuild) == 'NCBI36') {
+        high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg18-NCBI36.txt',
+                                          package="plinkQC")
+      } else if (tolower(genomebuild) == 'hg19' ||
+                 tolower(genomebuild) == 'grch37') {
+        high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg19-GRCh37.txt',
+                                          package="plinkQC")
+      } else if (tolower(genomebuild) == 'hg38' ||
+                 tolower(genomebuild) == 'grch38') {
+        high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg38-GRCh38.txt',
+                                          package="plinkQC")
+      } else {
+        stop(genomebuild, "is not a known/provided human genome build.",
+             "Options are: hg18, hg19, and hg38")
+      }
+      if (verbose) message(paste("Use", genomebuild, "coordinates for pruning of",
+                                 "high-ld regions"))
+    }
+    if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix,
+                          "--exclude", "range", high_ldregion_file,
+                          "--indep-pairwise", 50, 5, 0.2,
+                          "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
+  } else {
+    if (verbose) message("No pruning of high-ld regions")
+    if (verbose) message(paste("Prune", prefix,
+                               "for relatedness estimation"))
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix,
+                          "--indep-pairwise", 50, 5, 0.2, "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
+  }
+}
