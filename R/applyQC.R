@@ -345,7 +345,7 @@ cleanData <- function(indir, name, qcdir=indir,
     } 
     colnames(keepIDs) <- c("FID", "IID")
     
-    if (nrow(removeIDs) == 0) {
+    if (is.null(removeIDs) || nrow(removeIDs) == 0) {
       return(list(passIDs=keepIDs, failIDs=removeIDs))
     } 
     
