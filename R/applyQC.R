@@ -339,7 +339,16 @@ cleanData <- function(indir, name, qcdir=indir,
                                      stringsAsFactors=FALSE,
                                      header=FALSE)
     keepIDs <- keepIDs[, 1:2]
+    
+    if (nrow(keepIDs) == 0) {
+      message("No samples pass quality control filters.")
+    } 
     colnames(keepIDs) <- c("FID", "IID")
+    
+    if (nrow(removeIDs) == 0) {
+      return(list(passIDs=keepIDs, failIDs=removeIDs))
+    } 
+    
     colnames(removeIDs) <- c("FID", "IID")
     return(list(passIDs=keepIDs, failIDs=removeIDs))
 }
