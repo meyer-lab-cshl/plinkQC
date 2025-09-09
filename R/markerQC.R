@@ -840,11 +840,14 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
 
 
 #Pruning SNPs in linkage disequilibirum 
-check_ld <- function(indir, name, qcdir=indir,
+pruning_ld <- function(indir, name, qcdir=indir,
                                   path2plink=NULL,
                                   filter_high_ldregion=TRUE,
                                   high_ldregion_file=NULL,
                                   genomebuild='hg19',
+                                  window_size = 50,
+                                  step_size = 5,
+                                  r_2 = 0.2,
                                   showPlinkOutput=TRUE,
                                   keep_individuals=NULL,
                                   remove_individuals=NULL,
@@ -909,12 +912,21 @@ check_ld <- function(indir, name, qcdir=indir,
                    std_out=showPlinkOutput, std_err=showPlinkOutput)
   } else {
     if (verbose) message("No pruning of high-ld regions")
-    if (verbose) message(paste("Prune", prefix,
-                               "for relatedness estimation"))
     sys::exec_wait(path2plink,
                    args=c("--bfile", prefix,
-                          "--indep-pairwise", 50, 5, 0.2, "--out", out,
+                          "--indep-pairwise", window_size, step_size, r_2, 
+                          "--out", out,
                           args_filter),
                    std_out=showPlinkOutput, std_err=showPlinkOutput)
   }
+  
+  sys::exec_wait(path2plink,
+                 args=c("--bfile", prefix, "--extract",
+                        paste(out, ".prune.in", sep=""),
+                        "--make-bed",
+                        "--out", paste(out, ".pruned", sep=""),
+                        args_filter)
+                 )
 }
+
+
