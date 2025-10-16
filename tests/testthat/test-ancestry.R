@@ -2,7 +2,7 @@ context('Test ancestry functions')
 qcdir <- '.'
 indir <- '.'
 name <- 'data.hg38.renamed'
-path2load_mat <- '../../../loading_matrix'
+path2load_mat <- "../plinkQC_validation/ancestry_unrel_model/merged_chrs.postQC.train.pca"
 
 
 context('Test superpop_classifcation')
@@ -53,7 +53,7 @@ test_that("Throws error if pathtoplink isn't right", {
 
 test_that("Testing that the loading matrix path will not run if the path is not correct", {
   expect_error(checkLoadingMat(path2load_mat = "Nothing"),
-               "not found in the path given")
+               "The file unrel_hg38.maf.pruned.pca.acount is not found in the path \n         given for path2load_mat. Please check that the file path is correct")
   
 })
 

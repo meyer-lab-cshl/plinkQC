@@ -2,18 +2,27 @@
 % Please edit documentation in R/ancestry.R
 \name{superpop_classification}
 \alias{superpop_classification}
-\title{Predicting sample superpopualation ancestry}
+\title{Predicting sample superpopulation ancestry}
 \usage{
 superpop_classification(
   indir,
   name,
   qcdir = indir,
   verbose = FALSE,
+  interactive = FALSE,
   path2plink2 = NULL,
+  path2load_mat = NULL,
+  usethreshold = TRUE,
+  threshold = 0.9,
   keep_individuals = NULL,
   remove_individuals = NULL,
-  exclude_markers = NULL,
   extract_markers = NULL,
+  exclude_markers = NULL,
+  legend_text_size = 5,
+  legend_title_size = 7,
+  axis_text_size = 5,
+  axis_title_size = 7,
+  title_size = 9,
   showPlinkOutput = TRUE
 )
 }
@@ -30,12 +39,27 @@ default is qcdir=indir.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
+\item{interactive}{[logical] Should plots be shown interactively? When
+choosing this option, make sure you have X-forwarding/graphical interface
+available for interactive plotting. Alternatively, set interactive=FALSE and
+save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
+other_arguments) or pdf(outfile) print(p_ancestry) dev.off().}
+
 \item{path2plink2}{[character] Absolute path to PLINK executable
 (\url{https://www.cog-genomics.org/plink/2.0/}) i.e.
 plink 2 should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
+
+\item{path2load_mat}{[character] /path/to/directory where loading matrices are 
+kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData}
+
+\item{usethreshold}{[logical] If TRUE, the model will only return predictions 
+above a certain threshold}
+
+\item{threshold}{[integer] The threshold (between 0 and 1) of confidence the 
+model needs to have in a prediction to be returned}
 
 \item{keep_individuals}{[character] Path to file with individuals to be
 retained in the analysis. The file has to be a space/tab-delimited text file
@@ -51,13 +75,6 @@ column. All samples listed in this file will be removed from the current
 analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#indiv}.
 Default: NULL, i.e. no filtering on individuals.}
 
-\item{exclude_markers}{[character] Path to file with makers to be
-removed from the analysis. The file has to be a text file with a list of
-variant IDs (usually one per line, but it's okay for them to just be
-separated by spaces). All listed variants will be removed from the current
-analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
-Default: NULL, i.e. no filtering on markers.}
-
 \item{extract_markers}{[character] Path to file with makers to be
 included in the analysis. The file has to be a text file with a list of
 variant IDs (usually one per line, but it's okay for them to just be
@@ -65,13 +82,30 @@ separated by spaces). All unlisted variants will be removed from the current
 analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
 Default: NULL, i.e. no filtering on markers.}
 
+\item{exclude_markers}{[character] Path to file with makers to be
+removed from the analysis. The file has to be a text file with a list of
+variant IDs (usually one per line, but it's okay for them to just be
+separated by spaces). All listed variants will be removed from the current
+analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
+Default: NULL, i.e. no filtering on markers.}
+
+\item{legend_text_size}{[integer] Size for legend text.}
+
+\item{legend_title_size}{[integer] Size for legend title.}
+
+\item{axis_text_size}{[integer] Size for axis text.}
+
+\item{axis_title_size}{[integer] Size for axis title.}
+
+\item{title_size}{[integer] Size for plot title.}
+
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
 }
 \value{
-A named [factor] with five different levels AFR, AMR, EAS, EUR, and SAS that
-correspond to the ancestry that a sample comes from and the names corresponds
-to the IDs.
+A named [factor] with five different levels AFR, AMR, EAS, EUR, and 
+SAS that correspond to the ancestry that a sample comes from and the names 
+corresponds to the IDs.
 }
 \description{
 Predicts the ancestry of inputted samples using plink2. This program utilizes a random 
