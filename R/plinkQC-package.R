@@ -9,9 +9,10 @@
 #' @importFrom utils read.table write.table combn read.csv 
 #' @importFrom optparse make_option parse_args OptionParser
 #' @importFrom dplyr filter select select_
+#' @importFrom tidyr pivot_longer
 #' @importFrom cowplot plot_grid
 #' @importFrom UpSetR upset
 #' @importFrom methods is
-#' @importFrom stats sd predict
+#' @importFrom stats sd predict median 
 ## usethis namespace: end
 NULL

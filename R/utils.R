@@ -268,6 +268,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     names(relatedness)[iid2_index] <- "IID2"
     names(relatedness)[names(relatedness) == relatednessRelatedness] <- "M"
 
+
     relatedness_original <- relatedness
 
     if (!is.null(relatednessFID1) && is.null(relatednessFID2) ||
@@ -300,6 +301,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
 
     relatedness_original <- relatedness_original[keepIndex,]
     relatedness <- relatedness[keepIndex,]
+    
     
     # individuals with at least one pair-wise comparison > relatednessTh
     highRelated <- dplyr::filter(relatedness, .data$M > relatednessTh)
@@ -356,6 +358,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         }
         uniqueIIDs <- unique(c(highRelated$IID1, highRelated$IID2))
     }
+    
     # all samples with related individuals
     allRelated <- c(highRelated$IID1, highRelated$IID2)
 
@@ -398,7 +401,6 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         failIDs_single <- NULL
     }
 
-    
     if(length(multipleRelative) != 0) {
       combination_graph <- igraph::graph_from_data_frame(highRelatedMultiple, 
                                                          directed = FALSE)
@@ -407,27 +409,27 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
                                    family_id = families$membership)
       fam_num <- c(1:max(family_mapping$family_id))
       
+      
       nonrelated_perfam <- lapply(fam_num, function(x) {
         #ids in the family
         ids <- family_mapping$id[family_mapping$family_id == x]
         #then grab a portion of high related multiple that takes in those ids
-        comb_table <- highRelatedMultiple %>% 
-          filter(IID1 %in% ids & IID2 %in% ids) %>%
-          igraph::graph_from_data_frame(directed = FALSE)
+        filtered <- dplyr::filter(highRelatedMultiple, .data$IID1 %in% ids & .data$IID2 %in% ids)
+        comb_table <- igraph::graph_from_data_frame(filtered, directed = FALSE)
         largest_iv_set <- igraph::largest_ivs(comb_table)
         
-        if (length(largest_iv_set) != 1) {
+        if (length(largest_iv_set) != 1 && !is.null(otherCriterion)) {
           criterans <- sapply(largest_iv_set, function(x) {
             idnames = names(x)
-            med = median(otherCriterion$M[otherCriterion$IID %in% idnames])
+            med = stats::median(otherCriterion$M[otherCriterion$IID %in% idnames])
             return(med)})
           index = evaluateDirectionlist(criterans, 
                                             direction = otherCriterionThDirection)
+          
         }
         
         else {
           index = 1}
-        
         unrel <- largest_iv_set[index]
         return(unrel)
       })

@@ -38,7 +38,9 @@ Imports:
     dplyr,
     igraph (>= 1.2.4),
     sys,
-    randomForest
+    randomForest,
+    stats,
+    tidyr
 Suggests:
     testthat,
     mockery,

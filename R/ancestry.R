@@ -81,16 +81,22 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' above a certain threshold
 #' @param threshold [integer] The threshold (between 0 and 1) of confidence the 
 #' model needs to have in a prediction to be returned
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
 #' @param axis_text_size [integer] Size for axis text.
 #' @param axis_title_size [integer] Size for axis title.
 #' @param title_size [integer] Size for plot title.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
+#' @param interactive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
+#' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return A named [factor] with five different levels AFR, AMR, EAS, EUR, and 
 #' SAS that correspond to the ancestry that a sample comes from and the names 
 #' corresponds to the IDs.
-#' @export 
 #' @examples
 #' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
@@ -101,15 +107,19 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' \dontrun{
 #' superpop_classification(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
 #' }
+#'@export 
 superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
+                                    interactive = FALSE,
                                     path2plink2=NULL,
                                     path2load_mat=NULL,
                                     usethreshold = TRUE,
                                     threshold = 0.9,
                                     keep_individuals=NULL,
                                     remove_individuals=NULL,
-                                    exclude_markers=NULL,
                                     extract_markers=NULL,
+                                    exclude_markers=NULL,
+                                    legend_text_size = 5,
+                                    legend_title_size = 7,
                                     axis_text_size = 5,
                                     axis_title_size = 7,
                                     title_size = 9,
@@ -136,7 +146,6 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   system2(path2plink2,
           args=c("--pfile", prefix,
                  args_filter,
-                #"--extract", makepath(path2load_mat, "loading_variants.txt"),
                  "--snps-only",
                  "--max-alleles 2",
                  "--read-freq", paste0(path2load_mat, ".acount"),
@@ -145,51 +154,45 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                  "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 
-  # system2(path2plink2,
-  #         args=c("--pfile", prefix,
-  #                args_filter,
-  #                "--snps-only",
-  #                "--max-alleles 2",
-  #                "--chr 1-22",
-  #                "--read-freq", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.pruned.pca.acount",
-  #                "--score", "../plinkQC_validation/plinkQC_cleandata/merged_chrs.pruned.pca.eigenvec.allele",
-  #                "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
-  #                "--out", out),
-  #         stdout = showPlinkOutput, stderr = showPlinkOutput)
-  # 
-
   proj <- read.csv(paste0(out,".sscore"), 
                    sep='\t', header = TRUE)
+  colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
 
-  colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", "something", paste0("PC", 1:20))
-  #load RF
-  #rf_path <- system.file("extdata", 'superpop_rf_0909.RDS',
-  #            package="plinkQC")
-  rf_path <- system.file("extdata", 'harmonized_pruned_ref.rds',
+
+  rf_path <- system.file("extdata", 'final_model.RDS',
                                     package="plinkQC")
+  
+  #rf_path <- "../plinkQC_validation/ancestry_unrel_model/final_model.RDS"
   superpop <- readRDS(rf_path)
-  #superpop <- readRDS("../plinkQC_validation/harmonized_pruned_ref.rds")
-  #print(superpop)
-  predictions <- predict(superpop, proj)
+  prediction_prob <- predict(superpop, proj, type = "prob")
+  prediction_prob <- data.frame(prediction_prob)
+  prediction_prob <- data.frame(IID = proj["IID"], predictions = prediction_prob)
   
-  #NEED TO DOUBLE CHECK IF THIS SHOULD BE IID OR NOT
-  #predictions <- data.frame(ID =  proj$IID, pred_ancestry = predictions)
+  prediction_majority <- predict(superpop, proj)
+  prediction_majority <- data.frame(prediction_majority)
+  prediction_majority <- data.frame(IID = proj["IID"], predictions = prediction_majority)
   
-  predictions <- data.frame(predictions)
-  prediction_result <- data.frame(IID = proj["IID"], predictions = predictions)
+  colnames(prediction_prob) <- sub("^predictions.", "", colnames(prediction_prob))
+  prediction_prob_long <- pivot_longer(prediction_prob, 
+                                       cols = 'Africa':'Middle_East',
+                                       names_to = "Ancestry",
+                                       values_to = "predictions")
+  p_ancestry <- 
+     ggplot(prediction_prob_long, aes(x = as.factor(.data$IID), 
+                                      y = .data$predictions, 
+                                      fill = .data$Ancestry)) + 
+     geom_bar(stat = "identity") +
+     xlab("Ancestral Prediction") + ylab("Count") + 
+     theme_bw() + 
+     theme(legend.position = "right",
+           title = element_text(size = title_size),
+           axis.text = element_text(size = axis_text_size),
+           axis.title = element_text(size = axis_title_size)) +
+    scale_fill_brewer(palette = "Set2") 
   
-  return(prediction_result)
-  
-  
-  # p_ancestry <- 
-  #   ggplot(predictions, aes(x = predictions, fill = predictions)) + geom_bar() + 
-  #   xlab("Ancestral Prediction") + ylab("Count") + 
-  #   theme_bw() + 
-  #   theme(legend.position = "none",
-  #         title = element_text(size = title_size),
-  #         axis.text = element_text(size = axis_text_size),
-  #         axis.title = element_text(size = axis_title_size))
-  # return(list(predictions=predictions, p_ancestry = p_ancestry))
+   return(list(prediction_prob=prediction_prob, 
+               prediction_majority = prediction_majority, 
+               p_ancestry = p_ancestry))
 }
 
 
