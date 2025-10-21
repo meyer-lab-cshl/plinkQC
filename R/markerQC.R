@@ -839,7 +839,42 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
 
 
 
-#Pruning SNPs in linkage disequilibirum 
+#' Pruning of SNPs in Linkage Disequilibrium
+#'
+#' Runs plink --indep-pairwise to remove SNPs in linkage disequilibrium. It 
+#' excludes variants that found in a high linkage disequilbirum loci.
+#' 
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory to where name.genome as returned
+#' by plink --genome will be saved.  Per default qcdir=indir. If
+#' run.check_relatedness is FALSE, it is assumed that plink
+#' --missing and plink --genome have been run and qcdir/name.imiss and
+#' qcdir/name.genome exist. User needs writing permission to qcdir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam, name.genome and name.imiss.
+#' @inheritParams checkPlink
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @return Files with a .pruned with the pruned SNPS 
+#' @export
+#' @examples
+#' \dontrun{
+#' indir <- system.file("extdata", package="plinkQC")
+#' name <- 'data'
+#' path2plink <- "path/to/plink"
+#'
+#' # whole dataset
+#' relatednessQC <- check_relatedness(indir=indir, name=name, interactive=FALSE,
+#' run.check_relatedness=FALSE, path2plink=path2plink)
+#'
+#' # subset of dataset
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' fail_relatedness <- check_relatedness(indir=qcdir, name=name,
+#' remove_individuals=remove_individuals_file, path2plink=path2plink)
+#' }
 pruning_ld <- function(indir, name, qcdir=indir,
                                   path2plink=NULL,
                                   filter_high_ldregion=TRUE,

@@ -56,8 +56,6 @@ path2load_mat <- "/Users/syed/Documents/loading_matrix"
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
 may be needed to map variants from one annotation to another. More details on how
 to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd).
-We recommend using ```check_relatedness``` on the reference to filter our related samples. 
-This prevents data leakage between the training and testing datasets while training. 
 
 In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
 and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
@@ -110,7 +108,9 @@ into PLINK format. Vignettes
 show the download and processing of the HapMap phase III and 1000Genomes phase
 III dataset, respectively. In this example, we will use the 1000Genomes data as
 the reference dataset.
-We recommend using plink's <code>checkrelatedness function on the reference data to pre
+We recommend using ```check_relatedness``` on the reference to filter our related samples. 
+This prevents data leakage between the training and testing datasets while training. 
+
 
 ## Set-up
 We will first set up some bash variables and create directories needed; storing
@@ -182,8 +182,10 @@ mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 
 ### Renaming variant identifiers
 Variant identifiers can vary between studies. To ensure that the data can be properly processed,
-we will rename the variant identifiers to a common scheme based on chromosome number and basepair location.
-``` {bash renaming, eval = FALSE}
+we will rename the variant identifiers to a common scheme based on chromosome number and basepair location use plinkQC's rename variant identifier function.
+``` {R renaming, eval = FALSE}
+library(plinkQC)
+
 plink2 --bfile  $qcdir/$refname.no_ac_gt_snps \
       --set-all-var-ids "@:#[hg38]" \
       --rm-dup exclude-all \
