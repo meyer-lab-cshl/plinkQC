@@ -50,12 +50,12 @@ that fail the quality control can subsequently be removed with *plinkQC* to
 generate a new, clean dataset. Removal of individuals based on relationship
 status is optimised to retain as many individuals as possible in the study.
 
-*plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
+The majority if the functions in *plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
  (**version 1.9**), which has to be manually installed prior to the usage of
- *plinkQC*. It assumes the genotype have already been determined from the
+ *plinkQC*. The ancestry functions depends on the newer version of [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/)
+ (**version 2.0**). It assumes the genotype have already been determined from the
  original probe intensity data of the genotype array and is available in
-[plink format](https://www.cog-genomics.org/plink/1.9/input#bed). The ancestry functionality depends on the newer version of [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/)
- (**version 2.0**)
+[plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
 
 The protocol is implemented in three main functions, the per-individual quality
 control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
@@ -116,16 +116,6 @@ NB: To reduce the data size of the example data in `plinkQC`,
 data.genome  has already been reduced to the individuals that are related. Thus
 the relatedness plots in C only show counts for related individuals only.
 
-NB: To demonstrate the results of the ancestry check, the required eigenvector
-file of the combined study and reference datasets have been precomputed and
-for the purpose of this example will be copied to the `qcdir`. In practice,
-the `qcdir` will often be the same as the `indir` and this step will not be
-required.
-
-```{r copy files}
-file.copy(file.path(package.dir, 'extdata/data.HapMapIII.eigenvec'), qcdir)
-```
-
 `perIndividualQC` displays the results of the quality control steps in a
 multi-panel plot. 
 
@@ -137,7 +127,7 @@ fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 ```
 ```{r load individualQC, echo=FALSE,out.width = "500px", fig.align='center'}
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("individualQC.png")
+knitr::include_graphics("individualQC.pdf")
 ```
 
 
@@ -152,7 +142,6 @@ overview_individuals <- overviewPerIndividualQC(fail_individuals,
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewQC.png")
 ```
-
 
 
 ## Per-marker quality control
@@ -185,7 +174,6 @@ par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewMarkerQC.png")
 ```
 
-\newpage
 ## Create QC-ed dataset
 After checking results of the per-individual and per-marker quality control,
 individuals and markers that fail the chosen criteria can automatically be
@@ -197,6 +185,45 @@ Ids  <- cleanData(indir=indir, qcdir=qcdir, name=name, path2plink=path2plink,
                             verbose=TRUE, showPlinkOutput=FALSE)
 ```
 
+## Predicting Ancestry
+After filtering low quality markers and samples, it may be useful to predict the genomic ancestry of the samples. 
+We included a pre-trained random forest classifier to predict the genomic ancestry of the samples. [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of the package.
+Additional files for
+running the provided pre-trained classier are also needed from https://github.com/meyer-lab-cshl/plinkQC. [Git Large File Storage extention](https://git-lfs.com/) needs to be pre-installed to get the correct files.
+
+Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
+may be needed to map variants from one annotation to another. More details on how
+to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd).
+For this section, we provide an example dataset that is in hg38 annotation.
+
+In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
+and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
+We included the functions convert_to_plink2() and rename_variant_identifiers()
+to correctly format genomic data that is in the hg38 annotation. 
+
+``` {R, eval = FALSE}
+name = "data.hg38"
+path2load_mat = "path/to/load_mat/"
+convert_to_plink2(indir=indir, qcdir=qcdir, name=name, 
+                  path2plink2 = path2plink2)
+rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name, 
+                           path2plink2 = path2plink2)
+name <- paste0(name, ".renamed")
+```
+
+After correctly formatting the data, we can use the provided function to return the predicted ancestry. 
+``` {R ancestry identification, eval = FALSE}
+ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
+                                      path2plink2 = path2plink2, 
+                                      path2load_mat = path2load_mat) 
+```
+
+```{r load ancestry, out.width = "500px", echo=FALSE}
+par(mfrow=c(2,1), las=1)
+#knitr::include_graphics("ancestry_plot.png")
+```
+
+\newpage
 # Step-by-step
 
 ## Individuals with discordant sex information
@@ -281,38 +308,6 @@ knitr::include_graphics("checkRelatedness.png")
 ```
 
 
-## Individuals of divergent ancestry
-The identification of individuals of divergent ancestry can be achieved by
-combining the genotypes of the study population with genotypes of a reference
-dataset consisting of individuals from known ethnicities (for instance
-individuals from the Hapmap or 1000 genomes study [@HapMap2005,@HapMap2007,
-@HapMap2010,@a1000Genomes2015,@b1000Genomes2015]). Principal component
-analysis on this combined genotype panel can be used to detect population
-structure down to the level of the reference dataset (for Hapmap and 1000
-Genomes, this is down to large-scale continental ancestry).
-Identifying individuals of divergent ancestry is implemented in
-`check_ancestry`. Currently, check ancestry only supports automatic selection of
-individuals of European descent. It uses information from principal components 1
-and 2 to find the center of the European reference samples. All study samples
-whose euclidean distance from the centre falls outside a specified radius are
-considered non-European. `check_ancestry` creates a scatter plot of PC1 versus
-PC2 color-coded for samples of the reference populations and the study
-population.
-
-```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
-exclude_ancestry <- check_ancestry(indir=indir, qcdir=qcdir, name=name,
-                            refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",
-                                                 sep=""), 
-                            refColorsFile=paste(indir, "/HapMap_PopColors.txt",
-                                                 sep=""),
-                            prefixMergedDataset="data.HapMapIII",
-                            path2plink=path2plink, run.check_ancestry = FALSE,
-                            interactive=TRUE)
-```
-```{r load ancestry, out.width = "500px", echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkAncestry.png")
-```
-
 ## Markers with excessive missingness rate
 Markers with excessive missingness rate are removed as they are considered 
 unreliable. Typically, thresholds for marker exclusion based on missingness
@@ -367,5 +362,6 @@ fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
 ```{r load  maf, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("maf.png")
 ```
+
 
 # References 

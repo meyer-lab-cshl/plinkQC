@@ -22,7 +22,8 @@ Description: Genotyping arrays enable the direct measurement of an individuals
     Individuals and markers that fail the quality control can subsequently be
     removed to generate a new, clean dataset. Removal of individuals based on
     relationship status is optimised to retain as many individuals as possible
-    in the study.
+    in the study. Additionally, there is a pre-trained classifier to predict 
+    genomic ancestry of human samples.
 Depends:
     R (>= 3.6.0)
 Imports:
@@ -31,7 +32,6 @@ Imports:
     data.table (>= 1.11.0),
     R.utils,
     ggplot2,
-    ggforce,
     ggrepel,
     cowplot,
     UpSetR,

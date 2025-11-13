@@ -106,7 +106,8 @@ package.dir <- find.package('plinkQC')
 indir <- file.path(package.dir, 'extdata')
 qcdir <- tempdir()
 name <- 'data'
-path2plink <- "/Users/hannah/bin/plink"
+path2plink <- "/Users/syed/bin/plink"
+path2plink2 <- "/Users/syed/bin/plink2"
 ```
 
 ## Per-individual quality control
@@ -126,27 +127,12 @@ NB: To reduce the data size of the example data in `plinkQC`,
 data.genome  has already been reduced to the individuals that are related. Thus
 the relatedness plots in C only show counts for related individuals only.
 
-NB: To demonstrate the results of the ancestry check, the required eigenvector
-file of the combined study and reference datasets have been precomputed and
-for the purpose of this example will be copied to the `qcdir`. In practice,
-the `qcdir` will often be the same as the `indir` and this step will not be
-required.
-
-```{r copy files}
-file.copy(file.path(package.dir, 'extdata/data.HapMapIII.eigenvec'), qcdir)
-```
-
 `perIndividualQC` displays the results of the quality control steps in a
 multi-panel plot. 
 
 ```{r individual QC,  eval=FALSE, fig.height=12, fig.width=9}
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
-                            refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",
-                                                 sep=""), 
-                            refColorsFile=paste(indir, "/HapMap_PopColors.txt",
-                                                 sep=""),
-                            prefixMergedDataset="data.HapMapIII",
-                            path2plink=path2plink, do.run_check_ancestry = FALSE,
+                            path2plink=path2plink,
                             interactive=TRUE, verbose=TRUE)
 
 ```
@@ -296,38 +282,6 @@ knitr::include_graphics("checkRelatedness.png")
 ```
 
 
-## Individuals of divergent ancestry
-The identification of individuals of divergent ancestry can be achieved by
-combining the genotypes of the study population with genotypes of a reference
-dataset consisting of individuals from known ethnicities (for instance
-individuals from the Hapmap or 1000 genomes study [@HapMap2005,@HapMap2007,
-@HapMap2010,@a1000Genomes2015,@b1000Genomes2015]). Principal component
-analysis on this combined genotype panel can be used to detect population
-structure down to the level of the reference dataset (for Hapmap and 1000
-Genomes, this is down to large-scale continental ancestry).
-Identifying individuals of divergent ancestry is implemented in
-`check_ancestry`. Currently, check ancestry only supports automatic selection of
-individuals of European descent. It uses information from principal components 1
-and 2 to find the center of the European reference samples. All study samples
-whose euclidean distance from the centre falls outside a specified radius are
-considered non-European. `check_ancestry` creates a scatter plot of PC1 versus
-PC2 color-coded for samples of the reference populations and the study
-population.
-
-```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
-exclude_ancestry <- check_ancestry(indir=indir, qcdir=qcdir, name=name,
-                            refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",
-                                                 sep=""), 
-                            refColorsFile=paste(indir, "/HapMap_PopColors.txt",
-                                                 sep=""),
-                            prefixMergedDataset="data.HapMapIII",
-                            path2plink=path2plink, run.check_ancestry = FALSE,
-                            interactive=TRUE)
-```
-```{r load ancestry, out.width = "500px", echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkAncestry.png")
-```
-
 ## Markers with excessive missingness rate
 Markers with excessive missingness rate are removed as they are considered 
 unreliable. Typically, thresholds for marker exclusion based on missingness
@@ -382,5 +336,29 @@ fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
 ```{r load  maf, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("maf.png")
 ```
+
+## Predicting ancestry of human samples
+
+The identification of ancestry is done by training the classifier on the
+principal components of a reference dataset. The reference dataset is composed of 
+individuals a harmonized dataset of the 1000 genomes individuals with 
+the Human Genome Diversity Project. A pre-trained classifier is included
+within the package to predict the ancestry. `superpop_classification()` returns a plot
+of the predicted probabilities of each ancestry, the dataframe containing
+the predicted probability, and a dataframe with the majority ancestry for each individual. 
+
+There are additional functions to rename the variant in the correct format and put the data in plink2 format if needed for the classifier to work properly.
+```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
+
+superpop_classification(indir = indir, 
+                        name = name, qcdir = qcdir, 
+                        path2plink2 = path2plink2, path2load_mat = "../plinkQC_validation/ancestry_unrel_model/merged_chrs.postQC.train.pca")
+#function for superpop classification 
+
+```
+```{r load ancestry, out.width = "500px", echo=FALSE, fig.align='center'}
+knitr::include_graphics("checkAncestry.png")
+```
+
 
 # References 

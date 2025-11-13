@@ -68,6 +68,9 @@ identifiers in the format of 1:12345[hg38] is needed for the function to work</p
 <span>  remove_individuals <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exclude_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  extract_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  axis_text_size <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  axis_title_size <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  title_size <span class="op">=</span> <span class="fl">9</span>,</span>
 <span>  showPlinkOutput <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -102,7 +105,7 @@ default is qcdir=indir.</p></dd>
 plink 2 should be accessible as path2plink -h. The full name of the executable
 should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
-and PLINK will be found by <code><a href="https://rdrr.io/pkg/sys/man/exec.html" class="external-link">exec</a></code>('plink').</p></dd>
+and PLINK will be found by <code><a href="https://jeroen.r-universe.dev/sys/reference/exec.html" class="external-link">exec</a></code>('plink').</p></dd>
 
 
 <dt id="arg-path-load-mat">path2load_mat<a class="anchor" aria-label="anchor" href="#arg-path-load-mat"></a></dt>
@@ -144,6 +147,18 @@ variant IDs (usually one per line, but it's okay for them to just be
 separated by spaces). All unlisted variants will be removed from the current
 analysis. See <a href="https://www.cog-genomics.org/plink/1.9/filter#snp" class="external-link">https://www.cog-genomics.org/plink/1.9/filter#snp</a>.
 Default: NULL, i.e. no filtering on markers.</p></dd>
+
+
+<dt id="arg-axis-text-size">axis_text_size<a class="anchor" aria-label="anchor" href="#arg-axis-text-size"></a></dt>
+<dd><p>[integer] Size for axis text.</p></dd>
+
+
+<dt id="arg-axis-title-size">axis_title_size<a class="anchor" aria-label="anchor" href="#arg-axis-title-size"></a></dt>
+<dd><p>[integer] Size for axis title.</p></dd>
+
+
+<dt id="arg-title-size">title_size<a class="anchor" aria-label="anchor" href="#arg-title-size"></a></dt>
+<dd><p>[integer] Size for plot title.</p></dd>
 
 
 <dt id="arg-showplinkoutput">showPlinkOutput<a class="anchor" aria-label="anchor" href="#arg-showplinkoutput"></a></dt>

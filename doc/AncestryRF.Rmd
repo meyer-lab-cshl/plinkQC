@@ -1,6 +1,6 @@
 ---
 title: "Build Random Forest for Ancestry estimation"
-author: "Hannah Meyer"
+author: "Hannah Meyer, Maha Syed"
 date: "`r Sys.Date()`"
 output:
     pdf_document:

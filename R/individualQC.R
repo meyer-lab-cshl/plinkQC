@@ -300,6 +300,52 @@ perIndividualQC <- function(indir, name, qcdir=indir,
         }
     }
     
+    
+    if (!dont.check_relatedness) {
+      if (do.run_check_relatedness) {
+        run <- run_check_relatedness(qcdir=qcdir, indir=indir, name=name,
+                                     path2plink=path2plink,
+                                     mafThRelatedness=mafThRelatedness,
+                                     filter_high_ldregion=
+                                       filter_high_ldregion,
+                                     high_ldregion_file=high_ldregion_file,
+                                     genomebuild=genomebuild,
+                                     showPlinkOutput=showPlinkOutput,
+                                     keep_individuals=keep_individuals,
+                                     remove_individuals=remove_individuals,
+                                     exclude_markers=exclude_markers,
+                                     extract_markers=extract_markers,
+                                     verbose=verbose)
+      }
+      if (do.evaluate_check_relatedness) {
+        if (verbose) message("Identification of related individuals")
+        fail_relatedness <- evaluate_check_relatedness(qcdir=qcdir,
+                                                       name=name,
+                                                       imissTh=imissTh,
+                                                       highIBDTh=highIBDTh,
+                                                       legend_text_size =
+                                                         legend_text_size,
+                                                       legend_title_size =
+                                                         legend_title_size,
+                                                       axis_text_size =
+                                                         axis_text_size,
+                                                       axis_title_size =
+                                                         axis_title_size,
+                                                       title_size =
+                                                         title_size,
+                                                       interactive=FALSE)
+        write.table(fail_relatedness$failIDs,
+                    file=paste(out, ".fail-IBD.IDs", sep=""),
+                    row.names=FALSE, quote=FALSE, col.names=FALSE,
+                    sep="\t")
+        if (!is.null(fail_relatedness$failIDs)  &&
+            nrow(fail_relatedness$failIDs) != 0) {
+          highIBD <- select(fail_relatedness$failIDs,
+                            .data$FID, .data$IID)
+        }
+        p_relatedness <- fail_relatedness$p_IBD
+      }
+    }
 
     fail_list <- list(missing_genotype=missing_genotype,
                       highIBD=highIBD,

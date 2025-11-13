@@ -102,10 +102,12 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' qcdir <- tempdir()
 #' name <- "data.hg38"
 #' path2plink <- '/path/to/plink'
+#' path2load_mat <- '/path/to/load_mat/merged_chrs.postQC.train.pca'
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
 #' \dontrun{
-#' superpop_classification(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
+#' superpop_classification(indir=indir, qcdir=qcdir, name=name, 
+#' path2plink2 = path2plink2, path2load_mat = path2load_mat)
 #' }
 #'@export 
 superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
