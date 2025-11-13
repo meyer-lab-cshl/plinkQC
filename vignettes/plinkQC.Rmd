@@ -54,15 +54,8 @@ status is optimised to retain as many individuals as possible in the study.
  (**version 1.9**), which has to be manually installed prior to the usage of
  *plinkQC*. It assumes the genotype have already been determined from the
  original probe intensity data of the genotype array and is available in
-[plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
-
-**Note**: [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/) is still in alpha
-status with many re-implementations and updates, including output file changes.
-While these changes are ongoing, *plinkQC* will rely on users using PLINK 1.9.
-I will monitor PLINK 2.0 changes and check compatibility with `plinkQC`. If
-users require specific PLINK 2.0 output, I recommend using the [Step-by-Step]
-approach described below and manually saving to
-the output files expected from PLINK 1.9.
+[plink format](https://www.cog-genomics.org/plink/1.9/input#bed). The ancestry functionality depends on the newer version of [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/)
+ (**version 2.0**)
 
 The protocol is implemented in three main functions, the per-individual quality
 control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
@@ -75,8 +68,7 @@ functions:
     information,
     (ii) `check_heterozygosity_and_missingness`: for the identification of
     individuals with outlying missing genotype and/or heterozygosity rates,
-    (iii) `check_relatedness`: for the identification of related individuals,
-    (iv) `check_ancestry`: identification of individuals of divergent ancestry.
+    (iii) `check_relatedness`: for the identification of related individuals
 
 ## Per-marker quality control
 The per-marker quality control with `perMarkerQC` wraps around these
@@ -112,9 +104,7 @@ path2plink <- "/Users/hannah/bin/plink"
 ## Per-individual quality control
 For `perIndividualQC`, one simply specifies the directory where the data is
 stored (qcdir) and the prefix of the plink files (i.e. prefix.bim, prefix.bed,
-prefix.fam). In addition, the names of the files containing information about 
-the reference population and the merged dataset used in `check_ancestry` have to
-be provided: refSamplesFile, refColorsFile and prefixMergedDataset. Per default, 
+prefix.fam). Per default, 
 all quality control checks will be conducted. 
 
 In addition to running each check, `perIndividualQC` writes a list of all fail
@@ -141,12 +131,7 @@ multi-panel plot.
 
 ```{r individual QC,  eval=FALSE, fig.height=12, fig.width=9}
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
-                            refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",
-                                                 sep=""), 
-                            refColorsFile=paste(indir, "/HapMap_PopColors.txt",
-                                                 sep=""),
-                            prefixMergedDataset="data.HapMapIII",
-                            path2plink=path2plink, do.run_check_ancestry = FALSE,
+                            path2plink=path2plink, 
                             interactive=TRUE, verbose=TRUE)
 
 ```
