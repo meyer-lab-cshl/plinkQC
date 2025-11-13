@@ -25,11 +25,50 @@ knitr::opts_chunk$set(
 #                                       path2load_mat = path2load_mat)
 # head(ancestries$predictions)
 
+## ----renaming, eval = FALSE---------------------------------------------------
+# library(plinkQC)
+# name <- "data.no_ac_gt_snps"
+# refname <- "all_hg38.no_ac_gt_snps"
+# path2plink2 <- "/Users/syed/bin/plink2"
+# rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name,
+#                            path2plink2 = path2plink2)
+
+## ----marker_sample_QC, eval=FALSE---------------------------------------------
+# refname <- "all_hg38.renamed.studysnps"
+# 
+# fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
+#                             path2plink=path2plink,
+#                             verbose=TRUE, interactive=TRUE,
+#                             showPlinkOutput=FALSE)
+# marker_ids <- cleanData(indir = indir, qcdir = qcdir, name = name,
+# 				path2plink = path2plink, filterAncestry = FALSE, filterRelated = FALSE, macTh = NULL, mafTh = 0.05, verbose = TRUE,
+# 				filterSex = FALSE, filterHeterozygosity = FALSE,
+# 				filterSNPMissingness = TRUE, filterSampleMissingness = FALSE,
+# 				filterMAF = TRUE, filterHWE = TRUE)
+# name = paste(name, ".clean", sep = "")
+# 
+# pruning_ld(indir = indir, qcdir = qcdir, name = name,
+# 	  path2plink = path2plink, genomebuild="hg38")
+# name = paste(name, ".pruned", sep = "")
+# 
+# fail_samples <- perIndividualQC(indir=indir, qcdir=qcdir, name=name, dont.check_sex = TRUE,
+# 								dont.check_relatedness = TRUE,
+#                             path2plink=path2plink, dont.check_ancestry = TRUE,
+#                             interactive=TRUE, verbose=TRUE)
+# 
+# sample_ids <- cleanData(indir = indir, qcdir = qcdir, name = name,
+# 			 path2plink = path2plink, filterAncestry = FALSE, filterRelated = FALSE,verbose = TRUE,
+# 			filterSex = FALSE, filterHeterozygosity = TRUE,
+# 			filterSNPMissingness = FALSE, filterSampleMissingness = TRUE,
+# 			filterMAF = FALSE, filterHWE = FALSE)
+# 
+# 
+
 ## ----eval = FALSE-------------------------------------------------------------
 # library(tidyverse)
 # library(randomForest)
 # 
-# filepath <- '~/qcdir/filtered_hg38.projection.sscore'
+# filepath <- 'insert path to sscore file here'
 # proj <- read.csv(
 #   file= filepath,
 #   sep='\t', header = TRUE)
@@ -45,7 +84,7 @@ knitr::opts_chunk$set(
 #   select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
 # colnames(proj) <- c("IID", paste0("PC", 1:20))
 # 
-# labeled_proj <- merge(proj, superpop_id)
+# labeled_proj <- merge(proj, superpop)
 # 
 # n_individuals <- 448
 # set.seed(123)
@@ -107,73 +146,6 @@ knitr::opts_chunk$set(
 # }
 # 
 # 
-# 
-
-## ----eval = FALSE-------------------------------------------------------------
-# rf_100_trees <- randomForest(Ancestry ~ .,
-#                    data = train_proj_1000g[,-c(1,21,22)],
-#                    ntree = 100,
-#                    method = "rf",
-#                    importance = TRUE)
-# 
-# rf_500_trees <- randomForest(Ancestry ~ .,
-#                    data = train_proj_1000g[,-c(1,21,22)],
-#                    ntree = 500,
-#                    method = "rf",
-#                    importance = TRUE)
-# 
-# rf_10000_trees <- randomForest(Ancestry ~ .,
-#                    data = train_proj_1000g[,-c(1,21,22)],
-#                    ntree = 10000,
-#                    method = "rf",
-#                    mtry = best_mtry,
-#                    importance = TRUE)
-
-## ----eval = FALSE-------------------------------------------------------------
-# # This first line will provide the best mtry
-# mtry<- tuneRF(x = train_proj_1000g[,-c(1,21,22)], y = train_proj_1000g$Ancestry,
-#               stepFactor = 1.5, improve = 0.01, trace = TRUE, plot = TRUE)
-# best_mtry <- mtry[mtry[, 2] == min(mtry[, 2]), 1]
-# 
-# set.seed(123)
-# rf_mtry <- randomForest(Ancestry ~ .,
-#                         data = train_proj_1000g[,-c(1,21,22)],
-#                         mtry = best_mtry,
-#                         ntree = 1500,
-#                         method = "rf",
-#                         importance = TRUE)
-# rf_mtry
-
-## ----eval = FALSE-------------------------------------------------------------
-# library(caret)
-# 
-# set.seed(123)
-# trainControl_5 <- trainControl(method = "cv",
-#                           number = 5,
-#                           search = "grid")
-# 
-# forest_5 <- train(Ancestry ~ .,
-#                data=train_proj_1000g[,-c(1,21,22)],
-#                method = "rf",
-#                metric = "Accuracy",
-#                trControl = trainControl_5
-#                )
-# # Print out the model details
-# forest_5$finalModel
-# 
-# # Now for 10-fold cross validation
-# trainControl_10 <- trainControl(method = "cv",
-#                           number = 10,
-#                           search = "grid")
-# forest_10 <- train(Ancestry ~ .,
-#                data=train_proj_1000g[,-c(1,21,22)],
-#                method = "rf",
-#                metric = "Accuracy",
-#                trControl = trainControl_10
-#                )
-# 
-# # Print out model details
-# rf_10_fold_cv <- forest_10$finalModel
 # 
 
 ## ----eval = FALSE-------------------------------------------------------------

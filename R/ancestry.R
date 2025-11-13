@@ -156,7 +156,14 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
 
   proj <- read.csv(paste0(out,".sscore"), 
                    sep='\t', header = TRUE)
-  colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
+  
+  #seeing if FID is part of the projection
+  if ("X.FID" %in% names(proj)) {
+    colnames(proj) <- c("FID", "IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
+  }
+  else {
+    colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
+  }
 
 
   rf_path <- system.file("extdata", 'final_model.RDS',

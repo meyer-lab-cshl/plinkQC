@@ -853,7 +853,32 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
 #' qcdir/name.genome exist. User needs writing permission to qcdir.
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
 #' name.fam, name.genome and name.imiss.
+#' 
+#' @param filter_high_ldregion [logical] Should high LD regions be filtered
+#'   before IBD estimation; carried out per default with high LD regions for
+#'   hg19 provided as default via \code{genomebuild}. For alternative genome
+#'   builds not provided or non-human data, high LD regions files can be
+#'   provided via \code{high_ldregion_file}.
+#' @param high_ldregion_file [character] Path to file with high LD regions used
+#' for filtering before IBD estimation if \code{filter_high_ldregion} == TRUE,
+#' otherwise ignored; for human genome data, high LD region files are provided
+#' and can simply be chosen via \code{genomebuild}. Files have to be
+#' space-delimited, no column names with the following columns: chromosome,
+#' region-start, region-end, region number. Chromosomes are specified without
+#' 'chr' prefix. For instance:
+#' 1 48000000 52000000 1
+#' 2 86000000 100500000 2
+#' @param genomebuild [character] Name of the genome build of the PLINK file
+#' annotations, ie mappings in the name.bim file. Will be used to remove
+#' high-LD regions based on the coordinates of the respective build. Options
+#' are hg18, hg19 and hg38. See @details.
+#' @param window_size [integer] The size of the window (in variant count) in which
+#' variants in the window are pruned
+#' @param step_size [integer] The variant count to shift the window 
+#' @param r_2 [float] The threshold in which variant pairs with a squared correlation
+#' above the threshold are removed 
 #' @inheritParams checkPlink
+#' @inheritParams checkFiltering
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.

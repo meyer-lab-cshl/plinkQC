@@ -13,8 +13,6 @@
 #' analysis-specific plink output files in qcdir i.e. do.check_sex expects
 #' name.sexcheck, do.evaluate_check_het_and_miss expects name.het and name.imiss,
 #' do.evaluate_check_relatedness expects name.genome and name.imiss and
-#' do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
-#' are not present \code{perIndividualQC} will fail with missing file error.
 #' Setting do.run_[analysis] TRUE will execute the checks and create the
 #' required files. User needs writing permission to qcdir.
 #' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
@@ -32,26 +30,18 @@
 #' conducted; short for do.run_check_relatedness=FALSE and
 #' do.evaluate_check_relatedness=FALSE. Takes precedence over
 #' do.run_check_relatedness and do.evaluate_check_relatedness.
-#' @param dont.check_ancestry [logical] If TRUE, no ancestry check will be
-#' conducted; short for do.run_check_ancestry=FALSE and
-#' do.evaluate_check_ancestry=FALSE. Takes precedence over
-#' do.run_check_ancestry and do.evaluate_check_ancestry.
 #' @param do.run_check_sex [logical] If TRUE, run \code{\link{run_check_sex}}
 #' @param do.run_check_het_and_miss [logical] If TRUE, run
 #' \code{\link{run_check_heterozygosity}} and
 #' \code{\link{run_check_missingness}}
 #' @param do.run_check_relatedness [logical] If TRUE, run
 #' \code{\link{run_check_relatedness}}.
-#' @param do.run_check_ancestry [logical] If TRUE, run
-#' \code{\link{run_check_ancestry}}.
 #' @param do.evaluate_check_sex [logical] If TRUE, run
 #' \code{\link{evaluate_check_sex}}
 #' @param do.evaluate_check_het_and_miss [logical] If TRUE, run
 #' \code{\link{evaluate_check_het_and_miss}}.
 #' @param do.evaluate_check_relatedness [logical] If TRUE, run
 #' \code{\link{evaluate_check_relatedness}}.
-#' @param do.evaluate_check_ancestry [logical] If TRUE, run
-#' \code{\link{evaluate_check_ancestry}}.
 #' @param subplot_label_size [integer] Size of the subplot labeling.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -64,17 +54,14 @@
 #' split by their PEDSEX (if do.evaluate_check_sex is TRUE), ii) creates a
 #' scatter plot
 #' with samples' missingness rates on x-axis and their heterozygosity rates on
-#' the y-axis (if do.evaluate_check_het_and_miss is TRUE), iii) depicts
+#' the y-axis (if do.evaluate_check_het_and_miss is TRUE), and iii) depicts
 #' all pair-wise IBD-estimates as histogram (if do.evaluate_check_relatedness is
 #' TRUE)
-#' and iv) creates a scatter plot of PC1 versus PC2 color-coded for samples of
-#' reference populations and study population (if do.check_ancestry is set to
-#' TRUE).
+#' .
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @inheritParams checkPlink
 #' @inheritParams checkFiltering
 #' @inheritParams check_sex
-#' @inheritParams check_ancestry
 #' @inheritParams check_relatedness
 #' @inheritParams check_het_and_miss
 #' @return Named [list] with i) fail_list, a named [list] with 1.
@@ -87,13 +74,13 @@
 #' a vector with sample IIDs failing the ancestry check based on europeanTh and
 #' ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 #' QC-plots of \code{\link{check_sex}},
-#' \code{\link{check_het_and_miss}},
-#' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}, which can
+#' \code{\link{check_het_and_miss}}, and
+#' \code{\link{check_relatedness}}, which can
 #' be shown by print(p_sampleQC).
 #' List entries contain NULL if that specific check was not chosen.
 #' @details perIndividualQC wraps around the individual QC functions
-#' \code{\link{check_sex}}, \code{\link{check_het_and_miss}},
-#' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}. For details
+#' \code{\link{check_sex}}, \code{\link{check_het_and_miss}}, and
+#' \code{\link{check_relatedness}}. For details
 #' on the parameters and outputs, check these function documentations. For
 #' detailed output for fail IIDs (instead of simple IID lists), run each
 #' function individually.
@@ -110,11 +97,11 @@
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 #' do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
-#' do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
+#' do.run_check_sex=FALSE)
 #'
 #' # Only check sex and missingness/heterozygosity
 #' fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
-#' dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
+#' dont.check_relatedness=TRUE,
 #' interactive=FALSE, verbose=FALSE)
 #'
 #' # subset of dataset with sample highlighting
@@ -126,7 +113,6 @@
 #' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
-#' do.run_check_ancestry=FALSE, do.evaluate_check_ancestry=TRUE,
 #' path2plink=path2plink,
 #' remove_individuals=remove_individuals_file,
 #' highlight_samples=highlight_samples[,2],
@@ -151,16 +137,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             filter_high_ldregion=TRUE,
                             high_ldregion_file=NULL,
                             genomebuild='hg19',
-                            dont.check_ancestry=FALSE,
-                            do.run_check_ancestry=TRUE,
-                            do.evaluate_check_ancestry=TRUE,
-                            prefixMergedDataset, europeanTh=1.5,
-                            defaultRefSamples = c("HapMap", "1000Genomes"),
-                            refSamples=NULL, refColors=NULL,
-                            refSamplesFile=NULL, refColorsFile=NULL,
-                            refSamplesIID="IID", refSamplesPop="Pop",
-                            refColorsColor="Color", refColorsPop="Pop",
-                            studyColor="#2c7bb6", label_fail=TRUE,
+                            label_fail=TRUE,
                             highlight_samples = NULL,
                             highlight_type =
                                 c("text", "label", "color", "shape"),
@@ -185,12 +162,10 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     highIBD <- NULL
     outlying_heterozygosity <- NULL
     mismatched_sex <- NULL
-    ancestry <- NULL
 
     p_sexcheck <- NULL
     p_het_imiss <- NULL
     p_relatedness <- NULL
-    p_ancestry <- NULL
 
     out <- makepath(qcdir, name)
 
@@ -324,129 +299,12 @@ perIndividualQC <- function(indir, name, qcdir=indir,
             p_het_imiss <- fail_het_imiss$p_het_imiss
         }
     }
-    if (!dont.check_relatedness) {
-        if (do.run_check_relatedness) {
-            run <- run_check_relatedness(qcdir=qcdir, indir=indir, name=name,
-                                         path2plink=path2plink,
-                                         mafThRelatedness=mafThRelatedness,
-                                         filter_high_ldregion=
-                                             filter_high_ldregion,
-                                         high_ldregion_file=high_ldregion_file,
-                                         genomebuild=genomebuild,
-                                         showPlinkOutput=showPlinkOutput,
-                                         keep_individuals=keep_individuals,
-                                         remove_individuals=remove_individuals,
-                                         exclude_markers=exclude_markers,
-                                         extract_markers=extract_markers,
-                                         verbose=verbose)
-        }
-        if (do.evaluate_check_relatedness) {
-            if (verbose) message("Identification of related individuals")
-            fail_relatedness <- evaluate_check_relatedness(qcdir=qcdir,
-                                                           name=name,
-                                                           imissTh=imissTh,
-                                                           highIBDTh=highIBDTh,
-                                                           legend_text_size =
-                                                               legend_text_size,
-                                                           legend_title_size =
-                                                               legend_title_size,
-                                                           axis_text_size =
-                                                               axis_text_size,
-                                                           axis_title_size =
-                                                               axis_title_size,
-                                                           title_size =
-                                                               title_size,
-                                                           interactive=FALSE)
-            write.table(fail_relatedness$failIDs,
-                        file=paste(out, ".fail-IBD.IDs", sep=""),
-                        row.names=FALSE, quote=FALSE, col.names=FALSE,
-                        sep="\t")
-            if (!is.null(fail_relatedness$failIDs)  &&
-                nrow(fail_relatedness$failIDs) != 0) {
-                highIBD <- select(fail_relatedness$failIDs,
-                                   .data$FID, .data$IID)
-            }
-            p_relatedness <- fail_relatedness$p_IBD
-        }
-    }
-    if (!dont.check_ancestry) {
-        if (do.run_check_ancestry) {
-            run <- run_check_ancestry(qcdir=qcdir, indir=indir,
-                                      prefixMergedDataset=prefixMergedDataset,
-                                      path2plink=path2plink,
-                                      showPlinkOutput=showPlinkOutput,
-                                      keep_individuals=keep_individuals,
-                                      remove_individuals=remove_individuals,
-                                      exclude_markers=exclude_markers,
-                                      extract_markers=extract_markers,
-                                      verbose=verbose)
-        }
-        if (do.evaluate_check_ancestry) {
-            if (verbose) {
-                message("Identification of individuals of divergent ancestry")
-            }
-            fail_ancestry <- evaluate_check_ancestry(qcdir=qcdir, indir=indir,
-                                                     name=name,
-                                                     prefixMergedDataset=
-                                                         prefixMergedDataset,
-                                                     europeanTh=europeanTh,
-                                                     defaultRefSamples =
-                                                         defaultRefSamples,
-                                                     refSamples=refSamples,
-                                                     refColors=refColors,
-                                                     refSamplesFile=
-                                                         refSamplesFile,
-                                                     refColorsFile=
-                                                         refColorsFile,
-                                                     refSamplesIID=
-                                                         refSamplesIID,
-                                                     refSamplesPop=
-                                                         refSamplesPop,
-                                                     refColorsColor=
-                                                         refColorsColor,
-                                                     refColorsPop=
-                                                         refColorsPop,
-                                                     studyColor=studyColor,
-                                                     highlight_samples =
-                                                         highlight_samples,
-                                                     highlight_type =
-                                                         highlight_type,
-                                                     highlight_text_size =
-                                                         highlight_text_size,
-                                                     highlight_color =
-                                                         highlight_color,
-                                                     highlight_shape =
-                                                         highlight_shape,
-                                                     highlight_legend =
-                                                         highlight_legend,
-                                                     legend_text_size =
-                                                         legend_text_size,
-                                                     legend_title_size =
-                                                         legend_title_size,
-                                                     axis_text_size =
-                                                         axis_text_size,
-                                                     axis_title_size =
-                                                         axis_title_size,
-                                                     title_size = title_size,
-                                                     interactive=FALSE)
-            write.table(fail_ancestry$fail_ancestry,
-                        file=paste(out, ".fail-ancestry.IDs",
-                                   sep=""),
-                        quote=FALSE, row.names=FALSE, col.names=FALSE)
-            if (!is.null(fail_ancestry$fail_ancestry) &&
-                nrow(fail_ancestry$fail_ancestry) != 0) {
-                ancestry <- select(fail_ancestry$fail_ancestry,
-                                   .data$FID, .data$IID)
-            }
-            p_ancestry <- fail_ancestry$p_ancestry
-        }
-    }
+    
 
     fail_list <- list(missing_genotype=missing_genotype,
                       highIBD=highIBD,
                       outlying_heterozygosity=outlying_heterozygosity,
-                      mismatched_sex=mismatched_sex,
-                      ancestry=ancestry)
+                      mismatched_sex=mismatched_sex)
 
     if(verbose) message(paste("Combine fail IDs into ", out, ".fail.IDs",
                               sep=""))
@@ -459,19 +317,11 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 
     plots_sampleQC <- list(p_sexcheck=p_sexcheck,
                            p_het_imiss=p_het_imiss,
-                           p_relatedness=p_relatedness,
-                           p_ancestry=p_ancestry)
+                           p_relatedness=p_relatedness
+                           )
     plots_sampleQC <- plots_sampleQC[sapply(plots_sampleQC,
                                             function(x) !is.null(x))]
     subplotLabels <- LETTERS[1:length(plots_sampleQC)]
-
-    if (!is.null(p_ancestry)) {
-        ancestry_legend <- cowplot::get_legend(p_ancestry)
-        plots_sampleQC$p_ancestry <-  plots_sampleQC$p_ancestry +
-            theme(legend.position = "None")
-        plots_sampleQC$ancestry_legend <- ancestry_legend
-        subplotLabels <- c(subplotLabels, "")
-    }
 
     if (!is.null(p_sexcheck) && !is.null(p_het_imiss)) {
         first_plots <- cowplot::plot_grid(plotlist=plots_sampleQC[1:2],
@@ -481,41 +331,17 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                            labels=subplotLabels[1:2],
                            label_size = subplot_label_size
                             )
-        if (!is.null(p_ancestry)) {
-            if (!is.null(p_relatedness)) {
-                rel_heights <- c(2, 1, 1, 0.3)
-                plots_sampleQC <- list(first_plots,
-                                       plots_sampleQC[[3]],
-                                       plots_sampleQC[[4]],
-                                       plots_sampleQC[[5]]
-                                       )
-                subplotLabels <- c("", subplotLabels[3:5])
-            } else {
-                rel_heights <- c(2, 1, 0.3)
-                plots_sampleQC <- list(first_plots,
-                                       plots_sampleQC[[3]],
-                                       plots_sampleQC[[4]]
-                                       )
-                subplotLabels <- c("", subplotLabels[3:4])
-            }
+        if (!is.null(p_relatedness)) {
+          rel_heights <- c(2, 1)
+          plots_sampleQC <- list(first_plots, plots_sampleQC[[3]])
+          subplotLabels <- c("", subplotLabels[3])
         } else {
-            if (!is.null(p_relatedness)) {
-                rel_heights <- c(2, 1)
-                plots_sampleQC <- list(first_plots, plots_sampleQC[[3]])
-                subplotLabels <- c("", subplotLabels[3])
-            } else {
-                rel_heights <- 1
-                plots_sampleQC <- first_plots
-                subplotLabels <- ""
-            }
+          rel_heights <- 1
+          plots_sampleQC <- first_plots
+          subplotLabels <- ""
         }
-    } else {
-        if (!is.null(p_ancestry)) {
-            rel_heights <- c(rep(1, length(plots_sampleQC) -1), 0.3)
-        } else {
-            rel_heights <- c(rep(1, length(plots_sampleQC)))
-        }
-    }
+    } 
+    rel_heights <- c(rep(1, length(plots_sampleQC)))
     p_sampleQC <- cowplot::plot_grid(plotlist=plots_sampleQC,
                                      nrow=length(plots_sampleQC),
                                      labels=subplotLabels,
@@ -547,8 +373,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' sample IIDs failing the ancestry check based on the selected europeanTh and
 #' vi) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 #' QC-plots of \code{\link{check_sex}},
-#' \code{\link{check_het_and_miss}},
-#' \code{\link{check_relatedness}} and \code{\link{check_ancestry}}.
+#' \code{\link{check_het_and_miss}}, and
+#' \code{\link{check_relatedness}}.
 #' @param interactive [logical] Should plots be shown interactively? When
 #' choosing this option, make sure you have X-forwarding/graphical interface
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
@@ -575,7 +401,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 #' prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 #' do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
-#' do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
+#' do.run_check_sex=FALSE)
 #'
 #' overview <- overviewPerIndividualQC(fail_individuals)
 #' }
@@ -1107,187 +933,6 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                                        axis_title_size = axis_title_size,
                                        title_size = title_size,
                                        verbose=verbose)
-    return(fail)
-}
-
-
-
-#' Identification of individuals of divergent ancestry
-#'
-#' Runs and evaluates results of plink --pca on merged genotypes from
-#' individuals to be QCed and individuals of reference population of known
-#' genotypes. Currently, check ancestry only supports automatic selection of
-#' individuals of European descent. It uses information from principal
-#' components 1 and 2 returned by plink --pca to find the center of the European
-#' reference samples (mean(PC1_europeanRef), mean(PC2_europeanRef). It then
-#' computes the maximum Euclidean distance (maxDist) of the European reference
-#' samples from this centre. All study samples whose Euclidean distance from the
-#' centre falls outside the circle described by the radius r=europeanTh* maxDist
-#' are considered non-European and their IDs are returned as failing the
-#' ancestry check.
-#' \code{check_ancestry} creates a scatter plot of PC1 versus PC2 colour-coded
-#' for samples of the reference populations and the study population.
-#'
-#' @param indir [character] /path/to/directory containing the basic PLINK data
-#' files name.bim, name.bed, name.fam files.
-#' @param qcdir [character] /path/to/directory where
-#' prefixMergedDataset.eigenvec results as returned by plink --pca should be
-#' saved. Per default qcdir=indir. If run.check_ancestry is FALSE, it is assumed
-#' that plink --pca prefixMergedDataset has been run and
-#' qcdir/prefixMergedDataset.eigenvec exists.User needs writing permission to
-#' qcdir.
-#' @param name [character] prefix of plink files, i.e. name.bed, name.bim,
-#' name.fam.
-#' @param prefixMergedDataset [character] Prefix of merged dataset (study and
-#' reference samples) used in plink --pca, resulting in
-#' prefixMergedDataset.eigenvec.
-#' @param europeanTh [double] Scaling factor of radius to be drawn around center
-#' of European reference samples, with study samples inside this radius
-#' considered to be of European descent and samples outside this radius of
-#' non-European descent. The radius is computed as the maximum Euclidean
-#' distance of European reference samples to the centre of European reference
-#' samples.
-#' @param refSamples [data.frame] Dataframe with sample identifiers
-#' [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
-#' population identifier [refSamplesPop] corresponding to population IDs
-#' [refColorsPop] in refColorsfile/refColors. Either refSamples or
-#' refSamplesFile have to be specified.
-#' @param refColors [data.frame, optional] Dataframe with population IDs in
-#' column [refColorsPop] and corresponding colour-code for PCA plot in column
-#' [refColorsColor]. If not provided and is.null(refColorsFile) default colors
-#' are used.
-#' @param refSamplesFile [character] /path/to/File/with/reference samples. Needs
-#' columns with sample identifiers [refSamplesIID] corresponding to IIDs in
-#' prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
-#' corresponding to population IDs [refColorsPop] in refColorsfile/refColors.
-#' @param refColorsFile [character, optional]
-#' /path/to/File/with/Population/Colors containing population IDs in column
-#' [refColorsPop] and corresponding colour-code for PCA plot in column
-#' [refColorsColor].If not provided and is.null(refColors) default colors for
-#' are used.
-#' @param refSamplesIID [character] Column name of reference sample IDs in
-#' refSamples/refSamplesFile.
-#' @param refSamplesPop [character] Column name of reference sample population
-#' IDs in refSamples/refSamplesFile.
-#' @param refColorsColor [character] Column name of population colors in
-#' refColors/refColorsFile
-#' @param refColorsPop [character] Column name of reference sample population
-#' IDs in refColors/refColorsFile.
-#' @param studyColor [character] Colour to be used for study population.
-#' @param run.check_ancestry [logical] Should plink --pca be run to
-#' determine principal components of merged dataset; if FALSE, it is assumed
-#' that plink --pca has been run successfully and
-#' qcdir/prefixMergedDataset.eigenvec is present;
-#' \code{\link{check_ancestry}} will fail with missing file error otherwise.
-#' @param interactive [logical] Should plots be shown interactively? When
-#' choosing this option, make sure you have X-forwarding/graphical interface
-#' available for interactive plotting. Alternatively, set interactive=FALSE and
-#' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
-#' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
-#' @inheritParams checkPlink
-#' @inheritParams run_check_ancestry
-#' @inheritParams evaluate_check_ancestry
-#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
-#' printed to standard out.
-#' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @return Named [list] with i) fail_ancestry, containing a [data.frame] with
-#' FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
-#' 'containing' a scatter plot of PC1 versus PC2 colour-coded for samples of the
-#' reference populations and the study population, which can be shown by
-#' print(p_ancestry).
-#' @export
-#' @examples
-#' \dontrun{
-#' indir <- system.file("extdata", package="plinkQC")
-#' name <- "data"
-#' fail_ancestry <- check_ancestry(indir=indir, name=name,
-#' refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",sep=""),
-#' refColorsFile=paste(indir, "/HapMap_PopColors.txt", sep=""),
-#' prefixMergedDataset="data.HapMapIII", interactive=FALSE,
-#' run.check_ancestry=FALSE)
-#'
-#' # highlight samples
-#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
-#' package="plinkQC"))
-#' fail_ancestry <- check_ancestry(indir=qcdir, name=name,
-#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
-#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
-#' prefixMergedDataset="data.HapMapIII", interactive=FALSE,
-#' highlight_samples = highlight_samples[,2],
-#' run.check_ancestry=FALSE,
-#' highlight_type = c("text", "shape"))
-#' }
-
-check_ancestry <- function(indir, name, qcdir=indir, prefixMergedDataset,
-                           europeanTh=1.5,
-                           defaultRefSamples =
-                               c("HapMap","1000Genomes"),
-                           refPopulation=c("CEU", "TSI"),
-                           refSamples=NULL, refColors=NULL,
-                           refSamplesFile=NULL, refColorsFile=NULL,
-                           refSamplesIID="IID", refSamplesPop="Pop",
-                           refColorsColor="Color", refColorsPop="Pop",
-                           studyColor="#2c7bb6",
-                           legend_labels_per_row=6,
-                           run.check_ancestry=TRUE,
-                           interactive=FALSE, verbose=verbose,
-                           highlight_samples = NULL,
-                           highlight_type =
-                               c("text", "label", "color", "shape"),
-                           highlight_text_size = 3,
-                           highlight_color = "#c51b8a",
-                           highlight_shape = 17,
-                           highlight_legend = FALSE,
-                           legend_text_size = 5,
-                           legend_title_size = 7,
-                           axis_text_size = 5,
-                           axis_title_size = 7,
-                           title_size = 9,
-                           keep_individuals=NULL,
-                           remove_individuals=NULL,
-                           exclude_markers=NULL,
-                           extract_markers=NULL,
-                           path2plink=NULL, showPlinkOutput=TRUE) {
-    if (run.check_ancestry) {
-        run <- run_check_ancestry(indir=indir, qcdir=qcdir,
-                                  prefixMergedDataset=prefixMergedDataset,
-                                  verbose=verbose,
-                                  path2plink=path2plink,
-                                  keep_individuals=keep_individuals,
-                                  remove_individuals=remove_individuals,
-                                  exclude_markers=exclude_markers,
-                                  extract_markers=extract_markers,
-                                  showPlinkOutput=showPlinkOutput)
-    }
-    fail <- evaluate_check_ancestry(qcdir=qcdir, indir=indir, name=name,
-                                    prefixMergedDataset=prefixMergedDataset,
-                                    europeanTh=europeanTh,
-                                    refPopulation=refPopulation,
-                                    refSamples=refSamples,
-                                    refColors=refColors,
-                                    refSamplesFile=refSamplesFile,
-                                    refColorsFile=refColorsFile,
-                                    refSamplesIID=refSamplesIID,
-                                    refSamplesPop=refSamplesPop,
-                                    refColorsColor=refColorsColor,
-                                    refColorsPop=refColorsPop,
-                                    studyColor=studyColor,
-                                    legend_labels_per_row=
-                                        legend_labels_per_row,
-                                    highlight_samples = highlight_samples,
-                                    highlight_type = highlight_type,
-                                    highlight_text_size =
-                                        highlight_text_size,
-                                    highlight_color = highlight_color,
-                                    highlight_shape = highlight_shape,
-                                    highlight_legend = highlight_legend,
-                                    defaultRefSamples = defaultRefSamples,
-                                    legend_text_size = legend_text_size,
-                                    legend_title_size = legend_title_size,
-                                    title_size = title_size,
-                                    axis_text_size = axis_text_size,
-                                    axis_title_size = axis_title_size,
-                                    interactive=interactive)
     return(fail)
 }
 
@@ -2440,473 +2085,5 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                 plot_data = genome))
 }
 
-#' Run PLINK principal component analysis
-#'
-#' Run plink --pca to calculate the principal components on merged genotypes
-#' of the study and reference dataset.
-#'
-#' Both, \code{\link{run_check_ancestry}} and its evaluation by
-#' \code{\link{evaluate_check_ancestry}} can simply be invoked by
-#' \code{\link{check_ancestry}}.
-#'
-#' @param indir [character] /path/to/directory containing the basic PLINK data
-#' files prefixMergedDataset.bim,prefixMergedDataset.fam and
-#' prefixMergedDataset.bed.
-#' @param qcdir [character] /path/to/directory to save
-#' prefixMergedDataset.eigenvec as returned by plink --pca. User needs writing
-#' permission to qcdir. Per default qcdir=indir.
-#' @param prefixMergedDataset [character] Prefix of merged study and
-#' reference data files, i.e. prefixMergedDataset.bed, prefixMergedDataset.bim,
-#' prefixMergedDataset.fam.
-#' @inheritParams checkFiltering
-#' @inheritParams checkPlink
-#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
-#' printed to standard out.
-#' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @export
-#' @examples
-#' indir <- system.file("extdata", package="plinkQC")
-#' qcdir <- tempdir()
-#' prefixMergedDataset <- 'data.HapMapIII'
-#' path2plink <- 'path/to/plink'
-#' # the following code is not run on package build, as the path2plink on the
-#' # user system is not known.
-#' \dontrun{
-#' # ancestry check on all individuals in dataset
-#' run <- run_check_ancestry(indir=indir, qcdir=qcdir, prefixMergedDataset,
-#' path2plink=path2plink)
-#'
-#' # ancestry check on subset of dataset
-#' remove_individuals_file <- system.file("extdata", "remove_individuals",
-#' package="plinkQC")
-#' run <- run_check_ancestry(indir=indir, qcdir=qcdir, name=name,
-#' remove_individuals=remove_individuals_file, path2plink=path2plink)
-#' }
-run_check_ancestry <- function(indir, prefixMergedDataset,
-                               qcdir=indir,
-                               verbose=FALSE, path2plink=NULL,
-                               keep_individuals=NULL,
-                               remove_individuals=NULL,
-                               exclude_markers=NULL,
-                               extract_markers=NULL,
-                               showPlinkOutput=TRUE) {
-
-    prefix <- makepath(indir, prefixMergedDataset)
-    out <- makepath(qcdir, prefixMergedDataset)
-
-    checkFormat(prefix)
-    path2plink <- checkPlink(path2plink)
-    args_filter <- checkFiltering(keep_individuals, remove_individuals,
-                                  extract_markers, exclude_markers)
-
-    if (verbose) message("Run check_ancestry via plink --pca")
-    sys::exec_wait(path2plink,
-                   args=c("--bfile", prefix, "--pca", "--out", out,
-                          args_filter),
-                   std_out=showPlinkOutput, std_err=showPlinkOutput)
-}
-
-#' Evaluate results from PLINK PCA on combined study and reference data
-#'
-#' Evaluates and depicts results of plink --pca (via
-#' \code{\link{run_check_ancestry}} or externally conducted pca) on merged
-#' genotypes from individuals to be QCed and individuals of reference population
-#' of known genotypes. Currently, check ancestry only supports automatic
-#' selection of individuals of European descent. It uses information from
-#' principal components 1 and 2 returned by plink --pca to find the center of
-#' the European reference samples (mean(PC1_europeanRef), mean(PC2_europeanRef).
-#' It computes the maximum Euclidean distance (maxDist) of the European
-#' reference samples from this centre. All study samples whose Euclidean
-#' distance from the centre falls outside the circle described by the radius
-#' r=europeanTh* maxDist are considered non-European and their IDs are returned
-#' as failing the ancestry check.
-#' check_ancestry creates a scatter plot of PC1 versus PC2 colour-coded for
-#' samples of the reference populations and the study population.
-#'
-#' Both \code{\link{run_check_ancestry}} and
-#' \code{\link{evaluate_check_ancestry}} can simply be invoked by
-#' \code{\link{check_ancestry}}.
-#'
-#' @param indir [character] /path/to/directory containing the basic PLINK data
-#' files name.bim, name.bed, name.fam files.
-#' @param qcdir [character] /path/to/directory/with/QC/results containing
-#' prefixMergedDataset.eigenvec results as returned by plink --pca. Per default
-#' qcdir=indir.
-#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
-#' name.fam.
-#' @param prefixMergedDataset [character] Prefix of merged dataset (study and
-#' reference samples) used in plink --pca, resulting in
-#' prefixMergedDataset.eigenvec.
-#' @param europeanTh [double] Scaling factor of radius to be drawn around center
-#' of European reference samples, with study samples inside this radius
-#' considered to be of European descent and samples outside this radius of
-#' non-European descent. The radius is computed as the maximum Euclidean distance
-#' of European reference samples to the centre of European reference samples.
-#' @param refPopulation [vector] Vector with population identifiers of European
-#' reference population. Identifiers have to be corresponding to population IDs
-#' [refColorsPop] in refColorsfile/refColors.
-#' @param defaultRefSamples [character] Option to use pre-downloaded individual
-#' and population identifiers from either the 1000Genomes or HapMap project.
-#' If refSamples and refSamplesFile are not provided, the HapMap identifiers (or
-#' 1000Genomes is specified) will be used as default and the function will fail
-#' if the reference samples in the prefixMergedDataset do not match these
-#' reference samples. If refColors and refColorsFile are not provided, this also
-#' sets default colors for the reference populations.
-#' @param refSamples [data.frame] Dataframe with sample identifiers
-#' [refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
-#' population identifier [refSamplesPop] corresponding to population IDs
-#' [refColorsPop] in refColorsfile/refColors. If refSamples and
-#' refSamplesFile are not specified, defaultRefSamples will be used as
-#' reference.
-#' @param refColors [data.frame, optional] Dataframe with population IDs in
-#' column [refColorsPop] and corresponding colour-code for PCA plot in column
-#' [refColorsColor].  If refColors and refColorsFile are not specified and
-#' refSamples and refSamplesFile are not specified, default colors will be
-#' determined from the defaultRefSamples option. If refColors and refColorsFile
-#' are not specified and but refSamples or refSamplesFile are given, ggplot
-#' default colors will be used.
-#' @param refSamplesFile [character] /path/to/File/with/reference samples. Needs
-#' columns with sample identifiers [refSamplesIID] corresponding to IIDs in
-#' prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
-#' corresponding to population IDs [refColorsPop] in refColorsfile/refColors. If
-#' both refSamplesFile and refSamples are not NULL, defaultRefSamples information
-#' is used.
-#' @param refColorsFile [character, optional]
-#' /path/to/File/with/Population/Colors containing population IDs in column
-#' [refColorsPop] and corresponding colour-code for PCA plot in column
-#' [refColorsColor]. If refColors and refColorsFile are not specified and
-#' refSamples and refSamplesFile are not specified, default colors will be
-#' determined from the defaultRefSamples option. If refColors and refColorsFile
-#' are not specified and but refSamples or refSamplesFile are given, ggplot
-#' default colors will be used.
-#' @param refSamplesIID [character] Column name of reference sample IDs in
-#' refSamples/refSamplesFile.
-#' @param refSamplesPop [character] Column name of reference sample population
-#' IDs in refSamples/refSamplesFile.
-#' @param refColorsColor [character] Column name of population colors in
-#' refColors/refColorsFile
-#' @param refColorsPop [character] Column name of reference sample population
-#' IDs in refColors/refColorsFile.
-#' @param studyColor [character] Colour to be used for study population if plot
-#' is TRUE.
-#' @param highlight_samples [character vector] Vector of sample IIDs to
-#' highlight in the plot (p_ancestry); all highlight_samples IIDs have to
-#' be present in the IIDs of the prefixMergedDataset.fam file.
-#' @param highlight_type [character]  Type of sample highlight, labeling
-#' by IID ("text"/"label") and/or highlighting data points in different "color"
-#' and/or "shape". "text" and "label" use ggrepel for minimal
-#' overlap of text labels ("text) or label boxes ("label").  Only one of "text"
-#' and "label" can be specified.Text/Label size can be specified with
-#' highlight_text_size, highlight color with highlight_color,
-#' or highlight shape with highlight_shape.
-#' @param highlight_text_size [integer] Text/Label size for samples specified to
-#' be highlighted (highlight_samples) by "text" or "label" (highlight_type).
-#' @param highlight_color [character] Color for samples specified to
-#' be highlighted (highlight_samples) by "color" (highlight_type).
-#' @param highlight_shape [integer] Shape for samples specified to
-#' be highlighted (highlight_samples) by "shape" (highlight_type). Possible
-#' shapes and their encoding can be found at:
-#' \url{https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#sec:shape-spec}
-#' @param highlight_legend [logical] Should a separate legend for the
-#' highlighted samples be provided; only relevant for highlight_type == "color"
-#' or highlight_type == "shape".
-#' @param legend_labels_per_row [integer] Number of population names per row in
-#' PCA plot.
-#' @param axis_text_size [integer] Size for axis text.
-#' @param axis_title_size [integer] Size for axis title.
-#' @param legend_text_size [integer] Size for legend text.
-#' @param legend_title_size [integer] Size for legend title.
-#' @param title_size [integer] Size for plot title.
-#' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @param interactive [logical] Should plots be shown interactively? When
-#' choosing this option, make sure you have X-forwarding/graphical interface
-#' available for interactive plotting. Alternatively, set interactive=FALSE and
-#' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
-#' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
-#' @return Named [list] with i) fail_ancestry, containing a [data.frame] with
-#' FID and IID of non-European individuals and ii) p_ancestry, a ggplot2-object
-#' 'containing' a scatter plot of PC1 versus PC2 colour-coded for samples of the
-#' reference populations and the study population, which can be shown by
-#' print(p_ancestry) and iii) plot_data, a data.frame with the data
-#' visualised in p_ancestry (ii).
-#' @details 1000 Genomes samples were downloaded from
-#' \url{https://www.internationalgenome.org/category/sample/}, HapMap Phase 3
-#' samples were downloaded from
-#' \url{https://www.broadinstitute.org/medical-and-population-genetics/hapmap-3}.
-#' @export
-#' @examples
-#' \dontrun{
-#' qcdir <- system.file("extdata", package="plinkQC")
-#' name <- "data"
-#'
-#' # whole dataset
-#' fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
-#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
-#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
-#' prefixMergedDataset="data.HapMapIII", interactive=FALSE)
-#'
-#' # highlight samples
-#' highlight_samples <- read.table(system.file("extdata", "keep_individuals",
-#' package="plinkQC"))
-#' fail_ancestry <- evaluate_check_ancestry(indir=qcdir, name=name,
-#' refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
-#' refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
-#' prefixMergedDataset="data.HapMapIII", interactive=FALSE,
-#' highlight_samples = highlight_samples[,2],
-#' highlight_type = c("text", "shape"))
-#' }
-
-evaluate_check_ancestry <- function(indir, name, prefixMergedDataset,
-                                    qcdir=indir,
-                                    europeanTh=1.5,
-                                    defaultRefSamples =
-                                        c("HapMap","1000Genomes"),
-                                    refSamples=NULL, refColors=NULL,
-                                    refSamplesFile=NULL, refColorsFile=NULL,
-                                    refSamplesIID="IID", refSamplesPop="Pop",
-                                    refColorsColor="Color", refColorsPop="Pop",
-                                    studyColor="#2c7bb6",
-                                    refPopulation=c("CEU", "TSI"),
-                                    legend_labels_per_row=6,
-                                    legend_text_size = 5,
-                                    legend_title_size = 7,
-                                    axis_text_size = 5,
-                                    axis_title_size = 7,
-                                    title_size = 9,
-                                    highlight_samples = NULL,
-                                    highlight_type =
-                                        c("text", "label", "color", "shape"),
-                                    highlight_text_size = 3,
-                                    highlight_color = "#c51b8a",
-                                    highlight_shape = 17,
-                                    highlight_legend = FALSE,
-                                    interactive=FALSE,
-                                    verbose=FALSE) {
-
-    prefix <- makepath(indir, name)
-    out <- makepath(qcdir, prefixMergedDataset)
-
-    if (!file.exists(paste(prefix, ".fam", sep=""))){
-        stop("plink family file: ", prefix, ".fam does not exist.")
-    }
-    samples <- data.table::fread(paste(prefix, ".fam", sep=""),
-                                 header=FALSE, stringsAsFactors=FALSE,
-                                 data.table=FALSE)[,1:2]
-    colnames(samples) <- c("FID", "IID")
-
-    if (!file.exists(paste(out, ".eigenvec", sep=""))){
-        stop("plink --pca output file: ", out, ".eigenvec does not exist.")
-    }
-    testNumerics(numbers=c(europeanTh, legend_labels_per_row),
-                 positives=c(europeanTh, legend_labels_per_row))
-    pca_data <- data.table::fread(paste(out, ".eigenvec", sep=""),
-                                  stringsAsFactors=FALSE, data.table=FALSE)
-    colnames(pca_data) <- c("FID", "IID", paste("PC",1:(ncol(pca_data)-2),
-                                                sep=""))
-    if (!any(samples$IID %in% pca_data$IID)) {
-        stop("There are no ", prefix, ".fam samples in the prefixMergedDataset")
-    }
-    if (!all(samples$IID %in% pca_data$IID)) {
-        stop("Not all ", prefix, ".fam samples are present in the",
-             "prefixMergedDataset")
-    }
-
-    if (is.null(refSamples) && is.null(refSamplesFile)) {
-        if (any(!defaultRefSamples %in% c("1000Genomes", "HapMap"))){
-            stop("defaultRefSamples should be one of 'HapMap' or '1000Genomes'",
-                 " but ", defaultRefSamples," provided")
-        }
-        defaultRefSamples <- match.arg(defaultRefSamples)
-        if (defaultRefSamples == "HapMap") {
-            refSamplesFile <- system.file("extdata", "HapMap_ID2Pop.txt",
-                                          package="plinkQC")
-            if(is.null(refColorsFile) && is.null(refColors)) {
-                refColorsFile <-  system.file("extdata", "HapMap_PopColors.txt",
-                                              package="plinkQC")
-            }
-        } else  {
-            refSamplesFile <- system.file("extdata", "Genomes1000_ID2Pop.txt",
-                                          package="plinkQC")
-            if(is.null(refColorsFile) && is.null(refColors)) {
-                refColorsFile <-  system.file("extdata",
-                                              "Genomes1000_PopColors.txt",
-                                              package="plinkQC")
-            }
-        }
-
-        if (verbose) {
-            message("Using ", defaultRefSamples, " as reference samples.")
-        }
-    }
-    if (!is.null(refSamplesFile) && !file.exists(refSamplesFile)) {
-        stop("refSamplesFile file", refSamplesFile, "does not exist.")
-    }
-    if (!is.null(refSamplesFile)) {
-        refSamples <- read.table(refSamplesFile, header=TRUE,
-                                 stringsAsFactors=FALSE)
-    }
-    if (!(refSamplesIID  %in% names(refSamples))) {
-        stop(paste("Column", refSamplesIID, "not found in refSamples."))
-    }
-    if (!(refSamplesPop %in% names(refSamples))) {
-        stop(paste("Column", refSamplesPop, "not found in refSamples."))
-    }
-    names(refSamples)[names(refSamples) == refSamplesIID] <- "IID"
-    names(refSamples)[names(refSamples) == refSamplesPop] <- "Pop"
-    refSamples <- dplyr::select(refSamples, .data$IID, .data$Pop)
-    refSamples$IID <- as.character(refSamples$IID)
-    refSamples$Pop <- as.character(refSamples$Pop)
-
-    if (!is.null(refColorsFile) && !file.exists(refColorsFile)) {
-        stop("refColorsFile file", refColorsFile, "does not exist.")
-    }
-    if (!is.null(refColorsFile)) {
-        refColors <- read.table(refColorsFile, header=TRUE,
-                                stringsAsFactors=FALSE)
-    }
-    if (!is.null(refColors)) {
-        if (!(refColorsColor  %in% names(refColors))) {
-            stop(paste("Column", refColorsColor, "not found in refColors."))
-        }
-        if (!(refColorsPop %in% names(refColors))) {
-            stop(paste("Column", refColorsPop, "not found in refColors."))
-        }
-        names(refColors)[names(refColors) == refColorsColor] <- "Color"
-        names(refColors)[names(refColors) == refColorsPop] <- "Pop"
-        refColors <- dplyr::select(refColors, .data$Pop, .data$Color)
-        refColors$Color <- as.character(refColors$Color)
-        refColors$Pop <- as.character(refColors$Pop)
-    } else {
-        refColors <- data.frame(Pop=unique(as.character(refSamples$Pop)),
-                                stringsAsFactors=FALSE)
-        refColors$Color <- 1:nrow(refColors)
-    }
-    if (!all(refSamples$Pop %in% refColors$Pop)) {
-        missing <- refSamples$Pop[!refSamples$Pop %in% refColors$Pop]
-        stop("Not all refSamples populations found in population code of
-             refColors; missing population codes: ", paste(missing,
-                                                           collapse=","))
-    }
-    if (!all(refPopulation %in% refColors$Pop)) {
-        missing <- refPopulation[!refPopulation %in% refColors$Pop]
-        stop("Not all refPopulation populations found in population code of
-             refColors; missing population codes: ", paste(missing,
-                                                           collapse=","))
-    }
-    refSamples <- merge(refSamples, refColors, by="Pop", all.X=TRUE)
-
-    ## Combine pca data and population information ####
-    data_all <- merge(pca_data, refSamples, by="IID", all.x=TRUE)
-    data_all$Pop[data_all$IID %in% samples$IID] <- name
-    data_all$Color[data_all$IID %in% samples$IID] <- studyColor
-    if (any(is.na(data_all))) {
-        stop("There are samples in the prefixMergedDataset that cannot be found
-             in refSamples or ", prefix, ".fam")
-    }
-
-    colors <-  dplyr::select(data_all, .data$Pop, .data$Color)
-    colors <- colors[!duplicated(colors$Pop),]
-    colors <- colors[order(colors$Color),]
-
-    ## Find mean coordinates and distances of reference Europeans ####
-    all_european <- dplyr::filter(data_all, .data$Pop %in% refPopulation)
-    euro_pc1_mean <- mean(all_european$PC1)
-    euro_pc2_mean <- mean(all_european$PC2)
-
-    all_european$euclid_dist <- sqrt((all_european$PC1 - euro_pc1_mean)^2 +
-                                         (all_european$PC2 - euro_pc2_mean)^2)
-
-    max_euclid_dist <- max(all_european$euclid_dist)
-
-    ## Find samples' distances to reference Europeans ####
-    data_name <- dplyr::filter(data_all, .data$Pop == name)
-    data_name$euclid_dist <- sqrt((data_name$PC1 - euro_pc1_mean)^2 +
-                                      (data_name$PC2 - euro_pc2_mean)^2)
-    non_europeans <- dplyr::filter(data_name, .data$euclid_dist >
-                                        (max_euclid_dist * europeanTh))
-    fail_ancestry <- dplyr::select(non_europeans, .data$FID, .data$IID)
-    legend_rows <- round(nrow(colors)/legend_labels_per_row)
-
-    data_all$shape <- "general"
-    shape_guide <- FALSE
-    if(!is.null(highlight_samples)) {
-        if (!all(highlight_samples %in% pca_data$IID)) {
-            stop("Not all samples to be highlighted are present in the",
-                 "prefixMergedDataset")
-        }
-        highlight_type <- match.arg(highlight_type, several.ok = TRUE)
-        if (all(c("text", "label") %in% highlight_type)) {
-            stop("Only one of text or label highlighting possible; either ",
-                 "can be combined with shape and color highlighting")
-        }
-        if ("shape" %in% highlight_type) {
-            data_all$shape[data_all$IID %in% highlight_samples] <- "highlight"
-            shape_guide <- highlight_legend
-        }
-        if ("color" %in% highlight_type && highlight_legend) {
-            data_all$Pop[data_all$IID %in% highlight_samples] <- "highlight"
-            colors <- rbind(colors, c("highlight", highlight_color))
-        }
-    }
-    colors$Pop <- factor(colors$Pop, levels=unique(colors$Pop))
-    data_all$Pop <- factor(data_all$Pop, levels=levels(colors$Pop))
-
-    p_ancestry <- ggplot()
-    p_ancestry <- p_ancestry +
-        geom_point(data=data_all,
-                   aes_string(x='PC1', y='PC2', color='Pop', shape="shape")) +
-        geom_point(data=dplyr::filter(data_all, .data$Pop != name),
-                   aes_string(x='PC1', y='PC2', color='Pop', shape="shape"),
-                   size=1) +
-        scale_color_manual(values=colors$Color,
-                           name="Population") +
-        scale_shape_manual(values=c(16, highlight_shape), guide="none") +
-        guides(color=guide_legend(nrow=legend_rows, byrow=TRUE)) +
-        ggforce::geom_circle(aes(x0=euro_pc1_mean, y0=euro_pc2_mean,
-                                 r=(max_euclid_dist * europeanTh))) +
-        ggtitle("PCA on combined reference and study genotypes") +
-        theme_bw() +
-        theme(legend.position='bottom',
-              legend.direction = 'vertical',
-              legend.box = "vertical",
-              legend.text = element_text(size = legend_text_size),
-              legend.title = element_text(size = legend_title_size),
-              title = element_text(size = title_size),
-              axis.text = element_text(size = axis_text_size),
-              axis.title = element_text(size = axis_title_size))
-
-    if (!is.null(highlight_samples)) {
-        highlight_data <- dplyr::filter(data_all, .data$IID %in% highlight_samples)
-        if ("text" %in% highlight_type) {
-            p_ancestry <- p_ancestry +
-                ggrepel::geom_text_repel(data=highlight_data,
-                                         aes_string(x='PC1', y='PC2',
-                                                    label="IID"),
-                                         size=highlight_text_size)
-        }
-        if ("label" %in% highlight_type) {
-            p_ancestry <- p_ancestry +
-                ggrepel::geom_label_repel(data=highlight_data,
-                                          aes_string(x='PC1', y='PC2',
-                                                     label="IID"),
-                                          size=highlight_text_size)
-        }
-        if ("color" %in% highlight_type && !highlight_legend) {
-            p_ancestry <- p_ancestry +
-                geom_point(data=highlight_data,
-                           aes_string(x='PC1', y='PC2', shape='shape'),
-                           color=highlight_color,
-                           show.legend=highlight_legend)
-        }
-        if ("shape"  %in% highlight_type && highlight_legend) {
-            p_ancestry <- p_ancestry +
-                labs(shape = "Individual") +
-                guides(shape = "legend")
-        }
-    }
-    if (interactive) print(p_ancestry)
-    return(list(fail_ancestry=fail_ancestry, p_ancestry=p_ancestry,
-                plot_data=data_all))
-}
 
 
