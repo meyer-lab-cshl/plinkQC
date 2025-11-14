@@ -70,12 +70,13 @@ rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name,
 name <- paste0(name, ".renamed")
 ```
 
-After correctly formatting the data, we can use the provided function to return the sample ids and predicted ancestry. 
+After correctly formatting the data, we can use the provided function to return the 
+predicted ancestry. Because this example uses only a small subset of variants for demonstration, additional noise is expected. 
 ``` {R ancestry identification, eval = FALSE}
 ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
                                       path2plink2 = path2plink2, 
                                       path2load_mat = path2load_mat) 
-head(ancestries$predictions)
+ancestries$p_ancestry
 ```
 
 ```{r load ancestry, out.width = "500px", echo=FALSE}
