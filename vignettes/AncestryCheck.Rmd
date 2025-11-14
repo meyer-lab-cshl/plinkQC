@@ -78,6 +78,11 @@ ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name,
 head(ancestries$predictions)
 ```
 
+```{r load ancestry, out.width = "500px", echo=FALSE}
+par(mfrow=c(2,1), las=1)
+knitr::include_graphics("ancestral_prediction.pdf")
+```
+
 ## Training Your Own Random Forest Classifier 
 
 Based on the microchip used in the study data, there might not be a large enough 

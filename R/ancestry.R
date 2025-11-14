@@ -191,7 +191,7 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                       y = .data$predictions, 
                                       fill = .data$Ancestry)) + 
      geom_bar(stat = "identity") +
-     xlab("Ancestral Prediction") + ylab("Count") + 
+     xlab("Samples") + ylab("Ancestral Prediction") + 
      theme_bw() + 
      theme(legend.position = "right",
            title = element_text(size = title_size),
