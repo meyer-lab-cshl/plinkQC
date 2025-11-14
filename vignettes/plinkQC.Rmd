@@ -57,9 +57,10 @@ The majority if the functions in *plinkQC* depends on the [PLINK](https://www.co
  original probe intensity data of the genotype array and is available in
 [plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
 
-The protocol is implemented in three main functions, the per-individual quality
-control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
-the generation of the new, quality control dataset (`cleanData`):
+The protocol is implemented in four main functions, the per-individual quality
+control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`).
+the generation of the new, quality control dataset (`cleanData`), and the 
+prediction of human genetic ancestry (`superpop_classification`):
 
 ## Per-individual quality control
 The per-individual quality control with `perIndividualQC` wraps around these
@@ -84,6 +85,10 @@ functions:
 `cleanData` takes the results of `perMarkerQC` and `perIndividualQC` and creates
 a new dataset with all individuals and markers that passed the quality control
 checks.
+
+## Ancestry Identification
+`superpop_classification` runs a pre-trained classifier to predict the genomic ancestry
+of the individuals within the dataset. 
 
 # Workflow
 In the following, genotype quality control with *plinkQC* is applied on a small
@@ -188,8 +193,6 @@ Ids  <- cleanData(indir=indir, qcdir=qcdir, name=name, path2plink=path2plink,
 ## Predicting Ancestry
 After filtering low quality markers and samples, it may be useful to predict the genomic ancestry of the samples. 
 We included a pre-trained random forest classifier to predict the genomic ancestry of the samples. [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of the package.
-Additional files for
-running the provided pre-trained classier are also needed from https://github.com/meyer-lab-cshl/plinkQC. [Git Large File Storage extention](https://git-lfs.com/) needs to be pre-installed to get the correct files.
 
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
 may be needed to map variants from one annotation to another. More details on how
@@ -205,8 +208,8 @@ git clone git@github.com:meyer-lab-cshl/plinkQC.git
 In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
 and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
 We included the functions convert_to_plink2() and rename_variant_identifiers()
-to correctly format genomic data that is in the hg38 annotation. The name of the
-files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the path2load_mat. 
+to correctly format genomic data that is in the hg38 annotation. 
+The name of the files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the path2load_mat. 
 
 ``` {R, eval = FALSE}
 name = "data.hg38"
@@ -218,8 +221,9 @@ rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name,
 name <- paste0(name, ".renamed")
 ```
 
-After correctly formatting the data, we can use the provided function to return the 
-predicted ancestry. Because this example uses only a small subset of variants for demonstration, additional noise is expected.
+After correctly formatting the variants, we can use the provided function to return the 
+predicted ancestry. Because the example dataset has only a small number of variants 
+overlapping with the reference dataset, additional noise is expected.
 ``` {R ancestry identification, eval = FALSE}
 ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
                                       path2plink2 = path2plink2, 
