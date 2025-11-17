@@ -23,7 +23,11 @@ knitr::opts_chunk$set(
 # ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name,
 #                                       path2plink2 = path2plink2,
 #                                       path2load_mat = path2load_mat)
-# head(ancestries$predictions)
+# ancestries$p_ancestry
+
+## ----load ancestry, out.width = "500px", echo=FALSE---------------------------
+par(mfrow=c(2,1), las=1)
+knitr::include_graphics("ancestral_prediction.pdf")
 
 ## ----renaming, eval = FALSE---------------------------------------------------
 # library(plinkQC)

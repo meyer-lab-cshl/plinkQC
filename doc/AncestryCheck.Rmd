@@ -23,22 +23,20 @@ knitr::opts_chunk$set(
 ```
 
 ## Running Random Forest Classification
-This package contains a function to predict ancestry of samples. This works 
-through a random forest algorithm trained on the principal components of
-cleaned genomics data from the [1000 genomes dataset](https://www.internationalgenome.org/data/).
+plinkQC contains a pre-trained random forest classifier to predict genomic ancestry for 
+human data. It was trained on the principal components of the [harmonized 1000 Genomes and Human Genome Diversity Project datasets](https://genome.cshlp.org/content/34/5/796).
 This method is based off the ancestry identification scheme used in the [Pan-UK 
-BioBank analysis](https://pan.ukbb.broadinstitute.org/). 
+BioBank analysis](https://pan.ukbb.broadinstitute.org/). More details of the 
+training of the classifier is included in the manuscript.
 
 [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of 
-the package. In addition, there is a data repository containing necessary files for
-running the provided pre-trained classier here: https://github.com/meyer-lab-cshl/plinkQCAncestryData/tree/main. [Git Large File Storage extention](https://git-lfs.com/) needs to be pre-installed to get the correct files.  
-This can be downloaded from github with:
+the package. Additional loading matrices are needed for the PCA projection used in the model.
+This is hosted on the plinkQC github repo under the inst/extdata folder located 
+[here](https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat). Alternatively, the whole github repo can downloaded with
 ```{bash installing github, eval=FALSE}
-git clone git@github.com:meyer-lab-cshl/plinkQCAncestryData.git
+git clone git@github.com:meyer-lab-cshl/plinkQC.git
 ```
 
-If the zip folder downloaded is a smaller size than the expected 251.3MB, run 
-`git lfs fetch` to make sure the correct file gets downloaded. Unzip the file for future use. 
 
 ### Workflow
 
@@ -70,11 +68,19 @@ rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name,
 name <- paste0(name, ".renamed")
 ```
 
-After correctly formatting the data, we can use the provided function to return the sample ids and predicted ancestry. 
+After correctly formatting the variants, we can use the provided function to return the 
+predicted ancestry. Because the example dataset has only a small number of variants 
+overlapping with the reference dataset, additional noise is expected.
 ``` {R ancestry identification, eval = FALSE}
 ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
                                       path2plink2 = path2plink2, 
                                       path2load_mat = path2load_mat) 
+ancestries$p_ancestry
+```
+
+```{r load ancestry, out.width = "500px", echo=FALSE}
+par(mfrow=c(2,1), las=1)
+knitr::include_graphics("ancestral_prediction.pdf")
 ```
 
 ## Training Your Own Random Forest Classifier 

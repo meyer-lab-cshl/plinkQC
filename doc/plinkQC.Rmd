@@ -50,23 +50,17 @@ that fail the quality control can subsequently be removed with *plinkQC* to
 generate a new, clean dataset. Removal of individuals based on relationship
 status is optimised to retain as many individuals as possible in the study.
 
-*plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
+The majority if the functions in *plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
  (**version 1.9**), which has to be manually installed prior to the usage of
- *plinkQC*. It assumes the genotype have already been determined from the
+ *plinkQC*. The ancestry functions depends on the newer version of [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/)
+ (**version 2.0**). It assumes the genotype have already been determined from the
  original probe intensity data of the genotype array and is available in
 [plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
 
-**Note**: [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/) is still in alpha
-status with many re-implementations and updates, including output file changes.
-While these changes are ongoing, *plinkQC* will rely on users using PLINK 1.9.
-I will monitor PLINK 2.0 changes and check compatibility with `plinkQC`. If
-users require specific PLINK 2.0 output, I recommend using the [Step-by-Step]
-approach described below and manually saving to
-the output files expected from PLINK 1.9.
-
-The protocol is implemented in three main functions, the per-individual quality
-control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
-the generation of the new, quality control dataset (`cleanData`):
+The protocol is implemented in four main functions, the per-individual quality
+control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`).
+the generation of the new, quality control dataset (`cleanData`), and the 
+prediction of human genetic ancestry (`superpop_classification`):
 
 ## Per-individual quality control
 The per-individual quality control with `perIndividualQC` wraps around these
@@ -75,8 +69,7 @@ functions:
     information,
     (ii) `check_heterozygosity_and_missingness`: for the identification of
     individuals with outlying missing genotype and/or heterozygosity rates,
-    (iii) `check_relatedness`: for the identification of related individuals,
-    (iv) `check_ancestry`: identification of individuals of divergent ancestry.
+    (iii) `check_relatedness`: for the identification of related individuals
 
 ## Per-marker quality control
 The per-marker quality control with `perMarkerQC` wraps around these
@@ -93,6 +86,10 @@ functions:
 a new dataset with all individuals and markers that passed the quality control
 checks.
 
+## Ancestry Identification
+`superpop_classification` predicts the genomic ancestry
+of the individuals within the dataset. 
+
 # Workflow
 In the following, genotype quality control with *plinkQC* is applied on a small
 example dataset with 200 individuals and 10,000 markers (provided with this
@@ -106,16 +103,13 @@ package.dir <- find.package('plinkQC')
 indir <- file.path(package.dir, 'extdata')
 qcdir <- tempdir()
 name <- 'data'
-path2plink <- "/Users/syed/bin/plink"
-path2plink2 <- "/Users/syed/bin/plink2"
+path2plink <- "/Users/hannah/bin/plink"
 ```
 
 ## Per-individual quality control
 For `perIndividualQC`, one simply specifies the directory where the data is
 stored (qcdir) and the prefix of the plink files (i.e. prefix.bim, prefix.bed,
-prefix.fam). In addition, the names of the files containing information about 
-the reference population and the merged dataset used in `check_ancestry` have to
-be provided: refSamplesFile, refColorsFile and prefixMergedDataset. Per default, 
+prefix.fam). Per default, 
 all quality control checks will be conducted. 
 
 In addition to running each check, `perIndividualQC` writes a list of all fail
@@ -132,13 +126,13 @@ multi-panel plot.
 
 ```{r individual QC,  eval=FALSE, fig.height=12, fig.width=9}
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
-                            path2plink=path2plink,
+                            path2plink=path2plink, 
                             interactive=TRUE, verbose=TRUE)
 
 ```
 ```{r load individualQC, echo=FALSE,out.width = "500px", fig.align='center'}
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("individualQC.png")
+knitr::include_graphics("individualQC.pdf")
 ```
 
 
@@ -153,7 +147,6 @@ overview_individuals <- overviewPerIndividualQC(fail_individuals,
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewQC.png")
 ```
-
 
 
 ## Per-marker quality control
@@ -186,7 +179,6 @@ par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewMarkerQC.png")
 ```
 
-\newpage
 ## Create QC-ed dataset
 After checking results of the per-individual and per-marker quality control,
 individuals and markers that fail the chosen criteria can automatically be
@@ -198,6 +190,52 @@ Ids  <- cleanData(indir=indir, qcdir=qcdir, name=name, path2plink=path2plink,
                             verbose=TRUE, showPlinkOutput=FALSE)
 ```
 
+## Predicting Ancestry
+After filtering low quality markers and samples, it may be useful to predict the genomic ancestry of the samples. 
+We included a pre-trained random forest classifier to predict the genomic ancestry of the samples. [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of the package.
+
+Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
+may be needed to map variants from one annotation to another. More details on how
+to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd). We provide an example dataset that is in the hg38 annotation. 
+
+Additional loading matrices are needed for the PCA projection used in the model.
+This is hosted on the plinkQC github repo under the inst/extdata folder located 
+[here](https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat). Alternatively, the whole github repo can downloaded with
+```{bash installing github, eval=FALSE}
+git clone git@github.com:meyer-lab-cshl/plinkQC.git
+```
+
+In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
+and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
+We included the functions convert_to_plink2() and rename_variant_identifiers()
+to correctly format genomic data that is in the hg38 annotation. 
+The name of the files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the path2load_mat. 
+
+``` {R, eval = FALSE}
+name = "data.hg38"
+path2load_mat = "path/to/load_mat/merged_chrs.postQC.train.pca"
+convert_to_plink2(indir=indir, qcdir=qcdir, name=name, 
+                  path2plink2 = path2plink2)
+rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name, 
+                           path2plink2 = path2plink2)
+name <- paste0(name, ".renamed")
+```
+
+After correctly formatting the variants, we can use the provided function to return the 
+predicted ancestry. Because the example dataset has only a small number of variants 
+overlapping with the reference dataset, additional noise is expected.
+``` {R ancestry identification, eval = FALSE}
+ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
+                                      path2plink2 = path2plink2, 
+                                      path2load_mat = path2load_mat) 
+```
+
+```{r load ancestry, out.width = "500px", echo=FALSE}
+par(mfrow=c(2,1), las=1)
+knitr::include_graphics("ancestral_prediction.pdf")
+```
+
+\newpage
 # Step-by-step
 
 ## Individuals with discordant sex information
@@ -335,29 +373,6 @@ fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
 ```
 ```{r load  maf, out.width = "500px", echo=FALSE, fig.align='center'}
 knitr::include_graphics("maf.png")
-```
-
-## Predicting ancestry of human samples
-
-The identification of ancestry is done by training the classifier on the
-principal components of a reference dataset. The reference dataset is composed of 
-individuals a harmonized dataset of the 1000 genomes individuals with 
-the Human Genome Diversity Project. A pre-trained classifier is included
-within the package to predict the ancestry. `superpop_classification()` returns a plot
-of the predicted probabilities of each ancestry, the dataframe containing
-the predicted probability, and a dataframe with the majority ancestry for each individual. 
-
-There are additional functions to rename the variant in the correct format and put the data in plink2 format if needed for the classifier to work properly.
-```{r check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'}
-
-superpop_classification(indir = indir, 
-                        name = name, qcdir = qcdir, 
-                        path2plink2 = path2plink2, path2load_mat = "../plinkQC_validation/ancestry_unrel_model/merged_chrs.postQC.train.pca")
-#function for superpop classification 
-
-```
-```{r load ancestry, out.width = "500px", echo=FALSE, fig.align='center'}
-knitr::include_graphics("checkAncestry.png")
 ```
 
 

@@ -12,23 +12,15 @@ qcdir <- tempdir()
 name <- 'data'
 path2plink <- "/Users/hannah/bin/plink"
 
-## ----copy files---------------------------------------------------------------
-file.copy(file.path(package.dir, 'extdata/data.HapMapIII.eigenvec'), qcdir)
-
 ## ----individual QC,  eval=FALSE, fig.height=12, fig.width=9-------------------
 # fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
-#                             refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",
-#                                                  sep=""),
-#                             refColorsFile=paste(indir, "/HapMap_PopColors.txt",
-#                                                  sep=""),
-#                             prefixMergedDataset="data.HapMapIII",
-#                             path2plink=path2plink, do.run_check_ancestry = FALSE,
+#                             path2plink=path2plink,
 #                             interactive=TRUE, verbose=TRUE)
 # 
 
 ## ----load individualQC, echo=FALSE,out.width = "500px", fig.align='center'----
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("individualQC.png")
+knitr::include_graphics("individualQC.pdf")
 
 ## ----overview individual QC,fig.width=7, fig.height=7, eval=FALSE-------------
 # overview_individuals <- overviewPerIndividualQC(fail_individuals,
@@ -59,6 +51,24 @@ knitr::include_graphics("overviewMarkerQC.png")
 # Ids  <- cleanData(indir=indir, qcdir=qcdir, name=name, path2plink=path2plink,
 #                             verbose=TRUE, showPlinkOutput=FALSE)
 
+## ----eval = FALSE-------------------------------------------------------------
+# name = "data.hg38"
+# path2load_mat = "path/to/load_mat/merged_chrs.postQC.train.pca"
+# convert_to_plink2(indir=indir, qcdir=qcdir, name=name,
+#                   path2plink2 = path2plink2)
+# rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name,
+#                            path2plink2 = path2plink2)
+# name <- paste0(name, ".renamed")
+
+## ----ancestry identification, eval = FALSE------------------------------------
+# ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name,
+#                                       path2plink2 = path2plink2,
+#                                       path2load_mat = path2load_mat)
+
+## ----load ancestry, out.width = "500px", echo=FALSE---------------------------
+par(mfrow=c(2,1), las=1)
+knitr::include_graphics("ancestral_prediction.pdf")
+
 ## ----check sex, eval=FALSE, out.width = "500px", fig.align='center'-----------
 # fail_sex <- check_sex(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
 #                       verbose=TRUE, path2plink=path2plink)
@@ -80,19 +90,6 @@ knitr::include_graphics("checkHetImiss.png")
 
 ## ----load checkRelatedness, out.width = "500px", echo=FALSE, fig.align='center'----
 knitr::include_graphics("checkRelatedness.png")
-
-## ----check ancestry, eval=FALSE, fig.height=3, fig.width=5, fig.align='center'----
-# exclude_ancestry <- check_ancestry(indir=indir, qcdir=qcdir, name=name,
-#                             refSamplesFile=paste(indir, "/HapMap_ID2Pop.txt",
-#                                                  sep=""),
-#                             refColorsFile=paste(indir, "/HapMap_PopColors.txt",
-#                                                  sep=""),
-#                             prefixMergedDataset="data.HapMapIII",
-#                             path2plink=path2plink, run.check_ancestry = FALSE,
-#                             interactive=TRUE)
-
-## ----load ancestry, out.width = "500px", echo=FALSE, fig.align='center'-------
-knitr::include_graphics("checkAncestry.png")
 
 ## ----check snp missing, eval=FALSE--------------------------------------------
 # fail_snpmissing <- check_snp_missingness(indir=indir, qcdir=qcdir, name=name,
