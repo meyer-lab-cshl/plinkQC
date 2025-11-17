@@ -3,17 +3,19 @@ title: "Ancestry estimation based on reference samples of known ethnicities"
 author: "Maha Syed and Caroline Walter"
 date: "`r Sys.Date()`"
 output:
-    pdf_document:
-        fig_caption: yes
-        toc: true
-        toc_depth: 2
-        highlight: pygments
+  html_document:
+    toc: true
+    toc_depth: '2'
+    df_print: paged
+  pdf_document:
+    fig_caption: true
+    toc: true
+    toc_depth: 2
+    highlight: pygments
 bibliography: references.bib
-csl: plos-genetics.csl
-vignette: >
-  %\VignetteIndexEntry{AncestryCheck}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+csl: "plos-genetics.csl"
+vignette: "%\\VignetteIndexEntry{AncestryCheck} %\\VignetteEngine{knitr::rmarkdown}
+  %\\VignetteEncoding{UTF-8}\n"
 ---
 ```{r setup knitr, include = FALSE}
 knitr::opts_chunk$set(
@@ -23,24 +25,24 @@ knitr::opts_chunk$set(
 ```
 
 ## Running Random Forest Classification
-This package contains a function to predict ancestry of samples. We trained a random forest algorithm on the principal components of
-cleaned genomics data from the [harmonized 1000 Genomes and Human Genome Diversity Project dataset](https://genome.cshlp.org/content/34/5/796).
-This method is based off the ancestry identification scheme used in the [Pan-UK 
-BioBank analysis](https://pan.ukbb.broadinstitute.org/). 
+_plinkQC_ predicts sample ancestry by applying a random forest trained on the principal components of cleaned genotype data from the 
+[harmonized 1000 Genomes and Human Genome Diversity Project dataset](https://genome.cshlp.org/content/34/5/796).
 
-[Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed for this portion of 
-the package. Additional loading matrices are needed for the PCA projection used in the model.
-This is hosted on the plinkQC github repo under the inst/extdata folder located 
-[here](https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat). Alternatively, the whole github repo can downloaded with
+For ancestry estimation, accessory functions from [Plink v2](https://www.cog-genomics.org/plink/2.0/) are needed, as are pre-computed
+loading matrices for the PCA projection used in the model.
+These are hosted on the _plinkQC_ github repo under the inst/extdata folder
+located [here](https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat). Alternatively, the whole github repo can downloaded with
+
 ```{bash installing github, eval=FALSE}
 git clone git@github.com:meyer-lab-cshl/plinkQC.git
 ```
 
 
 ### Workflow
+To begin with this is an example of how to run the classifier with a provided
+test data set. We will set up a temporary directory for qcdir and name the variables. The name of the files (before the .acount or .eigenvec.allele) fo
+the loading matrices must be included in the `path2load_mat` variable. 
 
-To begin with this is an example of how to run the classifier with a provided test data set.
-We will set up a temporary directory for qcdir and name the variables. The name of the files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the `path2load_mat` variable. 
 ```{r setting up, eval = FALSE}
 package.dir <- find.package('plinkQC')
 indir <- file.path(package.dir, 'extdata')
@@ -50,14 +52,14 @@ path2plink2 <- "/Users/syed/bin/plink2"
 path2load_mat <- "path/to/load_mat/merged_chrs.postQC.train.pca"
 ```
 
-Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
-may be needed to map variants from one annotation to another. More details on how
-to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.html).
+Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool may be needed to map variants from one annotation to another. More details on how to use the tool can
+be found on the processing [HapMap III reference data vignette](HapMap.html).
 
-In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
-and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
-We can use the included functions `convert_to_plink2()` and `rename_variant_identifiers()`
-to correctly format genomic data that is in the hg38 annotation. 
+In addition, the data should be in PLINK 2.0 format (i.e .pgen, .pvar, .psam
+files),  and the variants identifiers should be formatted according to this
+example: 1:12345[hg38]. We can use the _plinkQC_ functions `convert_to_plink2()`
+and `rename_variant_identifiers()` to correctly format genotype data that is
+already in the hg38 annotation. 
 
 ``` {R, eval = FALSE}
 convert_to_plink2(indir=indir, qcdir=qcdir, name=name, 
@@ -67,9 +69,10 @@ rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name,
 name <- paste0(name, ".renamed")
 ```
 
-After correctly formatting the variants, we can use the provided function to return the 
-predicted ancestry. Because the example dataset has only a small number of variants 
-overlapping with the reference dataset, additional noise is expected.
+After correctly formatting the variants, we can use the provided function to
+return the predicted ancestry. Because the example dataset only has xx SNPS to
+pass CRAN requirements, the overlap with the reference dataset is only xx %, thus additional noise is expected and visible in the plot below.
+
 ``` {R ancestry identification, eval = FALSE}
 ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
                                       path2plink2 = path2plink2, 
@@ -85,14 +88,14 @@ knitr::include_graphics("ancestral_prediction.png")
 ```
 
 ## Training Your Own Random Forest Classifier 
+For non-human genotype data, there might still be the need to detect and predict population structure. In addition, in some rare cases, there might not be a
+large enough overlap in the SNP genotypes and the trained reference data (we 
+recommend > 5% overlap). In this case, we recommend training your own random
+forest classifier. In the following, we will demonstrate the workflow for
+setting up this training, starting with reference data download. As an example,
+we show the process for the 1000 genomes dataset. The download and pre-processing are described in detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.html). We will use a test study dataset included in the package as an example for the workflow.  
 
-Based on the microchip used in the study data, there might not be a large enough 
-overlap in the SNPs sequenced to gain accurate predictions. In this case,
-we recommend training your own random forest. To do so, we will first need to set 
-up the needed bash variables and download the 1000 genomes dataset into qcdir which is described in 
-detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.html). We will use a test study dataset included in the package as an example for the workflow.  
-
-### Setting up Bash Script
+### Setting up Bash Script Variables
 ``` {bash setting up bash, eval = FALSE}
 qcdir='~/qcdir'
 name='data.hg38'
@@ -102,33 +105,27 @@ mkdir -r $qcdir/plink_log
 ```
 
 ### Putting study data in qcdir
-Copy your study dataset to the qcdir folder. In this example, we are assuming that 
-the provided test dataset included with the package has been moved. 
+Copy your study dataset to the qcdir folder. In this example, we are assuming
+that the provided test dataset included with the package has been moved. 
 
-# Workflow
-## Download reference data
+### Download reference data
 A suitable reference dataset should be downloaded and if necessary, re-formated
 into PLINK format. Vignettes
 ['Processing HapMap III reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html) and 
 ['Processing 1000Genomes  reference data for ancestry estimation'](https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html),
 show the download and processing of the HapMap phase III and 1000Genomes phase
 III dataset, respectively. In this example, we will use the 1000Genomes data as
-the reference dataset.
-We recommend using ```check_relatedness``` on the reference to filter our related samples. 
-This prevents data leakage between the training and testing datasets while training. 
+the reference dataset. We recommend using ```check_relatedness``` on the
+reference to filter our related samples. This prevents data leakage between the training and testing datasets. 
 
-
-## Set-up
+### Set-up
 We will first set up some bash variables and create directories needed; storing
 the names and directories of the reference and study will make it easy to use 
 updated versions of the reference or new datasets in the future. We create a 
-directory named 'qcdir' for the study data. 
-In order to keep the data directory tidy, we'll create a directory for the log 
-files and move them to the log directory here after each analysis step. This
-is useful to keep the PLINK log-files for future reference. 
+directory named 'qcdir' for the study data. In order to keep the data directory tidy, we will create a directory for the log files and move them to the log directory for future reference after each analysis step. 
+
 Once you have created 'qcdir', be sure to copy the data.bim, data.bed, 
-and data.fam files into your directory. If you are using HapMap III reference 
-data, be sure to use the correct variable name; refname='HapMapIII'.  
+and data.fam files into your directory. 
 
 ```{bash setup, eval=FALSE}
 qcdir=~/qcdir
@@ -139,20 +136,14 @@ refname='all_hg38'
 mkdir -p $qcdir/plink_log
 ```
 
-## Match study genotypes and reference data
+### Match study genotypes and reference data
 In order to compute joint principal components of the reference and study
-population, we will need to combine the two datasets. The plink --merge
-function enables this merge, but requires the variants in the datasets to be
-matching by chromosome, position and alleles. The following sections show how
-to extract the relevant data from the reference and study dataset and how to
-filter matching variants.
+population, we will need to combine the two datasets. The plink --merge function enables this merge, but requires the variants in the datasets to be matching by chromosome, position and alleles. The following sections show how to extract the relevant data from the reference and study dataset and how to filter matching variants.
 
 ### Filter reference and study data for non A-T or G-C SNPs
-We will use an awk script to find non-A/T and non-G/C SNPs, as these SNPs are more
-difficult to align, and remove them from both the reference and study data sets.
-In addition, we will only keep the autosomes (chr 1-22), only keep snps (snps-only),
-of those, keep only the biallelic ones (max-alleles 2), and remove any duplicates
-(rm-dup). The data should start off in Plink 1.9 data format.
+We will use an awk script to find non-A/T and non-G/C SNPs, as these SNPs are
+more difficult to align, and remove them from both the reference and study data sets. In addition, we will only keep the autosomes (chr 1-22), only keep snps (snps-only), of those, keep only the biallelic ones (max-alleles 2), and remove
+any duplicates (rm-dup). The data should start off in Plink 1.9 data format.
 
 ```{bash filter at and gc snps, eval=FALSE}
 awk 'BEGIN {OFS="\t"}  ($5$6 == "GC" || $5$6 == "CG" \
@@ -185,11 +176,10 @@ plink2 --bfile  $qcdir/$name \
       --out $qcdir/$name.no_ac_gt_snps
 mv  $qcdir/$name.no_ac_gt_snps.log $qcdir/plink_log/$name.no_ac_gt_snps.log
 ```
-After here, is where you need to remove letters from ids.
 
 ### Renaming variant identifiers
-Variant identifiers can vary between studies. To ensure that the data can be properly processed,
-we will rename the variant identifiers to a common scheme based on chromosome number and basepair location by using plinkQC's rename variant identifier function.
+Variant identifiers can vary between studies. To ensure that the data can be properly processed, we will rename the variant identifiers to a common scheme
+based on chromosome number and basepair location by using _plinkQC_'s `rename_variant_identifiers` function.
 ``` {R renaming, eval = FALSE}
 library(plinkQC)
 name <- "data.no_ac_gt_snps"
@@ -199,8 +189,7 @@ rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name,
                            path2plink2 = path2plink2)
 ```
 
-### Filtering out the shared SNPs between the study dataset and reference 1000G dataset
-
+### Filtering out shared SNPs between study and reference dataset
 ```{bash filter study SNPs, eval=FALSE}
 cd $qcdir
 awk '{print $3}' $name.renamed.pvar > $name.renamed.varids.txt
@@ -209,12 +198,11 @@ plink2 --pfile $refname.renamed --extract $name.renamed.varids.txt --make-bed --
 ```
 
 ### Conducting markerQC, pruning LD, and individual QC
-After filtering for SNPS shared in the study, we will conduct marker and sample quality
-control on the reference dataset. This is to ensure only robust data is used as 
-a reference. To reduce correlations between SNPs, we will prune for variants in linkage disequilibrium (LD) after removing low quality markers. 
-This is done with plinkQC's pruning_ld() function. As part of the function, ranges
-of known high-LD are excluded. These ranges are originally provided by @Anderson2010. 
-
+After filtering for SNPS shared in the study, we will conduct marker and sample quality control on the reference dataset. This is to ensure only robust data is
+used as a reference. To reduce correlations between SNPs, we will prune for
+variants in linkage disequilibrium (LD) after removing low quality markers. 
+This is done with _plinkQC_'s pruning_ld() function. As part of the function,
+ranges of known high-LD are excluded. These ranges are originally provided by @Anderson2010. 
 
 ```{R marker_sample_QC, eval=FALSE}
 refname <- "all_hg38.renamed.studysnps"
@@ -244,14 +232,11 @@ sample_ids <- cleanData(indir = indir, qcdir = qcdir, name = name,
 			filterSex = FALSE, filterHeterozygosity = TRUE, 
 			filterSNPMissingness = FALSE, filterSampleMissingness = TRUE, 
 			filterMAF = FALSE, filterHWE = FALSE)
-
-
 ```
 
-
 ### PCA
-After conducting quality control, we will extract the principal
-components from the data to reduce the input space. 
+After conducting quality control, we will compute the joint principal
+components. 
 ``` {bash pca reference, eval=FALSE}
 plink2 --bfile  $refname.renamed.studysnps.cleaned.pruned.cleaned \
        --nonfounders \
@@ -262,18 +247,17 @@ plink2 --bfile  $refname.renamed.studysnps.cleaned.pruned.cleaned \
 mv $qcdir/$refname.renamed.studysnps.cleaned.pruned.cleaned.pca $qcdir/plink_log
 ```
 
-After running a PCA, we will project the original dataset onto the principal components to rescale. This ensures that future projections will be in the same scale.
+After running a PCA, we will project the original dataset onto the principal components to rescale. This ensures that future projections will be on the same scale.
 ``` {bash project, eval=FALSE}
 plink2 --pfile $refname.renamed.studysnps.cleaned.pruned.cleaned
        --read-freq $refname.renamed.studysnps.cleaned.pruned.cleaned.pca.acount 
        --score $refname.renamed.studysnps.cleaned.pruned.cleaned.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize 
        --score-col-nums 7-26 --out $refname.renamed.studysnps.cleaned.pruned.cleaned.projection
-
 ```
 
-### Training random forest classifier in R
-
-The principal components of the reference dataset will be used to train the random forest algorithm in R. 
+### Training a random forest classifier in R
+The principal components of the reference dataset will be used to train the
+random forest algorithm in R. 
 ```{r, eval = FALSE}
 library(tidyverse)
 library(randomForest)
@@ -290,9 +274,12 @@ superpop <-
   read_delim(file.path(package.dir,"extdata/AncestryGeoLocations.csv"))
 ```
 
-We divide up the data into a 70% training portion and 30% testing portion.
-To ensure a balanced model, we will sample the data to ensure an even representation of each ancestral superpopulation group in the testing portion of the data. The number of inidividuals from each group that is chosen will have to adjusted for the size of the reference dataset. For the 1000 genomes dataset, we use 448 samples in each of the five ancestral groups for a roughly 70% of the data. 
-
+We divide up the data into a 70% training portion and 30% testing portion. To
+ensure a balanced model, we will sample the data to ensure an even
+representation of each ancestral superpopulation group in the testing portion of
+the data. The number of inidividuals from each group that is chosen will have to adjusted for the size of the reference dataset. For the 1000 genomes dataset, we
+use 448 samples in each of the five ancestral groups for a roughly 70% of the
+data. 
 ``` {r, eval = FALSE}
 proj <- proj %>%
   select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
@@ -310,11 +297,10 @@ train.ids <- lapply(idx, function(i) {
 
 ids_to_keeps<- unlist(train.ids, use.names = FALSE, recursive = FALSE)
 train_proj_1000g <- labeled_proj[ids_to_keeps,]
-
 ```
 
-Then, we can train the random forest. We are putting in a starting value for the parameter but we 
-recommend utilizing a grid search (described in detail more below) to determine the optimal values. 
+Then, we can train the random forest. We are providing a starting value for the parameter but we recommend utilizing a grid search (described in detail more
+below) to determine the optimal values. 
 ```{r, eval = FALSE}
 train_proj_1000g$Ancestry <- factor(train_proj_1000g$Ancestry)
 
@@ -324,15 +310,12 @@ ancestry_rf <- randomForest(Ancestry ~ .,
                         ntree = 750,
                         importance = TRUE)
 ancestry_rf
-
 ```
 
 ### Predicting ancestries of new study data
-
 To predict the ancestries of a new study dataset with our trained random forest, 
-you need to project the newdata onto the principal components of the reference dataset. 
-This is done with the --score function in plink2. The projection is then used as 
-an input for the random forest. 
+you need to project the newdata onto the principal components of the reference dataset. This is done with the --score function in plink2. The projection is
+then used as input for the random forest. 
 ```{bash project newdata, eval=FALSE}
 plink2 --pfile newdata 
        --read-freq all_hg38.pca.acount 
@@ -340,7 +323,7 @@ plink2 --pfile newdata
        --score-col-nums 7-26 --out newdata.projection
 ```
 
-Then, we can use the random forest to predict the ancestry of the newdata. 
+Then, we can use the random forest to predict the ancestry of the new data. 
 ```{r, eval = FALSE}
 filepath <- "Insert path to newdata.sscore here"
 newdata <- read.csv(
@@ -356,7 +339,10 @@ predictions <- predict(ancestry_rf, newdata)
 
 ### Evalulating and Tuning Classification
 To evaluate the accuracy of the model, a commonly used metric is the out-of-bag 
-error rate and confusion matrix. The confusion matrix displays the number of correct classifications for each ancestry along the diagonal. Any values outside the diagonal are misclassifications for that other ancestry. A summary of these metrics can be seen through:
+(OOB) error rate and confusion matrix. The confusion matrix displays the number
+of correct classifications for each ancestry along the diagonal. Any values
+outside the diagonal are misclassifications for other ancestries. A summary of
+these metrics can be seen through:
 ``` {R, eval = FALSE}
 ancestry_rf
 ```
@@ -366,18 +352,10 @@ my_rf <- ancestry_rf$confusion
 heatmap(my_rf[,-c(27)], scale = 'column', trace = 'none')
 ```
 
-# Parameter Tuning
-Tuning the parameters for this random forest is crucial in building a 
-machine-learning model to produce the best forest. In this case, having the 
-highest accuracy. 
-
-## Grid Search 
-There are different optimization techniques to determine the parameters for a random forest.
-A simple one to implement is a grid-search in where models with different parameters are initialized. 
-Based on their performance, the optimal parameters can be determined. The parameters tested
-in a grid search are the number of principal components included and the number of trees.
-Within the parameter values of the number of principal components and number of trees, cross-validation
-is done to determine the mtry variable. 
+### Parameter Tuning via Grid Search 
+There are different optimization techniques to determine the parameters for a
+random forest. A simple one to implement is a grid-search where models with different parameters are initialized. Based on their performance, the optimal parameters can be determined. The parameters tested in our grid search are the
+number of principal components included and the number of trees. Within the parameter values of the number of principal components and number of trees, cross-validation is done to determine the mtry variable. 
 
 ```{r, eval = FALSE}
 train_results <- data.frame(mtry = c(0), ntrees = c(0), num_pc = c(0), acc = c(0))
@@ -395,22 +373,17 @@ for (PC_inc in c(1:20)) {
                                 acc = fit$results$Accuracy))
   }
 }
-
-
-
 ```
 
-
-## Evaluating/Interpretting the RF
-
+### Evaluating/Interpretting the RF
 Once you have found a successful OOB error rate, you can use the below package
 to find out important information regarding your tree. The below documentation 
 builds a decision tree using categorical aspects to classify the data. The PC 
 values for each sample are provided in our 1000 Genomes reference dataset file, 
 where each sample has values for 20 distinct PCs. We ask if a certain sample's
-value for a specific PC is less than or greater than a given number.  Based on
+value for a specific PC is less than or greater than a given number. Based on
 that answer, it is either classified as a specific ancestry or needs to undergo
-more investigation to classify it correctly. For comprehensability, this is only
+more investigation to classify it correctly. The visualization below is only
 a subset of a decision tree the random forest builds as classifying all 26 
 ancestries builds quite a complicated and cluttered plot. 
 ```{r, eval = FALSE}
@@ -422,6 +395,4 @@ reprtree:::plot.getTree(rf_mtry, k=1, d=5)
 reprtree:::plot.getTree(rf_mtry, k=1, d=6) 
 ```
 
-
-
-# References
+## References
