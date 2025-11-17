@@ -59,8 +59,8 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Genotype quality control with plinkQC</h1>
-                        <h4 data-toc-skip class="author">Hannah
-Meyer</h4>
+                        <h4 data-toc-skip class="author">Hannah Meyer
+and Maha Syed</h4>
             
             <h4 data-toc-skip class="date">2025-11-17</h4>
       
@@ -165,7 +165,7 @@ demonstrated at the end of this vignette.</p>
 <span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>, <span class="st">'extdata'</span><span class="op">)</span></span>
 <span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data'</span></span>
-<span><span class="va">path2plink</span> <span class="op">&lt;-</span> <span class="st">"/Users/hannah/bin/plink"</span></span></code></pre></div>
+<span><span class="va">path2plink</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink"</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="per-individual-quality-control-1">Per-individual quality control<a class="anchor" aria-label="anchor" href="#per-individual-quality-control-1"></a>
 </h3>
@@ -244,7 +244,7 @@ for this portion of the package.</p>
 <p>Before use, the study data should be in the new hg38 annotation.
 USCS’s <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a>
 tool may be needed to map variants from one annotation to another. More
-details on how to use the tool can be found on the processing <a href="HapMap.Rmd">HapMap III reference data vignette</a>. We provide an
+details on how to use the tool can be found on the processing <a href="HapMap.html">HapMap III reference data vignette</a>. We provide an
 example dataset that is in the hg38 annotation.</p>
 <p>Additional loading matrices are needed for the PCA projection used in
 the model. This is hosted on the plinkQC github repo under the
@@ -254,13 +254,15 @@ Alternatively, the whole github repo can downloaded with</p>
 <p>In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar,
 psam files), and the variants identifiers should be formatted similar to
 the following example: 1:12345[hg38]. We included the functions
-convert_to_plink2() and rename_variant_identifiers() to correctly format
-genomic data that is in the hg38 annotation. The name of the files
-(before the .acount or .eigenvec.allele) for the loading matrices must
-be included in the path2load_mat.</p>
+<code><a href="../reference/convert_to_plink2.html">convert_to_plink2()</a></code> and
+<code><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers()</a></code> to correctly format genomic
+data that is in the hg38 annotation. The name of the files (before the
+.acount or .eigenvec.allele) for the loading matrices must be included
+in the <code>path2load_mat</code> variable.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">name</span> <span class="op">=</span> <span class="st">"data.hg38"</span></span>
 <span><span class="va">path2load_mat</span> <span class="op">=</span> <span class="st">"path/to/load_mat/merged_chrs.postQC.train.pca"</span></span>
+<span><span class="va">path2plink2</span> <span class="op">=</span> <span class="st">"/Users/syed/bin/plink2"</span></span>
 <span><span class="fu"><a href="../reference/convert_to_plink2.html">convert_to_plink2</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
 <span>                  path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>

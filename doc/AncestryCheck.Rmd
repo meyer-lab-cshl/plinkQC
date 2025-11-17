@@ -53,7 +53,7 @@ path2load_mat <- "/Users/syed/Documents/loading_matrix"
 
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
 may be needed to map variants from one annotation to another. More details on how
-to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd).
+to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.html).
 
 In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
 and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].

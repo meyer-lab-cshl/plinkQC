@@ -1,6 +1,6 @@
 ---
 title: "Genotype quality control with plinkQC"
-author: "Hannah Meyer"
+author: "Hannah Meyer and Maha Syed"
 date: "`r Sys.Date()`"
 output: 
     pdf_document:
@@ -207,7 +207,7 @@ We included a pre-trained random forest classifier to predict the genomic ancest
 
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
 may be needed to map variants from one annotation to another. More details on how
-to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd). We provide an example dataset that is in the hg38 annotation. 
+to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.html). We provide an example dataset that is in the hg38 annotation. 
 
 Additional loading matrices are needed for the PCA projection used in the model.
 This is hosted on the plinkQC github repo under the inst/extdata folder located 
@@ -218,9 +218,9 @@ git clone git@github.com:meyer-lab-cshl/plinkQC.git
 
 In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
 and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
-We included the functions convert_to_plink2() and rename_variant_identifiers()
+We included the functions `convert_to_plink2()` and `rename_variant_identifiers()`
 to correctly format genomic data that is in the hg38 annotation. 
-The name of the files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the path2load_mat. 
+The name of the files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the `path2load_mat` variable. 
 
 ``` {R, eval = FALSE}
 name = "data.hg38"

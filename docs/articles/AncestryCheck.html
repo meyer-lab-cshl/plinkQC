@@ -89,24 +89,27 @@ Alternatively, the whole github repo can downloaded with</p>
 <h4 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h4>
 <p>To begin with this is an example of how to run the classifier with a
-provided test data set. We will set up a temporary directory for
-qcdir.</p>
+provided test data set. We will set up a temporary directory for qcdir
+and name the variables. The name of the files (before the .acount or
+.eigenvec.allele) for the loading matrices must be included in the
+<code>path2load_mat</code> variable.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">package.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/find.package.html" class="external-link">find.package</a></span><span class="op">(</span><span class="st">'plinkQC'</span><span class="op">)</span></span>
 <span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>, <span class="st">'extdata'</span><span class="op">)</span></span>
 <span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data.hg38'</span></span>
 <span><span class="va">path2plink2</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink2"</span></span>
-<span><span class="va">path2load_mat</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/Documents/loading_matrix"</span></span></code></pre></div>
+<span><span class="va">path2load_mat</span> <span class="op">&lt;-</span> <span class="st">"path/to/load_mat/merged_chrs.postQC.train.pca"</span></span></code></pre></div>
 <p>Before use, the study data should be in the new hg38 annotation.
 USCS’s <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a>
 tool may be needed to map variants from one annotation to another. More
-details on how to use the tool can be found on the processing <a href="HapMap.Rmd">HapMap III reference data vignette</a>.</p>
+details on how to use the tool can be found on the processing <a href="HapMap.html">HapMap III reference data vignette</a>.</p>
 <p>In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar,
 psam files), and the variants identifiers should be formatted similar to
 the following example: 1:12345[hg38]. We can use the included functions
-convert_to_plink2() and rename_variant_identifiers() to correctly format
-genomic data that is in the hg38 annotation.</p>
+<code><a href="../reference/convert_to_plink2.html">convert_to_plink2()</a></code> and
+<code><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers()</a></code> to correctly format genomic
+data that is in the hg38 annotation.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/convert_to_plink2.html">convert_to_plink2</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
 <span>                  path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span></span>
@@ -132,7 +135,7 @@ dataset, additional noise is expected.</p>
 large enough overlap in the SNPs sequenced to gain accurate predictions.
 In this case, we recommend training your own random forest. To do so, we
 will first need to set up the needed bash variables and download the
-1000 genomes dataset into qcdir which is described in detail in <a href="Genomes1000.Rmd">Processing 1000 Genomes reference data for
+1000 genomes dataset into qcdir which is described in detail in <a href="Genomes1000.html">Processing 1000 Genomes reference data for
 ancestry estimation</a>. We will use a test study dataset included in
 the package as an example for the workflow.</p>
 <div class="section level4">
