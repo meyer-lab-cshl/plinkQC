@@ -10,7 +10,7 @@
 #' should be specified: for windows OS, this means path/plink.exe, for unix
 #' platforms this is path/plink. If not provided, assumed that PATH set-up works
 #' and PLINK will be found by \code{\link[sys]{exec}}('plink').
-#' @return Path to PLINK executable.
+#' @return Path to PLINK 1.9 executable.
 #' @export
 
 checkPlink <- function(path2plink=NULL) {
@@ -42,7 +42,72 @@ checkPlink <- function(path2plink=NULL) {
                  findPlink, ".")
         }
     }
+    
+    plinkVersion <- system2(path2plink, args = "-h", stdout = TRUE)
+    if (!any(grepl("PLINK v1", plinkVersion))) {
+      stop("PLINK version 1.9 is required for running this function. A different 
+           version of Plink is linked, Please update path2plink2 with the path to Plink 1.9")
+    }
     return(path2plink)
+}
+
+#' Check PLINK2 software access
+#'
+#' checkPlink checks that the PLINK software version 2.0
+#' (\url{https://www.cog-genomics.org/plink/2.0/})
+#' can be found from system call.
+#'
+#' @param path2plink2 [character] Absolute path to PLINK executable
+#' (\url{https://www.cog-genomics.org/plink/2.0/}) i.e.
+#' plink 2 should be accessible as path2plink -h. The full name of the executable
+#' should be specified: for windows OS, this means path/plink.exe, for unix
+#' platforms this is path/plink. If not provided, assumed that PATH set-up works
+#' and PLINK will be found by \code{\link[sys]{exec}}('plink').
+#' @return Path to PLINK version 2.0 executable.
+#' @export
+
+checkPlink2 <- function(path2plink2=NULL) {
+  if (is.null(path2plink2)) {
+    path2plink2 <- 'plink2'
+    preset <- FALSE
+  } else {
+    preset <- TRUE
+  }
+  if (grepl("~", path2plink2)) {
+    stop("Path to plink (", path2plink2,
+         ") contains ~: please supply full path, not relying",
+         " on tilde extension.")
+  }
+  if (.Platform$OS.type == 'windows') {
+    path2plink2 <- paste(gsub('\\.exe', '', path2plink2), '.exe', sep="")
+  }
+  findPlink <- tryCatch(sys::exec_wait(path2plink2, args="-h", std_out=FALSE,
+                                       std_err=TRUE),
+                        warning=function(w) w,  error = function(e) e)
+  if("simpleError" %in% is(findPlink)) {
+    if (!preset) {
+      stop("PLINK 2.0 software required for running this function cannot be ",
+           "found in current PATH setting. Error message:", findPlink,
+           ". Try to set path2plink.")
+    } else {
+      stop("PLINK 2.0 software required for running this function cannot be ",
+           "found in path2plink (", path2plink2, ") . Error message: ",
+           findPlink, ".")
+    }
+  }
+  plinkVersion <- system2(path2plink2, args = "-h", stdout = TRUE)
+  if (any(grepl("PLINK v1", plinkVersion))) {
+    stop("PLINK version 2.0 is required for running this function. Currently
+         Plink version 1.9 is found. Please update path2plink2 with the path to
+         Plink 2.0")
+  }
+  else if (any(grepl("PLINK v2", plinkVersion))) {
+    return(path2plink2)
+  }
+  else {
+    stop("PLINK version 2.0 is required for running this function. Please update
+         path2plink2 with the path to Plink 2.0")
+  }
 }
 
 #' Test lists for different properties of numerics
@@ -203,6 +268,7 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     names(relatedness)[iid2_index] <- "IID2"
     names(relatedness)[names(relatedness) == relatednessRelatedness] <- "M"
 
+
     relatedness_original <- relatedness
 
     if (!is.null(relatednessFID1) && is.null(relatednessFID2) ||
@@ -235,7 +301,8 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
 
     relatedness_original <- relatedness_original[keepIndex,]
     relatedness <- relatedness[keepIndex,]
-
+    
+    
     # individuals with at least one pair-wise comparison > relatednessTh
     highRelated <- dplyr::filter(relatedness, .data$M > relatednessTh)
     if (nrow(highRelated) == 0) {
@@ -285,14 +352,13 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
         highRelated <- highRelated[!(highRelated$IID1 %in% failIDs_other |
                                          highRelated$IID2 %in% failIDs_other), ]
         if (nrow(highRelated) == 0) {
-            if (verbose) {
-                message("Relatedness cannot be evaluated as all individuals ",
+            message("Relatedness cannot be evaluated as all individuals ",
                         "involved fail due to otherCriterion")
-            }
             return(list(relatednessFails=NULL, failIDs=NULL))
         }
         uniqueIIDs <- unique(c(highRelated$IID1, highRelated$IID2))
     }
+    
     # all samples with related individuals
     allRelated <- c(highRelated$IID1, highRelated$IID2)
 
@@ -302,6 +368,9 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
 
     highRelatedMultiple <- highRelated[highRelated$IID1 %in% multipleRelative |
                                         highRelated$IID2 %in% multipleRelative,]
+    uniqueIIDsinfam <-  unique(c(highRelatedMultiple$IID1,highRelatedMultiple$IID2))
+    
+    singleRelative <- setdiff(singleRelative, uniqueIIDsinfam)
     highRelatedSingle <- highRelated[highRelated$IID1 %in% singleRelative &
                                        highRelated$IID2 %in% singleRelative,]
 
@@ -333,47 +402,43 @@ relatednessFilter <- function(relatedness, otherCriterion=NULL,
     }
 
     if(length(multipleRelative) != 0) {
-        relatedPerID <- lapply(multipleRelative, function(x) {
-            tmp <- highRelatedMultiple[rowSums(
-                cbind(highRelatedMultiple$IID1 %in% x,
-                      highRelatedMultiple$IID2 %in% x)) != 0,1:2]
-            rel <- unique(unlist(tmp))
-            return(rel)
-        })
-        names(relatedPerID) <- multipleRelative
-
-        keepIDs_multiple <- lapply(relatedPerID, function(x) {
-            pairwise <- t(combn(x, 2))
-            index <- (highRelatedMultiple$IID1 %in% pairwise[,1] &
-                          highRelatedMultiple$IID2 %in% pairwise[,2]) |
-                (highRelatedMultiple$IID1 %in% pairwise[,2] &
-                     highRelatedMultiple$IID2 %in% pairwise[,1])
-            combination <- highRelatedMultiple[index,]
-            combination_graph <- igraph::graph_from_data_frame(combination,
-                                                               directed=FALSE)
-            all_iv_set <- igraph::ivs(combination_graph)
-            length_iv_set <- sapply(all_iv_set, function(x) length(x))
-
-            if (all(length_iv_set == 1)) {
-                # check how often they occurr elsewhere
-                occurrence <- sapply(x, function(id) {
-                    sum(sapply(relatedPerID, function(idlist) id %in% idlist))
-                })
-                # if occurrence the same everywhere, pick the first, else keep
-                # the one with minimum occurrence elsewhere
-                if (length(unique(occurrence)) == 1) {
-                    nonRelated <- sort(x)[1]
-                } else {
-                    nonRelated <- names(occurrence)[which.min(occurrence)]
-                }
-            } else {
-                nonRelated <- all_iv_set[which.max(length_iv_set)]
-            }
-            return(nonRelated)
-        })
-        keepIDs_multiple <- unique(unlist(keepIDs_multiple))
-        failIDs_multiple <- c(multipleRelative[!multipleRelative %in%
-                                                   keepIDs_multiple])
+      combination_graph <- igraph::graph_from_data_frame(highRelatedMultiple, 
+                                                         directed = FALSE)
+      families = igraph::components(combination_graph)
+      family_mapping <- data.frame(id = names(families$membership), 
+                                   family_id = families$membership)
+      fam_num <- c(1:max(family_mapping$family_id))
+      
+      
+      nonrelated_perfam <- lapply(fam_num, function(x) {
+        #ids in the family
+        ids <- family_mapping$id[family_mapping$family_id == x]
+        #then grab a portion of high related multiple that takes in those ids
+        filtered <- dplyr::filter(highRelatedMultiple, .data$IID1 %in% ids & .data$IID2 %in% ids)
+        comb_table <- igraph::graph_from_data_frame(filtered, directed = FALSE)
+        largest_iv_set <- igraph::largest_ivs(comb_table)
+        
+        if (length(largest_iv_set) != 1 && !is.null(otherCriterion)) {
+          criterans <- sapply(largest_iv_set, function(x) {
+            idnames = names(x)
+            med = stats::median(otherCriterion$M[otherCriterion$IID %in% idnames])
+            return(med)})
+          index = evaluateDirectionlist(criterans, 
+                                            direction = otherCriterionThDirection)
+          
+        }
+        
+        else {
+          index = 1}
+        unrel <- largest_iv_set[index]
+        return(unrel)
+      })
+      
+      keepIDs_multiple <- names(unlist(nonrelated_perfam))
+      
+      #fail ids are the IDs that are NOT in the 
+      failIDs_multiple <- c(uniqueIIDsinfam[!uniqueIIDsinfam %in%
+                                               keepIDs_multiple])
     } else {
         failIDs_multiple <- NULL
     }
@@ -430,6 +495,21 @@ evaluateDirection <- function(x, y, direction) {
     else stop(direction, " as direction in evaluateDirection not known.")
 }
 
+
+evaluateDirectionlist <- function(x, direction) {
+  if (direction == 'ge') {
+    return(which.max(x))}
+  else if (direction == 'le') {
+    return(which.min(x))}
+  else if (direction == 'gt') {
+    return(which.max(x))}
+  else if (direction == 'lt') {
+    return(which.min(x))}
+  else if (direction == 'eq') {
+    {return(1)}}
+  else stop(direction, " as direction in evaluateDirection not known.")
+}
+
 makepath <- function(directory, name) {
     path <- file.path(directory, name)
     path <- gsub('\\\\', '/', path)
@@ -447,6 +527,19 @@ checkFormat <- function(prefix) {
         stop("plink binary file: ", prefix, ".bed does not exist.")
     }
 }
+
+checkFormatPlink2 <- function(prefix) {
+  if (!file.exists(paste(prefix, ".pgen", sep=""))){
+    stop("plink family file: ", prefix, ".pgen does not exist.")
+  }
+  if (!file.exists(paste(prefix, ".psam", sep=""))){
+    stop("plink snp file: ", prefix, ".psam does not exist.")
+  }
+  if (!file.exists(paste(prefix, ".pvar", sep=""))){
+    stop("plink binary file: ", prefix, ".pvar does not exist.")
+  }
+}
+
 
 #' Check and construct PLINK sample and marker filters
 #'
@@ -573,3 +666,5 @@ checkRemoveIDs <- function(prefix, remove_individuals=NULL, keep_individuals) {
     }
     return(removeIDs)
 }
+
+

@@ -501,7 +501,7 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' and specifically, if TRUE, plink log will be displayed.
 #' @return Named list with i) fail_hwe containing a [data.frame] with CHR
 #' (Chromosome code), SNP (Variant identifier), TEST (Type of test: one of
-#' {'ALL', 'AFF', 'UNAFF', 'ALL(QT)', 'ALL(NP)'}), A1 (Allele 1; usually minor),
+#' \{'ALL', 'AFF', 'UNAFF', 'ALL(QT)', 'ALL(NP)'\}), A1 (Allele 1; usually minor),
 #' A2 (Allele 2; usually major), GENO ('/'-separated genotype counts: A1 hom,
 #' het, A2 hom), O(HET) (Observed heterozygote frequency E(HET) (Expected
 #' heterozygote frequency), P (Hardy-Weinberg equilibrium exact test p-value)
@@ -836,3 +836,157 @@ check_maf <- function(indir, name, qcdir=indir, macTh=20,  mafTh=NULL,
     fail_maf <- maf[maf$MAF < mafTh,]
     return(list(fail_maf=fail_maf, p_maf=p_maf))
 }
+
+
+
+#' Pruning of SNPs in Linkage Disequilibrium
+#'
+#' Runs plink --indep-pairwise to remove SNPs in linkage disequilibrium. It 
+#' excludes variants that found in a high linkage disequilbirum loci.
+#' 
+#' @param indir [character] /path/to/directory containing the basic PLINK data
+#' files name.bim, name.bed, name.fam files.
+#' @param qcdir [character] /path/to/directory to where name.genome as returned
+#' by plink --genome will be saved.  Per default qcdir=indir. If
+#' run.check_relatedness is FALSE, it is assumed that plink
+#' --missing and plink --genome have been run and qcdir/name.imiss and
+#' qcdir/name.genome exist. User needs writing permission to qcdir.
+#' @param name [character] Prefix of PLINK files, i.e. name.bed, name.bim,
+#' name.fam, name.genome and name.imiss.
+#' 
+#' @param filter_high_ldregion [logical] Should high LD regions be filtered
+#'   before IBD estimation; carried out per default with high LD regions for
+#'   hg19 provided as default via \code{genomebuild}. For alternative genome
+#'   builds not provided or non-human data, high LD regions files can be
+#'   provided via \code{high_ldregion_file}.
+#' @param high_ldregion_file [character] Path to file with high LD regions used
+#' for filtering before IBD estimation if \code{filter_high_ldregion} == TRUE,
+#' otherwise ignored; for human genome data, high LD region files are provided
+#' and can simply be chosen via \code{genomebuild}. Files have to be
+#' space-delimited, no column names with the following columns: chromosome,
+#' region-start, region-end, region number. Chromosomes are specified without
+#' 'chr' prefix. For instance:
+#' 1 48000000 52000000 1
+#' 2 86000000 100500000 2
+#' @param genomebuild [character] Name of the genome build of the PLINK file
+#' annotations, ie mappings in the name.bim file. Will be used to remove
+#' high-LD regions based on the coordinates of the respective build. Options
+#' are hg18, hg19 and hg38. See @details.
+#' @param window_size [integer] The size of the window (in variant count) in which
+#' variants in the window are pruned
+#' @param step_size [integer] The variant count to shift the window 
+#' @param r_2 [float] The threshold in which variant pairs with a squared correlation
+#' above the threshold are removed 
+#' @inheritParams checkPlink
+#' @inheritParams checkFiltering
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @return Files with a .pruned with the pruned SNPS 
+#' @export
+#' @examples
+#' \dontrun{
+#' indir <- system.file("extdata", package="plinkQC")
+#' name <- 'data'
+#' path2plink <- "path/to/plink"
+#'
+#' # whole dataset
+#' relatednessQC <- check_relatedness(indir=indir, name=name, interactive=FALSE,
+#' run.check_relatedness=FALSE, path2plink=path2plink)
+#'
+#' # subset of dataset
+#' remove_individuals_file <- system.file("extdata", "remove_individuals",
+#' package="plinkQC")
+#' fail_relatedness <- check_relatedness(indir=qcdir, name=name,
+#' remove_individuals=remove_individuals_file, path2plink=path2plink)
+#' }
+pruning_ld <- function(indir, name, qcdir=indir,
+                                  path2plink=NULL,
+                                  filter_high_ldregion=TRUE,
+                                  high_ldregion_file=NULL,
+                                  genomebuild='hg38',
+                                  window_size = 50,
+                                  step_size = 5,
+                                  r_2 = 0.2,
+                                  showPlinkOutput=TRUE,
+                                  keep_individuals=NULL,
+                                  remove_individuals=NULL,
+                                  exclude_markers=NULL,
+                                  extract_markers=NULL,
+                                  verbose=FALSE) {
+  
+  prefix <- makepath(indir, name)
+  out <- makepath(qcdir, name)
+  
+  checkFormat(prefix)
+  path2plink <- checkPlink(path2plink)
+  args_filter <- checkFiltering(keep_individuals, remove_individuals,
+                                extract_markers, exclude_markers)
+  if (filter_high_ldregion) {
+    if (!is.null(high_ldregion_file)) {
+      if (!file.exists(high_ldregion_file)) {
+        stop("high_ldregion_file (", high_ldregion_file ,
+             ") cannot be read")
+      }
+      highld <- data.table::fread(high_ldregion_file, sep=" ",
+                                  header=FALSE, data.table=FALSE)
+      if(ncol(highld) != 4) {
+        stop("high_ldregion_file (", high_ldregion_file ,
+             ") is incorrectly formated: ",
+             "contains more/less than 4 columns")
+      }
+      if(any(grepl("chr", highld[,1]))) {
+        stop("high_ldregion_file (", high_ldregion_file ,
+             ") is incorrectly formated: ",
+             "chromosome specification in first column",
+             "cannot contain 'chr'")
+      }
+      if (verbose) message(paste("Using", high_ldregion_file, "coordinates for pruning of",
+                                 "high-ld regions"))
+    } else {
+      if (tolower(genomebuild) == 'hg18' || tolower(genomebuild) == 'NCBI36') {
+        high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg18-NCBI36.txt',
+                                          package="plinkQC")
+      } else if (tolower(genomebuild) == 'hg19' ||
+                 tolower(genomebuild) == 'grch37') {
+        high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg19-GRCh37.txt',
+                                          package="plinkQC")
+      } else if (tolower(genomebuild) == 'hg38' ||
+                 tolower(genomebuild) == 'grch38') {
+        high_ldregion_file <- system.file("extdata", 'high-LD-regions-hg38-GRCh38.txt',
+                                          package="plinkQC")
+      } else {
+        stop(genomebuild, "is not a known/provided human genome build.",
+             "Options are: hg18, hg19, and hg38")
+      }
+      if (verbose) message(paste("Use", genomebuild, "coordinates for pruning of",
+                                 "high-ld regions"))
+    }
+    if (verbose) message(paste("Prune", prefix, "for relatedness estimation"))
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix,
+                          "--exclude", "range", high_ldregion_file,
+                          "--indep-pairwise", 50, 5, 0.2,
+                          "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
+  } else {
+    if (verbose) message("No pruning of high-ld regions")
+    sys::exec_wait(path2plink,
+                   args=c("--bfile", prefix,
+                          "--indep-pairwise", window_size, step_size, r_2, 
+                          "--out", out,
+                          args_filter),
+                   std_out=showPlinkOutput, std_err=showPlinkOutput)
+  }
+  
+  sys::exec_wait(path2plink,
+                 args=c("--bfile", prefix, "--extract",
+                        paste(out, ".prune.in", sep=""),
+                        "--make-bed",
+                        "--out", paste(out, ".pruned", sep=""),
+                        args_filter)
+                 )
+}
+
+

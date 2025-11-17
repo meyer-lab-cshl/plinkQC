@@ -32,21 +32,6 @@ perIndividualQC(
   filter_high_ldregion = TRUE,
   high_ldregion_file = NULL,
   genomebuild = "hg19",
-  dont.check_ancestry = FALSE,
-  do.run_check_ancestry = TRUE,
-  do.evaluate_check_ancestry = TRUE,
-  prefixMergedDataset,
-  europeanTh = 1.5,
-  defaultRefSamples = c("HapMap", "1000Genomes"),
-  refSamples = NULL,
-  refColors = NULL,
-  refSamplesFile = NULL,
-  refColorsFile = NULL,
-  refSamplesIID = "IID",
-  refSamplesPop = "Pop",
-  refColorsColor = "Color",
-  refColorsPop = "Pop",
-  studyColor = "#2c7bb6",
   label_fail = TRUE,
   highlight_samples = NULL,
   highlight_type = c("text", "label", "color", "shape"),
@@ -83,8 +68,6 @@ do.run_[analysis] is FALSE, \code{perIndividualQC} expects the
 analysis-specific plink output files in qcdir i.e. do.check_sex expects
 name.sexcheck, do.evaluate_check_het_and_miss expects name.het and name.imiss,
 do.evaluate_check_relatedness expects name.genome and name.imiss and
-do.evaluate_check_ancestry expects prefixMergeData.eigenvec. If these files
-are not present \code{perIndividualQC} will fail with missing file error.
 Setting do.run_[analysis] TRUE will execute the checks and create the
 required files. User needs writing permission to qcdir.}
 
@@ -183,72 +166,6 @@ annotations, ie mappings in the name.bim file. Will be used to remove
 high-LD regions based on the coordinates of the respective build. Options
 are hg18, hg19 and hg38. See @details.}
 
-\item{dont.check_ancestry}{[logical] If TRUE, no ancestry check will be
-conducted; short for do.run_check_ancestry=FALSE and
-do.evaluate_check_ancestry=FALSE. Takes precedence over
-do.run_check_ancestry and do.evaluate_check_ancestry.}
-
-\item{do.run_check_ancestry}{[logical] If TRUE, run
-\code{\link{run_check_ancestry}}.}
-
-\item{do.evaluate_check_ancestry}{[logical] If TRUE, run
-\code{\link{evaluate_check_ancestry}}.}
-
-\item{prefixMergedDataset}{[character] Prefix of merged dataset (study and
-reference samples) used in plink --pca, resulting in
-prefixMergedDataset.eigenvec.}
-
-\item{europeanTh}{[double] Scaling factor of radius to be drawn around center
-of European reference samples, with study samples inside this radius
-considered to be of European descent and samples outside this radius of
-non-European descent. The radius is computed as the maximum Euclidean
-distance of European reference samples to the centre of European reference
-samples.}
-
-\item{defaultRefSamples}{[character] Option to use pre-downloaded individual
-and population identifiers from either the 1000Genomes or HapMap project.
-If refSamples and refSamplesFile are not provided, the HapMap identifiers (or
-1000Genomes is specified) will be used as default and the function will fail
-if the reference samples in the prefixMergedDataset do not match these
-reference samples. If refColors and refColorsFile are not provided, this also
-sets default colors for the reference populations.}
-
-\item{refSamples}{[data.frame] Dataframe with sample identifiers
-[refSamplesIID] corresponding to IIDs in prefixMergedDataset.eigenvec and
-population identifier [refSamplesPop] corresponding to population IDs
-[refColorsPop] in refColorsfile/refColors. Either refSamples or
-refSamplesFile have to be specified.}
-
-\item{refColors}{[data.frame, optional] Dataframe with population IDs in
-column [refColorsPop] and corresponding colour-code for PCA plot in column
-[refColorsColor]. If not provided and is.null(refColorsFile) default colors
-are used.}
-
-\item{refSamplesFile}{[character] /path/to/File/with/reference samples. Needs
-columns with sample identifiers [refSamplesIID] corresponding to IIDs in
-prefixMergedDataset.eigenvec and population identifier [refSamplesPop]
-corresponding to population IDs [refColorsPop] in refColorsfile/refColors.}
-
-\item{refColorsFile}{[character, optional]
-/path/to/File/with/Population/Colors containing population IDs in column
-[refColorsPop] and corresponding colour-code for PCA plot in column
-[refColorsColor].If not provided and is.null(refColors) default colors for
-are used.}
-
-\item{refSamplesIID}{[character] Column name of reference sample IDs in
-refSamples/refSamplesFile.}
-
-\item{refSamplesPop}{[character] Column name of reference sample population
-IDs in refSamples/refSamplesFile.}
-
-\item{refColorsColor}{[character] Column name of population colors in
-refColors/refColorsFile}
-
-\item{refColorsPop}{[character] Column name of reference sample population
-IDs in refColors/refColorsFile.}
-
-\item{studyColor}{[character] Colour to be used for study population.}
-
 \item{label_fail}{[logical] Set TRUE, to add fail IDs as text labels in
 scatter plot.}
 
@@ -288,12 +205,10 @@ If TRUE, i) depicts the X-chromosomal heterozygosity (SNPSEX) of the samples
 split by their PEDSEX (if do.evaluate_check_sex is TRUE), ii) creates a
 scatter plot
 with samples' missingness rates on x-axis and their heterozygosity rates on
-the y-axis (if do.evaluate_check_het_and_miss is TRUE), iii) depicts
+the y-axis (if do.evaluate_check_het_and_miss is TRUE), and iii) depicts
 all pair-wise IBD-estimates as histogram (if do.evaluate_check_relatedness is
 TRUE)
-and iv) creates a scatter plot of PC1 versus PC2 color-coded for samples of
-reference populations and study population (if do.check_ancestry is set to
-TRUE).}
+.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
 
@@ -358,8 +273,8 @@ the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
 a vector with sample IIDs failing the ancestry check based on europeanTh and
 ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of \code{\link{check_sex}},
-\code{\link{check_het_and_miss}},
-\code{\link{check_relatedness}} and \code{\link{check_ancestry}}, which can
+\code{\link{check_het_and_miss}}, and
+\code{\link{check_relatedness}}, which can
 be shown by print(p_sampleQC).
 List entries contain NULL if that specific check was not chosen.
 }
@@ -371,8 +286,8 @@ genetic ancestry.
 }
 \details{
 perIndividualQC wraps around the individual QC functions
-\code{\link{check_sex}}, \code{\link{check_het_and_miss}},
-\code{\link{check_relatedness}} and \code{\link{check_ancestry}}. For details
+\code{\link{check_sex}}, \code{\link{check_het_and_miss}}, and
+\code{\link{check_relatedness}}. For details
 on the parameters and outputs, check these function documentations. For
 detailed output for fail IIDs (instead of simple IID lists), run each
 function individually.
@@ -389,11 +304,11 @@ refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
-do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
+do.run_check_sex=FALSE)
 
 # Only check sex and missingness/heterozygosity
 fail_sex_het_miss <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
-dont.check_ancestry=TRUE, dont.check_relatedness=TRUE,
+dont.check_relatedness=TRUE,
 interactive=FALSE, verbose=FALSE)
 
 # subset of dataset with sample highlighting
@@ -405,7 +320,6 @@ individual_qc <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
-do.run_check_ancestry=FALSE, do.evaluate_check_ancestry=TRUE,
 path2plink=path2plink,
 remove_individuals=remove_individuals_file,
 highlight_samples=highlight_samples[,2],

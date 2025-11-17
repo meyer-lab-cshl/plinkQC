@@ -15,7 +15,7 @@ platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 }
 \value{
-Path to PLINK executable.
+Path to PLINK 1.9 executable.
 }
 \description{
 checkPlink checks that the PLINK software

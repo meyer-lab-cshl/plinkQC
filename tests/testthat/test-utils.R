@@ -130,7 +130,12 @@ test_that('relatednessFilter returns correct fail IDs for plink genome-like file
                                    relatednessTh=0.185,
                                    relatednessRelatedness="values",
                                    verbose=TRUE)
-    expect_true(all(failIDs$failIDs$IID %in% expectedfail))
+    non_related <- df %>% 
+      filter(!(ID1 %in% failIDs$failIDs$IID)) %>%
+      filter(!(ID2 %in% failIDs$failIDs$IID)) %>%
+      filter(values > 0.185)
+
+    expect_true(nrow(non_related) == 0)
 })
 
 test_that('relatednessFilter only returns fail IDs for plink genome-like file',{
@@ -139,7 +144,11 @@ test_that('relatednessFilter only returns fail IDs for plink genome-like file',{
                                  relatednessTh=0.185,
                                  relatednessRelatedness="values",
                                  verbose=TRUE)
-    expect_true(all(!nonrelated$ID1 %in% failIDs$failIDs$IID))
+    non_related <- df %>% 
+      filter(!(ID1 %in% failIDs$failIDs$IID)) %>%
+      filter(!(ID2 %in% failIDs$failIDs$IID)) %>%
+      filter(values > 0.185)
+    expect_true(nrow(non_related) == 0 && length(failIDs$failIDs$IID) == length(expectedfail))
 })
 
 test_that('relatednessFilter returns correct fail IDs for diagonal-derived file',{
@@ -148,7 +157,11 @@ test_that('relatednessFilter returns correct fail IDs for diagonal-derived file'
                                  relatednessTh=0.185,
                                  relatednessRelatedness="values",
                                  verbose=TRUE)
-    expect_true(all(failIDs$failIDs$IID %in% expectedfail))
+    non_related <- df %>% 
+      filter(!(ID1 %in% failIDs$failIDs$IID)) %>%
+      filter(!(ID2 %in% failIDs$failIDs$IID)) %>%
+      filter(values > 0.185)
+    expect_true(nrow(non_related) == 0)
 })
 
 
@@ -158,7 +171,11 @@ test_that('relatednessFilter only returns fail IDs for diagonal-derived file',{
                                  relatednessTh=0.185,
                                  relatednessRelatedness="values",
                                  verbose=TRUE)
-    expect_true(all(!nonrelated$ID1 %in% failIDs$failIDs$IID))
+    non_related <- df %>% 
+      filter(!(ID1 %in% failIDs$failIDs$IID)) %>%
+      filter(!(ID2 %in% failIDs$failIDs$IID)) %>%
+      filter(values > 0.185)
+    expect_true(nrow(non_related) == 0 && length(failIDs$failIDs$IID) == length(expectedfail))
 })
 
 test_that('relatednessFilter only returns one fail ID for 4-way relatedness',{

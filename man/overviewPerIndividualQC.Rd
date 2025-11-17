@@ -19,8 +19,8 @@ SNPSEX and selected femaleTh/maleTh, v) ancestry containing a vector with
 sample IIDs failing the ancestry check based on the selected europeanTh and
 vi) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of \code{\link{check_sex}},
-\code{\link{check_het_and_miss}},
-\code{\link{check_relatedness}} and \code{\link{check_ancestry}}.}
+\code{\link{check_het_and_miss}}, and
+\code{\link{check_relatedness}}.}
 
 \item{interactive}{[logical] Should plots be shown interactively? When
 choosing this option, make sure you have X-forwarding/graphical interface
@@ -56,7 +56,7 @@ refSamplesFile=paste(qcdir, "/HapMap_ID2Pop.txt",sep=""),
 refColorsFile=paste(qcdir, "/HapMap_PopColors.txt", sep=""),
 prefixMergedDataset="data.HapMapIII", interactive=FALSE, verbose=FALSE,
 do.run_check_het_and_miss=FALSE, do.run_check_relatedness=FALSE,
-do.run_check_sex=FALSE, do.run_check_ancestry=FALSE)
+do.run_check_sex=FALSE)
 
 overview <- overviewPerIndividualQC(fail_individuals)
 }
