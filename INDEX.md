@@ -14,26 +14,23 @@ genetic association studies. It makes PLINK basic statistics
 genetic marker) and relationship functions easily accessible from within
 R and allows for automatic evaluation of the results.
 
-**plinkQC** generates a per-individual and per-marker quality control
+**plinkQC** generates a per-individual, per-marker quality control, and ancestry identification 
 report. A step-by-step guide on how to run these analyses can be found
 [here](https://meyer-lab-cshl.github.io/plinkQC/articles/plinkQC.html).
 
 Individuals and markers that fail the quality control can subsequently
 be removed with **plinkQC** to generate a new, clean dataset.
 
-**plinkQC** facilitates an ancestry check for study individuals based on
-comparison to reference datasets. The processing of the reference
-datasets is documented in detail
+**plinkQC** includes a pretrained classifier to identify the genomic ancestry of human samples. More details are located 
 [here](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
 
 Removal of individuals based on relationship status via **plinkQC** is
 optimised to retain as many individuals as possible in the study.
 
-<img src="qc.png" width="744" />
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC** is: 0.3.4 and can be installed
+The current github version of **plinkQC** is: 1.0.0 and can be installed
 via
 
 ``` r
@@ -41,7 +38,7 @@ library(devtools)
 install_github("meyer-lab-cshl/plinkQC")
 ```
 
-The current CRAN version of **plinkQC** is: 0.3.4 and can be installed
+The current CRAN version of **plinkQC** is: 1.0.0 and can be installed
 via
 
 ``` r

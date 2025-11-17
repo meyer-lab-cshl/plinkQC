@@ -7,6 +7,7 @@
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/articles/Genomes1000.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/articles/index.html</loc></url>
+<url><loc>https://meyer-lab-cshl.github.io/plinkQC/articles/my-vignette.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/articles/plinkQC.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/authors.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/index.html</loc></url>
@@ -34,6 +35,7 @@
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/perIndividualQC.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/perMarkerQC.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/plinkQC-package.html</loc></url>
+<url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/pruning_ld.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/relatednessFilter.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/rename_variant_identifiers.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/run_check_ancestry.html</loc></url>

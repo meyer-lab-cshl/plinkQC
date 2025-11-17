@@ -1,6 +1,6 @@
 ---
 title: "Genotype quality control with plinkQC"
-author: "Hannah Meyer"
+author: "Hannah Meyer and Maha Syed"
 date: "`r Sys.Date()`"
 output: 
     pdf_document:
@@ -103,7 +103,7 @@ package.dir <- find.package('plinkQC')
 indir <- file.path(package.dir, 'extdata')
 qcdir <- tempdir()
 name <- 'data'
-path2plink <- "/Users/hannah/bin/plink"
+path2plink <- "/Users/syed/bin/plink"
 ```
 
 ## Per-individual quality control
@@ -131,19 +131,24 @@ fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
 
 ```
 ```{r load individualQC, echo=FALSE,out.width = "500px", fig.align='center'}
+#| fig.alt: >
+#|   Individual quality control report
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("individualQC.pdf")
+knitr::include_graphics("individualQC.png")
 ```
 
 
 `overviewperIndividualQC` depicts overview plots of quality control failures and
-the intersection of quality control failures with ancestry exclusion.
+the intersection of quality control failures.
 ```{r overview individual QC,fig.width=7, fig.height=7, eval=FALSE}
 overview_individuals <- overviewPerIndividualQC(fail_individuals,
                                                 interactive=TRUE)
 ```
 
 ```{r load overviewIndividualQC, out.width = "500px", echo=FALSE}
+#| fig.alt: >
+#|   Showing intersection of fails for individual quality 
+#|   control with an upset plot
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewQC.png")
 ```
@@ -164,6 +169,8 @@ fail_markers <- perMarkerQC(indir=indir, qcdir=qcdir, name=name,
 ```
 
 ```{r load markerQC, echo=FALSE, out.width = "500px", fig.align='center'}
+#| fig.alt: >
+#|   Marker quality control reports
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("markerQC.png")
 ```
@@ -171,10 +178,14 @@ knitr::include_graphics("markerQC.png")
 `overviewPerMarkerQC` depicts an overview of the marker quality control
 failures and their overlaps.
 ```{r overview marker QC, eval=FALSE}
+#| fig.alt: >
+#|   Upset plot showing intersection of markers that fail 
 overview_marker <- overviewPerMarkerQC(fail_markers, interactive=TRUE)
 ```
 
 ```{r load overviewMarkerQC, out.width = "500px", echo=FALSE}
+#| fig.alt: >
+#|   Overview of the marker quality control ran 
 par(mfrow=c(2,1), las=1)
 knitr::include_graphics("overviewMarkerQC.png")
 ```
@@ -196,7 +207,7 @@ We included a pre-trained random forest classifier to predict the genomic ancest
 
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
 may be needed to map variants from one annotation to another. More details on how
-to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd). We provide an example dataset that is in the hg38 annotation. 
+to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.html). We provide an example dataset that is in the hg38 annotation. 
 
 Additional loading matrices are needed for the PCA projection used in the model.
 This is hosted on the plinkQC github repo under the inst/extdata folder located 
@@ -207,13 +218,14 @@ git clone git@github.com:meyer-lab-cshl/plinkQC.git
 
 In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
 and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
-We included the functions convert_to_plink2() and rename_variant_identifiers()
+We included the functions `convert_to_plink2()` and `rename_variant_identifiers()`
 to correctly format genomic data that is in the hg38 annotation. 
-The name of the files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the path2load_mat. 
+The name of the files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the `path2load_mat` variable. 
 
 ``` {R, eval = FALSE}
 name = "data.hg38"
 path2load_mat = "path/to/load_mat/merged_chrs.postQC.train.pca"
+path2plink2 = "/Users/syed/bin/plink2"
 convert_to_plink2(indir=indir, qcdir=qcdir, name=name, 
                   path2plink2 = path2plink2)
 rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name, 
@@ -231,8 +243,10 @@ ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name,
 ```
 
 ```{r load ancestry, out.width = "500px", echo=FALSE}
+#| fig.alt: >
+#|   Bar graph showing predicted ancestry fractions 
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("ancestral_prediction.pdf")
+knitr::include_graphics("ancestral_prediction.png")
 ```
 
 \newpage
@@ -261,6 +275,8 @@ fail_sex <- check_sex(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       verbose=TRUE, path2plink=path2plink)
 ```
 ```{r load checkSex, out.width = "500px", echo=FALSE, fig.align='center'}
+#| fig.alt: >
+#|   Graph showing predicted sex versus labeled sex
 knitr::include_graphics("checkSex.png")
 ```
 
@@ -287,6 +303,9 @@ fail_het_imiss <- check_het_and_miss(indir=indir, qcdir=qcdir, name=name,
                                      interactive=TRUE, path2plink=path2plink)
 ```
 ```{r load checkHetImiss, out.width = "500px", echo=FALSE, fig.align='center'}
+#| fig.alt: >
+#|   Showing the missingness on x-axis and heterzyogisity rate on the
+#|   y-axis for individuals
 knitr::include_graphics("checkHetImiss.png")
 ```
 
@@ -316,6 +335,8 @@ exclude_relatedness <- check_relatedness(indir=indir, qcdir=qcdir, name=name,
                                          path2plink=path2plink)
 ```
 ```{r load checkRelatedness, out.width = "500px", echo=FALSE, fig.align='center'}
+#| fig.alt: >
+#|   bar graph with a histogram og IBD measurements
 knitr::include_graphics("checkRelatedness.png")
 ```
 
@@ -336,6 +357,8 @@ fail_snpmissing <- check_snp_missingness(indir=indir, qcdir=qcdir, name=name,
 ```
 
 ```{r load snp missing, out.width = "500px", echo=FALSE, fig.align='center'}
+#| fig.alt: >
+#|   marker missingness
 knitr::include_graphics("snpmissingness.png")
 ```
 
@@ -355,6 +378,8 @@ fail_hwe <- check_hwe(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       path2plink=path2plink, showPlinkOutput=FALSE)
 ```
 ```{r load hwe, out.width = "500px", echo=FALSE, fig.align='center'}
+#| fig.alt: >
+#|   p-values of deviations from HWE histogram 
 knitr::include_graphics("hwe.png")
 ```
 
@@ -372,6 +397,8 @@ fail_maf <- check_maf(indir=indir, qcdir=qcdir, name=name, interactive=TRUE,
                       path2plink=path2plink, showPlinkOutput=FALSE)
 ```
 ```{r load  maf, out.width = "500px", echo=FALSE, fig.align='center'}
+#| fig.alt: >
+#|   Histogram of minor allele frequencies
 knitr::include_graphics("maf.png")
 ```
 

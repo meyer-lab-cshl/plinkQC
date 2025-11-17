@@ -23,9 +23,8 @@ knitr::opts_chunk$set(
 ```
 
 ## Running Random Forest Classification
-This package contains a function to predict ancestry of samples. This works 
-through a random forest algorithm trained on the principal components of
-cleaned genomics data from the [1000 genomes dataset](https://www.internationalgenome.org/data/).
+This package contains a function to predict ancestry of samples. We trained a random forest algorithm on the principal components of
+cleaned genomics data from the [harmonized 1000 Genomes and Human Genome Diversity Project dataset](https://genome.cshlp.org/content/34/5/796).
 This method is based off the ancestry identification scheme used in the [Pan-UK 
 BioBank analysis](https://pan.ukbb.broadinstitute.org/). 
 
@@ -41,23 +40,23 @@ git clone git@github.com:meyer-lab-cshl/plinkQC.git
 ### Workflow
 
 To begin with this is an example of how to run the classifier with a provided test data set.
-We will set up a temporary directory for qcdir. 
+We will set up a temporary directory for qcdir and name the variables. The name of the files (before the .acount or .eigenvec.allele) for the loading matrices must be included in the `path2load_mat` variable. 
 ```{r setting up, eval = FALSE}
 package.dir <- find.package('plinkQC')
 indir <- file.path(package.dir, 'extdata')
 qcdir <- tempdir()
 name <- 'data.hg38'
 path2plink2 <- "/Users/syed/bin/plink2"
-path2load_mat <- "/Users/syed/Documents/loading_matrix"
+path2load_mat <- "path/to/load_mat/merged_chrs.postQC.train.pca"
 ```
 
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
 may be needed to map variants from one annotation to another. More details on how
-to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.Rmd).
+to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.html).
 
 In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
 and the variants identifiers should be formatted similar to the following example: 1:12345[hg38].
-We can use the included functions convert_to_plink2() and rename_variant_identifiers()
+We can use the included functions `convert_to_plink2()` and `rename_variant_identifiers()`
 to correctly format genomic data that is in the hg38 annotation. 
 
 ``` {R, eval = FALSE}
@@ -79,8 +78,10 @@ ancestries$p_ancestry
 ```
 
 ```{r load ancestry, out.width = "500px", echo=FALSE}
+#| fig.alt: >
+#|   Bar graph showing predicted ancestry fractions 
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("ancestral_prediction.pdf")
+knitr::include_graphics("ancestral_prediction.png")
 ```
 
 ## Training Your Own Random Forest Classifier 
@@ -89,7 +90,7 @@ Based on the microchip used in the study data, there might not be a large enough
 overlap in the SNPs sequenced to gain accurate predictions. In this case,
 we recommend training your own random forest. To do so, we will first need to set 
 up the needed bash variables and download the 1000 genomes dataset into qcdir which is described in 
-detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.Rmd). We will use a test study dataset included in the package as an example for the workflow.  
+detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.html). We will use a test study dataset included in the package as an example for the workflow.  
 
 ### Setting up Bash Script
 ``` {bash setting up bash, eval = FALSE}
