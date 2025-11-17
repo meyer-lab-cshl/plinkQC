@@ -170,8 +170,6 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
 
   rf_path <- system.file("extdata", 'final_model.RDS',
                                     package="plinkQC")
-  
-  #rf_path <- "../plinkQC_validation/ancestry_unrel_model/final_model.RDS"
   superpop <- readRDS(rf_path)
   prediction_prob <- predict(superpop, proj, type = "prob")
   prediction_prob <- data.frame(prediction_prob)

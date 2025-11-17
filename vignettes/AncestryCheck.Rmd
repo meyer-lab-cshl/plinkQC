@@ -23,9 +23,8 @@ knitr::opts_chunk$set(
 ```
 
 ## Running Random Forest Classification
-This package contains a function to predict ancestry of samples. This works 
-through a random forest algorithm trained on the principal components of
-cleaned genomics data from the [1000 genomes dataset](https://www.internationalgenome.org/data/).
+This package contains a function to predict ancestry of samples. We trained a random forest algorithm on the principal components of
+cleaned genomics data from the [harmonized 1000 Genomes and Human Genome Diversity Project dataset](https://genome.cshlp.org/content/34/5/796).
 This method is based off the ancestry identification scheme used in the [Pan-UK 
 BioBank analysis](https://pan.ukbb.broadinstitute.org/). 
 
@@ -79,8 +78,10 @@ ancestries$p_ancestry
 ```
 
 ```{r load ancestry, out.width = "500px", echo=FALSE}
+#| fig.alt: >
+#|   Bar graph showing predicted ancestry fractions 
 par(mfrow=c(2,1), las=1)
-knitr::include_graphics("ancestral_prediction.pdf")
+knitr::include_graphics("ancestral_prediction.png")
 ```
 
 ## Training Your Own Random Forest Classifier 
