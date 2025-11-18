@@ -1,3 +1,85 @@
+#' Running functions to format data for ancestry identification
+#' 
+#' This function runs convert_to_plink2 and rename_variant_identifiers to format 
+#' the data for the ancestry identification with superpop_classification
+#' 
+#' @inheritParams convert_to_plink2
+#' @inheritParams rename_variant_identifiers
+#' @inheritParams checkPlink2
+#' @inheritParams superpop_classification
+#' @param plink2format [logical] If TRUE, data is in plink2 format already and 
+#' convert_to_plink2 will not be run
+#' @param var_format [logical] If TRUE, variant identifiers are in correct 
+#' format already and rename_variant_identifiers will not be run
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @return Creates plink 2.0 datafiles
+#' @export
+#' @examples
+#' indir <- system.file("extdata", package="plinkQC")
+#' qcdir <- tempdir()
+#' name <- "data"
+#' path2plink <- '/path/to/plink'
+#' # the following code is not run on package build, as the path2plink on the
+#' # user system is not known.
+#' \dontrun{
+#' run_ancestry_format(indir=indir, qcdir=qcdir, 
+#'   name=name, path2plink2 = path2plink2)
+#' }
+run_ancestry_format <- function(indir, name, qcdir=indir, verbose=FALSE,
+                                path2plink2=NULL,
+                                keep_individuals=NULL,
+                                remove_individuals=NULL,
+                                exclude_markers=NULL,
+                                extract_markers=NULL,
+                                showPlinkOutput=TRUE,
+                                format = "@:#[hg38]",
+                                plink2format = FALSE,
+                                var_format = FALSE,
+                                path2load_mat, legend_text_size,
+                                legend_title_size, axis_text_size,
+                                axis_title_size, title_size,
+                                legend_position = "bottom") {
+  
+  path2plink2 <- checkPlink2(path2plink2)
+  if (plink2format==FALSE) {
+    convert_to_plink2(indir=indir, name=name, qcdir=qcdir, verbose=verbose,
+                      path2plink2=path2plink2,
+                      keep_individuals=keep_individuals,
+                      remove_individuals=remove_individuals,
+                      exclude_markers=exclude_markers,
+                      extract_markers=extract_markers,
+                      showPlinkOutput=showPlinkOutput)
+    indir=qcdir
+  }
+  
+  if (var_format==FALSE) {
+    rename_variant_identifiers(indir=indir, name=name, qcdir=qcdir, verbose=verbose,
+                      path2plink2=path2plink2,
+                      format=format,
+                      showPlinkOutput=showPlinkOutput)
+    name = paste0(name, ".renamed")
+  }
+  
+  results <- superpop_classification(indir=indir, name=name, qcdir=qcdir, 
+                                     verbose=verbose, interactive=interactive,
+                          path2plink2=path2plink2,
+                          path2load_mat=path2load_mat,
+                          keep_individuals=keep_individuals,
+                          remove_individuals=remove_individuals,
+                          extract_markers=extract_markers,
+                          exclude_markers=exclude_markers,
+                          legend_text_size=legend_text_size,
+                          legend_title_size=legend_title_size,
+                          axis_text_size=axis_text_size,
+                          axis_title_size=axis_title_size,
+                          title_size=title_size,
+                          showPlinkOutput=showPlinkOutput, 
+                          legend_position=legend_position)
+  return(results)
+}
+
+
+
 #' Converting PLINK v1.9 data files into PLINK v2.0 data files
 #' 
 #' This converts files in the PLINK v1.9 format (i.e. name.bim, name.fam, and 
@@ -38,7 +120,6 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
   
-  checkFormat(prefix)
   path2plink2 <- checkPlink2(path2plink2)
   
   if (showPlinkOutput) {
@@ -77,10 +158,6 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData
 #' @inheritParams checkPlink2
 #' @inheritParams checkFiltering
-#' @param usethreshold [logical] If TRUE, the model will only return predictions 
-#' above a certain threshold
-#' @param threshold [integer] The threshold (between 0 and 1) of confidence the 
-#' model needs to have in a prediction to be returned
 #' @param legend_text_size [integer] Size for legend text.
 #' @param legend_title_size [integer] Size for legend title.
 #' @param axis_text_size [integer] Size for axis text.
@@ -114,8 +191,6 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     interactive = FALSE,
                                     path2plink2=NULL,
                                     path2load_mat=NULL,
-                                    usethreshold = TRUE,
-                                    threshold = 0.9,
                                     keep_individuals=NULL,
                                     remove_individuals=NULL,
                                     extract_markers=NULL,
@@ -125,7 +200,8 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     axis_text_size = 5,
                                     axis_title_size = 7,
                                     title_size = 9,
-                                    showPlinkOutput=TRUE) {
+                                    showPlinkOutput=TRUE,
+                                    legend_position="right") {
   
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
@@ -191,7 +267,9 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
      geom_bar(stat = "identity") +
      xlab("Samples") + ylab("Ancestral Prediction") + 
      theme_bw() + 
-     theme(legend.position = "right",
+     theme(legend.position = legend_position,
+           legend.text = element_text(size = legend_text_size),
+           legend.title = element_text(size = legend_title_size),
            title = element_text(size = title_size),
            axis.text = element_text(size = axis_text_size),
            axis.title = element_text(size = axis_title_size)) +

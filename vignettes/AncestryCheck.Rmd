@@ -24,68 +24,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Running Random Forest Classification
-_plinkQC_ predicts sample ancestry by applying a random forest trained on the principal components of cleaned genotype data from the 
-[harmonized 1000 Genomes and Human Genome Diversity Project dataset](https://genome.cshlp.org/content/34/5/796).
-
-For ancestry estimation, accessory functions from [Plink v2](https://www.cog-genomics.org/plink/2.0/) are needed, as are pre-computed
-loading matrices for the PCA projection used in the model.
-These are hosted on the _plinkQC_ github repo under the inst/extdata folder
-located [here](https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat). Alternatively, the whole github repo can downloaded with
-
-```{bash installing github, eval=FALSE}
-git clone git@github.com:meyer-lab-cshl/plinkQC.git
-```
-
-
-### Workflow
-To begin with this is an example of how to run the classifier with a provided
-test data set. We will set up a temporary directory for qcdir and name the variables. The name of the files (before the .acount or .eigenvec.allele) fo
-the loading matrices must be included in the `path2load_mat` variable. 
-
-```{r setting up, eval = FALSE}
-package.dir <- find.package('plinkQC')
-indir <- file.path(package.dir, 'extdata')
-qcdir <- tempdir()
-name <- 'data.hg38'
-path2plink2 <- "/Users/syed/bin/plink2"
-path2load_mat <- "path/to/load_mat/merged_chrs.postQC.train.pca"
-```
-
-Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool may be needed to map variants from one annotation to another. More details on how to use the tool can
-be found on the processing [HapMap III reference data vignette](HapMap.html).
-
-In addition, the data should be in PLINK 2.0 format (i.e .pgen, .pvar, .psam
-files),  and the variants identifiers should be formatted according to this
-example: 1:12345[hg38]. We can use the _plinkQC_ functions `convert_to_plink2()`
-and `rename_variant_identifiers()` to correctly format genotype data that is
-already in the hg38 annotation. 
-
-``` {R, eval = FALSE}
-convert_to_plink2(indir=indir, qcdir=qcdir, name=name, 
-                  path2plink2 = path2plink2)
-rename_variant_identifiers(indir=qcdir, qcdir=qcdir, name=name, 
-                           path2plink2 = path2plink2)
-name <- paste0(name, ".renamed")
-```
-
-After correctly formatting the variants, we can use the provided function to
-return the predicted ancestry. Because the example dataset only has xx SNPS to
-pass CRAN requirements, the overlap with the reference dataset is only xx %, thus additional noise is expected and visible in the plot below.
-
-``` {R ancestry identification, eval = FALSE}
-ancestries <- superpop_classification(indir=qcdir, qcdir=qcdir, name=name, 
-                                      path2plink2 = path2plink2, 
-                                      path2load_mat = path2load_mat) 
-ancestries$p_ancestry
-```
-
-```{r load ancestry, out.width = "500px", echo=FALSE}
-#| fig.alt: >
-#|   Bar graph showing predicted ancestry fractions 
-par(mfrow=c(2,1), las=1)
-knitr::include_graphics("ancestral_prediction.png")
-```
 
 ## Training Your Own Random Forest Classifier 
 For non-human genotype data, there might still be the need to detect and predict population structure. In addition, in some rare cases, there might not be a

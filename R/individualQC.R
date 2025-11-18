@@ -64,6 +64,7 @@
 #' @inheritParams check_sex
 #' @inheritParams check_relatedness
 #' @inheritParams check_het_and_miss
+#' @inheritParams run_ancestry_format
 #' @return Named [list] with i) fail_list, a named [list] with 1.
 #' sample_missingness containing a [vector] with sample IIDs failing the
 #' missingness threshold imissTh, 2. highIBD containing a [vector] with sample
@@ -71,7 +72,7 @@
 #' containing a [vector] with sample IIDs failing the heterozygosity threshold
 #' hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
 #' the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
-#' a vector with sample IIDs failing the ancestry check based on europeanTh and
+#' a dataframe of sample ids and ancestry probablities predicted by a classifier
 #' ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 #' QC-plots of \code{\link{check_sex}},
 #' \code{\link{check_het_and_miss}}, and
@@ -136,7 +137,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             mafThRelatedness=0.1,
                             filter_high_ldregion=TRUE,
                             high_ldregion_file=NULL,
-                            genomebuild='hg19',
+                            genomebuild='hg38',
                             label_fail=TRUE,
                             highlight_samples = NULL,
                             highlight_type =
@@ -156,16 +157,25 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             axis_title_size = 7,
                             subplot_label_size = 9,
                             title_size = 9,
-                            path2plink=NULL, showPlinkOutput=TRUE) {
+                            path2plink=NULL, showPlinkOutput=TRUE,
+                            path2plink2=NULL, 
+                            do.run_superpop_classification=TRUE,
+                            path2load_mat = NULL, 
+                            plink2format=FALSE,
+                            var_format=FALSE
+                            ) {
 
     missing_genotype <- NULL
     highIBD <- NULL
     outlying_heterozygosity <- NULL
     mismatched_sex <- NULL
+    ancestry_pred_maj <- NULL
+    ancestry_pred_prob <- NULL
 
     p_sexcheck <- NULL
     p_het_imiss <- NULL
     p_relatedness <- NULL
+    p_ancestry <- NULL
 
     out <- makepath(qcdir, name)
 
@@ -346,6 +356,49 @@ perIndividualQC <- function(indir, name, qcdir=indir,
         p_relatedness <- fail_relatedness$p_IBD
       }
     }
+    
+    if (do.run_superpop_classification) {
+      if ((plink2format == FALSE) | (var_format == FALSE)) { 
+        ancestry_predictions <- run_ancestry_format(indir=indir, name=name, qcdir=qcdir, 
+                            verbose=verbose,
+                            path2plink2=path2plink2,
+                            keep_individuals=keep_individuals,
+                            remove_individuals=remove_individuals,
+                            exclude_markers=exclude_markers,
+                            extract_markers=extract_markers,
+                            showPlinkOutput=showPlinkOutput,
+                            format = "@:#[hg38]",
+                            plink2format = plink2format,
+                            var_format = var_format,
+                            path2load_mat=path2load_mat, 
+                            legend_text_size=legend_text_size,
+                            legend_title_size=legend_title_size, 
+                            axis_text_size=axis_text_size,
+                            axis_title_size=axis_title_size, 
+                            title_size=title_size,
+                            legend_position = "bottom")
+      }
+      else { 
+        ancestry_predictions <- superpop_classification(indir=indir, name=name, qcdir=qcdir, 
+                                                      verbose=verbose,
+                                                      path2plink2=path2plink2,
+                                                      keep_individuals=keep_individuals,
+                                                      remove_individuals=remove_individuals,
+                                                      exclude_markers=exclude_markers,
+                                                      extract_markers=extract_markers,
+                                                      showPlinkOutput=showPlinkOutput,
+                                                      path2load_mat=path2load_mat, 
+                                                      legend_text_size=legend_text_size,
+                                                      legend_title_size=legend_title_size, 
+                                                      axis_text_size=axis_text_size,
+                                                      axis_title_size=axis_title_size, 
+                                                      title_size=title_size,
+                                                      legend_position = "bottom")
+      }
+      ancestry_pred_maj <- ancestry_predictions$prediction_majority
+      ancestry_pred_prob <- ancestry_predictions$prediction_prob
+      p_ancestry <- ancestry_predictions$p_ancestry
+    }
 
     fail_list <- list(missing_genotype=missing_genotype,
                       highIBD=highIBD,
@@ -363,20 +416,47 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 
     plots_sampleQC <- list(p_sexcheck=p_sexcheck,
                            p_het_imiss=p_het_imiss,
-                           p_relatedness=p_relatedness
+                           p_relatedness=p_relatedness,
+                           p_ancestry=p_ancestry
                            )
     plots_sampleQC <- plots_sampleQC[sapply(plots_sampleQC,
                                             function(x) !is.null(x))]
     subplotLabels <- LETTERS[1:length(plots_sampleQC)]
-
+    
+    if (!is.null(p_ancestry)) {
+      ancestry_legend <- cowplot::get_legend(p_ancestry)
+      plots_sampleQC$p_ancestry <-  plots_sampleQC$p_ancestry +
+        theme(legend.position = "None")
+      plots_sampleQC$ancestry_legend <- ancestry_legend
+      subplotLabels <- c(subplotLabels, "")
+    }
+    
     if (!is.null(p_sexcheck) && !is.null(p_het_imiss)) {
-        first_plots <- cowplot::plot_grid(plotlist=plots_sampleQC[1:2],
-                           nrow=2,
-                           align = "v",
-                           axis = "lr",
-                           labels=subplotLabels[1:2],
-                           label_size = subplot_label_size
-                            )
+      first_plots <- cowplot::plot_grid(plotlist=plots_sampleQC[1:2],
+                                        nrow=2,
+                                        align = "v",
+                                        axis = "lr",
+                                        labels=subplotLabels[1:2],
+                                        label_size = subplot_label_size
+      )
+      if (!is.null(p_ancestry)) {
+        if (!is.null(p_relatedness)) {
+          rel_heights <- c(2, 1, 1, 0.5)
+          plots_sampleQC <- list(first_plots,
+                                 plots_sampleQC[[3]],
+                                 plots_sampleQC[[4]],
+                                 plots_sampleQC[[5]]
+          )
+          subplotLabels <- c("", subplotLabels[3:5])
+        } else {
+          rel_heights <- c(2, 1, 0.5)
+          plots_sampleQC <- list(first_plots,
+                                 plots_sampleQC[[3]],
+                                 plots_sampleQC[[4]]
+          )
+          subplotLabels <- c("", subplotLabels[3:4])
+        }
+      } else {
         if (!is.null(p_relatedness)) {
           rel_heights <- c(2, 1)
           plots_sampleQC <- list(first_plots, plots_sampleQC[[3]])
@@ -386,17 +466,25 @@ perIndividualQC <- function(indir, name, qcdir=indir,
           plots_sampleQC <- first_plots
           subplotLabels <- ""
         }
-    } 
-    rel_heights <- c(rep(1, length(plots_sampleQC)))
+      }
+    } else {
+      if (!is.null(p_ancestry)) {
+        rel_heights <- c(rep(1, length(plots_sampleQC) -1), 0.5)
+      } else {
+        rel_heights <- c(rep(1, length(plots_sampleQC)))
+      }
+    }
     p_sampleQC <- cowplot::plot_grid(plotlist=plots_sampleQC,
                                      nrow=length(plots_sampleQC),
                                      labels=subplotLabels,
                                      label_size = subplot_label_size,
                                      rel_heights=rel_heights)
     if (interactive) {
-        print(p_sampleQC)
+      print(p_sampleQC)
     }
-    return(list(fail_list=fail_list, p_sampleQC=p_sampleQC))
+    return(list(fail_list=fail_list, p_sampleQC=p_sampleQC, 
+                ancestry_pred_prob=ancestry_pred_prob, 
+                ancestry_pred_maj=ancestry_pred_maj))
 }
 
 #' Overview of per sample QC
@@ -415,9 +503,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' highIBDTh, iii) outlying_heterozygosity containing a [vector] with sample
 #' IIDs failing selected the heterozygosity threshold hetTh, iv) mismatched_sex
 #' containing a [vector] with the sample IIDs failing the sexcheck based on
-#' SNPSEX and selected femaleTh/maleTh, v) ancestry containing a vector with
-#' sample IIDs failing the ancestry check based on the selected europeanTh and
-#' vi) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
+#' SNPSEX and selected femaleTh/maleTh, and
+#' v) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 #' QC-plots of \code{\link{check_sex}},
 #' \code{\link{check_het_and_miss}}, and
 #' \code{\link{check_relatedness}}.

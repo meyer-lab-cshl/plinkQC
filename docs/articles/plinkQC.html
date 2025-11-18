@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Hannah Meyer
 and Maha Syed</h4>
             
-            <h4 data-toc-skip class="date">2025-11-17</h4>
+            <h4 data-toc-skip class="date">2025-11-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/plinkQC.Rmd" class="external-link"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="d-none name"><code>plinkQC.Rmd</code></div>
@@ -122,7 +122,9 @@ identification of individuals with discordant sex information, (ii)
 <code>check_heterozygosity_and_missingness</code>: for the
 identification of individuals with outlying missing genotype and/or
 heterozygosity rates, (iii) <code>check_relatedness</code>: for the
-identification of related individuals</p>
+identification of related individuals (iv)
+<code>superpop_classfication</code>: for prediction of genomic
+ancestry</p>
 </div>
 <div class="section level3">
 <h3 id="per-marker-quality-control">Per-marker quality control<a class="anchor" aria-label="anchor" href="#per-marker-quality-control"></a>
@@ -160,12 +162,28 @@ control followed by the generation of the new dataset. In addition, the
 functionality of each of the functions underlying
 <code>perMarkerQC</code> and <code>perIndividualQC</code> is
 demonstrated at the end of this vignette.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<p>To run the ancestry functionality of the package, <a href="https://www.cog-genomics.org/plink/2.0/" class="external-link">Plink v2</a> is needed.
+Before use, the study data should be in the new hg38 annotation. USCS’s
+<a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a> tool
+may be needed to map variants from one annotation to another. More
+details on how to use the tool can be found on the processing <a href="HapMap.html">HapMap III reference data vignette</a>. We provide an
+example dataset that is in the hg38 annotation.</p>
+<p>Additional loading matrices are needed for the PCA projection used in
+the model. This is hosted on the plinkQC github repo under the
+inst/extdata folder located <a href="https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat" class="external-link">here</a>.
+Alternatively, the whole github repo can downloaded with</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">git</span> clone git@github.com:meyer-lab-cshl/plinkQC.git</span></code></pre></div>
+<p>The name of the files (before the .acount or .eigenvec.allele) for
+the loading matrices must be included in the <code>path2load_mat</code>
+variable.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">package.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/find.package.html" class="external-link">find.package</a></span><span class="op">(</span><span class="st">'plinkQC'</span><span class="op">)</span></span>
 <span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">package.dir</span>, <span class="st">'extdata'</span><span class="op">)</span></span>
 <span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data'</span></span>
-<span><span class="va">path2plink</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink"</span></span></code></pre></div>
+<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">'data.hg38'</span></span>
+<span><span class="va">path2plink</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink"</span></span>
+<span><span class="va">path2plink2</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink2"</span></span>
+<span><span class="va">path2load_mat</span> <span class="op">&lt;-</span> <span class="st">"path/to/load_mat/merged_chrs.postQC.train.pca"</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="per-individual-quality-control-1">Per-individual quality control<a class="anchor" aria-label="anchor" href="#per-individual-quality-control-1"></a>
 </h3>
@@ -178,13 +196,23 @@ writes a list of all fail individual IDs to the qcdir. These IDs will be
 removed in the computation of the <code>perMarkerQC</code>. If the list
 is not present, <code>perMarkerQC</code> will send a message about
 conducting the quality control on the entire dataset.</p>
+<p>The ancestry portion of the package requires that the data should be
+in PLINK 2.0 format (i.e pgen, pvar, psam files), and the variants
+identifiers should be formatted similar to the following example:
+1:12345[hg38]. <code>perIndividualQC</code> will run the functions
+<code><a href="../reference/convert_to_plink2.html">convert_to_plink2()</a></code> and
+<code><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers()</a></code> to convert the data into PLINK
+2.0 format and rename the variant identifiers respectively.</p>
 <p>NB: To reduce the data size of the example data in
 <code>plinkQC</code>, data.genome has already been reduced to the
 individuals that are related. Thus the relatedness plots in C only show
-counts for related individuals only.</p>
+counts for related individuals only. For ancestry identification, there
+are 597 SNPs that overlap between the study and reference data, roughly
+0.2% of the reference dataset. Thus, additional noise is expected and
+visible in the plot below.</p>
 <p><code>perIndividualQC</code> displays the results of the quality
 control steps in a multi-panel plot.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_individuals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/perIndividualQC.html">perIndividualQC</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
 <span>                            path2plink<span class="op">=</span><span class="va">path2plink</span>, </span>
 <span>                            interactive<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -192,7 +220,7 @@ control steps in a multi-panel plot.</p>
 <p><code>overviewperIndividualQC</code> depicts overview plots of
 quality control failures and the intersection of quality control
 failures.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">overview_individuals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/overviewPerIndividualQC.html">overviewPerIndividualQC</a></span><span class="op">(</span><span class="va">fail_individuals</span>,</span>
 <span>                                                interactive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="overviewQC.png" alt="Showing intersection of fails for individual quality  control with an upset plot" width="500px"></p>
@@ -207,7 +235,7 @@ specify different thresholds for the quality control checks and which
 check to conduct. Per default, all quality control checks will be
 conducted. <code>perMarkerQC</code> displays the results of the QC step
 in a multi-panel plot.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/perMarkerQC.html">perMarkerQC</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
 <span>                            path2plink<span class="op">=</span><span class="va">path2plink</span>,</span>
 <span>                            verbose<span class="op">=</span><span class="cn">TRUE</span>, interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
@@ -215,7 +243,7 @@ in a multi-panel plot.</p>
 <p><img src="markerQC.png" alt="Marker quality control reports" width="500px" style="display: block; margin: auto;"></p>
 <p><code>overviewPerMarkerQC</code> depicts an overview of the marker
 quality control failures and their overlaps.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">overview_marker</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/overviewPerMarkerQC.html">overviewPerMarkerQC</a></span><span class="op">(</span><span class="va">fail_markers</span>, interactive<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="overviewMarkerQC.png" alt="Overview of the marker quality control ran " width="500px"></p>
 </div>
@@ -229,54 +257,9 @@ resulting in the new dataset qcdir/data.clean.bed,qcdir/data.clean.bim,
 qcdir/data.clean.fam. For convenience, <code>cleanData</code> returns a
 list of all individuals in the study split into keep and remove
 individuals.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Ids</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cleanData.html">cleanData</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, path2plink<span class="op">=</span><span class="va">path2plink</span>,</span>
 <span>                            verbose<span class="op">=</span><span class="cn">TRUE</span>, showPlinkOutput<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="predicting-ancestry">Predicting Ancestry<a class="anchor" aria-label="anchor" href="#predicting-ancestry"></a>
-</h3>
-<p>After filtering low quality markers and samples, it may be useful to
-predict the genomic ancestry of the samples. We included a pre-trained
-random forest classifier to predict the genomic ancestry of the samples.
-<a href="https://www.cog-genomics.org/plink/2.0/" class="external-link">Plink v2</a> is needed
-for this portion of the package.</p>
-<p>Before use, the study data should be in the new hg38 annotation.
-USCS’s <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a>
-tool may be needed to map variants from one annotation to another. More
-details on how to use the tool can be found on the processing <a href="HapMap.html">HapMap III reference data vignette</a>. We provide an
-example dataset that is in the hg38 annotation.</p>
-<p>Additional loading matrices are needed for the PCA projection used in
-the model. This is hosted on the plinkQC github repo under the
-inst/extdata folder located <a href="https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat" class="external-link">here</a>.
-Alternatively, the whole github repo can downloaded with</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">git</span> clone git@github.com:meyer-lab-cshl/plinkQC.git</span></code></pre></div>
-<p>In addition, the data should be in PLINK 2.0 format (i.e pgen, pvar,
-psam files), and the variants identifiers should be formatted similar to
-the following example: 1:12345[hg38]. We included the functions
-<code><a href="../reference/convert_to_plink2.html">convert_to_plink2()</a></code> and
-<code><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers()</a></code> to correctly format genomic
-data that is in the hg38 annotation. The name of the files (before the
-.acount or .eigenvec.allele) for the loading matrices must be included
-in the <code>path2load_mat</code> variable.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">name</span> <span class="op">=</span> <span class="st">"data.hg38"</span></span>
-<span><span class="va">path2load_mat</span> <span class="op">=</span> <span class="st">"path/to/load_mat/merged_chrs.postQC.train.pca"</span></span>
-<span><span class="va">path2plink2</span> <span class="op">=</span> <span class="st">"/Users/syed/bin/plink2"</span></span>
-<span><span class="fu"><a href="../reference/convert_to_plink2.html">convert_to_plink2</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
-<span>                  path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
-<span>                           path2plink2 <span class="op">=</span> <span class="va">path2plink2</span><span class="op">)</span></span>
-<span><span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">".renamed"</span><span class="op">)</span></span></code></pre></div>
-<p>After correctly formatting the variants, we can use the provided
-function to return the predicted ancestry. Because the example dataset
-has only a small number of variants overlapping with the reference
-dataset, additional noise is expected.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ancestries</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/superpop_classification.html">superpop_classification</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">qcdir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span>
-<span>                                      path2plink2 <span class="op">=</span> <span class="va">path2plink2</span>, </span>
-<span>                                      path2load_mat <span class="op">=</span> <span class="va">path2load_mat</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="ancestral_prediction.png" alt="Bar graph showing predicted ancestry fractions " width="500px"></p>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -304,7 +287,7 @@ processed at different centers) match. If a mismatch between PEDSEX and
 SNPSEX was detected, by SNPSEX == Sex, PEDSEX of these individuals can
 optionally be updated. <code>check_sex</code> depicts the X-chromosomal
 heterozygosity (SNPSEX) of the samples split by their (PEDSEX).</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_sex.html">check_sex</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                      verbose<span class="op">=</span><span class="cn">TRUE</span>, path2plink<span class="op">=</span><span class="va">path2plink</span><span class="op">)</span></span></code></pre></div>
 <p><img src="checkSex.png" alt="Graph showing predicted sex versus labeled sex" width="500px" style="display: block; margin: auto;"></p>
@@ -328,7 +311,7 @@ genotype and/or heterozygosity rates is implemented in
 genotyping and heterozygosity rates that fail the set thresholds and
 depicts the results as a scatter plot with the samples’ missingness
 rates on x-axis and their heterozygosity rates on the y-axis.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_het_imiss</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_het_and_miss.html">check_het_and_miss</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
 <span>                                     interactive<span class="op">=</span><span class="cn">TRUE</span>, path2plink<span class="op">=</span><span class="va">path2plink</span><span class="op">)</span></span></code></pre></div>
 <p><img src="checkHetImiss.png" alt="Showing the missingness on x-axis and heterzyogisity rate on the y-axis for individuals" width="500px" style="display: block; margin: auto;"></p>
@@ -354,7 +337,7 @@ parents will be kept in the analysis).</p>
 <code>plinkQC</code>, data.genome has already been reduced to the
 individuals that are related. Thus the relatedness plots in C only show
 counts for related individuals only.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exclude_relatedness</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_relatedness.html">check_relatedness</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
 <span>                                         interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                                         path2plink<span class="op">=</span><span class="va">path2plink</span><span class="op">)</span></span></code></pre></div>
@@ -370,7 +353,7 @@ missingness rates is implemented in <code>snp_missingness</code>. It
 calculates the rates of missing genotype calls and frequency for all
 variants in the individuals that passed the
 <code>perIndividualQC</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_snpmissing</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_snp_missingness.html">check_snp_missingness</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
 <span>                                         interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                                         path2plink<span class="op">=</span><span class="va">path2plink</span>, </span>
@@ -391,7 +374,7 @@ in <code>check_hwe</code>. It calculates the observed and expected
 heterozygote frequencies per SNP in the individuals that passed the
 <code>perIndividualQC</code> and computes the deviation of the
 frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_hwe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_hwe.html">check_hwe</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                      path2plink<span class="op">=</span><span class="va">path2plink</span>, showPlinkOutput<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="hwe.png" alt="p-values of deviations from HWE histogram " width="500px" style="display: block; margin: auto;"></p>
@@ -406,7 +389,7 @@ Identifying markers with low minor allele count is implemented in
 <code>check_maf</code>. It calculates the minor allele frequencies for
 all variants in the individuals that passed the
 <code>perIndividualQC</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_maf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_maf.html">check_maf</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                      path2plink<span class="op">=</span><span class="va">path2plink</span>, showPlinkOutput<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="maf.png" alt="Histogram of minor allele frequencies" width="500px" style="display: block; margin: auto;"></p>
