@@ -171,6 +171,7 @@ test_that('perIndividualQC works if all samples pass', {
                         interactive=FALSE, verbose=FALSE,
                         do.run_check_sex = FALSE,
                         do.run_check_relatedness = FALSE,
-                        do.run_check_het_and_miss = FALSE)
+                        do.run_check_het_and_miss = FALSE,
+                        do.run_superpop_classification = FALSE)
     expect_equal(unlist(fail_individuals$fail_list), NULL)
 })

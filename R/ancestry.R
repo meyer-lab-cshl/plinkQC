@@ -120,6 +120,7 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
   
+  checkFormatPlink2(prefix)
   path2plink2 <- checkPlink2(path2plink2)
   
   if (showPlinkOutput) {
@@ -163,6 +164,7 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param axis_text_size [integer] Size for axis text.
 #' @param axis_title_size [integer] Size for axis title.
 #' @param title_size [integer] Size for plot title.
+#' @param legend_position [character] Legend position for the plot. 
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param interactive [logical] Should plots be shown interactively? When

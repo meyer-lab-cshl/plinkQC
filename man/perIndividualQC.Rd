@@ -31,7 +31,7 @@ perIndividualQC(
   mafThRelatedness = 0.1,
   filter_high_ldregion = TRUE,
   high_ldregion_file = NULL,
-  genomebuild = "hg19",
+  genomebuild = "hg38",
   label_fail = TRUE,
   highlight_samples = NULL,
   highlight_type = c("text", "label", "color", "shape"),
@@ -52,7 +52,12 @@ perIndividualQC(
   subplot_label_size = 9,
   title_size = 9,
   path2plink = NULL,
-  showPlinkOutput = TRUE
+  showPlinkOutput = TRUE,
+  path2plink2 = NULL,
+  do.run_superpop_classification = TRUE,
+  path2load_mat = NULL,
+  plink2format = FALSE,
+  var_format = FALSE
 )
 }
 \arguments{
@@ -261,6 +266,25 @@ and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
+
+\item{path2plink2}{[character] Absolute path to PLINK executable
+(\url{https://www.cog-genomics.org/plink/2.0/}) i.e.
+plink 2 should be accessible as path2plink -h. The full name of the executable
+should be specified: for windows OS, this means path/plink.exe, for unix
+platforms this is path/plink. If not provided, assumed that PATH set-up works
+and PLINK will be found by \code{\link[sys]{exec}}('plink').}
+
+\item{do.run_superpop_classification}{[logical] If TRUE, run 
+\code{\link{superpop_classification}}}
+
+\item{path2load_mat}{[character] /path/to/directory where loading matrices are 
+kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData}
+
+\item{plink2format}{[logical] If TRUE, data is in plink2 format already and 
+convert_to_plink2 will not be run}
+
+\item{var_format}{[logical] If TRUE, variant identifiers are in correct 
+format already and rename_variant_identifiers will not be run}
 }
 \value{
 Named [list] with i) fail_list, a named [list] with 1.
@@ -270,7 +294,7 @@ IIDs failing the relatedness threshold highIBDTh, 3. outlying_heterozygosity
 containing a [vector] with sample IIDs failing the heterozygosity threshold
 hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
 the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
-a vector with sample IIDs failing the ancestry check based on europeanTh and
+a dataframe of sample ids and ancestry probablities predicted by a classifier
 ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of \code{\link{check_sex}},
 \code{\link{check_het_and_miss}}, and

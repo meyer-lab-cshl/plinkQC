@@ -40,6 +40,8 @@
 #' \code{\link{evaluate_check_sex}}
 #' @param do.evaluate_check_het_and_miss [logical] If TRUE, run
 #' \code{\link{evaluate_check_het_and_miss}}.
+#' @param do.run_superpop_classification [logical] If TRUE, run 
+#' \code{\link{superpop_classification}}
 #' @param do.evaluate_check_relatedness [logical] If TRUE, run
 #' \code{\link{evaluate_check_relatedness}}.
 #' @param subplot_label_size [integer] Size of the subplot labeling.
@@ -90,6 +92,7 @@
 #' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
 #' name <- "data"
+#' 
 #' # All quality control checks
 #' \dontrun{
 #' # whole dataset

@@ -8,7 +8,8 @@ fail_individuals <-
                     do.run_check_sex=FALSE,
                     do.run_check_het_and_miss=FALSE,
                     do.run_check_relatedness=FALSE,
-                    interactive=FALSE, verbose=FALSE)
+                    interactive=FALSE, verbose=FALSE,
+                    do.run_superpop_classification = FALSE)
 
 context('Test cleanData')
 test_that('cleanData throws file error',{

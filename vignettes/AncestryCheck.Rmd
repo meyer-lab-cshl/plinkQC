@@ -14,8 +14,10 @@ output:
     highlight: pygments
 bibliography: references.bib
 csl: "plos-genetics.csl"
-vignette: "%\\VignetteIndexEntry{AncestryCheck} %\\VignetteEngine{knitr::rmarkdown}
-  %\\VignetteEncoding{UTF-8}\n"
+vignette: >
+  %\VignetteIndexEntry{AncestryCheck}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 ```{r setup knitr, include = FALSE}
 knitr::opts_chunk$set(

@@ -15,9 +15,8 @@ a [vector] with sample IIDs failing the selected relatedness threshold
 highIBDTh, iii) outlying_heterozygosity containing a [vector] with sample
 IIDs failing selected the heterozygosity threshold hetTh, iv) mismatched_sex
 containing a [vector] with the sample IIDs failing the sexcheck based on
-SNPSEX and selected femaleTh/maleTh, v) ancestry containing a vector with
-sample IIDs failing the ancestry check based on the selected europeanTh and
-vi) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
+SNPSEX and selected femaleTh/maleTh, and
+v) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of \code{\link{check_sex}},
 \code{\link{check_het_and_miss}}, and
 \code{\link{check_relatedness}}.}
