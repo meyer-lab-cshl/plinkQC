@@ -81,7 +81,7 @@ genetic ancestry.</p>
 <span>  mafThRelatedness <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  filter_high_ldregion <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  high_ldregion_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  genomebuild <span class="op">=</span> <span class="st">"hg19"</span>,</span>
+<span>  genomebuild <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  label_fail <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  highlight_samples <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  highlight_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"text"</span>, <span class="st">"label"</span>, <span class="st">"color"</span>, <span class="st">"shape"</span><span class="op">)</span>,</span>
@@ -102,7 +102,12 @@ genetic ancestry.</p>
 <span>  subplot_label_size <span class="op">=</span> <span class="fl">9</span>,</span>
 <span>  title_size <span class="op">=</span> <span class="fl">9</span>,</span>
 <span>  path2plink <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  showPlinkOutput <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  showPlinkOutput <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  path2plink2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  do.run_superpop_classification <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  path2load_mat <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  plink2format <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  var_format <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -411,6 +416,35 @@ and PLINK will be found by <code><a href="https://jeroen.r-universe.dev/sys/refe
 <dd><p>[logical] If TRUE, plink log and error messages are
 printed to standard out.</p></dd>
 
+
+<dt id="arg-path-plink-">path2plink2<a class="anchor" aria-label="anchor" href="#arg-path-plink-"></a></dt>
+<dd><p>[character] Absolute path to PLINK executable
+(<a href="https://www.cog-genomics.org/plink/2.0/" class="external-link">https://www.cog-genomics.org/plink/2.0/</a>) i.e.
+plink 2 should be accessible as path2plink -h. The full name of the executable
+should be specified: for windows OS, this means path/plink.exe, for unix
+platforms this is path/plink. If not provided, assumed that PATH set-up works
+and PLINK will be found by <code><a href="https://jeroen.r-universe.dev/sys/reference/exec.html" class="external-link">exec</a></code>('plink').</p></dd>
+
+
+<dt id="arg-do-run-superpop-classification">do.run_superpop_classification<a class="anchor" aria-label="anchor" href="#arg-do-run-superpop-classification"></a></dt>
+<dd><p>[logical] If TRUE, run
+<code><a href="superpop_classification.html">superpop_classification</a></code></p></dd>
+
+
+<dt id="arg-path-load-mat">path2load_mat<a class="anchor" aria-label="anchor" href="#arg-path-load-mat"></a></dt>
+<dd><p>[character] /path/to/directory where loading matrices are
+kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData</p></dd>
+
+
+<dt id="arg-plink-format">plink2format<a class="anchor" aria-label="anchor" href="#arg-plink-format"></a></dt>
+<dd><p>[logical] If TRUE, data is in plink2 format already and
+convert_to_plink2 will not be run</p></dd>
+
+
+<dt id="arg-var-format">var_format<a class="anchor" aria-label="anchor" href="#arg-var-format"></a></dt>
+<dd><p>[logical] If TRUE, variant identifiers are in correct
+format already and rename_variant_identifiers will not be run</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -421,7 +455,7 @@ IIDs failing the relatedness threshold highIBDTh, 3. outlying_heterozygosity
 containing a [vector] with sample IIDs failing the heterozygosity threshold
 hetTh, 4. mismatched_sex containing a [vector] with the sample IIDs failing
 the sexcheck based on SNPSEX and femaleTh/maleTh and 5. ancestry containing
-a vector with sample IIDs failing the ancestry check based on europeanTh and
+a dataframe of sample ids and ancestry probablities predicted by a classifier
 ii) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of <code><a href="check_sex.html">check_sex</a></code>,
 <code><a href="check_het_and_miss.html">check_het_and_miss</a></code>, and
