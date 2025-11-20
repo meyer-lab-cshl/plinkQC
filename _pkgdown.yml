@@ -66,7 +66,7 @@ navbar:
       menu:
       -  text: "Step-by-step QC"
          href: articles/plinkQC.html
-      -  text: "Ancestry"
+      -  text: "Population structure identification by Random Forest"
          href: articles/AncestryCheck.html
       -  text: "HapMap III reference"
          href: articles/HapMap.html
