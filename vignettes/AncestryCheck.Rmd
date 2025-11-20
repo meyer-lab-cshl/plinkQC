@@ -26,25 +26,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-For non-human genotype data, there might still be the need to detect and predict population structure. In addition, in some rare cases, there might not be a
-large enough overlap in the SNP genotypes and the trained reference data (we 
-recommend > 5% overlap). In this case, we recommend training your own random
+Population structure also exists in non-human populations. In addition, in some
+rare cases, there might not be a large enough overlap between the user's
+genotypes and the reference data (we recommend > 5% overlap) and consequently the pre-trained classifier. In this case, we recommend training your own random
 forest classifier. In the following, we will demonstrate the workflow for
-setting up this training, starting with reference data download. As an example,
-we show the process for the 1000 genomes dataset. The download and pre-processing are described in detail in [Processing 1000 Genomes reference data for ancestry estimation](Genomes1000.html). We will use a test study dataset included in the package as an example for the workflow.  
-
-### Setting up Bash Script Variables
-``` {bash setting up bash, eval = FALSE}
-qcdir='~/qcdir'
-name='data.hg38'
-refdir=~/reference
-
-mkdir -r $qcdir/plink_log
-```
-
-### Putting study data in qcdir
-Copy your study dataset to the qcdir folder. In this example, we are assuming
-that the provided test dataset included with the package has been moved. 
+setting up this training, starting with reference data download. We will use a test study dataset included in the package as an example for the workflow.  
 
 ### Download reference data
 A suitable reference dataset should be downloaded and if necessary, re-formated
@@ -62,8 +48,8 @@ the names and directories of the reference and study will make it easy to use
 updated versions of the reference or new datasets in the future. We create a 
 directory named 'qcdir' for the study data. In order to keep the data directory tidy, we will create a directory for the log files and move them to the log directory for future reference after each analysis step. 
 
-Once you have created 'qcdir', be sure to copy the data.bim, data.bed, 
-and data.fam files into your directory. 
+Once you have created 'qcdir', be sure to copy the study data (here simply
+data.bim, data.bed, and data.fam) files into your directory. 
 
 ```{bash setup, eval=FALSE}
 qcdir=~/qcdir

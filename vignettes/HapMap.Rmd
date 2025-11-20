@@ -36,8 +36,8 @@ The following vignette shows the processing steps required to use samples of the
 HapMap study [@HapMap2005][@HapMap2007][@HapMap2010] as a reference dataset. 
 Using this reference, population structure down to large-scale continental
 ancestry can be detected. A step-by-step instruction on how to conduct this
-analysis is described in this
-[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+analysis by training a random forest classifier is described in 
+the vignette [Classifier training for ancestry estimation](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
 
 
 # Workflow

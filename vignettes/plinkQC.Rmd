@@ -25,61 +25,49 @@ knitr::opts_chunk$set(
 ```
 
 # Introduction
-Genotyping arrays enable the direct measurement of an individuals genotype at
+Genotyping arrays enable the direct measurement of an individual's genotype at
 thousands of markers. Subsequent analyses such as genome-wide association
-studies rely on the high quality of these marker genotypes.
+studies rely on the high quality of these marker genotypes. 
 
-Anderson and colleagues introduced a protocol for data quality control in
-genetic association studies heavily based on the summary statistics and
-relatedness estimation functions in the PLINK software [@Anderson2010]. PLINK is
-a comprehensive, open-source command-line tool for genome-wide association
-studies (GWAS) and population genetics research [@Purcell2007, @Chang2015]. It's
-main functionalities include data management, computing individual- and marker-
-level summary statistics, identity-by-state estimation and association analysis.  
-Integration with R is achieved through its R plugin or PLINK/SEQ R Package
-[@PlinkSeq2014]. While the plugin is limited to operations yielding simple
-genetic marker vectors as output, the PLINK/SEQ R Package is limited in the
-functionalities it can access. 
+*plinkQC* facilitates such genotype quality control, including a pre-trained ancestry classifier and relatedness filter optimized to retain the maximally unrelated sample set with highest quality.
 
-*plinkQC* facilitates genotype quality control for genetic association studies
-as described by [@Anderson2010]. It wraps 
-around plink basic statistics (e.g. missing genotyping rates per individual, 
-allele frequencies per genetic marker) and relationship functions and generates
-a per-individual and per-marker quality control report. Individuals and markers
-that fail the quality control can subsequently be removed with *plinkQC* to
-generate a new, clean dataset. Removal of individuals based on relationship
-status is optimised to retain as many individuals as possible in the study.
+*plinkQC*  assumes the genotypes have already been determined from the
+ original probe intensity data of the genotype array and are available in
+[plink format](https://www.cog-genomics.org/plink/1.9/input#bed). It wraps 
+around PLINK [@Purcell2007,@Chang2015] basic statistics (e.g. missing
+genotyping rates per individual, allele frequencies per genetic marker) and relationship functions. *plinkQC* then generates a per-individual and per-marker quality control report and individuals and markers that fail the quality control
+can subsequently be removed with *plinkQC* to generate a new, clean dataset. 
 
-The majority if the functions in *plinkQC* depends on the [PLINK](https://www.cog-genomics.org/plink/1.9/) 
+The majority of functions in *plinkQC* depend on [PLINK](https://www.cog-genomics.org/plink/1.9/) 
  (**version 1.9**), which has to be manually installed prior to the usage of
- *plinkQC*. The ancestry functions depends on the newer version of [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/)
- (**version 2.0**). It assumes the genotype have already been determined from the
- original probe intensity data of the genotype array and is available in
-[plink format](https://www.cog-genomics.org/plink/1.9/input#bed). 
+ *plinkQC*. The ancestry functions depend on the newer version of [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/)
+ (**version 2.0**).
 
-The protocol is implemented in four main functions, the per-individual quality
-control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`).
-the generation of the new, quality control dataset (`cleanData`), and the 
-prediction of human genetic ancestry (`superpop_classification`):
+The protocol can be run via three main functions, the per-individual quality
+control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
+the generation of the new, quality control dataset (`cleanData`):
 
 ## Per-individual quality control
 The per-individual quality control with `perIndividualQC` wraps around these
 functions:
-    (i) `check_sex`: for the identification of individuals with discordant sex
-    information,
-    (ii) `check_heterozygosity_and_missingness`: for the identification of
-    individuals with outlying missing genotype and/or heterozygosity rates,
-    (iii) `check_relatedness`: for the identification of related individuals
-    (iv) `ancestry_prediction`: for prediction of genomic ancestry
+
+1. `check_sex`: for the identification of individuals with discordant sex information,
+
+1. `check_heterozygosity_and_missingness`: for the identification of individuals with outlying missing genotype and/or heterozygosity rates,
+
+1. `check_relatedness`: for the identification of related individuals
+
+1. `ancestry_prediction`: for prediction of genomic ancestry
 
 ## Per-marker quality control
 The per-marker quality control with `perMarkerQC` wraps around these
 functions:
-    (i) `check_snp_missingnes`: for the identifying markers with excessive
-    missing genotype rates,
-    (ii) `check_hwe`: for the identifying markers showing a significant
-    deviation from Hardy-Weinberg equilibrium (HWE),
-    (iii) `check_maf`: for the removal of markers with low minor allele
+
+1. `check_snp_missingnes`: for the identifying markers with excessive missing genotype rates,
+
+1. `check_hwe`: for the identifying markers showing a significant deviation from Hardy-Weinberg equilibrium (HWE),
+
+1. `check_maf`: for the removal of markers with low minor allele
     frequency (MAF).
     
 ## Clean data
@@ -89,7 +77,7 @@ checks.
 
 # Workflow
 In the following, genotype quality control with *plinkQC* is applied on a small
-example dataset with 200 individuals and 10,000 markers (provided with this
+example dataset with 200 individuals and 10,000 markers (provided within this
 package). The  quality control is demonstrated in three easy steps,
 per-individual and per-marker quality control followed by the generation of the
 new dataset. In addition, the functionality of each of the functions underlying
@@ -97,8 +85,8 @@ new dataset. In addition, the functionality of each of the functions underlying
 
 To run the ancestry functionality of the package, [Plink v2](https://www.cog-genomics.org/plink/2.0/) is needed. 
 Before use, the study data should be in the new hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool
-may be needed to map variants from one annotation to another. More details on how
-to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.html). We provide an example dataset that is in the hg38 annotation. 
+may be needed to map variants from one annotation to another. More details on
+how to use the tool can be found on the processing [HapMap III reference data vignette](HapMap.html). We provide an example dataset that is in the hg38 annotation. 
 
 Additional loading matrices are needed for the PCA projection used in the model.
 This is hosted on the plinkQC github repo under the inst/extdata folder located 
@@ -114,30 +102,32 @@ package.dir <- find.package('plinkQC')
 indir <- file.path(package.dir, 'extdata')
 qcdir <- tempdir()
 name <- 'data.hg38'
-path2plink <- "/Users/syed/bin/plink"
-path2plink2 <- "/Users/syed/bin/plink2"
+path2plink <- "/path/to/plink"
+path2plink2 <- "/path/to/plink2"
 path2load_mat <- "path/to/load_mat/merged_chrs.postQC.train.pca"
 ```
 
 ## Per-individual quality control
 For `perIndividualQC`, one simply specifies the directory where the data is
 stored (qcdir) and the prefix of the plink files (i.e. prefix.bim, prefix.bed,
-prefix.fam). Per default, 
-all quality control checks will be conducted. 
+prefix.fam). Per default, all quality control checks will be conducted. 
 
 In addition to running each check, `perIndividualQC` writes a list of all fail
 individual IDs to the qcdir. These IDs will be removed in the computation of the
 `perMarkerQC`. If the list is not present, `perMarkerQC` will send a message
 about conducting the quality control on the entire dataset.
 
-The ancestry portion of the package requires that the data should be in PLINK 2.0 format (i.e pgen, pvar, psam files), 
-and the variants identifiers should be formatted similar to the following example: 1:12345[hg38]. `perIndividualQC` will run the functions `convert_to_plink2()` and `rename_variant_identifiers()` to convert the data
+The ancestry portion of the package requires data in PLINK 2.0 format (i.e pgen, pvar, psam files), and the variant identifiers should be formatted similar to
+the following example: 1:12345[hg38]. `perIndividualQC` will run the functions `convert_to_plink2()` and `rename_variant_identifiers()` to convert the data
 into PLINK 2.0 format and rename the variant identifiers respectively. 
 
-NB: To reduce the data size of the example data in `plinkQC`,
-data.genome  has already been reduced to the individuals that are related. Thus
-the relatedness plots in C only show counts for related individuals only. 
-For ancestry identification, there are 597 SNPs that overlap between the study and  reference data, roughly 0.2% of the reference dataset. Thus, additional noise is expected and visible in the plot below.
+*NB*: There are limitations on CRAN file sizes. To reduce the data size of the
+example data in `plinkQC`, data.genome  has already been reduced to the
+individuals that are related. Thus the relatedness plots in C only counts for related individuals only. 
+For ancestry identification, the example dataset is very small (10k genotypes)
+and contains markers and individuals failing qc controls to showcase the
+*plinkQC*'s functionality. In practice this means that the overlap in genotypes between the study and  reference data is only 597 SNPs (roughly 0.2%) of the reference dataset. Thus, additional noise is expected and visible in the
+ancestry plot below.
 
 `perIndividualQC` displays the results of the quality control steps in a
 multi-panel plot. 
@@ -226,7 +216,7 @@ Ids  <- cleanData(indir=indir, qcdir=qcdir, name=name, path2plink=path2plink,
 The identification of individuals with discordant sex information helps to detect
 sample mix-ups and samples with very poor genotyping rates. For each sample, the
 homozygosity rates across all X-chromosomal genetic markers are computed and
-compared with the expected rates (typically $<$0.2 for females and $>$0.8 for
+compared with the expected rates (typically $<0.2$ for females and $>0.8$ for
 males). For samples where the assigned sex (PEDSEX in the .fam file) contradicts
 the sex inferred from the homozygosity rates (SNPSEX), it should be checked that
 the sex was correctly recorded (genotyping often occurs at different locations
@@ -280,14 +270,14 @@ knitr::include_graphics("checkHetImiss.png")
 ```
 
 
-## Related individuals
-Depending on the future use of the genotypes, it might required to remove any
-related individuals from the study. Related individuals can be identified by
+## Related individualis
+Depending on downstream analyses, it might be required to remove related
+individuals from the study. Related individuals can be identified by
 their proportion of shared alleles at the genotyped markers (identity by
 descend, IBD). Standardly, individuals with second-degree relatedness or higher
 will be excluded. 
 Identifying related individuals is implemented in `check_relatedness`. It finds
-pairs of samples whose proportion of IBD is larger than the specified highIBDTh. 
+pairs of samples whose proportion of IBD is larger than the specified `highIBDTh`. 
 Subsequently, for pairs of individual that do not have additional relatives in
 the dataset, the individual with the greater genotype missingness rate is
 selected and returned as the individual failing the relatedness check. For more
@@ -328,7 +318,7 @@ Additionally, the ancestry prediction function requires that the data is in plin
 The function returns: 
   (i) prediction_prob: Dataframe of family ids, sample ids, and model probability of the each ancestry.
   (ii) prediction_majority: Dataframe of family ids, sample ids, and ancestry with highest model probability.
-  (iii) exclude_ancestry: A list of ids to be excluded based on user-inputted ancestries
+  (iii) exclude_ancestry: A list of ids to be excluded based on user-specified ancestries
 to the ancestral predictions of the samples
   (iv) p_ancestry: Bar graph of the ancestry model probabilities. 
 
@@ -372,7 +362,7 @@ knitr::include_graphics("snpmissingness.png")
 ## Markers with deviation from HWE
 Markers with strong deviation from HWE might be indicative of genotyping or
 genotype-calling errors. As serious genotyping errors often yield
-very low p-values (in the order of $10^-50$), it is recommended to choose a 
+very low p-values (in the order of $10^{-50}$), it is recommended to choose a 
 reasonably low threshold to avoid filtering too many variants (that might have
 slight, non-critical deviations).
 Identifying markers with deviation from HWE is implemented in `check_hwe`.
