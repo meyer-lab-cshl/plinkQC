@@ -10,7 +10,7 @@ fail_sexIDs <- read.table(paste(qcdir, '/', name, ".fail-sexcheck.IDs", sep=""))
 fail_highIBDIDs <- read.table(paste(qcdir, '/', name, ".fail-IBD.IDs", sep=""))
 fail_imissIDs <- read.table(paste(qcdir, '/', name, ".fail-imiss.IDs", sep=""))
 fail_hetIDs <- read.table(paste(qcdir, '/', name, ".fail-het.IDs", sep=""))
-fail_ancestryIDs <- read.table(paste(qcdir, '/', name, ".fail-ancestry.IDs",
+fail_ancestryIDs <- read.table(paste(qcdir, '/', name, ".exclude-ancestry.IDs",
                                      sep=""))
 refSamples <- read.table(paste(qcdir, '/', refSamplesFile, sep=""), header=TRUE,
                          stringsAsFactors=FALSE)

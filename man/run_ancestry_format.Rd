@@ -2,7 +2,7 @@
 % Please edit documentation in R/ancestry.R
 \name{run_ancestry_format}
 \alias{run_ancestry_format}
-\title{Running functions to format data for ancestry identification}
+\title{Running functions to format data for ancestry prediction}
 \usage{
 run_ancestry_format(
   indir,
@@ -18,13 +18,7 @@ run_ancestry_format(
   format = "@:#[hg38]",
   plink2format = FALSE,
   var_format = FALSE,
-  path2load_mat,
-  legend_text_size,
-  legend_title_size,
-  axis_text_size,
-  axis_title_size,
-  title_size,
-  legend_position = "bottom"
+  path2load_mat
 )
 }
 \arguments{
@@ -86,24 +80,9 @@ convert_to_plink2 will not be run}
 
 \item{var_format}{[logical] If TRUE, variant identifiers are in correct 
 format already and rename_variant_identifiers will not be run}
-
-\item{path2load_mat}{[character] /path/to/directory where loading matrices are 
-kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData}
-
-\item{legend_text_size}{[integer] Size for legend text.}
-
-\item{legend_title_size}{[integer] Size for legend title.}
-
-\item{axis_text_size}{[integer] Size for axis text.}
-
-\item{axis_title_size}{[integer] Size for axis title.}
-
-\item{title_size}{[integer] Size for plot title.}
-
-\item{legend_position}{[character] Legend position for the plot.}
 }
 \value{
-Creates plink 2.0 datafiles
+Name of file with correct format
 }
 \description{
 This function runs convert_to_plink2 and rename_variant_identifiers to format 

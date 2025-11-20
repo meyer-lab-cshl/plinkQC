@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Hannah Meyer
 and Maha Syed</h4>
             
-            <h4 data-toc-skip class="date">2025-11-19</h4>
+            <h4 data-toc-skip class="date">2025-11-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/plinkQC.Rmd" class="external-link"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="d-none name"><code>plinkQC.Rmd</code></div>
@@ -123,8 +123,7 @@ identification of individuals with discordant sex information, (ii)
 identification of individuals with outlying missing genotype and/or
 heterozygosity rates, (iii) <code>check_relatedness</code>: for the
 identification of related individuals (iv)
-<code>superpop_classfication</code>: for prediction of genomic
-ancestry</p>
+<code>ancestry_prediction</code>: for prediction of genomic ancestry</p>
 </div>
 <div class="section level3">
 <h3 id="per-marker-quality-control">Per-marker quality control<a class="anchor" aria-label="anchor" href="#per-marker-quality-control"></a>
@@ -143,12 +142,6 @@ frequency (MAF).</p>
 <p><code>cleanData</code> takes the results of <code>perMarkerQC</code>
 and <code>perIndividualQC</code> and creates a new dataset with all
 individuals and markers that passed the quality control checks.</p>
-</div>
-<div class="section level3">
-<h3 id="ancestry-identification">Ancestry Identification<a class="anchor" aria-label="anchor" href="#ancestry-identification"></a>
-</h3>
-<p><code>superpop_classification</code> runs a pre-trained classifier to
-predict the genomic ancestry of the individuals within the dataset.</p>
 </div>
 </div>
 <div class="section level2">
@@ -344,6 +337,41 @@ counts for related individuals only.</p>
 <p><img src="checkRelatedness.png" alt="bar graph with a histogram og IBD measurements" width="500px" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
+<h3 id="ancestry-predictions-of-data">Ancestry Predictions of Data<a class="anchor" aria-label="anchor" href="#ancestry-predictions-of-data"></a>
+</h3>
+<p>For ancestry estimation, accessory functions from <a href="https://www.cog-genomics.org/plink/2.0/" class="external-link">Plink v2</a> are needed,
+as are pre-computed loading matrices for the PCA projection used in the
+model. These are hosted on the <em>plinkQC</em> github repo under the
+inst/extdata folder located <a href="https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat" class="external-link">here</a>.
+Alternatively, the whole github repo can downloaded with</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">git</span> clone git@github.com:meyer-lab-cshl/plinkQC.git</span></code></pre></div>
+<p>For this, it is important that the data is in hg38 annotation. USCS’s
+<a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a> tool
+may be needed to map variants from one annotation to another. More
+details on how to use the tool can be found on the processing <a href="HapMap.html">HapMap III reference data vignette</a>.</p>
+<p>Additionally, the ancestry prediction function requires that the data
+is in plink 2 format and has variant identifiers in the format:
+1:12345[hg38]. The function <code>ancestry_prediction</code> will call
+helper functions, <code><a href="../reference/convert_to_plink2.html">convert_to_plink2()</a></code> and
+<code><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers()</a></code> to format the data as directed
+by the parameters. The function returns: (i) prediction_prob: Dataframe
+of family ids, sample ids, and model probability of the each ancestry.
+(ii) prediction_majority: Dataframe of family ids, sample ids, and
+ancestry with highest model probability. (iii) exclude_ancestry: A list
+of ids to be excluded based on user-inputted ancestries to the ancestral
+predictions of the samples (iv) p_ancestry: Bar graph of the ancestry
+model probabilities.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">path2plink2</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink2"</span></span>
+<span><span class="va">path2load_mat</span> <span class="op">&lt;-</span> <span class="st">"path/to/load_mat/merged_chrs.postQC.train.pca"</span></span>
+<span></span>
+<span><span class="va">anc_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ancestry_prediction.html">ancestry_prediction</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
+<span>                                         interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                                         path2plink2<span class="op">=</span><span class="va">path2plink2</span>, </span>
+<span>                                         path2load_mat <span class="op">=</span> <span class="va">path2load_mat</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ancestral_prediction.png" alt="marker missingness" width="500px" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
 <h3 id="markers-with-excessive-missingness-rate">Markers with excessive missingness rate<a class="anchor" aria-label="anchor" href="#markers-with-excessive-missingness-rate"></a>
 </h3>
 <p>Markers with excessive missingness rate are removed as they are
@@ -353,7 +381,7 @@ missingness rates is implemented in <code>snp_missingness</code>. It
 calculates the rates of missing genotype calls and frequency for all
 variants in the individuals that passed the
 <code>perIndividualQC</code>.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_snpmissing</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_snp_missingness.html">check_snp_missingness</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
 <span>                                         interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                                         path2plink<span class="op">=</span><span class="va">path2plink</span>, </span>
@@ -374,7 +402,7 @@ in <code>check_hwe</code>. It calculates the observed and expected
 heterozygote frequencies per SNP in the individuals that passed the
 <code>perIndividualQC</code> and computes the deviation of the
 frequencies from Hardy-Weinberg equilibrium (HWE) by HWE exact test.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_hwe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_hwe.html">check_hwe</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                      path2plink<span class="op">=</span><span class="va">path2plink</span>, showPlinkOutput<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="hwe.png" alt="p-values of deviations from HWE histogram " width="500px" style="display: block; margin: auto;"></p>
@@ -389,7 +417,7 @@ Identifying markers with low minor allele count is implemented in
 <code>check_maf</code>. It calculates the minor allele frequencies for
 all variants in the individuals that passed the
 <code>perIndividualQC</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fail_maf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_maf.html">check_maf</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                      path2plink<span class="op">=</span><span class="va">path2plink</span>, showPlinkOutput<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="maf.png" alt="Histogram of minor allele frequencies" width="500px" style="display: block; margin: auto;"></p>

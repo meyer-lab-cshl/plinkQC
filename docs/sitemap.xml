@@ -12,7 +12,9 @@
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/authors.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/index.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/news/index.html</loc></url>
+<url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/ancestry_prediction.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkFiltering.html</loc></url>
+<url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkLoadingMat.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkPlink.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkPlink2.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkRemoveIDs.html</loc></url>
@@ -25,6 +27,7 @@
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/check_snp_missingness.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/cleanData.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/convert_to_plink2.html</loc></url>
+<url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/evaluate_ancestry_prediction.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/evaluate_check_ancestry.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/evaluate_check_het_and_miss.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/evaluate_check_relatedness.html</loc></url>
@@ -39,6 +42,7 @@
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/relatednessFilter.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/rename_variant_identifiers.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/run_ancestry_format.html</loc></url>
+<url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/run_ancestry_prediction.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/run_check_ancestry.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/run_check_heterozygosity.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/run_check_missingness.html</loc></url>

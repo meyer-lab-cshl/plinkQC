@@ -46,11 +46,14 @@ reference:
 - title: Identifying Ancestry
   desc: ~
   contents:
-  - '`superpop_classification`'
+  - '`ancestry_prediction`'
+  - '`evaluate_ancestry_prediction`'
+  - '`run_ancestry_prediction`'
   - '`run_ancestry_format`'
 - title: internal
   contents:
   - '`checkRemoveIDs`'
+  - '`checkLoadingMat`'
 navbar:
   type: standard
   left:

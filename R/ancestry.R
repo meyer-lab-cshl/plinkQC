@@ -1,4 +1,4 @@
-#' Running functions to format data for ancestry identification
+#' Running functions to format data for ancestry prediction
 #' 
 #' This function runs convert_to_plink2 and rename_variant_identifiers to format 
 #' the data for the ancestry identification with superpop_classification
@@ -6,13 +6,12 @@
 #' @inheritParams convert_to_plink2
 #' @inheritParams rename_variant_identifiers
 #' @inheritParams checkPlink2
-#' @inheritParams superpop_classification
 #' @param plink2format [logical] If TRUE, data is in plink2 format already and 
 #' convert_to_plink2 will not be run
 #' @param var_format [logical] If TRUE, variant identifiers are in correct 
 #' format already and rename_variant_identifiers will not be run
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @return Creates plink 2.0 datafiles
+#' @return Name of file with correct format
 #' @export
 #' @examples
 #' indir <- system.file("extdata", package="plinkQC")
@@ -35,10 +34,7 @@ run_ancestry_format <- function(indir, name, qcdir=indir, verbose=FALSE,
                                 format = "@:#[hg38]",
                                 plink2format = FALSE,
                                 var_format = FALSE,
-                                path2load_mat, legend_text_size,
-                                legend_title_size, axis_text_size,
-                                axis_title_size, title_size,
-                                legend_position = "bottom") {
+                                path2load_mat) {
   
   path2plink2 <- checkPlink2(path2plink2)
   if (plink2format==FALSE) {
@@ -58,24 +54,19 @@ run_ancestry_format <- function(indir, name, qcdir=indir, verbose=FALSE,
                       format=format,
                       showPlinkOutput=showPlinkOutput)
     name = paste0(name, ".renamed")
+    
+    indir=qcdir
   }
-  
-  results <- superpop_classification(indir=indir, name=name, qcdir=qcdir, 
-                                     verbose=verbose, interactive=interactive,
-                          path2plink2=path2plink2,
-                          path2load_mat=path2load_mat,
-                          keep_individuals=keep_individuals,
-                          remove_individuals=remove_individuals,
-                          extract_markers=extract_markers,
-                          exclude_markers=exclude_markers,
-                          legend_text_size=legend_text_size,
-                          legend_title_size=legend_title_size,
-                          axis_text_size=axis_text_size,
-                          axis_title_size=axis_title_size,
-                          title_size=title_size,
-                          showPlinkOutput=showPlinkOutput, 
-                          legend_position=legend_position)
-  return(results)
+
+  results <- run_ancestry_prediction(qcdir=qcdir, indir=indir, name=name,
+                                         path2plink2=path2plink2,
+                                         path2load_mat=path2load_mat,
+                                         keep_individuals=keep_individuals,
+                                         remove_individuals=remove_individuals,
+                                         extract_markers=extract_markers,
+                                         exclude_markers=exclude_markers,
+                                         showPlinkOutput=showPlinkOutput)
+  return(name)
 }
 
 
@@ -119,8 +110,7 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
   
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
-  
-  checkFormatPlink2(prefix)
+
   path2plink2 <- checkPlink2(path2plink2)
   
   if (showPlinkOutput) {
@@ -140,13 +130,14 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 }
 
-#' Predicting sample superpopulation ancestry 
+
+#' Projecting the study data set onto the PC space of the reference dataset 
 #' 
-#' Predicts the ancestry of inputted samples using plink2. This program utilizes a random 
-#' forest algorithm that was trained on the 1000 genomes dataset to predict the 
-#' ancestry of the samples. There are five possible ancestral superpopulation
-#' categories: AFR, AMR, EAS, EUR, and SAS. Genomic data version hg38 with variant 
-#' identifiers in the format of 1:12345[hg38] is needed for the function to work 
+#' Projects the study dataset onto the PC space of the reference dataset. 
+#' The output of this function as input in a random forest classifier to predict 
+#' the genomic ancestry of the samples. Genomic data version hg38 with variant 
+#' identifiers in the format of 1:12345[hg38] is needed for ancestry identification 
+#' to work.
 #' 
 #' @param indir [character] /path/to/directory containing the basic PLINK 2.0 data
 #' file name.pgen, name.pvar, name.psam
@@ -156,26 +147,16 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param name [character] Prefix of PLINK 2.0 files, i.e. name.pgen, name.pvar, 
 #' name.psam
 #' @param path2load_mat [character] /path/to/directory where loading matrices are 
-#' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData
+#' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData.
+#' Note that file names before the .acount or .eigenvec.allele must be included
+#' in file path. 
 #' @inheritParams checkPlink2
 #' @inheritParams checkFiltering
-#' @param legend_text_size [integer] Size for legend text.
-#' @param legend_title_size [integer] Size for legend title.
-#' @param axis_text_size [integer] Size for axis text.
-#' @param axis_title_size [integer] Size for axis title.
-#' @param title_size [integer] Size for plot title.
-#' @param legend_position [character] Legend position for the plot. 
+#' @inheritParams checkLoadingMat
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
-#' @param interactive [logical] Should plots be shown interactively? When
-#' choosing this option, make sure you have X-forwarding/graphical interface
-#' available for interactive plotting. Alternatively, set interactive=FALSE and
-#' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
-#' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
-#' @return A named [factor] with five different levels AFR, AMR, EAS, EUR, and 
-#' SAS that correspond to the ancestry that a sample comes from and the names 
-#' corresponds to the IDs.
+#' @return A .sscore file with the input data projected onto the reference data PCs
 #' @examples
 #' indir <- system.file("extdata", package="plinkQC")
 #' qcdir <- tempdir()
@@ -189,29 +170,22 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' path2plink2 = path2plink2, path2load_mat = path2load_mat)
 #' }
 #'@export 
-superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
-                                    interactive = FALSE,
+run_ancestry_prediction  <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     path2plink2=NULL,
                                     path2load_mat=NULL,
                                     keep_individuals=NULL,
                                     remove_individuals=NULL,
                                     extract_markers=NULL,
                                     exclude_markers=NULL,
-                                    legend_text_size = 5,
-                                    legend_title_size = 7,
-                                    axis_text_size = 5,
-                                    axis_title_size = 7,
-                                    title_size = 9,
-                                    showPlinkOutput=TRUE,
-                                    legend_position="right") {
+                                    showPlinkOutput=TRUE) {
   
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
-
+  
   checkFormatPlink2(prefix)
   path2plink2 <- checkPlink2(path2plink2)
-  #checkLoadingMat(path2load_mat)
-
+  checkLoadingMat(path2load_mat)
+  
   if (showPlinkOutput) {
     showPlinkOutput = ""
   }
@@ -233,8 +207,70 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
                  "2 6 header-read no-mean-imputation variance-standardize --score-col-nums 7-26",
                  "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
+}
 
-  proj <- read.csv(paste0(out,".sscore"), 
+#' Predicting sample superpopulation ancestry 
+#' 
+#' Predicts the ancestry of inputted samples using plink2. Uses the output of
+#' \code{\link{run_ancestry_identification}} as input in a random forest classifier 
+#' to predict the genomic ancestry of samples within six continental groups: 
+#' AFR, AMR, EAS, EUR, CSA, and MID. Genomic data version hg38 with variant 
+#' identifiers in the format of 1:12345[hg38] is needed for the function to work 
+#' 
+#' @param qcdir [character] /path/to/directory where name.sscore as returned by 
+#' plink2 --score is located.
+#' @param name [character] Prefix of file with a .sscore output 
+#' @param path2load_mat [character] /path/to/directory where loading matrices are 
+#' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData
+#' @param legend_text_size [integer] Size for legend text.
+#' @param legend_title_size [integer] Size for legend title.
+#' @param axis_text_size [integer] Size for axis text.
+#' @param axis_title_size [integer] Size for axis title.
+#' @param title_size [integer] Size for plot title.
+#' @param legend_position [character] Legend position for the plot. 
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
+#' @param interactive [logical] Should plots be shown interactively? When
+#' choosing this option, make sure you have X-forwarding/graphical interface
+#' available for interactive plotting. Alternatively, set interactive=FALSE and
+#' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
+#' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @param excludeAncestry [character] Ancestries to be excluded (if any). Options are:
+#' Africa, America, Central_South_Asia, East_Asia, Europe, and Middle_East. Strings 
+#' must be spelled exactly as shown. 
+#' @return Three dataframes and a visualization of the ancestral probabilities. 
+#' prediction_prob contains the sample IDs and ancestral probabilities from the model.
+#' prediction_majority contains the sample IDs and greatest ancestry probabilities 
+#' from the model. exclude_ancestry contains the list of sample ids with ancestries
+#' to be excluded. p_ancestry contains a plot visualizing the ancestry probabilities 
+#' in a bargraph. 
+#' @examples
+#' indir <- system.file("extdata", package="plinkQC")
+#' qcdir <- tempdir()
+#' name <- "data.hg38"
+#' path2plink <- '/path/to/plink'
+#' path2load_mat <- '/path/to/load_mat/merged_chrs.postQC.train.pca'
+#' # the following code is not run on package build, as the path2plink on the
+#' # user system is not known.
+#' \dontrun{
+#' superpop_classification(indir=indir, qcdir=qcdir, name=name, 
+#' path2plink2 = path2plink2, path2load_mat = path2load_mat)
+#' }
+#'@export 
+evaluate_ancestry_prediction <- function(qcdir, name, verbose=FALSE,
+                                    interactive = FALSE,
+                                    excludeAncestry = NULL,
+                                    legend_text_size = 5,
+                                    legend_title_size = 7,
+                                    axis_text_size = 5,
+                                    axis_title_size = 7,
+                                    title_size = 9,
+                                    showPlinkOutput=TRUE,
+                                    legend_position="right") {
+  
+
+  proj <- read.csv(paste0(makepath(qcdir, name),".sscore"), 
                    sep='\t', header = TRUE)
   
   #seeing if FID is part of the projection
@@ -243,6 +279,7 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   }
   else {
     colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
+    proj$FID <- rep(0,nrow(proj))
   }
 
 
@@ -251,12 +288,17 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   superpop <- readRDS(rf_path)
   prediction_prob <- predict(superpop, proj, type = "prob")
   prediction_prob <- data.frame(prediction_prob)
-  prediction_prob <- data.frame(IID = proj["IID"], predictions = prediction_prob)
+  prediction_prob <- data.frame(FID = proj["FID"], IID = proj["IID"], 
+                                predictions = prediction_prob)
   
   prediction_majority <- predict(superpop, proj)
   prediction_majority <- data.frame(prediction_majority)
-  prediction_majority <- data.frame(IID = proj["IID"], predictions = prediction_majority)
-  
+  prediction_majority <- data.frame(FID = proj["FID"], IID = proj["IID"],
+                                    predictions = prediction_majority)
+
+  exclude_ancestry <- prediction_majority %>%
+    filter(prediction_majority %in% excludeAncestry) %>%
+    select(c(FID, IID))
   colnames(prediction_prob) <- sub("^predictions.", "", colnames(prediction_prob))
   prediction_prob_long <- pivot_longer(prediction_prob, 
                                        cols = 'Africa':'Middle_East',
@@ -279,8 +321,117 @@ superpop_classification <- function(indir, name, qcdir=indir, verbose=FALSE,
   
    return(list(prediction_prob=prediction_prob, 
                prediction_majority = prediction_majority, 
-               p_ancestry = p_ancestry))
+               p_ancestry = p_ancestry,
+               exclude_ancestry = exclude_ancestry))
 }
+
+
+#' Predicting sample superpopulation ancestry 
+#' 
+#' Predicts the ancestry of inputted samples using plink2. Projects the samples
+#' on to the principal components of the reference dataset and inputs it into
+#' a random forest classifier to identify the ancestry. 
+#' 
+#' @inheritParams run_ancestry_format
+#' @inheritParams run_ancestry_prediction
+#' @inheritParams evaluate_ancestry_prediction
+#' 
+#' @return Three dataframes and a visualization of the ancestral probabilities. 
+#' prediction_prob contains the sample IDs and ancestral probabilities from the model.
+#' prediction_majority contains the sample IDs and greatest ancestry probabilities 
+#' from the model. exclude_ancestry contains the list of sample ids with ancestries
+#' to be excluded. p_ancestry contains a plot visualizing the ancestry probabilities 
+#' in a bargraph. 
+#' @examples
+#' indir <- system.file("extdata", package="plinkQC")
+#' qcdir <- tempdir()
+#' name <- "data.hg38"
+#' path2plink <- '/path/to/plink'
+#' path2load_mat <- '/path/to/load_mat/merged_chrs.postQC.train.pca'
+#' # the following code is not run on package build, as the path2plink on the
+#' # user system is not known.
+#' \dontrun{
+#' ancestry_identification(indir=indir, qcdir=qcdir, name=name, 
+#' path2plink2 = path2plink2, path2load_mat = path2load_mat)
+#' }
+#'@export 
+ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
+                                             interactive = FALSE,
+                                             path2plink2=NULL,
+                                             path2load_mat=NULL,
+                                             legend_text_size = 5,
+                                             legend_title_size = 7,
+                                             axis_text_size = 5,
+                                             axis_title_size = 7,
+                                             title_size = 9,
+                                             showPlinkOutput=TRUE,
+                                             legend_position="right",
+                                             keep_individuals=NULL,
+                                             remove_individuals=NULL,
+                                             exclude_markers=NULL,
+                                             extract_markers=NULL,
+                                             plink2format=FALSE,
+                                             var_format=FALSE,
+                                             excludeAncestry=NULL,
+                                             dont.ancestry_prediction=FALSE,
+                                             do.run_ancestry_prediction=TRUE,
+                                             do.evaluate_ancestry_prediction=TRUE) {
+  if (!dont.ancestry_prediction) {
+    sscore_path <- indir
+    ancestry_name <- name
+    
+    if (do.run_ancestry_prediction) {
+      if ((plink2format == FALSE) | (var_format == FALSE)) { 
+        ancestry_name <- run_ancestry_format(indir=indir, name=name, qcdir=qcdir, 
+                                             verbose=verbose,
+                                             path2plink2=path2plink2,
+                                             keep_individuals=keep_individuals,
+                                             remove_individuals=remove_individuals,
+                                             exclude_markers=exclude_markers,
+                                             extract_markers=extract_markers,
+                                             showPlinkOutput=showPlinkOutput,
+                                             format = "@:#[hg38]",
+                                             plink2format = plink2format,
+                                             var_format = var_format,
+                                             path2load_mat=path2load_mat)
+      }
+      else { 
+        run <- run_ancestry_prediction(qcdir=qcdir, indir=indir, name=name,
+                                       path2plink2=path2plink2,
+                                       path2load_mat=path2load_mat,
+                                       keep_individuals=keep_individuals,
+                                       remove_individuals=remove_individuals,
+                                       extract_markers=extract_markers,
+                                       exclude_markers=exclude_markers,
+                                       showPlinkOutput=showPlinkOutput)
+      }
+      sscore_path <- qcdir
+    }
+    
+    if (do.evaluate_ancestry_prediction) {
+      if (verbose) message("Prediction of ancestries")
+      ancestry_exclusion <- evaluate_ancestry_prediction(qcdir=sscore_path,
+                                                         name=ancestry_name,
+                                                         excludeAncestry = excludeAncestry,
+                                                         legend_text_size =
+                                                           legend_text_size,
+                                                         legend_title_size =
+                                                           legend_title_size,
+                                                         axis_text_size =
+                                                           axis_text_size,
+                                                         axis_title_size =
+                                                           axis_title_size,
+                                                         title_size =
+                                                           title_size,
+                                                         interactive=FALSE,
+                                                         legend_position = "bottom")
+      
+      
+      return(ancestry_exclusion)
+    }
+  }
+}
+
 
 
 #' Renaming variants  
@@ -344,15 +495,26 @@ rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
 }
 
 
-
+#' Checking the path of the loading matrix  
+#' 
+#' Makes sure that the loading matrix is located at the filepath stored in path2load_mat
+#' 
+#' @param path2load_mat [character] /path/to/directory containing the filepath
+#' to the loading matrices needed to run the ancestry functionality 
+#' @export
+#' @return NULL 
 checkLoadingMat <- function(path2load_mat) {
-  if (!file.exists(makepath(path2load_mat, "unrel_hg38.maf.pruned.pca.acount"))) {
-    stop("The file unrel_hg38.maf.pruned.pca.acount is not found in the path 
-         given for path2load_mat. Please check that the file path is correct")
+  if (!file.exists(paste0(path2load_mat, ".acount"))) {
+    stop("The loading matrix .acount file is not found in the path 
+         given for path2load_mat. Please check that the file path is correct.
+         Note that that filepath requires for the filename before .acount to be 
+         included.")
   }
-  if (!file.exists(makepath(path2load_mat, "unrel_hg38.maf.pruned.pca.eigenvec.allele"))) {
-    stop("The file unrel_hg38.maf.pruned.pca.eigenvec.allele is not found in the 
-         path given for path2load_mat. Please check that the file path is correct")
+  if (!file.exists(paste0(path2load_mat, ".eigenvec.allele"))) {
+    stop("The loading matrix .eigenvec.allele file is not found in the 
+         path given for path2load_mat. Please check that the file path is correct.
+         Note that that filepath requires for the filename before .acount to be 
+         included.")
   }
 }
 

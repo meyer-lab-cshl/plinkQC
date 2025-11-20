@@ -70,7 +70,7 @@ functions:
     (ii) `check_heterozygosity_and_missingness`: for the identification of
     individuals with outlying missing genotype and/or heterozygosity rates,
     (iii) `check_relatedness`: for the identification of related individuals
-    (iv) `superpop_classfication`: for prediction of genomic ancestry
+    (iv) `ancestry_prediction`: for prediction of genomic ancestry
 
 ## Per-marker quality control
 The per-marker quality control with `perMarkerQC` wraps around these
@@ -86,10 +86,6 @@ functions:
 `cleanData` takes the results of `perMarkerQC` and `perIndividualQC` and creates
 a new dataset with all individuals and markers that passed the quality control
 checks.
-
-## Ancestry Identification
-`superpop_classification` runs a pre-trained classifier to predict the genomic ancestry
-of the individuals within the dataset. 
 
 # Workflow
 In the following, genotype quality control with *plinkQC* is applied on a small
@@ -314,6 +310,43 @@ exclude_relatedness <- check_relatedness(indir=indir, qcdir=qcdir, name=name,
 knitr::include_graphics("checkRelatedness.png")
 ```
 
+## Ancestry Predictions of Data
+For ancestry estimation, accessory functions from [Plink v2](https://www.cog-genomics.org/plink/2.0/) are needed, as are pre-computed
+loading matrices for the PCA projection used in the model.
+These are hosted on the _plinkQC_ github repo under the inst/extdata folder
+located [here](https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat). Alternatively, the whole github repo can downloaded with
+
+```{bash installing github for step by step, eval=FALSE}
+git clone git@github.com:meyer-lab-cshl/plinkQC.git
+```
+
+For this, it is important that the data is in hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool may be needed to map variants from one annotation to another. More details on how to use the tool can
+be found on the processing [HapMap III reference data vignette](HapMap.html).
+
+Additionally, the ancestry prediction function requires that the data is in plink 2 format and has variant identifiers in the format: 1:12345[hg38]. The function 
+`ancestry_prediction` will call helper functions, `convert_to_plink2()` and `rename_variant_identifiers()` to format the data as directed by the parameters.
+The function returns: 
+  (i) prediction_prob: Dataframe of family ids, sample ids, and model probability of the each ancestry.
+  (ii) prediction_majority: Dataframe of family ids, sample ids, and ancestry with highest model probability.
+  (iii) exclude_ancestry: A list of ids to be excluded based on user-inputted ancestries
+to the ancestral predictions of the samples
+  (iv) p_ancestry: Bar graph of the ancestry model probabilities. 
+
+```{r ancestry prediction, eval=FALSE}
+path2plink2 <- "/Users/syed/bin/plink2"
+path2load_mat <- "path/to/load_mat/merged_chrs.postQC.train.pca"
+
+anc_check <- ancestry_prediction(indir=indir, qcdir=qcdir, name=name,
+                                         interactive=TRUE,
+                                         path2plink2=path2plink2, 
+                                         path2load_mat = path2load_mat)
+```
+
+```{r load anc graph, out.width = "500px", echo=FALSE, fig.align='center'}
+#| fig.alt: >
+#|   marker missingness
+knitr::include_graphics("ancestral_prediction.png")
+```
 
 ## Markers with excessive missingness rate
 Markers with excessive missingness rate are removed as they are considered 

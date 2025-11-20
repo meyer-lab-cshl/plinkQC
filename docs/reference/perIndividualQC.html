@@ -104,7 +104,10 @@ genetic ancestry.</p>
 <span>  path2plink <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  showPlinkOutput <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  path2plink2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  do.run_superpop_classification <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  dont.ancestry_prediction <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  do.run_ancestry_prediction <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  do.evaluate_ancestry_prediction <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  excludeAncestry <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  path2load_mat <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plink2format <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  var_format <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -426,16 +429,6 @@ platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href="https://jeroen.r-universe.dev/sys/reference/exec.html" class="external-link">exec</a></code>('plink').</p></dd>
 
 
-<dt id="arg-do-run-superpop-classification">do.run_superpop_classification<a class="anchor" aria-label="anchor" href="#arg-do-run-superpop-classification"></a></dt>
-<dd><p>[logical] If TRUE, run
-<code><a href="superpop_classification.html">superpop_classification</a></code></p></dd>
-
-
-<dt id="arg-path-load-mat">path2load_mat<a class="anchor" aria-label="anchor" href="#arg-path-load-mat"></a></dt>
-<dd><p>[character] /path/to/directory where loading matrices are
-kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData</p></dd>
-
-
 <dt id="arg-plink-format">plink2format<a class="anchor" aria-label="anchor" href="#arg-plink-format"></a></dt>
 <dd><p>[logical] If TRUE, data is in plink2 format already and
 convert_to_plink2 will not be run</p></dd>
@@ -444,6 +437,11 @@ convert_to_plink2 will not be run</p></dd>
 <dt id="arg-var-format">var_format<a class="anchor" aria-label="anchor" href="#arg-var-format"></a></dt>
 <dd><p>[logical] If TRUE, variant identifiers are in correct
 format already and rename_variant_identifiers will not be run</p></dd>
+
+
+<dt id="arg-do-run-superpop-classification">do.run_superpop_classification<a class="anchor" aria-label="anchor" href="#arg-do-run-superpop-classification"></a></dt>
+<dd><p>[logical] If TRUE, run
+<code>superpop_classification</code></p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -478,6 +476,7 @@ function individually.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package<span class="op">=</span><span class="st">"plinkQC"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">"data"</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># All quality control checks</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># whole dataset</span></span></span>

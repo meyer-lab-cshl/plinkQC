@@ -54,7 +54,10 @@ perIndividualQC(
   path2plink = NULL,
   showPlinkOutput = TRUE,
   path2plink2 = NULL,
-  do.run_superpop_classification = TRUE,
+  dont.ancestry_prediction = FALSE,
+  do.run_ancestry_prediction = TRUE,
+  do.evaluate_ancestry_prediction = TRUE,
+  excludeAncestry = NULL,
   path2load_mat = NULL,
   plink2format = FALSE,
   var_format = FALSE
@@ -274,17 +277,14 @@ should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 
-\item{do.run_superpop_classification}{[logical] If TRUE, run 
-\code{\link{superpop_classification}}}
-
-\item{path2load_mat}{[character] /path/to/directory where loading matrices are 
-kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData}
-
 \item{plink2format}{[logical] If TRUE, data is in plink2 format already and 
 convert_to_plink2 will not be run}
 
 \item{var_format}{[logical] If TRUE, variant identifiers are in correct 
 format already and rename_variant_identifiers will not be run}
+
+\item{do.run_superpop_classification}{[logical] If TRUE, run 
+\code{\link{superpop_classification}}}
 }
 \value{
 Named [list] with i) fail_list, a named [list] with 1.
@@ -320,6 +320,7 @@ function individually.
 indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 name <- "data"
+
 # All quality control checks
 \dontrun{
 # whole dataset

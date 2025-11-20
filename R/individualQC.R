@@ -162,7 +162,10 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             title_size = 9,
                             path2plink=NULL, showPlinkOutput=TRUE,
                             path2plink2=NULL, 
-                            do.run_superpop_classification=TRUE,
+                            dont.ancestry_prediction=FALSE,
+                            do.run_ancestry_prediction=TRUE,
+                            do.evaluate_ancestry_prediction=TRUE,
+                            excludeAncestry = NULL,
                             path2load_mat = NULL, 
                             plink2format=FALSE,
                             var_format=FALSE
@@ -172,8 +175,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     highIBD <- NULL
     outlying_heterozygosity <- NULL
     mismatched_sex <- NULL
-    ancestry_pred_maj <- NULL
-    ancestry_pred_prob <- NULL
+    ancestry_excluded <- NULL
 
     p_sexcheck <- NULL
     p_het_imiss <- NULL
@@ -351,6 +353,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                     file=paste(out, ".fail-IBD.IDs", sep=""),
                     row.names=FALSE, quote=FALSE, col.names=FALSE,
                     sep="\t")
+
         if (!is.null(fail_relatedness$failIDs)  &&
             nrow(fail_relatedness$failIDs) != 0) {
           highIBD <- select(fail_relatedness$failIDs,
@@ -360,29 +363,14 @@ perIndividualQC <- function(indir, name, qcdir=indir,
       }
     }
     
-    if (do.run_superpop_classification) {
-      if ((plink2format == FALSE) | (var_format == FALSE)) { 
-        ancestry_predictions <- run_ancestry_format(indir=indir, name=name, qcdir=qcdir, 
-                            verbose=verbose,
-                            path2plink2=path2plink2,
-                            keep_individuals=keep_individuals,
-                            remove_individuals=remove_individuals,
-                            exclude_markers=exclude_markers,
-                            extract_markers=extract_markers,
-                            showPlinkOutput=showPlinkOutput,
-                            format = "@:#[hg38]",
-                            plink2format = plink2format,
-                            var_format = var_format,
-                            path2load_mat=path2load_mat, 
-                            legend_text_size=legend_text_size,
-                            legend_title_size=legend_title_size, 
-                            axis_text_size=axis_text_size,
-                            axis_title_size=axis_title_size, 
-                            title_size=title_size,
-                            legend_position = "bottom")
-      }
-      else { 
-        ancestry_predictions <- superpop_classification(indir=indir, name=name, qcdir=qcdir, 
+    
+    if (!dont.ancestry_prediction) {
+      sscore_path <- indir
+      ancestry_name <- name
+
+      if (do.run_ancestry_prediction) {
+        if ((plink2format == FALSE) | (var_format == FALSE)) { 
+          ancestry_name <- run_ancestry_format(indir=indir, name=name, qcdir=qcdir, 
                                                       verbose=verbose,
                                                       path2plink2=path2plink2,
                                                       keep_individuals=keep_individuals,
@@ -390,23 +378,63 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                       exclude_markers=exclude_markers,
                                                       extract_markers=extract_markers,
                                                       showPlinkOutput=showPlinkOutput,
-                                                      path2load_mat=path2load_mat, 
-                                                      legend_text_size=legend_text_size,
-                                                      legend_title_size=legend_title_size, 
-                                                      axis_text_size=axis_text_size,
-                                                      axis_title_size=axis_title_size, 
-                                                      title_size=title_size,
-                                                      legend_position = "bottom")
+                                                      format = "@:#[hg38]",
+                                                      plink2format = plink2format,
+                                                      var_format = var_format,
+                                                      path2load_mat=path2load_mat)
+        }
+        else { 
+          run <- run_ancestry_prediction(qcdir=qcdir, indir=indir, name=name,
+                                                              path2plink2=path2plink2,
+                                                              path2load_mat=path2load_mat,
+                                                              keep_individuals=keep_individuals,
+                                                              remove_individuals=remove_individuals,
+                                                              extract_markers=extract_markers,
+                                                              exclude_markers=exclude_markers,
+                                                              showPlinkOutput=showPlinkOutput)
+        }
+        sscore_path <- qcdir
       }
-      ancestry_pred_maj <- ancestry_predictions$prediction_majority
-      ancestry_pred_prob <- ancestry_predictions$prediction_prob
-      p_ancestry <- ancestry_predictions$p_ancestry
+      
+      if (do.evaluate_ancestry_prediction) {
+        if (verbose) message("Prediction of ancestries")
+        ancestry_exclusion <- evaluate_ancestry_prediction(qcdir=sscore_path,
+                                                       name=ancestry_name,
+                                                       excludeAncestry = excludeAncestry,
+                                                       legend_text_size =
+                                                         legend_text_size,
+                                                       legend_title_size =
+                                                         legend_title_size,
+                                                       axis_text_size =
+                                                         axis_text_size,
+                                                       axis_title_size =
+                                                         axis_title_size,
+                                                       title_size =
+                                                         title_size,
+                                                       interactive=FALSE,
+                                                       legend_position = "bottom")
+    
+        write.table(ancestry_exclusion$exclude_ancestry,
+                    file=paste(out, ".exclude-ancestry.IDs", sep=""),
+                    row.names=FALSE, quote=FALSE, col.names=FALSE,
+                    sep="\t")
+        
+        if (!is.null(ancestry_exclusion$exclude_ancestry)  &&
+            (nrow(ancestry_exclusion$exclude_ancestry) !=0)) {
+          ancestry_excluded <- select(ancestry_exclusion$exclude_ancestry,
+                            .data$FID, .data$IID)
+        }
+        p_ancestry <- ancestry_exclusion$p_ancestry
+      }
     }
-
+    
+    
+   
     fail_list <- list(missing_genotype=missing_genotype,
                       highIBD=highIBD,
                       outlying_heterozygosity=outlying_heterozygosity,
-                      mismatched_sex=mismatched_sex)
+                      mismatched_sex=mismatched_sex,
+                      ancestry_excluded=ancestry_excluded)
 
     if(verbose) message(paste("Combine fail IDs into ", out, ".fail.IDs",
                               sep=""))
@@ -485,9 +513,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     if (interactive) {
       print(p_sampleQC)
     }
-    return(list(fail_list=fail_list, p_sampleQC=p_sampleQC, 
-                ancestry_pred_prob=ancestry_pred_prob, 
-                ancestry_pred_maj=ancestry_pred_maj))
+    return(list(fail_list=fail_list, p_sampleQC=p_sampleQC))
 }
 
 #' Overview of per sample QC
@@ -523,7 +549,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' if passing the QC and entries=1 if failing that particular QC and iii)
 #' fail_QC_and_ancestry containing a [data.frame] with samples that failed
 #' ancestry and QC checks with IID, FID, QC_fail and
-#' Ancestry_fail, with entries=0 if passing and entries=1 if failing that check,
+#' Ancestry_exclusion, with entries=0 if passing and entries=1 if failing that check,
 #' iii) p_overview, a ggplot2-object 'containing' a sub-paneled plot with the
 #' QC-plots.
 #' @export
@@ -579,7 +605,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
     if ("ancestry" %in% names(fail_list) && !is.null(fail_list$ancestry)) {
         # b) overview of QC and ancestry fails
         fail_all <- list(QC_fail=unique_samples_fail_wo_ancestry,
-                         Ancestry_fail=fail_list$ancestry$IID)
+                         Ancestry_exclusion=fail_list$ancestry$IID)
 
         unique_samples_fail_all <- unique(unlist(fail_all))
         fail_counts_all <- UpSetR::fromList(fail_all)
@@ -591,7 +617,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
                            # title=
                            # "Intersection between QC and ancestry failures",
                            mainbar.y.label=
-                               "Samples failing QC and ancestry checks",
+                               "Samples failing QC and ancestry exclusion",
                            sets.x.label="Sample fails per QC check",
                            empty.intersections = "on", text.scale=1.2,
                            main.bar.color="#7570b3", matrix.color="#7570b3",
@@ -617,7 +643,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
     nr_fail_samples <- length(unique(samples_fail_all$IID))
     return(list(nr_fail_samples=nr_fail_samples,
                 fail_QC=fail_counts_wo_ancestry,
-                fail_QC_and_ancestry=fail_counts_all,
+                fail_QC_and_ancestry_exclusion=fail_counts_all,
                 p_overview=p_overview))
 }
 

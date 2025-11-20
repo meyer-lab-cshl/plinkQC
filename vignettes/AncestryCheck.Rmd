@@ -1,5 +1,5 @@
 ---
-title: "Ancestry estimation based on reference samples of known ethnicities"
+title: "Training a Random Forest Classifier for Population Structure Identification"
 author: "Maha Syed and Caroline Walter"
 date: "`r Sys.Date()`"
 output:
@@ -26,8 +26,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-## Training Your Own Random Forest Classifier 
 For non-human genotype data, there might still be the need to detect and predict population structure. In addition, in some rare cases, there might not be a
 large enough overlap in the SNP genotypes and the trained reference data (we 
 recommend > 5% overlap). In this case, we recommend training your own random
