@@ -25,7 +25,7 @@ genetic ancestry."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-documentation" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Documentation"><span class="fa fa-file"></span> Documentation</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-documentation"><li><a class="dropdown-item" href="../articles/plinkQC.html">Step-by-step QC</a></li>
-    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Ancestry</a></li>
+    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Population structure identification by Random Forest</a></li>
     <li><a class="dropdown-item" href="../articles/HapMap.html">HapMap III reference</a></li>
     <li><a class="dropdown-item" href="../articles/Genomes1000.html">1000 Genomes reference</a></li>
   </ul></li>
@@ -429,6 +429,35 @@ platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by <code><a href="https://jeroen.r-universe.dev/sys/reference/exec.html" class="external-link">exec</a></code>('plink').</p></dd>
 
 
+<dt id="arg-dont-ancestry-prediction">dont.ancestry_prediction<a class="anchor" aria-label="anchor" href="#arg-dont-ancestry-prediction"></a></dt>
+<dd><p>[logical] If TRUE, no ancestry prediction will be
+conducted; short for do.run_ancestry_prediction=FALSE and
+do.evaluate_ancestry_prediction=FALSE. Takes precedence over
+do.run_ancestry_prediction and do.evaluate_ancestry_prediction</p></dd>
+
+
+<dt id="arg-do-run-ancestry-prediction">do.run_ancestry_prediction<a class="anchor" aria-label="anchor" href="#arg-do-run-ancestry-prediction"></a></dt>
+<dd><p>[logical] If TRUE, run
+<code><a href="run_ancestry_prediction.html">run_ancestry_prediction</a></code>.</p></dd>
+
+
+<dt id="arg-do-evaluate-ancestry-prediction">do.evaluate_ancestry_prediction<a class="anchor" aria-label="anchor" href="#arg-do-evaluate-ancestry-prediction"></a></dt>
+<dd><p>[logical] If TRUE, run
+<code><a href="evaluate_ancestry_prediction.html">evaluate_ancestry_prediction</a></code>.</p></dd>
+
+
+<dt id="arg-excludeancestry">excludeAncestry<a class="anchor" aria-label="anchor" href="#arg-excludeancestry"></a></dt>
+<dd><p>[character] Ancestries to be excluded (if any). Options are:
+Africa, America, Central_South_Asia, East_Asia, Europe, and Middle_East. Strings
+must be spelled exactly as shown.</p></dd>
+
+
+<dt id="arg-path-load-mat">path2load_mat<a class="anchor" aria-label="anchor" href="#arg-path-load-mat"></a></dt>
+<dd><p>[character] /path/to/directory where loading matrices are
+kept. This can be downloaded from the github repo. Note that the name of the file
+before the .eigenvec.allele or .acount must be included in file path.</p></dd>
+
+
 <dt id="arg-plink-format">plink2format<a class="anchor" aria-label="anchor" href="#arg-plink-format"></a></dt>
 <dd><p>[logical] If TRUE, data is in plink2 format already and
 convert_to_plink2 will not be run</p></dd>
@@ -437,11 +466,6 @@ convert_to_plink2 will not be run</p></dd>
 <dt id="arg-var-format">var_format<a class="anchor" aria-label="anchor" href="#arg-var-format"></a></dt>
 <dd><p>[logical] If TRUE, variant identifiers are in correct
 format already and rename_variant_identifiers will not be run</p></dd>
-
-
-<dt id="arg-do-run-superpop-classification">do.run_superpop_classification<a class="anchor" aria-label="anchor" href="#arg-do-run-superpop-classification"></a></dt>
-<dd><p>[logical] If TRUE, run
-<code>superpop_classification</code></p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -25,7 +25,7 @@ which QC checks individuals failed or passed."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-documentation" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Documentation"><span class="fa fa-file"></span> Documentation</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-documentation"><li><a class="dropdown-item" href="../articles/plinkQC.html">Step-by-step QC</a></li>
-    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Ancestry</a></li>
+    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Population structure identification by Random Forest</a></li>
     <li><a class="dropdown-item" href="../articles/HapMap.html">HapMap III reference</a></li>
     <li><a class="dropdown-item" href="../articles/Genomes1000.html">1000 Genomes reference</a></li>
   </ul></li>
@@ -92,8 +92,8 @@ other_arguments) or pdf(outfile) print(p_overview) dev.off().</p></dd>
 samples that failed QC steps (excluding ancestry) with IID, FID,
 all QC steps applied by perIndividualQC (max=4), with entries=0
 if passing the QC and entries=1 if failing that particular QC and iii)
-fail_QC_and_ancestry containing a [data.frame] with samples that failed
-ancestry and QC checks with IID, FID, QC_fail and
+fail_QC_and_ancestry_exclusion containing a [data.frame] with samples that are excluded
+for ancestry  and QC checks with IID, FID, QC_fail and
 Ancestry_exclusion, with entries=0 if passing and entries=1 if failing that check,
 iii) p_overview, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots.</p>

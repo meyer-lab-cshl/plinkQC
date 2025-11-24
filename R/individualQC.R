@@ -30,20 +30,26 @@
 #' conducted; short for do.run_check_relatedness=FALSE and
 #' do.evaluate_check_relatedness=FALSE. Takes precedence over
 #' do.run_check_relatedness and do.evaluate_check_relatedness.
+#' @param dont.ancestry_prediction [logical] If TRUE, no ancestry prediction will be
+#' conducted; short for do.run_ancestry_prediction=FALSE and
+#' do.evaluate_ancestry_prediction=FALSE. Takes precedence over
+#' do.run_ancestry_prediction and do.evaluate_ancestry_prediction
 #' @param do.run_check_sex [logical] If TRUE, run \code{\link{run_check_sex}}
 #' @param do.run_check_het_and_miss [logical] If TRUE, run
 #' \code{\link{run_check_heterozygosity}} and
 #' \code{\link{run_check_missingness}}
 #' @param do.run_check_relatedness [logical] If TRUE, run
 #' \code{\link{run_check_relatedness}}.
+#' @param do.run_ancestry_prediction [logical] If TRUE, run
+#' \code{\link{run_ancestry_prediction}}.
 #' @param do.evaluate_check_sex [logical] If TRUE, run
 #' \code{\link{evaluate_check_sex}}
 #' @param do.evaluate_check_het_and_miss [logical] If TRUE, run
 #' \code{\link{evaluate_check_het_and_miss}}.
-#' @param do.run_superpop_classification [logical] If TRUE, run 
-#' \code{\link{superpop_classification}}
 #' @param do.evaluate_check_relatedness [logical] If TRUE, run
 #' \code{\link{evaluate_check_relatedness}}.
+#' @param do.evaluate_ancestry_prediction [logical] If TRUE, run
+#' \code{\link{evaluate_ancestry_prediction}}.
 #' @param subplot_label_size [integer] Size of the subplot labeling.
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
@@ -87,6 +93,9 @@
 #' on the parameters and outputs, check these function documentations. For
 #' detailed output for fail IIDs (instead of simple IID lists), run each
 #' function individually.
+#' @param excludeAncestry [character] Ancestries to be excluded (if any). Options are:
+#' Africa, America, Central_South_Asia, East_Asia, Europe, and Middle_East. Strings 
+#' must be spelled exactly as shown.
 #' @export
 #' @examples
 #' indir <- system.file("extdata", package="plinkQC")
@@ -532,7 +541,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' highIBDTh, iii) outlying_heterozygosity containing a [vector] with sample
 #' IIDs failing selected the heterozygosity threshold hetTh, iv) mismatched_sex
 #' containing a [vector] with the sample IIDs failing the sexcheck based on
-#' SNPSEX and selected femaleTh/maleTh, and
+#' SNPSEX and selected femaleTh/maleTh, and 
 #' v) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 #' QC-plots of \code{\link{check_sex}},
 #' \code{\link{check_het_and_miss}}, and
@@ -547,8 +556,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 #' samples that failed QC steps (excluding ancestry) with IID, FID,
 #' all QC steps applied by perIndividualQC (max=4), with entries=0
 #' if passing the QC and entries=1 if failing that particular QC and iii)
-#' fail_QC_and_ancestry containing a [data.frame] with samples that failed
-#' ancestry and QC checks with IID, FID, QC_fail and
+#' fail_QC_and_ancestry_exclusion containing a [data.frame] with samples that are excluded
+#' for ancestry  and QC checks with IID, FID, QC_fail and
 #' Ancestry_exclusion, with entries=0 if passing and entries=1 if failing that check,
 #' iii) p_overview, a ggplot2-object 'containing' a sub-paneled plot with the
 #' QC-plots.
@@ -570,81 +579,81 @@ perIndividualQC <- function(indir, name, qcdir=indir,
 
 overviewPerIndividualQC <- function(results_perIndividualQC,
                                     interactive=FALSE) {
-    if (length(perIndividualQC) == 2 &&
-        !all(names(results_perIndividualQC) == c("fail_list", "p_sampleQC"))) {
-        stop("results_perIndividualQC not direct output of perIndividualQC")
-    }
-    fail_list <- results_perIndividualQC$fail_list
-    samples_fail_all <- do.call(rbind, fail_list)
-
-    # a) overview QC fails independent of ethnicity
-    fail_list_wo_ancestry <- fail_list[!names(fail_list) == "ancestry"]
-    id_list_wo_ancestry <- sapply(fail_list_wo_ancestry, function(x) x$IID)
-    unique_samples_fail_wo_ancestry <- unique(unlist(id_list_wo_ancestry))
-    fail_counts_wo_ancestry <- UpSetR::fromList(id_list_wo_ancestry)
-    rownames(fail_counts_wo_ancestry) <- unique_samples_fail_wo_ancestry
-
-    p <- UpSetR::upset(fail_counts_wo_ancestry,
+  if (length(perIndividualQC) == 2 &&
+      !all(names(results_perIndividualQC) == c("fail_list", "p_sampleQC"))) {
+    stop("results_perIndividualQC not direct output of perIndividualQC")
+  }
+  fail_list <- results_perIndividualQC$fail_list
+  samples_fail_all <- do.call(rbind, fail_list)
+  
+  # a) overview QC fails independent of ancestry
+  fail_list_wo_ancestry <- fail_list[!names(fail_list) == "ancestry"]
+  id_list_wo_ancestry <- sapply(fail_list_wo_ancestry, function(x) x$IID)
+  unique_samples_fail_wo_ancestry <- unique(unlist(id_list_wo_ancestry))
+  fail_counts_wo_ancestry <- UpSetR::fromList(id_list_wo_ancestry)
+  rownames(fail_counts_wo_ancestry) <- unique_samples_fail_wo_ancestry
+  
+  p <- UpSetR::upset(fail_counts_wo_ancestry,
+                     order.by = "freq",
+                     empty.intersections = "on", text.scale=1.2,
+                     # Include when UpSetR v1.4.1 is released
+                     #title="Overview quality control failures",
+                     mainbar.y.label="Samples failing multiple QC checks",
+                     sets.x.label="Sample fails per QC check",
+                     main.bar.color="#1b9e77", matrix.color="#1b9e77",
+                     sets.bar.color="#d95f02")
+  p_qc <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
+                             nrow=2, align='v', rel_heights = c(3,1),
+                             rel_widths = c(2,3))
+  if (interactive) {
+    print(p_qc)
+  }
+  
+  fail_counts_wo_ancestry <- merge(samples_fail_all, fail_counts_wo_ancestry,
+                                   by.x=2, by.y=0)
+  if ("ancestry" %in% names(fail_list) && !is.null(fail_list$ancestry_excluded)) {
+    # b) overview of QC and ancestry fails
+    fail_all <- list(QC_fail=unique_samples_fail_wo_ancestry,
+                     Ancestry_fail=fail_list$ancestry_excluded$IID)
+    
+    unique_samples_fail_all <- unique(unlist(fail_all))
+    fail_counts_all <- UpSetR::fromList(fail_all)
+    rownames(fail_counts_all) <- unique_samples_fail_all
+    
+    m <- UpSetR::upset(fail_counts_all,
                        order.by = "freq",
-                       empty.intersections = "on", text.scale=1.2,
                        # Include when UpSetR v1.4.1 is released
-                       #title="Overview quality control failures",
-                       mainbar.y.label="Samples failing multiple QC checks",
-                       sets.x.label="Sample fails per QC check",
-                       main.bar.color="#1b9e77", matrix.color="#1b9e77",
-                       sets.bar.color="#d95f02")
-    p_qc <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
-                               nrow=2, align='v', rel_heights = c(3,1),
-                               rel_widths = c(2,3))
+                       # title=
+                       # "Intersection between QC and ancestry failures",
+                       mainbar.y.label=
+                         "Samples failing QC checks and excluded for ancestry",
+                       sets.x.label="Sample excluded per QC check",
+                       empty.intersections = "on", text.scale=1.2,
+                       main.bar.color="#7570b3", matrix.color="#7570b3",
+                       sets.bar.color="#e7298a" )
+    p_all <- cowplot::plot_grid(NULL, m$Main_bar, m$Sizes, m$Matrix,
+                                nrow=2, align='v', rel_heights = c(3,1),
+                                rel_widths = c(2,3))
     if (interactive) {
-        print(p_qc)
+      print(p_all)
     }
-
-    fail_counts_wo_ancestry <- merge(samples_fail_all, fail_counts_wo_ancestry,
-                                     by.x=2, by.y=0)
-    if ("ancestry" %in% names(fail_list) && !is.null(fail_list$ancestry)) {
-        # b) overview of QC and ancestry fails
-        fail_all <- list(QC_fail=unique_samples_fail_wo_ancestry,
-                         Ancestry_exclusion=fail_list$ancestry$IID)
-
-        unique_samples_fail_all <- unique(unlist(fail_all))
-        fail_counts_all <- UpSetR::fromList(fail_all)
-        rownames(fail_counts_all) <- unique_samples_fail_all
-
-        m <- UpSetR::upset(fail_counts_all,
-                           order.by = "freq",
-                           # Include when UpSetR v1.4.1 is released
-                           # title=
-                           # "Intersection between QC and ancestry failures",
-                           mainbar.y.label=
-                               "Samples failing QC and ancestry exclusion",
-                           sets.x.label="Sample fails per QC check",
-                           empty.intersections = "on", text.scale=1.2,
-                           main.bar.color="#7570b3", matrix.color="#7570b3",
-                           sets.bar.color="#e7298a" )
-        p_all <- cowplot::plot_grid(NULL, m$Main_bar, m$Sizes, m$Matrix,
-                                    nrow=2, align='v', rel_heights = c(3,1),
-                                    rel_widths = c(2,3))
-        if (interactive) {
-            print(p_all)
-        }
-        fail_counts_all <- merge(samples_fail_all, fail_counts_all,
-                                 by.x=2, by.y=0)
-
-        p_overview <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
-                                         NULL, m$Main_bar, m$Sizes, m$Matrix,
-                                         nrow=4, align='v',
-                                         rel_heights = c(3,1,3,1),
-                                         rel_widths = c(2,3))
-    } else {
-        p_overview <- p_qc
-        fail_counts_all <- NULL
-    }
-    nr_fail_samples <- length(unique(samples_fail_all$IID))
-    return(list(nr_fail_samples=nr_fail_samples,
-                fail_QC=fail_counts_wo_ancestry,
-                fail_QC_and_ancestry_exclusion=fail_counts_all,
-                p_overview=p_overview))
+    fail_counts_all <- merge(samples_fail_all, fail_counts_all,
+                             by.x=2, by.y=0)
+    
+    p_overview <- cowplot::plot_grid(NULL, p$Main_bar, p$Sizes, p$Matrix,
+                                     NULL, m$Main_bar, m$Sizes, m$Matrix,
+                                     nrow=4, align='v',
+                                     rel_heights = c(3,1,3,1),
+                                     rel_widths = c(2,3))
+  } else {
+    p_overview <- p_qc
+    fail_counts_all <- NULL
+  }
+  nr_fail_samples <- length(unique(samples_fail_all$IID))
+  return(list(nr_fail_samples=nr_fail_samples,
+              fail_QC=fail_counts_wo_ancestry,
+              fail_QC_and_ancestry_exclusion=fail_counts_all,
+              p_overview=p_overview))
 }
 
 #' Identification of individuals with discordant sex information

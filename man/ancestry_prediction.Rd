@@ -26,7 +26,6 @@ ancestry_prediction(
   plink2format = FALSE,
   var_format = FALSE,
   excludeAncestry = NULL,
-  dont.ancestry_prediction = FALSE,
   do.run_ancestry_prediction = TRUE,
   do.evaluate_ancestry_prediction = TRUE
 )
@@ -58,9 +57,8 @@ platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 
 \item{path2load_mat}{[character] /path/to/directory where loading matrices are 
-kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData.
-Note that file names before the .acount or .eigenvec.allele must be included
-in file path.}
+kept. This can be downloaded from the github repo. Note that the name of the file 
+before the .eigenvec.allele or .acount must be included in file path.}
 
 \item{legend_text_size}{[integer] Size for legend text.}
 
@@ -114,6 +112,12 @@ format already and rename_variant_identifiers will not be run}
 \item{excludeAncestry}{[character] Ancestries to be excluded (if any). Options are:
 Africa, America, Central_South_Asia, East_Asia, Europe, and Middle_East. Strings 
 must be spelled exactly as shown.}
+
+\item{do.run_ancestry_prediction}{[logical] If TRUE, run
+\code{\link{run_ancestry_prediction}}.}
+
+\item{do.evaluate_ancestry_prediction}{[logical] If TRUE, run
+\code{\link{evaluate_ancestry_prediction}}.}
 }
 \value{
 Three dataframes and a visualization of the ancestral probabilities. 

@@ -51,9 +51,6 @@ must be spelled exactly as shown.}
 printed to standard out.}
 
 \item{legend_position}{[character] Legend position for the plot.}
-
-\item{path2load_mat}{[character] /path/to/directory where loading matrices are 
-kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData}
 }
 \value{
 Three dataframes and a visualization of the ancestral probabilities. 
@@ -65,7 +62,7 @@ in a bargraph.
 }
 \description{
 Predicts the ancestry of inputted samples using plink2. Uses the output of
-\code{\link{run_ancestry_identification}} as input in a random forest classifier 
+\code{\link{run_ancestry_prediction}} as input in a random forest classifier 
 to predict the genomic ancestry of samples within six continental groups: 
 AFR, AMR, EAS, EUR, CSA, and MID. Genomic data version hg38 with variant 
 identifiers in the format of 1:12345[hg38] is needed for the function to work

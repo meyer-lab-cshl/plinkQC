@@ -35,7 +35,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-documentation" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Documentation"><span class="fa fa-file"></span> Documentation</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-documentation">
 <li><a class="dropdown-item" href="../articles/plinkQC.html">Step-by-step QC</a></li>
-    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Ancestry</a></li>
+    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Population structure identification by Random Forest</a></li>
     <li><a class="dropdown-item" href="../articles/HapMap.html">HapMap III reference</a></li>
     <li><a class="dropdown-item" href="../articles/Genomes1000.html">1000 Genomes reference</a></li>
   </ul>
@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Hannah
 Meyer</h4>
             
-            <h4 data-toc-skip class="date">2025-11-20</h4>
+            <h4 data-toc-skip class="date">2025-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/HapMap.Rmd" class="external-link"><code>vignettes/HapMap.Rmd</code></a></small>
       <div class="d-none name"><code>HapMap.Rmd</code></div>
@@ -85,8 +85,9 @@ reference dataset.</p>
 samples of the HapMap study [<span class="citation">[1]</span>]<span class="citation">[2]</span><span class="citation">[3]</span> as a
 reference dataset. Using this reference, population structure down to
 large-scale continental ancestry can be detected. A step-by-step
-instruction on how to conduct this analysis is described in this <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry
-estimation vignette</a>.</p>
+instruction on how to conduct this analysis by training a random forest
+classifier is described in the vignette <a href="Genomes1000.html">Classifier training for ancestry
+estimation</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
@@ -108,9 +109,7 @@ and move them to the log directory here after each analysis step.</p>
 </h3>
 <p>Hapmap phase 3 data (HapMapIII) is available in <a href="https://www.cog-genomics.org/plink/1.9/input#ped" class="external-link">PLINK text
 format</a> at ncbi. In addition, a sample file with information about
-the individuals’ ancestry is available and should be downloaded as in
-input for <code>plinkQC::chec_Ancestry()</code>. The following code
-chunk downloads and unzips the data.</p>
+the individuals’ ancestry is available and should be downloaded.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$refdir</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="va">ftp</span><span class="op">=</span>ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/2009-01_phaseIII/plink_format/</span>
@@ -177,10 +176,7 @@ positions</p>
 <h3 id="update-the-reference-data">Update the reference data<a class="anchor" aria-label="anchor" href="#update-the-reference-data"></a>
 </h3>
 <p>We can now use PLINK to extract the mappable variants from the old
-build and update their position. After these steps, the HapMap III
-dataset can be used for inferring study ancestry as described in the
-corresponding <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry
-estimation vignette</a>.</p>
+build and update their position.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> <span class="va">$refdir</span>/HapMapIII_NCBI36 <span class="dt">\</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>    <span class="at">--extract</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.snps <span class="dt">\</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="at">--update-map</span> <span class="va">$refdir</span>/HapMapIII_CGRCh37.pos <span class="dt">\</span></span>

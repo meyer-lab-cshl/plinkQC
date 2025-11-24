@@ -80,6 +80,10 @@ convert_to_plink2 will not be run}
 
 \item{var_format}{[logical] If TRUE, variant identifiers are in correct 
 format already and rename_variant_identifiers will not be run}
+
+\item{path2load_mat}{[character] /path/to/directory where loading matrices are 
+kept. This can be downloaded from the github repo. Note that the name of the file 
+before the .eigenvec.allele or .acount must be included in file path.}
 }
 \value{
 Name of file with correct format

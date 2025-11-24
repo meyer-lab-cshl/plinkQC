@@ -37,7 +37,7 @@ HapMap study [@HapMap2005][@HapMap2007][@HapMap2010] as a reference dataset.
 Using this reference, population structure down to large-scale continental
 ancestry can be detected. A step-by-step instruction on how to conduct this
 analysis by training a random forest classifier is described in 
-the vignette [Classifier training for ancestry estimation](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+the vignette [Classifier training for ancestry estimation](Genomes1000.html).
 
 
 # Workflow
@@ -58,8 +58,7 @@ mkdir -r $qcdir/plink_log
 Hapmap phase 3 data (HapMapIII) is available in
 [PLINK text format](https://www.cog-genomics.org/plink/1.9/input#ped) at ncbi.
 In addition, a sample file with information about the individuals' ancestry
-is available and should be downloaded as in input for `plinkQC::chec_Ancestry()`.
-The following code chunk downloads and unzips the data.
+is available and should be downloaded.
 ```{bash download, eval=FALSE}
 cd $refdir
 
@@ -143,8 +142,7 @@ awk '{print $4, $3}' $refdir/HapMapIII_CGRCh37 > $refdir/HapMapIII_CGRCh37.pos
 
 ## Update the reference data
 We can now use PLINK to extract the mappable variants from the old build and
-update their position. After these steps, the HapMap III dataset can be used 
-for inferring study ancestry as described in the corresponding [Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+update their position.
 ```{bash update annotation, eval=FALSE}
 plink --bfile $refdir/HapMapIII_NCBI36 \
     --extract $refdir/HapMapIII_CGRCh37.snps \

@@ -12,6 +12,7 @@ cleanData(
   filterHeterozygosity = TRUE,
   filterSampleMissingness = TRUE,
   filterRelated = TRUE,
+  filterAncestry = TRUE,
   filterSNPMissingness = TRUE,
   lmissTh = 0.01,
   filterHWE = TRUE,
@@ -64,6 +65,12 @@ do.evaluate_check_het_and_miss set to TRUE).}
 check (via \code{\link{check_relatedness}} or \code{\link{perIndividualQC}}).
 Requires file qcdir/name.fail-IBD.IDs (automatically created by
 \code{\link{perIndividualQC}} if do.evaluate_check_relatedness set to TRUE).}
+
+\item{filterAncestry}{[logical] Set to exclude samples that are
+excluded for ancestry (via \code{\link{ancestry_prediction}} or 
+\code{\link{perIndividualQC}}).
+Requires file qcdir/name.exclude-ancestry.IDs (automatically created by
+\code{\link{perIndividualQC}} if do.evaluate_check_sex set to TRUE).}
 
 \item{filterSNPMissingness}{[logical] Set to exclude markers that have
 excessive missing rates across samples (via

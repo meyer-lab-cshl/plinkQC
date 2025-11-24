@@ -10,7 +10,7 @@ fail_sexIDs <- read.table(paste(qcdir, '/', name, ".fail-sexcheck.IDs", sep=""))
 fail_highIBDIDs <- read.table(paste(qcdir, '/', name, ".fail-IBD.IDs", sep=""))
 fail_imissIDs <- read.table(paste(qcdir, '/', name, ".fail-imiss.IDs", sep=""))
 fail_hetIDs <- read.table(paste(qcdir, '/', name, ".fail-het.IDs", sep=""))
-fail_ancestryIDs <- read.table(paste(qcdir, '/', name, ".exclude-ancestry.IDs",
+exclude_ancestryIDs <- read.table(paste(qcdir, '/', name, ".exclude-ancestry.IDs",
                                      sep=""))
 refSamples <- read.table(paste(qcdir, '/', refSamplesFile, sep=""), header=TRUE,
                          stringsAsFactors=FALSE)
@@ -172,6 +172,6 @@ test_that('perIndividualQC works if all samples pass', {
                         do.run_check_sex = FALSE,
                         do.run_check_relatedness = FALSE,
                         do.run_check_het_and_miss = FALSE,
-                        do.run_superpop_classification = FALSE)
+                        dont.ancestry_prediction = TRUE)
     expect_equal(unlist(fail_individuals$fail_list), NULL)
 })

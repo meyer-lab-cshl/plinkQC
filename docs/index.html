@@ -37,7 +37,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-documentation" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Documentation"><span class="fa fa-file"></span> Documentation</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-documentation">
 <li><a class="dropdown-item" href="articles/plinkQC.html">Step-by-step QC</a></li>
-    <li><a class="dropdown-item" href="articles/AncestryCheck.html">Ancestry</a></li>
+    <li><a class="dropdown-item" href="articles/AncestryCheck.html">Population structure identification by Random Forest</a></li>
     <li><a class="dropdown-item" href="articles/HapMap.html">HapMap III reference</a></li>
     <li><a class="dropdown-item" href="articles/Genomes1000.html">1000 Genomes reference</a></li>
   </ul>
@@ -59,11 +59,8 @@
 <h2 id="id_-plinkqc">
 <i class="fa fa-map" aria-hidden="true"></i> plinkQC<a class="anchor" aria-label="anchor" href="#id_-plinkqc"></a>
 </h2>
-<p><strong>plinkQC</strong> is a R/CRAN package for <strong>genotype quality control</strong> in genetic association studies. It makes PLINK basic statistics (e.g.missing genotyping rates per individual, allele frequencies per genetic marker) and relationship functions easily accessible from within R and allows for automatic evaluation of the results.</p>
-<p><strong>plinkQC</strong> generates a per-individual, per-marker quality control, and ancestry identification report. A step-by-step guide on how to run these analyses can be found <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/plinkQC.html">here</a>.</p>
-<p>Individuals and markers that fail the quality control can subsequently be removed with <strong>plinkQC</strong> to generate a new, clean dataset.</p>
-<p><strong>plinkQC</strong> includes a pretrained classifier to identify the genomic ancestry of human samples. More details are located <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">here</a>.</p>
-<p>Removal of individuals based on relationship status via <strong>plinkQC</strong> is optimised to retain as many individuals as possible in the study.</p>
+<p><strong>plinkQC</strong> is a R/CRAN package for <strong>genotype quality control</strong> including a pre-trained ancestry classifier and relatedness filter optimized to retain the maximally unrelated sample set with highest quality.</p>
+<p><strong>plinkQC</strong> generates a per-individual and per-marker quality control report. A step-by-step guide on how to run these analyses can be found <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/plinkQC.html">here</a>. Individuals and markers that fail the quality control can subsequently be removed with <strong>plinkQC</strong> to generate a new, clean dataset.</p>
 </div>
 <div class="section level2">
 <h2 id="id_-installation">
@@ -82,7 +79,7 @@
 <h2 id="id_-citation">
 <i class="fa fa-pencil" aria-hidden="true"></i> Citation<a class="anchor" aria-label="anchor" href="#id_-citation"></a>
 </h2>
-<p>Meyer HV (2020) plinkQC: Genotype quality control in genetic association studies. <a href="https://doi.org/10.5281/zenodo.3934294" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3934294.svg" alt="DOI"></a></p>
+<p>Syed M, Walter C and Meyer HV (2025) plinkQC: Genotype quality control in genetic association studies. <a href="https://doi.org/10.5281/zenodo.3934294" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3934294.svg" alt="DOI"></a></p>
 </div>
 
   </main><aside class="col-md-3"><div class="links">

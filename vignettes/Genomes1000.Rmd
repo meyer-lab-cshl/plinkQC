@@ -36,8 +36,8 @@ The following vignette shows the processing steps required to use samples of the
 1000 Genomes study [@a1000Genomes2015],[@b1000Genomes2015] as a reference
 dataset. Using the 1000 Genomes reference, population structure down to
 large-scale continental ancestry can be detected. A step-by-step instruction on
-how to conduct this ancestry analysis is described in this
-[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+how to train a random forest classifier for population structure is found 
+[here](AncestryCheck.html).
 
 
 # Workflow
@@ -65,7 +65,7 @@ corresponds to v1.9, whereas `plink2` corresponds to v2.
 1000 Genomes phase III (1000GenomesIII) is available in
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) at https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3.
 In addition, a sample file with information about the individuals' ancestry
-is available and should be downloaded as in input for `plinkQC::check_ancestry()`.
+is available. 
 The following code chunk downloads and decompresses the data.
 The genome build of
 these files is the same as the original release of the 1000GenomesIII, namely
@@ -78,9 +78,9 @@ for the 1000GenomesIII available in
 
 NB: the links to the files below are the three boldfaced links on this page:
 https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3. The dropbox links
-have been updated in the past, which means the links below where outdated.
+have been updated in the past.
 Please refer to the original site and open an issue on github if you notice
-a change. Thank you!
+a change. 
 ```{bash download, eval=FALSE}
 cd $refdir
 
@@ -99,13 +99,10 @@ wget $sample
 mv 'all_hg38.psam?dl=1' all_hg38.psam
 ```
 
-fter these steps, the 1000 Genomes dataset can be used 
-for inferring study ancestry as described in the corresponding
-[Ancestry estimation vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html).
+After these steps, the 1000 Genomes dataset can be used 
+for training a random forest classifier as described in the corresponding
+[vignette](AncestryCheck.html).
 
-
-
-I think I should delete this?
 ## Convert 1000 Genomes phase 3 data to plink 1 binary format
 We then convert the
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) to the
@@ -121,6 +118,6 @@ mv $refdir/all_hg38.log $refdir/plink_log/all_hg38_convert.log
 ```
 
  
-A
+
 # References
 

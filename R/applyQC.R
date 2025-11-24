@@ -33,6 +33,11 @@
 #' check (via \code{\link{check_sex}} or \code{\link{perIndividualQC}}).
 #' Requires file qcdir/name.fail-sexcheck.IDs (automatically created by
 #' \code{\link{perIndividualQC}} if do.evaluate_check_sex set to TRUE).
+#' @param filterAncestry [logical] Set to exclude samples that are
+#' excluded for ancestry (via \code{\link{ancestry_prediction}} or 
+#' \code{\link{perIndividualQC}}).
+#' Requires file qcdir/name.exclude-ancestry.IDs (automatically created by
+#' \code{\link{perIndividualQC}} if do.evaluate_check_sex set to TRUE).
 #' @param filterHWE [logical] Set to exclude markers that fail HWE exact test
 #' (via \code{\link{check_hwe}} or \code{\link{perMarkerQC}}). Requires hweTh to
 #' be set.
@@ -107,6 +112,7 @@ cleanData <- function(indir, name, qcdir=indir,
                       filterSex=TRUE, filterHeterozygosity=TRUE,
                       filterSampleMissingness=TRUE,
                       filterRelated=TRUE,
+                      filterAncestry=TRUE,
                       filterSNPMissingness=TRUE, lmissTh=0.01,
                       filterHWE=TRUE, hweTh=1e-5,
                       filterMAF=TRUE, macTh=20, mafTh=NULL,
@@ -117,7 +123,8 @@ cleanData <- function(indir, name, qcdir=indir,
                       extract_markers=NULL,
                       showPlinkOutput=TRUE) {
     sampleFilter <- c(filterRelated, filterSex,
-                      filterHeterozygosity, filterSampleMissingness)
+                      filterHeterozygosity, filterSampleMissingness, 
+                      filterAncestry)
     markerFilter <- c(filterHWE, filterMAF, filterSNPMissingness)
 
     prefix <- makepath(indir, name)
@@ -236,6 +243,29 @@ cleanData <- function(indir, name, qcdir=indir,
                 }
             }
         }
+      
+      if (filterAncestry) {
+        exclude_ancestry_ids <- paste0(out, ".exclude-ancestry.IDs")
+        if (!file.exists(exclude_ancestry_ids)){
+          stop("filterAncestry is TRUE but file ", out,
+               ".exclude-ancestry.IDs does not exist")
+        } else {
+          if (verbose) {
+            message("Read individual IDs that are excluded for ancestry check")
+          }
+          if (file.size(exclude_ancestry_ids) == 0) {
+            if (verbose) {
+              message("No individuals are excluded for ancestry")
+            }
+          } else {
+            removeIDs <- rbind(removeIDs,
+                               data.table::fread(exclude_ancestry_ids,
+                                                 data.table=FALSE,
+                                                 stringsAsFactors=FALSE,
+                                                 header=FALSE))
+          }
+        }
+      }
         # ensure unique IDs in remove.IDs
         if (!is.null(removeIDs)) {
             removeIDs <- removeIDs[!duplicated(removeIDs),]

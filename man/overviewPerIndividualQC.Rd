@@ -15,7 +15,7 @@ a [vector] with sample IIDs failing the selected relatedness threshold
 highIBDTh, iii) outlying_heterozygosity containing a [vector] with sample
 IIDs failing selected the heterozygosity threshold hetTh, iv) mismatched_sex
 containing a [vector] with the sample IIDs failing the sexcheck based on
-SNPSEX and selected femaleTh/maleTh, and
+SNPSEX and selected femaleTh/maleTh, and 
 v) p_sampleQC, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots of \code{\link{check_sex}},
 \code{\link{check_het_and_miss}}, and
@@ -33,8 +33,8 @@ Named [list] with i) nr_fail_samples: total number of samples
 samples that failed QC steps (excluding ancestry) with IID, FID,
 all QC steps applied by perIndividualQC (max=4), with entries=0
 if passing the QC and entries=1 if failing that particular QC and iii)
-fail_QC_and_ancestry containing a [data.frame] with samples that failed
-ancestry and QC checks with IID, FID, QC_fail and
+fail_QC_and_ancestry_exclusion containing a [data.frame] with samples that are excluded
+for ancestry  and QC checks with IID, FID, QC_fail and
 Ancestry_exclusion, with entries=0 if passing and entries=1 if failing that check,
 iii) p_overview, a ggplot2-object 'containing' a sub-paneled plot with the
 QC-plots.

@@ -8,8 +8,8 @@
 <title>Processing 1000 Genomes reference data for ancestry estimation • plinkQC</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Processing 1000 Genomes reference data for ancestry estimation">
 </head>
@@ -30,12 +30,12 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span></a></li>
+<li class="nav-item"><a class="nav-link" href="../index.html" aria-label="ho"><span class="fa fa-home"></span></a></li>
 <li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-documentation" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fa-file"></span> documentation</button>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-documentation" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Documentation"><span class="fa fa-file"></span> Documentation</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-documentation">
 <li><a class="dropdown-item" href="../articles/plinkQC.html">Step-by-step QC</a></li>
-    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Ancestry</a></li>
+    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Population structure identification by Random Forest</a></li>
     <li><a class="dropdown-item" href="../articles/HapMap.html">HapMap III reference</a></li>
     <li><a class="dropdown-item" href="../articles/Genomes1000.html">1000 Genomes reference</a></li>
   </ul>
@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Hannah
 Meyer</h4>
             
-            <h4 data-toc-skip class="date">2025-01-07</h4>
+            <h4 data-toc-skip class="date">2025-11-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/Genomes1000.Rmd" class="external-link"><code>vignettes/Genomes1000.Rmd</code></a></small>
       <div class="d-none name"><code>Genomes1000.Rmd</code></div>
@@ -85,9 +85,8 @@ reference dataset.</p>
 samples of the 1000 Genomes study <span class="citation">[1]</span>,<span class="citation">[2]</span> as a
 reference dataset. Using the 1000 Genomes reference, population
 structure down to large-scale continental ancestry can be detected. A
-step-by-step instruction on how to conduct this ancestry analysis is
-described in this <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry
-estimation vignette</a>.</p>
+step-by-step instruction on how to train a random forest classifier for
+population structure is found <a href="AncestryCheck.html">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
@@ -119,20 +118,17 @@ processing the downloaded the dataset. In the following, when
 <p>1000 Genomes phase III (1000GenomesIII) is available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen" class="external-link">PLINK 2 binary
 format</a> at <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="external-link uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>.
 In addition, a sample file with information about the individuals’
-ancestry is available and should be downloaded as in input for
-<code><a href="../reference/check_ancestry.html">plinkQC::check_ancestry()</a></code>. The following code chunk
-downloads and decompresses the data. The genome build of these files is
-the same as the original release of the 1000GenomesIII, namely
-CGRCh37.</p>
+ancestry is available. The following code chunk downloads and
+decompresses the data. The genome build of these files is the same as
+the original release of the 1000GenomesIII, namely CGRCh37.</p>
 <p>NB: CGRCh38 positions in vcf format can be found <a href="http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/" class="external-link">here</a>.
 The remainder of this vignette will however look at the data processing
 required for the 1000GenomesIII available in <a href="https://www.cog-genomics.org/plink/2.0/input#pgen" class="external-link">PLINK 2 binary
 format</a>.</p>
 <p>NB: the links to the files below are the three boldfaced links on
 this page: <a href="https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3" class="external-link uri">https://www.cog-genomics.org/plink/2.0/resources#1kg_phase3</a>.
-The dropbox links have been updated in the past, which means the links
-below where outdated. Please refer to the original site and open an
-issue on github if you notice a change. Thank you!</p>
+The dropbox links have been updated in the past. Please refer to the
+original site and open an issue on github if you notice a change.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$refdir</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="va">pgen</span><span class="op">=</span>https://www.dropbox.com/s/j72j6uciq5zuzii/all_hg38.pgen.zst<span class="pp">?</span>dl=1</span>
@@ -148,11 +144,13 @@ issue on github if you notice a change. Thank you!</p>
 <span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a></span>
 <span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="fu">wget</span> <span class="va">$sample</span></span>
 <span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="fu">mv</span> <span class="st">'all_hg38.psam?dl=1'</span> all_hg38.psam</span></code></pre></div>
-<p>fter these steps, the 1000 Genomes dataset can be used for inferring
-study ancestry as described in the corresponding <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/AncestryCheck.html">Ancestry
-estimation vignette</a>.</p>
-<p>I think I should delete this? ## Convert 1000 Genomes phase 3 data to
-plink 1 binary format We then convert the <a href="https://www.cog-genomics.org/plink/2.0/input#pgen" class="external-link">PLINK 2 binary
+<p>After these steps, the 1000 Genomes dataset can be used for training
+a random forest classifier as described in the corresponding <a href="AncestryCheck.html">vignette</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="convert-1000-genomes-phase-3-data-to-plink-1-binary-format">Convert 1000 Genomes phase 3 data to plink 1 binary format<a class="anchor" aria-label="anchor" href="#convert-1000-genomes-phase-3-data-to-plink-1-binary-format"></a>
+</h3>
+<p>We then convert the <a href="https://www.cog-genomics.org/plink/2.0/input#pgen" class="external-link">PLINK 2 binary
 format</a> to the (at the moment) more standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped" class="external-link">PLINK 1 binary
 format</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> <span class="va">$refdir</span>/all_hg38 vzs<span class="dt">\</span></span>
@@ -161,7 +159,11 @@ format</a>.</p>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>      <span class="at">--allow-extra-chr</span> 0 <span class="dt">\</span></span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>      <span class="at">--out</span> <span class="va">$refdir</span>/all_hg38</span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">mv</span> <span class="va">$refdir</span>/all_hg38.log <span class="va">$refdir</span>/plink_log/all_hg38_convert.log</span></code></pre></div>
-<p>A # References</p>
+</div>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body">
 <div id="ref-a1000Genomes2015" class="csl-entry">
 <div class="csl-left-margin">1. </div>
@@ -180,7 +182,6 @@ human genetic variation</span>. Nature. 2015;526: 75–81. doi:<a href="https://
 </div>
 </div>
 </div>
-</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
@@ -192,7 +193,7 @@ human genetic variation</span>. Nature. 2015;526: 75–81. doi:<a href="https://
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

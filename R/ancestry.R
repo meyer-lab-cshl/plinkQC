@@ -6,6 +6,7 @@
 #' @inheritParams convert_to_plink2
 #' @inheritParams rename_variant_identifiers
 #' @inheritParams checkPlink2
+#' @inheritParams checkLoadingMat
 #' @param plink2format [logical] If TRUE, data is in plink2 format already and 
 #' convert_to_plink2 will not be run
 #' @param var_format [logical] If TRUE, variant identifiers are in correct 
@@ -110,7 +111,8 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
   
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
-
+  
+  checkFormat(prefix)
   path2plink2 <- checkPlink2(path2plink2)
   
   if (showPlinkOutput) {
@@ -212,7 +214,7 @@ run_ancestry_prediction  <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' Predicting sample superpopulation ancestry 
 #' 
 #' Predicts the ancestry of inputted samples using plink2. Uses the output of
-#' \code{\link{run_ancestry_identification}} as input in a random forest classifier 
+#' \code{\link{run_ancestry_prediction}} as input in a random forest classifier 
 #' to predict the genomic ancestry of samples within six continental groups: 
 #' AFR, AMR, EAS, EUR, CSA, and MID. Genomic data version hg38 with variant 
 #' identifiers in the format of 1:12345[hg38] is needed for the function to work 
@@ -220,8 +222,6 @@ run_ancestry_prediction  <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param qcdir [character] /path/to/directory where name.sscore as returned by 
 #' plink2 --score is located.
 #' @param name [character] Prefix of file with a .sscore output 
-#' @param path2load_mat [character] /path/to/directory where loading matrices are 
-#' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData
 #' @param legend_text_size [integer] Size for legend text.
 #' @param legend_title_size [integer] Size for legend title.
 #' @param axis_text_size [integer] Size for axis text.
@@ -296,9 +296,10 @@ evaluate_ancestry_prediction <- function(qcdir, name, verbose=FALSE,
   prediction_majority <- data.frame(FID = proj["FID"], IID = proj["IID"],
                                     predictions = prediction_majority)
 
-  exclude_ancestry <- prediction_majority %>%
-    filter(prediction_majority %in% excludeAncestry) %>%
-    select(c(FID, IID))
+  exclude_ancestry <- filter(prediction_majority, 
+                             .data$prediction_majority %in% excludeAncestry)
+  exclude_ancestry <- select(exclude_ancestry, c(.data$FID, .data$IID))
+ 
   colnames(prediction_prob) <- sub("^predictions.", "", colnames(prediction_prob))
   prediction_prob_long <- pivot_longer(prediction_prob, 
                                        cols = 'Africa':'Middle_East',
@@ -335,6 +336,10 @@ evaluate_ancestry_prediction <- function(qcdir, name, verbose=FALSE,
 #' @inheritParams run_ancestry_format
 #' @inheritParams run_ancestry_prediction
 #' @inheritParams evaluate_ancestry_prediction
+#' @param do.run_ancestry_prediction [logical] If TRUE, run
+#' \code{\link{run_ancestry_prediction}}.
+#' @param do.evaluate_ancestry_prediction [logical] If TRUE, run
+#' \code{\link{evaluate_ancestry_prediction}}.
 #' 
 #' @return Three dataframes and a visualization of the ancestral probabilities. 
 #' prediction_prob contains the sample IDs and ancestral probabilities from the model.
@@ -373,10 +378,8 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
                                              plink2format=FALSE,
                                              var_format=FALSE,
                                              excludeAncestry=NULL,
-                                             dont.ancestry_prediction=FALSE,
                                              do.run_ancestry_prediction=TRUE,
                                              do.evaluate_ancestry_prediction=TRUE) {
-  if (!dont.ancestry_prediction) {
     sscore_path <- indir
     ancestry_name <- name
     
@@ -423,13 +426,12 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
                                                            axis_title_size,
                                                          title_size =
                                                            title_size,
-                                                         interactive=FALSE,
+                                                         interactive=interactive,
                                                          legend_position = "bottom")
       
       
       return(ancestry_exclusion)
     }
-  }
 }
 
 
@@ -499,8 +501,9 @@ rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' 
 #' Makes sure that the loading matrix is located at the filepath stored in path2load_mat
 #' 
-#' @param path2load_mat [character] /path/to/directory containing the filepath
-#' to the loading matrices needed to run the ancestry functionality 
+#' @param path2load_mat [character] /path/to/directory where loading matrices are 
+#' kept. This can be downloaded from the github repo. Note that the name of the file 
+#' before the .eigenvec.allele or .acount must be included in file path.
 #' @export
 #' @return NULL 
 checkLoadingMat <- function(path2load_mat) {

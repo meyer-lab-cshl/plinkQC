@@ -25,7 +25,7 @@ qcdir/name.clean.bim/.bed/.fam."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-documentation" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Documentation"><span class="fa fa-file"></span> Documentation</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-documentation"><li><a class="dropdown-item" href="../articles/plinkQC.html">Step-by-step QC</a></li>
-    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Ancestry</a></li>
+    <li><a class="dropdown-item" href="../articles/AncestryCheck.html">Population structure identification by Random Forest</a></li>
     <li><a class="dropdown-item" href="../articles/HapMap.html">HapMap III reference</a></li>
     <li><a class="dropdown-item" href="../articles/Genomes1000.html">1000 Genomes reference</a></li>
   </ul></li>
@@ -62,6 +62,7 @@ qcdir/name.clean.bim/.bed/.fam.</p>
 <span>  filterHeterozygosity <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  filterSampleMissingness <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  filterRelated <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  filterAncestry <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  filterSNPMissingness <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  lmissTh <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>  filterHWE <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -131,6 +132,14 @@ do.evaluate_check_het_and_miss set to TRUE).</p></dd>
 check (via <code><a href="check_relatedness.html">check_relatedness</a></code> or <code><a href="perIndividualQC.html">perIndividualQC</a></code>).
 Requires file qcdir/name.fail-IBD.IDs (automatically created by
 <code><a href="perIndividualQC.html">perIndividualQC</a></code> if do.evaluate_check_relatedness set to TRUE).</p></dd>
+
+
+<dt id="arg-filterancestry">filterAncestry<a class="anchor" aria-label="anchor" href="#arg-filterancestry"></a></dt>
+<dd><p>[logical] Set to exclude samples that are
+excluded for ancestry (via <code><a href="ancestry_prediction.html">ancestry_prediction</a></code> or
+<code><a href="perIndividualQC.html">perIndividualQC</a></code>).
+Requires file qcdir/name.exclude-ancestry.IDs (automatically created by
+<code><a href="perIndividualQC.html">perIndividualQC</a></code> if do.evaluate_check_sex set to TRUE).</p></dd>
 
 
 <dt id="arg-filtersnpmissingness">filterSNPMissingness<a class="anchor" aria-label="anchor" href="#arg-filtersnpmissingness"></a></dt>

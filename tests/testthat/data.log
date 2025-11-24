@@ -1,32 +1,22 @@
 PLINK v2.00a6 64-bit (5 Feb 2024)
 Options in effect:
-  --out tests/testthat/data
-  --pfile tests/testthat/data
-  --read-freq /Users/syed/Documents/meyerlab/Aim1/plinkQC/extdata/all_hg38_maf_first_pca.acount
-  --score /Users/syed/Documents/meyerlab/Aim1/plinkQC/extdata/all_hg38_maf_first_pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize
-  --score-col-nums 7-26
+  --bfile tests/testthat//data
+  --make-pgen
+  --out tests/testthat//data
 
-Hostname: SBS2022-05.cshl.edu
+Hostname: SBS2022-05.local
 Working directory: /Users/syed/Documents/meyerlab/Aim1/plinkQC
-Start time: Fri Aug 16 15:37:58 2024
+Start time: Fri Nov 21 15:07:27 2025
 
-Random number seed: 1723837078
+Random number seed: 1763755647
 16384 MiB RAM detected; reserving 8192 MiB for main workspace.
 Using up to 8 compute threads.
 200 samples (111 females, 89 males; 200 founders) loaded from
-tests/testthat/data.psam.
-10000 variants loaded from tests/testthat/data.pvar.
+tests/testthat//data.fam.
+10000 variants loaded from tests/testthat//data.bim.
 Note: No phenotype data present.
---read-freq: PLINK 2 --freq file detected.
---read-freq: Frequencies for 0 variants loaded.
-Warning: 1859624 entries skipped due to missing variant IDs, mismatching allele
-codes, and/or zero observations.
-Calculating allele frequencies... done.
-Warning: --score: 3719248 entries in
-/Users/syed/Documents/meyerlab/Aim1/plinkQC/extdata/all_hg38_maf_first_pca.eigenvec.allele
-were skipped due to missing variant IDs.
-(Add the 'list-variants' modifier to see which variants were actually used for
-scoring.)
-Error: --score: No valid variants in /Users/syed/Documents/meyerlab/Aim1/plinkQC/extdata/all_hg38_maf_first_pca.eigenvec.allele.
+Writing tests/testthat//data.psam ... done.
+Writing tests/testthat//data.pvar ... done.
+Writing tests/testthat//data.pgen ... done.
 
-End time: Fri Aug 16 15:37:58 2024
+End time: Fri Nov 21 15:07:27 2025

@@ -135,6 +135,9 @@ multi-panel plot.
 ```{r individual QC,  eval=FALSE, fig.height=12, fig.width=9}
 fail_individuals <- perIndividualQC(indir=indir, qcdir=qcdir, name=name,
                             path2plink=path2plink, 
+                            path2load_mat = path2load_mat,
+                            path2plink2=path2plink2, 
+                            excludeAncestry = c("Africa"),
                             interactive=TRUE, verbose=TRUE)
 
 ```

@@ -7,8 +7,9 @@
 checkLoadingMat(path2load_mat)
 }
 \arguments{
-\item{path2load_mat}{[character] /path/to/directory containing the filepath
-to the loading matrices needed to run the ancestry functionality}
+\item{path2load_mat}{[character] /path/to/directory where loading matrices are 
+kept. This can be downloaded from the github repo. Note that the name of the file 
+before the .eigenvec.allele or .acount must be included in file path.}
 }
 \description{
 Makes sure that the loading matrix is located at the filepath stored in path2load_mat

@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 **plinkQC** is a R/CRAN package for **genotype quality control** including a pre-trained ancestry classifier and relatedness filter optimized to retain the maximally unrelated sample set with highest quality.
 
 **plinkQC** generates a per-individual and per-marker quality control report.
-A step-by-step guide on how to run these analyses can be found [here](https://meyer-lab-cshl.github.io/plinkQC/articles/plinkQC.html). Individuals and markers that fail the quality control can subsequently be removed with **plinkQC** to generate a new, clean dataset.
+A step-by-step guide on how to run these analyses can be found [here](plinkQC.html). Individuals and markers that fail the quality control can subsequently be removed with **plinkQC** to generate a new, clean dataset.
 
 ```{r, echo = FALSE}
 knitr::include_graphics("qc.png")

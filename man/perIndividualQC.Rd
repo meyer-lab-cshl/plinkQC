@@ -277,14 +277,30 @@ should be specified: for windows OS, this means path/plink.exe, for unix
 platforms this is path/plink. If not provided, assumed that PATH set-up works
 and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 
+\item{dont.ancestry_prediction}{[logical] If TRUE, no ancestry prediction will be
+conducted; short for do.run_ancestry_prediction=FALSE and
+do.evaluate_ancestry_prediction=FALSE. Takes precedence over
+do.run_ancestry_prediction and do.evaluate_ancestry_prediction}
+
+\item{do.run_ancestry_prediction}{[logical] If TRUE, run
+\code{\link{run_ancestry_prediction}}.}
+
+\item{do.evaluate_ancestry_prediction}{[logical] If TRUE, run
+\code{\link{evaluate_ancestry_prediction}}.}
+
+\item{excludeAncestry}{[character] Ancestries to be excluded (if any). Options are:
+Africa, America, Central_South_Asia, East_Asia, Europe, and Middle_East. Strings 
+must be spelled exactly as shown.}
+
+\item{path2load_mat}{[character] /path/to/directory where loading matrices are 
+kept. This can be downloaded from the github repo. Note that the name of the file 
+before the .eigenvec.allele or .acount must be included in file path.}
+
 \item{plink2format}{[logical] If TRUE, data is in plink2 format already and 
 convert_to_plink2 will not be run}
 
 \item{var_format}{[logical] If TRUE, variant identifiers are in correct 
 format already and rename_variant_identifiers will not be run}
-
-\item{do.run_superpop_classification}{[logical] If TRUE, run 
-\code{\link{superpop_classification}}}
 }
 \value{
 Named [list] with i) fail_list, a named [list] with 1.
