@@ -15,7 +15,7 @@ to work."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">plinkQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -165,9 +165,9 @@ printed to standard out.</p></dd>
 <span class="r-in"><span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">"data.hg38"</span></span></span>
 <span class="r-in"><span><span class="va">path2plink</span> <span class="op">&lt;-</span> <span class="st">'/path/to/plink'</span></span></span>
 <span class="r-in"><span><span class="va">path2load_mat</span> <span class="op">&lt;-</span> <span class="st">'/path/to/load_mat/merged_chrs.postQC.train.pca'</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># the following code is not run on package build, as the path2plink on the</span></span></span>
 <span class="r-in"><span><span class="co"># user system is not known.</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu">superpop_classification</span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>, </span></span>
 <span class="r-in"><span>path2plink2 <span class="op">=</span> <span class="va">path2plink2</span>, path2load_mat <span class="op">=</span> <span class="va">path2load_mat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
