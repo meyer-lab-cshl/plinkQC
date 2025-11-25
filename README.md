@@ -11,11 +11,11 @@ MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.or
 **plinkQC** is a R/CRAN package for **genotype quality control** including a pre-trained ancestry classifier and relatedness filter optimized to retain the maximally unrelated sample set with highest quality.
 
 **plinkQC** generates a per-individual and per-marker quality control report.
-A step-by-step guide on how to run these analyses can be found [here](articles/plinkQC.html). Individuals and markers that fail the quality control can subsequently be removed with **plinkQC** to generate a new, clean dataset.
+A step-by-step guide on how to run these analyses can be found [here](https://meyer-lab-cshl.github.io/plinkQC/articles/plinkQC.html). Individuals and markers that fail the quality control can subsequently be removed with **plinkQC** to generate a new, clean dataset.
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC** is: 2.0.0 and can be installed
+The current github version of **plinkQC** is: 1.0.0 and can be installed
 via
 
 ``` r
