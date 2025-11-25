@@ -80,9 +80,9 @@ indir <- system.file("extdata", package="plinkQC")
 qcdir <- tempdir()
 name <- "data"
 path2plink <- '/path/to/plink'
+\dontrun{
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
-\dontrun{
 convert_to_plink2(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
 }
 }

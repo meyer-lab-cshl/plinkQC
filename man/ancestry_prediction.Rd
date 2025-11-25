@@ -138,10 +138,10 @@ qcdir <- tempdir()
 name <- "data.hg38"
 path2plink <- '/path/to/plink'
 path2load_mat <- '/path/to/load_mat/merged_chrs.postQC.train.pca'
+\dontrun{
 # the following code is not run on package build, as the path2plink on the
 # user system is not known.
-\dontrun{
-ancestry_identification(indir=indir, qcdir=qcdir, name=name, 
+ancestry_prediction(indir=indir, qcdir=qcdir, name=name, 
 path2plink2 = path2plink2, path2load_mat = path2load_mat)
 }
 }

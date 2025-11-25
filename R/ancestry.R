@@ -19,9 +19,9 @@
 #' qcdir <- tempdir()
 #' name <- "data"
 #' path2plink <- '/path/to/plink'
+#' \dontrun{
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
-#' \dontrun{
 #' run_ancestry_format(indir=indir, qcdir=qcdir, 
 #'   name=name, path2plink2 = path2plink2)
 #' }
@@ -96,9 +96,9 @@ run_ancestry_format <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' qcdir <- tempdir()
 #' name <- "data"
 #' path2plink <- '/path/to/plink'
+#' \dontrun{
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
-#' \dontrun{
 #' convert_to_plink2(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
 #' }
 convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
@@ -165,9 +165,9 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' name <- "data.hg38"
 #' path2plink <- '/path/to/plink'
 #' path2load_mat <- '/path/to/load_mat/merged_chrs.postQC.train.pca'
+#' \dontrun{
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
-#' \dontrun{
 #' superpop_classification(indir=indir, qcdir=qcdir, name=name, 
 #' path2plink2 = path2plink2, path2load_mat = path2load_mat)
 #' }
@@ -251,9 +251,9 @@ run_ancestry_prediction  <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' name <- "data.hg38"
 #' path2plink <- '/path/to/plink'
 #' path2load_mat <- '/path/to/load_mat/merged_chrs.postQC.train.pca'
+#' \dontrun{
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
-#' \dontrun{
 #' superpop_classification(indir=indir, qcdir=qcdir, name=name, 
 #' path2plink2 = path2plink2, path2load_mat = path2load_mat)
 #' }
@@ -353,10 +353,10 @@ evaluate_ancestry_prediction <- function(qcdir, name, verbose=FALSE,
 #' name <- "data.hg38"
 #' path2plink <- '/path/to/plink'
 #' path2load_mat <- '/path/to/load_mat/merged_chrs.postQC.train.pca'
+#' \dontrun{
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
-#' \dontrun{
-#' ancestry_identification(indir=indir, qcdir=qcdir, name=name, 
+#' ancestry_prediction(indir=indir, qcdir=qcdir, name=name, 
 #' path2plink2 = path2plink2, path2load_mat = path2load_mat)
 #' }
 #'@export 
@@ -461,9 +461,9 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
 #' qcdir <- tempdir()
 #' name <- "data.hg38"
 #' path2plink <- '/path/to/plink'
+#' \dontrun{
 #' # the following code is not run on package build, as the path2plink on the
 #' # user system is not known.
-#' \dontrun{
 #' rename_variant_identifiers(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
 #' }
 rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
@@ -506,6 +506,13 @@ rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' before the .eigenvec.allele or .acount must be included in file path.
 #' @export
 #' @return NULL 
+#' @examples
+#' path2load_mat <- '/path/to/loading_mat/merged_chrs.postQC.train.pca'
+#' \dontrun{
+#' # the following code is not run on package build, as the path2load_mat on the
+#' # user system is not known.
+#' checkLoadingMat(path2load_mat = path2load_mat)
+#' }
 checkLoadingMat <- function(path2load_mat) {
   if (!file.exists(paste0(path2load_mat, ".acount"))) {
     stop("The loading matrix .acount file is not found in the path 

@@ -14,3 +14,11 @@ before the .eigenvec.allele or .acount must be included in file path.}
 \description{
 Makes sure that the loading matrix is located at the filepath stored in path2load_mat
 }
+\examples{
+path2load_mat <- '/path/to/loading_mat/merged_chrs.postQC.train.pca'
+\dontrun{
+# the following code is not run on package build, as the path2load_mat on the
+# user system is not known.
+checkLoadingMat(path2load_mat = path2load_mat)
+}
+}

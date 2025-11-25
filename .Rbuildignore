@@ -40,8 +40,11 @@ inst/extdata/data.lmiss
 inst/extdata/data.fail-sexcheck.IDs
 inst/extdata/data.sexcheck
 inst/extdata/load_mat/
-
+docs/articles
+docs/reference
+docs/
 _pkgdown.yml
+README.md
 
 Check-list-Joss.md
 Figure1.pdf

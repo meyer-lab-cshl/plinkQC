@@ -1,0 +1,22 @@
+PLINK v2.00a6 64-bit (5 Feb 2024)
+Options in effect:
+  --bfile tests/testthat//data.clean
+  --make-pgen
+  --out tests/testthat//data.clean
+
+Hostname: SBS2022-05.local
+Working directory: /Users/syed/Documents/meyerlab/Aim1/plinkQC
+Start time: Fri Nov 21 15:08:24 2025
+
+Random number seed: 1763755704
+16384 MiB RAM detected; reserving 8192 MiB for main workspace.
+Using up to 8 compute threads.
+180 samples (97 females, 83 males; 180 founders) loaded from
+tests/testthat//data.clean.fam.
+8153 variants loaded from tests/testthat//data.clean.bim.
+Note: No phenotype data present.
+Writing tests/testthat//data.clean.psam ... done.
+Writing tests/testthat//data.clean.pvar ... done.
+Writing tests/testthat//data.clean.pgen ... done.
+
+End time: Fri Nov 21 15:08:24 2025
