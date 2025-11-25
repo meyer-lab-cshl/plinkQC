@@ -500,8 +500,8 @@ check_snp_missingness <- function(indir, name, qcdir=indir, lmissTh=0.01,
 #' @param verbose [logical] If TRUE, progress info is printed to standard out
 #' and specifically, if TRUE, plink log will be displayed.
 #' @return Named list with i) fail_hwe containing a [data.frame] with CHR
-#' (Chromosome code), SNP (Variant identifier), TEST (Type of test: one of
-#' \{'ALL', 'AFF', 'UNAFF', 'ALL(QT)', 'ALL(NP)'\}), A1 (Allele 1; usually minor),
+#' (Chromosome code), SNP (Variant identifier), TEST (Type of test: one of: 
+#' ALL', 'AFF', 'UNAFF', 'ALL(QT)', 'ALL(NP)'), A1 (Allele 1; usually minor),
 #' A2 (Allele 2; usually major), GENO ('/'-separated genotype counts: A1 hom,
 #' het, A2 hom), O(HET) (Observed heterozygote frequency E(HET) (Expected
 #' heterozygote frequency), P (Hardy-Weinberg equilibrium exact test p-value)

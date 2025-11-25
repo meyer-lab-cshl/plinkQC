@@ -37,8 +37,8 @@ setting up this training, starting with reference data download. We will use a t
 ### Download reference data
 A suitable reference dataset should be downloaded and if necessary, re-formated
 into PLINK format. Vignettes
-*Processing HapMap III reference data for ancestry estimation*([HapMap](HapMap.html)) and 
-*Processing 1000Genomes  reference data for ancestry estimation*([Genomes1000](Genomes1000.html)),
+*Processing HapMap III reference data for ancestry estimation* and 
+*Processing 1000Genomes  reference data for ancestry estimation*
 show the download and processing of the HapMap phase III and 1000Genomes phase
 III dataset, respectively. In this example, we will use the 1000Genomes data as
 the reference dataset. We recommend using ```check_relatedness``` on the
