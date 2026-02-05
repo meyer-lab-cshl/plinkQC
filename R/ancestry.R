@@ -273,15 +273,17 @@ evaluate_ancestry_prediction <- function(qcdir, name, verbose=FALSE,
   proj <- read.csv(paste0(makepath(qcdir, name),".sscore"), 
                    sep='\t', header = TRUE)
   
-  #seeing if FID is part of the projection
-  if ("X.FID" %in% names(proj)) {
-    colnames(proj) <- c("FID", "IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
-  }
-  else {
-    colnames(proj) <- c("IID", "Allele_Count", "Allele_Dosage", paste0("PC", 1:20))
+  if (!("X.FID" %in% colnames(proj))) {
     proj$FID <- rep(0,nrow(proj))
   }
+  else {
+    proj$FID <- proj$`X.FID`
+  }
 
+  pc_start <- which(colnames(proj) == "PC1_AVG")
+  colnames(proj)[pc_start:ncol(proj)] <-
+    sub("_AVG$", "", colnames(proj)[pc_start:ncol(proj)])
+  
 
   rf_path <- system.file("extdata", 'final_model.RDS',
                                     package="plinkQC")

@@ -63,5 +63,11 @@ test_that("Testing that the loading matrix path will not run if the path is not 
   
 })
 
-
+test_that("Evaluate ancestry prediction works with phenotypes in score matrix", {
+  expect_equal(evaluate_ancestry_prediction(qcdir = qcdir, 
+                                        name = "data.clean"),
+               evaluate_ancestry_prediction(qcdir = qcdir, 
+                                             name = "data.clean.pheno")
+               )
+})
 
