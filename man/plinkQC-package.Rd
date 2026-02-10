@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Hannah Meyer \email{hannah.v.meyer@gmail.com} (\href{https://orcid.org/0000-0003-4564-0899}{ORCID})
+\strong{Maintainer}: Hannah Meyer \email{maha.s.syed@gmail.com} (\href{https://orcid.org/0000-0003-4564-0899}{ORCID})
 
 Other contributors:
 \itemize{

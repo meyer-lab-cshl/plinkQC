@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plinkQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Hannah
 Meyer</h4>
             
-            <h4 data-toc-skip class="date">2025-11-29</h4>
+            <h4 data-toc-skip class="date">2026-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/Genomes1000.Rmd" class="external-link"><code>vignettes/Genomes1000.Rmd</code></a></small>
       <div class="d-none name"><code>Genomes1000.Rmd</code></div>
@@ -151,7 +151,7 @@ a random forest classifier as described in the corresponding <a href="AncestryCh
 <h3 id="convert-1000-genomes-phase-3-data-to-plink-1-binary-format">Convert 1000 Genomes phase 3 data to plink 1 binary format<a class="anchor" aria-label="anchor" href="#convert-1000-genomes-phase-3-data-to-plink-1-binary-format"></a>
 </h3>
 <p>We then convert the <a href="https://www.cog-genomics.org/plink/2.0/input#pgen" class="external-link">PLINK 2 binary
-format</a> to the (at the moment) more standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped" class="external-link">PLINK 1 binary
+format</a> to the (at the moment) more standardly used <a href="https://www.cog-genomics.org/plink/1.9/input#ped" class="external-link">PLINK 1 binary
 format</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> <span class="va">$refdir</span>/all_hg38 vzs<span class="dt">\</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>      <span class="at">--max-alleles</span> 2 <span class="dt">\</span></span>

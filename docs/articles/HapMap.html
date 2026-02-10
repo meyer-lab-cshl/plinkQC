@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">plinkQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Hannah
 Meyer</h4>
             
-            <h4 data-toc-skip class="date">2025-11-29</h4>
+            <h4 data-toc-skip class="date">2026-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/HapMap.Rmd" class="external-link"><code>vignettes/HapMap.Rmd</code></a></small>
       <div class="d-none name"><code>HapMap.Rmd</code></div>
@@ -123,7 +123,7 @@ the individuals’ ancestry is available and should be downloaded.</p>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
 <span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="fu">wget</span> <span class="va">$ftp</span>/relationships_w_pops_121708.txt</span></code></pre></div>
 <p>We then convert the <a href="https://www.cog-genomics.org/plink/1.9/input#ped" class="external-link">PLINK text
-format</a> to the standardly used <a href="https://www.cog-genomics.org/plink/1.9/inputbped" class="external-link">PLINK binary
+format</a> to the standardly used <a href="https://www.cog-genomics.org/plink/1.9/input#ped" class="external-link">PLINK binary
 format</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--file</span> <span class="va">$refdir</span>/<span class="va">$prefix</span> <span class="dt">\</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>      <span class="at">--make-bed</span> <span class="dt">\</span></span>

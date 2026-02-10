@@ -37,7 +37,7 @@ HapMap study [@HapMap2005][@HapMap2007][@HapMap2010] as a reference dataset.
 Using this reference, population structure down to large-scale continental
 ancestry can be detected. A step-by-step instruction on how to conduct this
 analysis by training a random forest classifier is described in 
-the vignette [Classifier training for ancestry estimation](Genomes1000.html).
+the vignette [Classifier training for ancestry estimation](AncestryCheck.html).
 
 
 # Workflow
@@ -77,7 +77,7 @@ wget $ftp/relationships_w_pops_121708.txt
 We then convert the
 [PLINK text format](https://www.cog-genomics.org/plink/1.9/input#ped) to the
 standardly used
-[PLINK binary format](https://www.cog-genomics.org/plink/1.9/inputbped).
+[PLINK binary format](https://www.cog-genomics.org/plink/1.9/input#ped).
 ```{bash convert, eval=FALSE}
 plink --file $refdir/$prefix \
       --make-bed \

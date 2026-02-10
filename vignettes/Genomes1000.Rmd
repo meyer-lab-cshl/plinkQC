@@ -107,7 +107,7 @@ for training a random forest classifier as described in the corresponding
 We then convert the
 [PLINK 2 binary format](https://www.cog-genomics.org/plink/2.0/input#pgen) to the
 (at the moment) more standardly used
-[PLINK 1 binary format](https://www.cog-genomics.org/plink/1.9/inputbped).
+[PLINK 1 binary format](https://www.cog-genomics.org/plink/1.9/input#ped).
 ```{bash convert, eval=FALSE}
 plink2 --pfile $refdir/all_hg38 vzs\
       --max-alleles 2 \

@@ -1,3 +1,7 @@
+# plinkQC 1.0.1
+## minor changes
+* Fixed a bug so that ancestry prediction function works when there are phenotypes included in the input data.
+
 # plinkQC 1.0.0
 ## major changes
 * Added a pre-trained random forest classifier to predict genomic ancestry with the functions ancestry_prediction()
