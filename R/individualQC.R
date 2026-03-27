@@ -93,9 +93,12 @@
 #' on the parameters and outputs, check these function documentations. For
 #' detailed output for fail IIDs (instead of simple IID lists), run each
 #' function individually.
+#' @param plink2format [logical] If TRUE, data is also avaliable in plink2 format 
+#' (i.e. name.pvar, name.psam, and name.pgen)
 #' @param excludeAncestry [character] Ancestries to be excluded (if any). Options are:
 #' Africa, America, Central_South_Asia, East_Asia, Europe, and Middle_East. Strings 
 #' must be spelled exactly as shown.
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file
 #' @export
 #' @examples
 #' indir <- system.file("extdata", package="plinkQC")
@@ -177,7 +180,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                             excludeAncestry = NULL,
                             path2load_mat = NULL, 
                             plink2format=FALSE,
-                            var_format=FALSE
+                            var_format=FALSE,
+                            write_multiqc = FALSE
                             ) {
 
     missing_genotype <- NULL
@@ -235,7 +239,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                            axis_text_size = axis_text_size,
                                            axis_title_size = axis_title_size,
                                            title_size = title_size,
-                                           interactive=FALSE)
+                                           interactive=FALSE,
+                                           write_multiqc = write_multiqc)
             write.table(fail_sex$fail_sex[,1:2],
                         file=paste(out, ".fail-sexcheck.IDs",
                                    sep=""),
@@ -298,7 +303,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                             axis_text_size = axis_text_size,
                                             axis_title_size = axis_title_size,
                                             title_size = title_size,
-                                            interactive=FALSE)
+                                            interactive=FALSE,
+                                            write_multiqc = write_multiqc)
             write.table(fail_het_imiss$fail_imiss[,1:2],
                         file=paste(out, ".fail-imiss.IDs",
                                    sep=""),
@@ -357,7 +363,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                          axis_title_size,
                                                        title_size =
                                                          title_size,
-                                                       interactive=FALSE)
+                                                       interactive=FALSE,
+                                                       write_multiqc = FALSE)
         write.table(fail_relatedness$failIDs,
                     file=paste(out, ".fail-IBD.IDs", sep=""),
                     row.names=FALSE, quote=FALSE, col.names=FALSE,
@@ -378,7 +385,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
       ancestry_name <- name
 
       if (do.run_ancestry_prediction) {
-        if ((plink2format == FALSE) | (var_format == FALSE)) { 
+        if ((var_format == FALSE)) { 
           ancestry_name <- run_ancestry_format(indir=indir, name=name, qcdir=qcdir, 
                                                       verbose=verbose,
                                                       path2plink2=path2plink2,
@@ -400,7 +407,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                               remove_individuals=remove_individuals,
                                                               extract_markers=extract_markers,
                                                               exclude_markers=exclude_markers,
-                                                              showPlinkOutput=showPlinkOutput)
+                                                              showPlinkOutput=showPlinkOutput,
+                                                              plink2format = plink2format)
         }
         sscore_path <- qcdir
       }
@@ -421,7 +429,8 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                                                        title_size =
                                                          title_size,
                                                        interactive=FALSE,
-                                                       legend_position = "bottom")
+                                                       legend_position = "bottom",
+                                                       write_multiqc = write_multiqc)
     
         write.table(ancestry_exclusion$exclude_ancestry,
                     file=paste(out, ".exclude-ancestry.IDs", sep=""),
@@ -444,9 +453,48 @@ perIndividualQC <- function(indir, name, qcdir=indir,
                       outlying_heterozygosity=outlying_heterozygosity,
                       mismatched_sex=mismatched_sex,
                       ancestry_excluded=ancestry_excluded)
+  
+    if (write_multiqc) {
+      multiqc_sampledf <- dplyr::bind_rows(fail_list, .id = "source")
+      multiqc_sampledf <- dplyr::mutate(multiqc_sampledf, present = "Fail")
+      multiqc_sampledf <- tidyr::pivot_wider(multiqc_sampledf, names_from = source, 
+                                             values_from = .data$present, 
+                                             values_fill = "Pass")
+      multiqc_sampledf <- dplyr::select(multiqc_sampledf, -"FID")
+      multiqc_sampledf <- dplyr::rename(multiqc_sampledf, Sample = .data$IID)
+      
+      multiqc_report <- makepath(qcdir, "sample_qc_mqc.txt")
+      writeLines(c(
+        "# plot_type: 'generalstats'",
+        "# pconfig:",
+        "#    - missing_genotype:",
+        "#       title: 'Missing Genotype'",
+        "#       format: '{:d}'",
+        "#       scale: False",
+        "#    - highIBD:",
+        "#       title: 'High IBD'",
+        "#       format: '{:d}'",
+        "#       scale: False",
+        "#    - outlying_heterozygosity:",
+        "#       title: 'Outlying Het'",
+        "#       format: '{:d}'",
+        "#       scale: False",
+        "#    - mismatched_sex:",
+        "#       title: 'Mismatched Sex'",
+        "#       format: '{:d}'",
+        "#       scale: False",
+        "#    - ancestry_excluded:",
+        "#       title: 'Ancestry Excluded'",
+        "#       format: '{:d}'",
+        "#       scale: False"
+      ), con = multiqc_report)
+      write.table(multiqc_sampledf, multiqc_report,
+                  sep = "\t", quote = FALSE, row.names = FALSE, append = TRUE)
+    }
 
     if(verbose) message(paste("Combine fail IDs into ", out, ".fail.IDs",
                               sep=""))
+    
 
     uniqueFails <- do.call(rbind, fail_list)
     uniqueFails <- uniqueFails[!duplicated(uniqueFails$IID),]
@@ -522,6 +570,7 @@ perIndividualQC <- function(indir, name, qcdir=indir,
     if (interactive) {
       print(p_sampleQC)
     }
+
     return(list(fail_list=fail_list, p_sampleQC=p_sampleQC))
 }
 
@@ -723,6 +772,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file
 #' @return Named list with i) fail_sex: [data.frame] with FID, IID, PEDSEX,
 #' SNPSEX and Sex (if externalSex was provided) of individuals failing sex
 #' check, ii) mixup: dataframe with FID, IID, PEDSEX, SNPSEX and Sex (if
@@ -730,6 +780,7 @@ overviewPerIndividualQC <- function(results_perIndividualQC,
 #' SNPSEX and iii) p_sexcheck, a ggplot2-object 'containing' a scatter plot of
 #' the X-chromosomal heterozygosity (SNPSEX) of the sample split by their
 #' (PEDSEX), which can be shown by print(p_sexcheck).
+#' 
 #' @export
 #' @examples
 #'  \dontrun{
@@ -775,7 +826,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                       axis_text_size = 5,
                       axis_title_size = 7,
                       title_size = 9,
-                      showPlinkOutput=TRUE) {
+                      showPlinkOutput=TRUE, write_multiqc = FALSE) {
     if (run.check_sex) {
         run_sex <- run_check_sex(indir=indir, qcdir=qcdir, name=name,
                                  verbose=verbose,
@@ -811,7 +862,8 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
                                axis_text_size = axis_text_size,
                                axis_title_size = axis_title_size,
                                title_size = title_size,
-                               showPlinkOutput=showPlinkOutput)
+                               showPlinkOutput=showPlinkOutput,
+                               write_multiqc = write_multiqc)
     return(fail)
 }
 
@@ -882,6 +934,7 @@ check_sex <- function(indir, name, qcdir=indir, maleTh=0.8, femaleTh=0.2,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
 #' , other_arguments) or pdf(outfile) print(p_het_imiss) dev.off().
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @return Named [list] with i) fail_imiss [data.frame] containing FID (Family
 #' ID), IID (Within-family ID), MISS_PHENO (Phenotype missing? (Y/N)), N_MISS
@@ -936,7 +989,8 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                axis_text_size = 5,
                                axis_title_size = 7,
                                title_size = 9,
-                               path2plink=NULL, showPlinkOutput=TRUE) {
+                               path2plink=NULL, showPlinkOutput=TRUE,
+                               write_multiqc = FALSE) {
     if (run.check_het_and_miss) {
         run_het <- run_check_heterozygosity(indir=indir,qcdir=qcdir, name=name,
                                             verbose=verbose,
@@ -968,7 +1022,8 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
                                         legend_title_size = legend_title_size,
                                         title_size = title_size,
                                         axis_text_size = axis_text_size,
-                                        axis_title_size = axis_title_size)
+                                        axis_title_size = axis_title_size,
+                                        write_multiqc = write_multiqc)
     return(fail)
 }
 
@@ -1032,6 +1087,7 @@ check_het_and_miss <- function(indir, name, qcdir=indir, imissTh=0.03, hetTh=3,
 #' save the returned plot object (p_IBD() via ggplot2::ggsave(p=p_IBD,
 #' other_arguments) or pdf(outfile) print(p_IBD) dev.off().
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file.
 #' @return Named [list] with i) fail_high_IBD containing a [data.frame] of
 #' IIDs and FIDs of individuals who fail the IBDTh in columns
 #' FID1 and IID1. In addition, the following columns are returned (as originally
@@ -1081,7 +1137,8 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                               axis_text_size = 5,
                               axis_title_size = 7,
                               title_size = 9,
-                              showPlinkOutput=TRUE) {
+                              showPlinkOutput=TRUE,
+                              write_multiqc = FALSE) {
     if (run.check_relatedness) {
         run <- run_check_relatedness(indir=indir, qcdir=qcdir, name=name,
                                      verbose=verbose,
@@ -1103,7 +1160,8 @@ check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.1875,
                                        axis_text_size = axis_text_size,
                                        axis_title_size = axis_title_size,
                                        title_size = title_size,
-                                       verbose=verbose)
+                                       verbose=verbose,
+                                       write_multiqc = write_multiqc)
     return(fail)
 }
 
@@ -1257,6 +1315,7 @@ run_check_sex <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file.
 #' @return named list with i) fail_sex: dataframe with FID, IID, PEDSEX, SNPSEX
 #' and Sex (if externalSex was provided) of individuals failing sex check;
 #' ii) mixup: dataframe with FID, IID, PEDSEX, SNPSEX and Sex (if externalSex
@@ -1306,7 +1365,8 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
                                exclude_markers=NULL,
                                extract_markers=NULL,
                                showPlinkOutput=TRUE,
-                               interactive=FALSE) {
+                               interactive=FALSE, 
+                               write_multiqc = FALSE) {
 
     prefix <- makepath(indir, name)
     out <- makepath(qcdir, name)
@@ -1511,6 +1571,45 @@ evaluate_check_sex <- function(qcdir, name, maleTh=0.8,
               title = element_text(size = title_size),
               axis.text = element_text(size = axis_text_size),
               axis.title = element_text(size = axis_title_size))
+    
+    if (write_multiqc) {
+      color_map <- c(
+        "Male"    = "#377eb8",
+        "Female"  = "#e41a1c",
+        "Unassigned" = "#999999"
+      )
+      
+      multiqc_sexcheck <- data.frame(
+        Sample = sexcheck$IID,
+        x      = sexcheck$PEDSEX,
+        y      = sexcheck$F,
+        color  = color_map[sexcheck$LABELSEX]
+      )
+      
+      outfile <- makepath(qcdir, "sexcheck_mqc.txt")
+      
+      writeLines(c(
+        "# plot_type: 'scatter'",
+        "# id: 'sexcheck'",
+        "# section_name: 'Sex Check'",
+        "# description: 'Check assigned sex versus SNP sex'",
+        "# pconfig:",
+        "#    xlab: 'Reported Sex (PEDSEX)'",
+        "#    ylab: 'ChrX heterozygosity (F)'",
+        "#    y_lines:",
+         paste0("#       - value: ", maleTh),
+        "#         color: '#e7298a'",
+        "#         label: 'Male threshold'",
+        "#         dashStyle: 'dash'",
+        paste0("#       - value: ", femaleTh),
+        "#         color: '#e7298a'",
+        "#         label: 'Female threshold'",
+        "#         dashStyle: 'dash'"
+      ), con = outfile)
+      
+      write.table(multiqc_sexcheck, outfile,
+                  sep = "\t", quote = FALSE, row.names = FALSE, append = TRUE)
+    }
 
     if (interactive) print(p_sexcheck)
     return(list(fail_sex=fail_sex, mixup=mixup_geno_pheno,
@@ -1720,6 +1819,7 @@ run_check_missingness <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' @param legend_text_size [integer] Size for legend text.
 #' @param legend_title_size [integer] Size for legend title.
 #' @param title_size [integer] Size for plot title.
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file
 #' @return named [list] with i) fail_imiss dataframe containing FID (Family ID),
 #' IID (Within-family ID), MISS_PHENO (Phenotype missing? (Y/N)), N_MISS (Number
 #' of missing genotype call(s), not including obligatory missings), N_GENO (
@@ -1762,7 +1862,8 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                                         axis_title_size = 7,
                                         title_size = 9,
                                         highlight_legend = FALSE,
-                                        interactive=FALSE) {
+                                        interactive=FALSE,
+                                        write_multiqc = FALSE) {
 
     prefix <- makepath(qcdir, name)
 
@@ -1904,6 +2005,40 @@ evaluate_check_het_and_miss <- function(qcdir, name, imissTh=0.03,
                 guides(shape = "legend")
         }
     }
+    
+    if (write_multiqc) {
+      
+      color_map <- c(
+        "pass"             = "#666666",
+        "fail het"         = "#1b9e77",
+        "fail miss"        = "#d95f02",
+        "fail het + miss"  = "#7570b3"
+      )
+      
+      multiqc_scatter <- data.frame(
+        Sample = het_imiss$IID,  
+        x = het_imiss$logF_MISS,
+        y = het_imiss$F,
+        color = color_map[het_imiss$type]  
+      )
+      
+      outfile <- makepath(qcdir, "het_imiss_mqc.txt")
+
+      writeLines(c(
+        "# plot_type: 'scatter'",
+        "# id: 'het_imiss'",
+        "# section_name: 'Heterozygosity vs Missingness'",
+        "# description: 'Samples coloured by QC pass/fail status'",
+        "# pconfig:",
+        "#    xlab: 'Log10 Fraction Missing'",
+        "#    ylab: 'Heterozygosity F statistic'"
+      ), con = outfile)
+      
+      write.table(multiqc_scatter, outfile,
+                  sep = "\t", quote = FALSE, row.names = FALSE, append = TRUE)
+      
+    }
+    
     p_het_imiss <- p_het_imiss +
         theme_bw() +
         theme(legend.text = element_text(size = legend_text_size),
@@ -2148,6 +2283,7 @@ run_check_relatedness <- function(indir, name, qcdir=indir, highIBDTh=0.185,
 #' @param legend_title_size [integer] Size for legend title.
 #' @param title_size [integer] Size for plot title.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file.
 #' @return a named [list] with i) fail_high_IBD containing a [data.frame] of
 #' IIDs and FIDs of individuals who fail the IBDTh in columns
 #' FID1 and IID1. In addition, the following columns are returned (as originally
@@ -2179,7 +2315,8 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                                        axis_text_size = 5,
                                        axis_title_size = 7,
                                        title_size = 9,
-                                       verbose=FALSE) {
+                                       verbose=FALSE,
+                                       write_multiqc = FALSE) {
 
     prefix <- makepath(qcdir, name)
 
@@ -2250,6 +2387,19 @@ evaluate_check_relatedness <- function(qcdir, name, highIBDTh=0.1875,
                             size=title_size)
     p_IBD <- cowplot::plot_grid(title, p_histo, ncol = 1,
                                 rel_heights = c(0.1, 1))
+    if (write_multiqc) {
+      multiqc_df <- data.frame(Sample = unique(c(genome$IID1, genome$IID2)))
+      multiqc_df <- dplyr::mutate(multiqc_df, Relatedness_fail = .data$Sample 
+                                  %in% fail_highIBD$IID)
+      
+      multiqc_report <- makepath(qcdir, "relatedness_qc_mqc.txt")
+      writeLines(c(
+        "# plot_type: 'generalstats'"
+      ), con = multiqc_report)
+      write.table(multiqc_df, multiqc_report,
+                  sep = "\t", quote = FALSE, row.names = FALSE, append = TRUE)
+    }
+    
     if (interactive) print(p_IBD)
     return(list(fail_highIBD=fail_highIBD$relatednessFails,
                 failIDs=fail_highIBD$failIDs, p_IBD=p_IBD,

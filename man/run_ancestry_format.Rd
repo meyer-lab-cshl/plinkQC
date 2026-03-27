@@ -18,7 +18,8 @@ run_ancestry_format(
   format = "@:#[hg38]",
   plink2format = FALSE,
   var_format = FALSE,
-  path2load_mat
+  path2load_mat = NULL,
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -75,8 +76,8 @@ printed to standard out.}
 \item{format}{[character] This gives the template to rewrite the variant identifier.
 A '@' represents the chromosome code, and a '#' represents the base-pair position.}
 
-\item{plink2format}{[logical] If TRUE, data is in plink2 format already and 
-convert_to_plink2 will not be run}
+\item{plink2format}{[logical] If TRUE, data is in plink2 format (i.e. name.pvar, 
+name.psam, and name.pgen)}
 
 \item{var_format}{[logical] If TRUE, variant identifiers are in correct 
 format already and rename_variant_identifiers will not be run}
@@ -84,6 +85,8 @@ format already and rename_variant_identifiers will not be run}
 \item{path2load_mat}{[character] /path/to/directory where loading matrices are 
 kept. This can be downloaded from the github repo. Note that the name of the file 
 before the .eigenvec.allele or .acount must be included in file path.}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file.}
 }
 \value{
 Name of file with correct format

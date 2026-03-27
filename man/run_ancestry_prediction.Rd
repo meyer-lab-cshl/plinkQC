@@ -15,7 +15,8 @@ run_ancestry_prediction(
   remove_individuals = NULL,
   extract_markers = NULL,
   exclude_markers = NULL,
-  showPlinkOutput = TRUE
+  showPlinkOutput = TRUE,
+  plink2format = FALSE
 )
 }
 \arguments{
@@ -73,6 +74,9 @@ Default: NULL, i.e. no filtering on markers.}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
+
+\item{plink2format}{[logical] If TRUE, data is in plink2 format (i.e. name.pvar, 
+name.psam, and name.pgen)}
 }
 \value{
 A .sscore file with the input data projected onto the reference data PCs

@@ -118,7 +118,8 @@ of the samples split by their (PEDSEX).</p>
 <span>  exclude_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  extract_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  showPlinkOutput <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  interactive <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  interactive <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  write_multiqc <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -307,6 +308,10 @@ choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().</p></dd>
+
+
+<dt id="arg-write-multiqc">write_multiqc<a class="anchor" aria-label="anchor" href="#arg-write-multiqc"></a></dt>
+<dd><p>[logical] If TRUE, will output a multiQC-compatible report file.</p></dd>
 
 </dl></div>
     <div class="section level2">

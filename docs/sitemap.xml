@@ -17,6 +17,7 @@
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkLoadingMat.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkPlink.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkPlink2.html</loc></url>
+<url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkRF_path.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/checkRemoveIDs.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/check_ancestry.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/check_het_and_miss.html</loc></url>
@@ -26,6 +27,7 @@
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/check_sex.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/check_snp_missingness.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/cleanData.html</loc></url>
+<url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/convert_from_vcf.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/convert_to_plink2.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/evaluate_ancestry_prediction.html</loc></url>
 <url><loc>https://meyer-lab-cshl.github.io/plinkQC/reference/evaluate_check_ancestry.html</loc></url>

@@ -15,7 +15,7 @@ A step-by-step guide on how to run these analyses can be found [here](articles/p
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC** is: 1.0.1 and can be installed
+The current github version of **plinkQC** is: 1.0.2 and can be installed
 via
 
 ``` r

@@ -60,7 +60,8 @@ perIndividualQC(
   excludeAncestry = NULL,
   path2load_mat = NULL,
   plink2format = FALSE,
-  var_format = FALSE
+  var_format = FALSE,
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -296,11 +297,13 @@ must be spelled exactly as shown.}
 kept. This can be downloaded from the github repo. Note that the name of the file 
 before the .eigenvec.allele or .acount must be included in file path.}
 
-\item{plink2format}{[logical] If TRUE, data is in plink2 format already and 
-convert_to_plink2 will not be run}
+\item{plink2format}{[logical] If TRUE, data is also avaliable in plink2 format 
+(i.e. name.pvar, name.psam, and name.pgen)}
 
 \item{var_format}{[logical] If TRUE, variant identifiers are in correct 
 format already and rename_variant_identifiers will not be run}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file}
 }
 \value{
 Named [list] with i) fail_list, a named [list] with 1.

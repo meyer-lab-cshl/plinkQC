@@ -43,6 +43,8 @@ reference:
   - '`rename_variant_identifiers`'
   - '`pruning_ld`'
   - '`convert_to_plink2`'
+  - '`convert_from_vcf`'
+  - '`checkRF_path`'
 - title: Identifying Ancestry
   desc: ~
   contents:

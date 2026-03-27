@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Hannah Meyer
 and Maha Syed</h4>
             
-            <h4 data-toc-skip class="date">2026-02-06</h4>
+            <h4 data-toc-skip class="date">2026-03-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/plinkQC.Rmd" class="external-link"><code>vignettes/plinkQC.Rmd</code></a></small>
       <div class="d-none name"><code>plinkQC.Rmd</code></div>
@@ -89,7 +89,8 @@ frequencies per genetic marker) and relationship functions.
 <em>plinkQC</em> then generates a per-individual and per-marker quality
 control report and individuals and markers that fail the quality control
 can subsequently be removed with <em>plinkQC</em> to generate a new,
-clean dataset.</p>
+clean dataset. <em>plinkQC</em> can also generate <a href="https://seqera.io/multiqc/" class="external-link"><em>MultiQC</em></a> compatible
+reports.</p>
 <p>The majority of functions in <em>plinkQC</em> depend on <a href="https://www.cog-genomics.org/plink/1.9/" class="external-link">PLINK</a>
 (<strong>version 1.9</strong>), which has to be manually installed prior
 to the usage of <em>plinkQC</em>. The ancestry functions depend on the
@@ -153,8 +154,9 @@ demonstrated at the end of this vignette.</p>
 Before use, the study data should be in the new hg38 annotation. USCS’s
 <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a> tool
 may be needed to map variants from one annotation to another. More
-details on how to use the tool can be found on the processing <a href="HapMap.html">HapMap III reference data vignette</a>. We provide an
-example dataset that is in the hg38 annotation.</p>
+details on how to use the tool can be found on the processing <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html">HapMap
+III reference data vignette</a>. We provide an example dataset that is
+in the hg38 annotation.</p>
 <p>Additional loading matrices are needed for the PCA projection used in
 the model. This is hosted on the plinkQC github repo under the
 inst/extdata folder located <a href="https://github.com/meyer-lab-cshl/plinkQC/tree/ancestry_update/inst/extdata/load_mat" class="external-link">here</a>.
@@ -183,13 +185,11 @@ writes a list of all fail individual IDs to the qcdir. These IDs will be
 removed in the computation of the <code>perMarkerQC</code>. If the list
 is not present, <code>perMarkerQC</code> will send a message about
 conducting the quality control on the entire dataset.</p>
-<p>The ancestry portion of the package requires data in PLINK 2.0 format
-(i.e pgen, pvar, psam files), and the variant identifiers should be
-formatted similar to the following example: 1:12345[hg38].
-<code>perIndividualQC</code> will run the functions
-<code><a href="../reference/convert_to_plink2.html">convert_to_plink2()</a></code> and
-<code><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers()</a></code> to convert the data into PLINK
-2.0 format and rename the variant identifiers respectively.</p>
+<p>The ancestry portion of the package requires the variant identifiers
+should be formatted similar to the following example: 1:12345[hg38].
+<code>perIndividualQC</code> will run
+<code><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers()</a></code> to rename the variant
+identifiers.</p>
 <p><em>NB</em>: There are limitations on CRAN file sizes. To reduce the
 data size of the example data in <code>plinkQC</code>, data.genome has
 already been reduced to the individuals that are related. Thus the
@@ -352,19 +352,21 @@ Alternatively, the whole github repo can downloaded with</p>
 <p>For this, it is important that the data is in hg38 annotation. USCS’s
 <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver" class="external-link">liftOver</a> tool
 may be needed to map variants from one annotation to another. More
-details on how to use the tool can be found on the processing <a href="HapMap.html">HapMap III reference data vignette</a>.</p>
-<p>Additionally, the ancestry prediction function requires that the data
-is in plink 2 format and has variant identifiers in the format:
-1:12345[hg38]. The function <code>ancestry_prediction</code> will call
-helper functions, <code><a href="../reference/convert_to_plink2.html">convert_to_plink2()</a></code> and
+details on how to use the tool can be found on the processing <a href="https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html">HapMap
+III reference data vignette</a>.</p>
+<p>Additionally, the ancestry prediction function requires the data
+variant identifiers in the format: 1:12345[hg38]. The function
+<code>ancestry_prediction</code> will call helper functions
 <code><a href="../reference/rename_variant_identifiers.html">rename_variant_identifiers()</a></code> to format the data as directed
-by the parameters. The function returns: (i) prediction_prob: Dataframe
-of family ids, sample ids, and model probability of the each ancestry.
-(ii) prediction_majority: Dataframe of family ids, sample ids, and
-ancestry with highest model probability. (iii) exclude_ancestry: A list
-of ids to be excluded based on user-specified ancestries to the
-ancestral predictions of the samples (iv) p_ancestry: Bar graph of the
-ancestry model probabilities.</p>
+by the parameters. If the data is plink format 2.0, the parameter
+<code>plink2format</code> should be set to <code>TRUE</code>.</p>
+<p>The function returns: (i) prediction_prob: Dataframe of family ids,
+sample ids, and model probability of the each ancestry. (ii)
+prediction_majority: Dataframe of family ids, sample ids, and ancestry
+with highest model probability. (iii) exclude_ancestry: A list of ids to
+be excluded based on user-specified ancestries to the ancestral
+predictions of the samples (iv) p_ancestry: Bar graph of the ancestry
+model probabilities.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">path2plink2</span> <span class="op">&lt;-</span> <span class="st">"/Users/syed/bin/plink2"</span></span>
 <span><span class="va">path2load_mat</span> <span class="op">&lt;-</span> <span class="st">"path/to/load_mat/merged_chrs.postQC.train.pca"</span></span>
@@ -372,7 +374,8 @@ ancestry model probabilities.</p>
 <span><span class="va">anc_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ancestry_prediction.html">ancestry_prediction</a></span><span class="op">(</span>indir<span class="op">=</span><span class="va">indir</span>, qcdir<span class="op">=</span><span class="va">qcdir</span>, name<span class="op">=</span><span class="va">name</span>,</span>
 <span>                                         interactive<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                                         path2plink2<span class="op">=</span><span class="va">path2plink2</span>, </span>
-<span>                                         path2load_mat <span class="op">=</span> <span class="va">path2load_mat</span><span class="op">)</span></span></code></pre></div>
+<span>                                         path2load_mat <span class="op">=</span> <span class="va">path2load_mat</span>,</span>
+<span>                                         plink2format <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ancestral_prediction.png" alt="marker missingness" width="500px" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">

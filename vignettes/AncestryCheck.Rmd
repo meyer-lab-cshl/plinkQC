@@ -236,25 +236,40 @@ ancestry_rf <- randomForest(Ancestry ~ .,
                         ntree = 750,
                         importance = TRUE)
 ancestry_rf
+
+saveRDS(ancestry_rf, file = "ancestry_rf.RDS")
 ```
 
 ### Predicting ancestries of new study data
-To predict the ancestries of a new study dataset with our trained random forest, 
-you need to project the newdata onto the principal components of the reference dataset. This is done with the --score function in plink2. The projection is
-then used as input for the random forest. 
-```{bash project newdata, eval=FALSE}
-plink2 --pfile newdata 
-       --read-freq all_hg38.pca.acount 
-       --score all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize 
-       --score-col-nums 7-26 --out newdata.projection
+The include `ancestry_prediction` function within the package allows users to put
+in their trained models and loading matrices paths. After projecting the data 
+and running it through the classifier, the program will format the predictions in
+a dataframe and easy to see visualization. The user must provide three things: a 
+path to the trained classifier (as a RDS format), path to the loading matrixes, 
+and a list of the names of labels used in the classifier. 
+
+```{R predict_ancestry, eval=FALSE}
+library(plinkQC)
+
+indir = "."
+qcdir = "."
+name = "studydata"
+path2plink2 = "plink2"
+path2load_mat = "path/to/loading/matrix"
+rf_path = "path/to/ancestry_rf.RDS"
+rf_labels = c("column", "labels", "in", "classifier")
+
+ancestry_prediction(indir = indir, qcdir = qcdir, name = studydata, 
+                    path2plink2 = path2plink2, path2load_mat = path2load_mat,
+                    rf_path = rf_path, rf_labels = rf_labels)
 ```
 
 Then, we can use the random forest to predict the ancestry of the new data. 
 ```{r, eval = FALSE}
-filepath <- "Insert path to newdata.sscore here"
-newdata <- read.csv(
-  file= filepath, 
-  sep='\t', header = TRUE)
+name <- "name of the data"
+indir <- "filepath"
+qcdir <- "filepath"
+path2load_mat <- "all_hg38.pca"
 
 newdata <- newdata %>%
   select(-c(ALLELE_CT, NAMED_ALLELE_DOSAGE_SUM))
@@ -263,7 +278,7 @@ colnames(newdata) <- c("ID", paste0("PC", 1:20))
 predictions <- predict(ancestry_rf, newdata)
 ```
 
-### Evalulating and Tuning Classification
+### Evalulating and Tuning of Classification Model
 To evaluate the accuracy of the model, a commonly used metric is the out-of-bag 
 (OOB) error rate and confusion matrix. The confusion matrix displays the number
 of correct classifications for each ancestry along the diagonal. Any values

@@ -31,7 +31,8 @@ check_het_and_miss(
   axis_title_size = 7,
   title_size = 9,
   path2plink = NULL,
-  showPlinkOutput = TRUE
+  showPlinkOutput = TRUE,
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -147,6 +148,8 @@ and PLINK will be found by \code{\link[sys]{exec}}('plink').}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file.}
 }
 \value{
 Named [list] with i) fail_imiss [data.frame] containing FID (Family

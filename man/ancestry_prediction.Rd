@@ -25,9 +25,13 @@ ancestry_prediction(
   extract_markers = NULL,
   plink2format = FALSE,
   var_format = FALSE,
+  rf_path = NULL,
+  rf_labels = c("Africa", "America", "Central_South_Asia", "East_Asia", "Europe",
+    "Middle_East"),
   excludeAncestry = NULL,
   do.run_ancestry_prediction = TRUE,
-  do.evaluate_ancestry_prediction = TRUE
+  do.evaluate_ancestry_prediction = TRUE,
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -103,11 +107,16 @@ separated by spaces). All unlisted variants will be removed from the current
 analysis. See \url{https://www.cog-genomics.org/plink/1.9/filter#snp}.
 Default: NULL, i.e. no filtering on markers.}
 
-\item{plink2format}{[logical] If TRUE, data is in plink2 format already and 
-convert_to_plink2 will not be run}
+\item{plink2format}{[logical] If TRUE, data is in plink2 format (i.e. name.pvar, 
+name.psam, and name.pgen)}
 
 \item{var_format}{[logical] If TRUE, variant identifiers are in correct 
 format already and rename_variant_identifiers will not be run}
+
+\item{rf_path}{[character] /path/to/model for user inputted model. NULL to
+use the included pre-trained ancestry classification model}
+
+\item{rf_labels}{[list] list of the label names for user inputted model.}
 
 \item{excludeAncestry}{[character] Ancestries to be excluded (if any). Options are:
 Africa, America, Central_South_Asia, East_Asia, Europe, and Middle_East. Strings 
@@ -118,6 +127,8 @@ must be spelled exactly as shown.}
 
 \item{do.evaluate_ancestry_prediction}{[logical] If TRUE, run
 \code{\link{evaluate_ancestry_prediction}}.}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file.}
 }
 \value{
 Three dataframes and a visualization of the ancestral probabilities. 

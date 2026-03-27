@@ -16,7 +16,11 @@ evaluate_ancestry_prediction(
   axis_title_size = 7,
   title_size = 9,
   showPlinkOutput = TRUE,
-  legend_position = "right"
+  legend_position = "right",
+  rf_path = NULL,
+  rf_labels = c("Africa", "America", "Central_South_Asia", "East_Asia", "Europe",
+    "Middle_East"),
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -51,6 +55,13 @@ must be spelled exactly as shown.}
 printed to standard out.}
 
 \item{legend_position}{[character] Legend position for the plot.}
+
+\item{rf_path}{[character] /path/to/model for user inputted model. NULL to
+use the included pre-trained ancestry classification model}
+
+\item{rf_labels}{[list] list of the label names for user inputted model.}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file.}
 }
 \value{
 Three dataframes and a visualization of the ancestral probabilities. 

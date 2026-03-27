@@ -110,7 +110,8 @@ genetic ancestry.</p>
 <span>  excludeAncestry <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  path2load_mat <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plink2format <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  var_format <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  var_format <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  write_multiqc <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -459,13 +460,17 @@ before the .eigenvec.allele or .acount must be included in file path.</p></dd>
 
 
 <dt id="arg-plink-format">plink2format<a class="anchor" aria-label="anchor" href="#arg-plink-format"></a></dt>
-<dd><p>[logical] If TRUE, data is in plink2 format already and
-convert_to_plink2 will not be run</p></dd>
+<dd><p>[logical] If TRUE, data is also avaliable in plink2 format
+(i.e. name.pvar, name.psam, and name.pgen)</p></dd>
 
 
 <dt id="arg-var-format">var_format<a class="anchor" aria-label="anchor" href="#arg-var-format"></a></dt>
 <dd><p>[logical] If TRUE, variant identifiers are in correct
 format already and rename_variant_identifiers will not be run</p></dd>
+
+
+<dt id="arg-write-multiqc">write_multiqc<a class="anchor" aria-label="anchor" href="#arg-write-multiqc"></a></dt>
+<dd><p>[logical] If TRUE, will output a multiQC-compatible report file</p></dd>
 
 </dl></div>
     <div class="section level2">

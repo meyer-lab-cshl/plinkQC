@@ -15,7 +15,7 @@ A step-by-step guide on how to run these analyses can be found [here](https://me
 
 ## <i class="fa fa-rocket" aria-hidden="true"></i> Installation
 
-The current github version of **plinkQC** is: 1.0.1 and can be installed
+The current github version of **plinkQC** is: 1.1.0 and can be installed
 via
 
 ``` r
@@ -23,7 +23,7 @@ library(devtools)
 install_github("meyer-lab-cshl/plinkQC")
 ```
 
-The current CRAN version of **plinkQC** is: 1.0.1 and can be installed via
+The current CRAN version of **plinkQC** is: 1.1.0 and can be installed via
 
 ``` r
 install.packages("plinkQC")

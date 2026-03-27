@@ -15,7 +15,8 @@ evaluate_check_relatedness(
   axis_text_size = 5,
   axis_title_size = 7,
   title_size = 9,
-  verbose = FALSE
+  verbose = FALSE,
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ other_arguments) or pdf(outfile) print(p_IBD) dev.off().}
 \item{title_size}{[integer] Size for plot title.}
 
 \item{verbose}{[logical] If TRUE, progress info is printed to standard out.}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file.}
 }
 \value{
 a named [list] with i) fail_high_IBD containing a [data.frame] of

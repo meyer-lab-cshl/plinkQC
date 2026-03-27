@@ -21,7 +21,8 @@ evaluate_check_het_and_miss(
   axis_title_size = 7,
   title_size = 9,
   highlight_legend = FALSE,
-  interactive = FALSE
+  interactive = FALSE,
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -86,6 +87,8 @@ choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_het_imiss) via ggplot2::ggsave(p=p_het_imiss
 , other_arguments) or pdf(outfile) print(p_het_imiss) dev.off().}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file}
 }
 \value{
 named [list] with i) fail_imiss dataframe containing FID (Family ID),

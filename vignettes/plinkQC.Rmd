@@ -37,11 +37,12 @@ studies rely on the high quality of these marker genotypes.
 around PLINK [@Purcell2007,@Chang2015] basic statistics (e.g. missing
 genotyping rates per individual, allele frequencies per genetic marker) and relationship functions. *plinkQC* then generates a per-individual and per-marker quality control report and individuals and markers that fail the quality control
 can subsequently be removed with *plinkQC* to generate a new, clean dataset. 
+*plinkQC* can also generate [*MultiQC*](https://seqera.io/multiqc/) compatible reports.  
 
 The majority of functions in *plinkQC* depend on [PLINK](https://www.cog-genomics.org/plink/1.9/) 
  (**version 1.9**), which has to be manually installed prior to the usage of
  *plinkQC*. The ancestry functions depend on the newer version of [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/)
- (**version 2.0**).
+ (**version 2.0**). 
 
 The protocol can be run via three main functions, the per-individual quality
 control (`perIndividualQC`), the per-marker quality control (`perMarkerQC`) and
@@ -117,9 +118,8 @@ individual IDs to the qcdir. These IDs will be removed in the computation of the
 `perMarkerQC`. If the list is not present, `perMarkerQC` will send a message
 about conducting the quality control on the entire dataset.
 
-The ancestry portion of the package requires data in PLINK 2.0 format (i.e pgen, pvar, psam files), and the variant identifiers should be formatted similar to
-the following example: 1:12345[hg38]. `perIndividualQC` will run the functions `convert_to_plink2()` and `rename_variant_identifiers()` to convert the data
-into PLINK 2.0 format and rename the variant identifiers respectively. 
+The ancestry portion of the package requires the variant identifiers should be formatted similar to
+the following example: 1:12345[hg38]. `perIndividualQC` will run `rename_variant_identifiers()` to rename the variant identifiers. 
 
 *NB*: There are limitations on CRAN file sizes. To reduce the data size of the
 example data in `plinkQC`, data.genome  has already been reduced to the
@@ -316,8 +316,9 @@ git clone git@github.com:meyer-lab-cshl/plinkQC.git
 For this, it is important that the data is in hg38 annotation. USCS's [liftOver](https://genome.ucsc.edu/cgi-bin/hgLiftOver) tool may be needed to map variants from one annotation to another. More details on how to use the tool can
 be found on the processing [HapMap III reference data vignette](https://meyer-lab-cshl.github.io/plinkQC/articles/HapMap.html).
 
-Additionally, the ancestry prediction function requires that the data is in plink 2 format and has variant identifiers in the format: 1:12345[hg38]. The function 
-`ancestry_prediction` will call helper functions, `convert_to_plink2()` and `rename_variant_identifiers()` to format the data as directed by the parameters.
+Additionally, the ancestry prediction function requires the data variant identifiers in the format: 1:12345[hg38]. The function 
+`ancestry_prediction` will call helper functions `rename_variant_identifiers()` to format the data as directed by the parameters. If the data is plink format 2.0, the parameter `plink2format` should be set to `TRUE`.
+
 The function returns: 
   (i) prediction_prob: Dataframe of family ids, sample ids, and model probability of the each ancestry.
   (ii) prediction_majority: Dataframe of family ids, sample ids, and ancestry with highest model probability.
@@ -332,7 +333,8 @@ path2load_mat <- "path/to/load_mat/merged_chrs.postQC.train.pca"
 anc_check <- ancestry_prediction(indir=indir, qcdir=qcdir, name=name,
                                          interactive=TRUE,
                                          path2plink2=path2plink2, 
-                                         path2load_mat = path2load_mat)
+                                         path2load_mat = path2load_mat,
+                                         plink2format = FALSE)
 ```
 
 ```{r load anc graph, out.width = "500px", echo=FALSE, fig.align='center'}

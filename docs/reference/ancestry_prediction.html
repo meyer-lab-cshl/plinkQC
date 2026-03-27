@@ -72,9 +72,13 @@ a random forest classifier to identify the ancestry.</p>
 <span>  extract_markers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plink2format <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  var_format <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rf_path <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rf_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Africa"</span>, <span class="st">"America"</span>, <span class="st">"Central_South_Asia"</span>, <span class="st">"East_Asia"</span>, <span class="st">"Europe"</span>,</span>
+<span>    <span class="st">"Middle_East"</span><span class="op">)</span>,</span>
 <span>  excludeAncestry <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  do.run_ancestry_prediction <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  do.evaluate_ancestry_prediction <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  do.evaluate_ancestry_prediction <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  write_multiqc <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -191,13 +195,22 @@ Default: NULL, i.e. no filtering on markers.</p></dd>
 
 
 <dt id="arg-plink-format">plink2format<a class="anchor" aria-label="anchor" href="#arg-plink-format"></a></dt>
-<dd><p>[logical] If TRUE, data is in plink2 format already and
-convert_to_plink2 will not be run</p></dd>
+<dd><p>[logical] If TRUE, data is in plink2 format (i.e. name.pvar,
+name.psam, and name.pgen)</p></dd>
 
 
 <dt id="arg-var-format">var_format<a class="anchor" aria-label="anchor" href="#arg-var-format"></a></dt>
 <dd><p>[logical] If TRUE, variant identifiers are in correct
 format already and rename_variant_identifiers will not be run</p></dd>
+
+
+<dt id="arg-rf-path">rf_path<a class="anchor" aria-label="anchor" href="#arg-rf-path"></a></dt>
+<dd><p>[character] /path/to/model for user inputted model. NULL to
+use the included pre-trained ancestry classification model</p></dd>
+
+
+<dt id="arg-rf-labels">rf_labels<a class="anchor" aria-label="anchor" href="#arg-rf-labels"></a></dt>
+<dd><p>[list] list of the label names for user inputted model.</p></dd>
 
 
 <dt id="arg-excludeancestry">excludeAncestry<a class="anchor" aria-label="anchor" href="#arg-excludeancestry"></a></dt>
@@ -214,6 +227,10 @@ must be spelled exactly as shown.</p></dd>
 <dt id="arg-do-evaluate-ancestry-prediction">do.evaluate_ancestry_prediction<a class="anchor" aria-label="anchor" href="#arg-do-evaluate-ancestry-prediction"></a></dt>
 <dd><p>[logical] If TRUE, run
 <code><a href="evaluate_ancestry_prediction.html">evaluate_ancestry_prediction</a></code>.</p></dd>
+
+
+<dt id="arg-write-multiqc">write_multiqc<a class="anchor" aria-label="anchor" href="#arg-write-multiqc"></a></dt>
+<dd><p>[logical] If TRUE, will output a multiQC-compatible report file.</p></dd>
 
 </dl></div>
     <div class="section level2">

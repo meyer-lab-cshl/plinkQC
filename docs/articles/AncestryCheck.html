@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">Maha Syed and
 Caroline Walter</h4>
             
-            <h4 data-toc-skip class="date">2026-02-06</h4>
+            <h4 data-toc-skip class="date">2026-03-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/meyer-lab-cshl/plinkQC/blob/HEAD/vignettes/AncestryCheck.Rmd" class="external-link"><code>vignettes/AncestryCheck.Rmd</code></a></small>
       <div class="d-none name"><code>AncestryCheck.Rmd</code></div>
@@ -299,27 +299,41 @@ value for the parameter but we recommend utilizing a grid search
 <span>                        method <span class="op">=</span> <span class="st">"rf"</span>, </span>
 <span>                        ntree <span class="op">=</span> <span class="fl">750</span>,</span>
 <span>                        importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">ancestry_rf</span></span></code></pre></div>
+<span><span class="va">ancestry_rf</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">ancestry_rf</span>, file <span class="op">=</span> <span class="st">"ancestry_rf.RDS"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="predicting-ancestries-of-new-study-data">Predicting ancestries of new study data<a class="anchor" aria-label="anchor" href="#predicting-ancestries-of-new-study-data"></a>
 </h3>
-<p>To predict the ancestries of a new study dataset with our trained
-random forest, you need to project the newdata onto the principal
-components of the reference dataset. This is done with the –score
-function in plink2. The projection is then used as input for the random
-forest.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="ex">plink2</span> <span class="at">--pfile</span> newdata </span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>       <span class="ex">--read-freq</span> all_hg38.pca.acount </span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>       <span class="ex">--score</span> all_hg38.pca.eigenvec.allele 2 6 header-read no-mean-imputation variance-standardize </span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>       <span class="ex">--score-col-nums</span> 7-26 <span class="at">--out</span> newdata.projection</span></code></pre></div>
+<p>The include <code>ancestry_prediction</code> function within the
+package allows users to put in their trained models and loading matrices
+paths. After projecting the data and running it through the classifier,
+the program will format the predictions in a dataframe and easy to see
+visualization. The user must provide three things: a path to the trained
+classifier (as a RDS format), path to the loading matrixes, and a list
+of the names of labels used in the classifier.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://meyer-lab-cshl.github.io/plinkQC/">plinkQC</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">indir</span> <span class="op">=</span> <span class="st">"."</span></span>
+<span><span class="va">qcdir</span> <span class="op">=</span> <span class="st">"."</span></span>
+<span><span class="va">name</span> <span class="op">=</span> <span class="st">"studydata"</span></span>
+<span><span class="va">path2plink2</span> <span class="op">=</span> <span class="st">"plink2"</span></span>
+<span><span class="va">path2load_mat</span> <span class="op">=</span> <span class="st">"path/to/loading/matrix"</span></span>
+<span><span class="va">rf_path</span> <span class="op">=</span> <span class="st">"path/to/ancestry_rf.RDS"</span></span>
+<span><span class="va">rf_labels</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"column"</span>, <span class="st">"labels"</span>, <span class="st">"in"</span>, <span class="st">"classifier"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/ancestry_prediction.html">ancestry_prediction</a></span><span class="op">(</span>indir <span class="op">=</span> <span class="va">indir</span>, qcdir <span class="op">=</span> <span class="va">qcdir</span>, name <span class="op">=</span> <span class="va">studydata</span>, </span>
+<span>                    path2plink2 <span class="op">=</span> <span class="va">path2plink2</span>, path2load_mat <span class="op">=</span> <span class="va">path2load_mat</span>,</span>
+<span>                    rf_path <span class="op">=</span> <span class="va">rf_path</span>, rf_labels <span class="op">=</span> <span class="va">rf_labels</span><span class="op">)</span></span></code></pre></div>
 <p>Then, we can use the random forest to predict the ancestry of the new
 data.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="st">"Insert path to newdata.sscore here"</span></span>
-<span><span class="va">newdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
-<span>  file<span class="op">=</span> <span class="va">filepath</span>, </span>
-<span>  sep<span class="op">=</span><span class="st">'\t'</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">"name of the data"</span></span>
+<span><span class="va">indir</span> <span class="op">&lt;-</span> <span class="st">"filepath"</span></span>
+<span><span class="va">qcdir</span> <span class="op">&lt;-</span> <span class="st">"filepath"</span></span>
+<span><span class="va">path2load_mat</span> <span class="op">&lt;-</span> <span class="st">"all_hg38.pca"</span></span>
 <span></span>
 <span><span class="va">newdata</span> <span class="op">&lt;-</span> <span class="va">newdata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ALLELE_CT</span>, <span class="va">NAMED_ALLELE_DOSAGE_SUM</span><span class="op">)</span><span class="op">)</span></span>
@@ -328,7 +342,7 @@ data.</p>
 <span><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">ancestry_rf</span>, <span class="va">newdata</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="evalulating-and-tuning-classification">Evalulating and Tuning Classification<a class="anchor" aria-label="anchor" href="#evalulating-and-tuning-classification"></a>
+<h3 id="evalulating-and-tuning-of-classification-model">Evalulating and Tuning of Classification Model<a class="anchor" aria-label="anchor" href="#evalulating-and-tuning-of-classification-model"></a>
 </h3>
 <p>To evaluate the accuracy of the model, a commonly used metric is the
 out-of-bag (OOB) error rate and confusion matrix. The confusion matrix

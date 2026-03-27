@@ -35,7 +35,8 @@ evaluate_check_sex(
   exclude_markers = NULL,
   extract_markers = NULL,
   showPlinkOutput = TRUE,
-  interactive = FALSE
+  interactive = FALSE,
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -159,6 +160,8 @@ choosing this option, make sure you have X-forwarding/graphical interface
 available for interactive plotting. Alternatively, set interactive=FALSE and
 save the returned plot object (p_sexcheck) via ggplot2::ggsave(p=p_sexcheck,
 other_arguments) or pdf(outfile) print(p_sexcheck) dev.off().}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file.}
 }
 \value{
 named list with i) fail_sex: dataframe with FID, IID, PEDSEX, SNPSEX

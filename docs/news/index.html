@@ -39,7 +39,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.1" id="plinkqc-101">plinkQC 1.0.1<a class="anchor" aria-label="anchor" href="#plinkqc-101"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.0" id="plinkqc-110">plinkQC 1.1.0<a class="anchor" aria-label="anchor" href="#plinkqc-110"></a></h2>
+<div class="section level3">
+<h3 id="major-changes-1-1-0">major changes<a class="anchor" aria-label="anchor" href="#major-changes-1-1-0"></a></h3>
+<ul><li>Changed it so ancestry prediction function works with PLINK 1.9v files. The default is that there are PLINK 1.9v files available. Users can use the plink2format parameter if the data is in PLINK 2.0 format.</li>
+<li>Added convert_to_vcf() function to convert vcf files to PLINK format</li>
+<li>Added parameter to ancestry function so user can use their own trained classifier</li>
+<li>added a parameter write_multiqc for functions relating to sample QC to create reports compatible with multiQC</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.1" id="plinkqc-101">plinkQC 1.0.1<a class="anchor" aria-label="anchor" href="#plinkqc-101"></a></h2><p class="text-muted">CRAN release: 2026-02-09</p>
 <div class="section level3">
 <h3 id="minor-changes-1-0-1">minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-1-0-1"></a></h3>
 <ul><li>Fixed a bug so that ancestry prediction function works when there are phenotypes included in the input data.</li>

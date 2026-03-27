@@ -11,7 +11,8 @@ rename_variant_identifiers(
   verbose = FALSE,
   path2plink2 = NULL,
   format = "@:#[hg38]",
-  showPlinkOutput = TRUE
+  showPlinkOutput = TRUE,
+  plink2format = FALSE
 )
 }
 \arguments{
@@ -39,6 +40,9 @@ A '@' represents the chromosome code, and a '#' represents the base-pair positio
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
+
+\item{plink2format}{[logical] If TRUE, data is in plink2 format (i.e. name.pvar, 
+name.psam, and name.pgen)}
 }
 \value{
 Files with a .renamed in them that have the renamed variants

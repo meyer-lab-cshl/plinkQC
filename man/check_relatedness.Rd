@@ -27,7 +27,8 @@ check_relatedness(
   axis_text_size = 5,
   axis_title_size = 7,
   title_size = 9,
-  showPlinkOutput = TRUE
+  showPlinkOutput = TRUE,
+  write_multiqc = FALSE
 )
 }
 \arguments{
@@ -134,6 +135,8 @@ Default: NULL, i.e. no filtering on markers.}
 
 \item{showPlinkOutput}{[logical] If TRUE, plink log and error messages are
 printed to standard out.}
+
+\item{write_multiqc}{[logical] If TRUE, will output a multiQC-compatible report file.}
 }
 \value{
 Named [list] with i) fail_high_IBD containing a [data.frame] of

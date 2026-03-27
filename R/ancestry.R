@@ -7,11 +7,12 @@
 #' @inheritParams rename_variant_identifiers
 #' @inheritParams checkPlink2
 #' @inheritParams checkLoadingMat
-#' @param plink2format [logical] If TRUE, data is in plink2 format already and 
-#' convert_to_plink2 will not be run
+#' @param plink2format [logical] If TRUE, data is in plink2 format (i.e. name.pvar, 
+#' name.psam, and name.pgen)
 #' @param var_format [logical] If TRUE, variant identifiers are in correct 
 #' format already and rename_variant_identifiers will not be run
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file.
 #' @return Name of file with correct format
 #' @export
 #' @examples
@@ -35,24 +36,16 @@ run_ancestry_format <- function(indir, name, qcdir=indir, verbose=FALSE,
                                 format = "@:#[hg38]",
                                 plink2format = FALSE,
                                 var_format = FALSE,
-                                path2load_mat) {
+                                path2load_mat = NULL,
+                                write_multiqc = FALSE) {
   
   path2plink2 <- checkPlink2(path2plink2)
-  if (plink2format==FALSE) {
-    convert_to_plink2(indir=indir, name=name, qcdir=qcdir, verbose=verbose,
-                      path2plink2=path2plink2,
-                      keep_individuals=keep_individuals,
-                      remove_individuals=remove_individuals,
-                      exclude_markers=exclude_markers,
-                      extract_markers=extract_markers,
-                      showPlinkOutput=showPlinkOutput)
-    indir=qcdir
-  }
   
   if (var_format==FALSE) {
     rename_variant_identifiers(indir=indir, name=name, qcdir=qcdir, verbose=verbose,
                       path2plink2=path2plink2,
                       format=format,
+                      plink2format=plink2format,
                       showPlinkOutput=showPlinkOutput)
     name = paste0(name, ".renamed")
     
@@ -66,7 +59,8 @@ run_ancestry_format <- function(indir, name, qcdir=indir, verbose=FALSE,
                                          remove_individuals=remove_individuals,
                                          extract_markers=extract_markers,
                                          exclude_markers=exclude_markers,
-                                         showPlinkOutput=showPlinkOutput)
+                                         showPlinkOutput=showPlinkOutput,
+                                         plink2format=plink2format)
   return(name)
 }
 
@@ -132,7 +126,6 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 }
 
-
 #' Projecting the study data set onto the PC space of the reference dataset 
 #' 
 #' Projects the study dataset onto the PC space of the reference dataset. 
@@ -152,6 +145,8 @@ convert_to_plink2 <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' kept. This can be downloaded from: https://github.com/meyer-lab-cshl/plinkQCAncestryData.
 #' Note that file names before the .acount or .eigenvec.allele must be included
 #' in file path. 
+#' @param plink2format [logical] If TRUE, data is in plink2 format (i.e. name.pvar, 
+#' name.psam, and name.pgen)
 #' @inheritParams checkPlink2
 #' @inheritParams checkFiltering
 #' @inheritParams checkLoadingMat
@@ -179,12 +174,23 @@ run_ancestry_prediction  <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     remove_individuals=NULL,
                                     extract_markers=NULL,
                                     exclude_markers=NULL,
-                                    showPlinkOutput=TRUE) {
+                                    showPlinkOutput=TRUE,
+                                    plink2format=FALSE) {
   
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, name) 
   
-  checkFormatPlink2(prefix)
+  print("running")
+  if (plink2format) {
+    print("FALSE")
+    checkFormatPlink2(prefix)
+    filestarting = "--pfile"
+  }
+  else {
+    checkFormat(prefix)
+    filestarting = "--bfile"
+  }
+
   path2plink2 <- checkPlink2(path2plink2)
   checkLoadingMat(path2load_mat)
   
@@ -200,7 +206,7 @@ run_ancestry_prediction  <- function(indir, name, qcdir=indir, verbose=FALSE,
   
   if (verbose) message("Projecting data on 1000G PC space via Plink2 --score")
   system2(path2plink2,
-          args=c("--pfile", prefix,
+          args=c(filestarting, prefix,
                  args_filter,
                  "--snps-only",
                  "--max-alleles 2",
@@ -235,10 +241,14 @@ run_ancestry_prediction  <- function(indir, name, qcdir=indir, verbose=FALSE,
 #' available for interactive plotting. Alternatively, set interactive=FALSE and
 #' save the returned plot object (p_ancestry) via ggplot2::ggsave(p=p_ancestry,
 #' other_arguments) or pdf(outfile) print(p_ancestry) dev.off().
+#' @param rf_path [character] /path/to/model for user inputted model. NULL to
+#' use the included pre-trained ancestry classification model
+#' @param rf_labels [list] list of the label names for user inputted model.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
 #' @param excludeAncestry [character] Ancestries to be excluded (if any). Options are:
 #' Africa, America, Central_South_Asia, East_Asia, Europe, and Middle_East. Strings 
 #' must be spelled exactly as shown. 
+#' @param write_multiqc [logical] If TRUE, will output a multiQC-compatible report file.
 #' @return Three dataframes and a visualization of the ancestral probabilities. 
 #' prediction_prob contains the sample IDs and ancestral probabilities from the model.
 #' prediction_majority contains the sample IDs and greatest ancestry probabilities 
@@ -267,26 +277,40 @@ evaluate_ancestry_prediction <- function(qcdir, name, verbose=FALSE,
                                     axis_title_size = 7,
                                     title_size = 9,
                                     showPlinkOutput=TRUE,
-                                    legend_position="right") {
+                                    legend_position="right",
+                                    rf_path = NULL,
+                                    rf_labels = c("Africa", "America", 
+                                                  "Central_South_Asia",
+                                                  "East_Asia", "Europe",
+                                                  "Middle_East"),
+                                    write_multiqc = FALSE) {
   
 
   proj <- read.csv(paste0(makepath(qcdir, name),".sscore"), 
-                   sep='\t', header = TRUE)
+                   sep='\t', header = TRUE, na.strings = c("", "NA"))
   
   if (!("X.FID" %in% colnames(proj))) {
     proj$FID <- rep(0,nrow(proj))
   }
   else {
-    proj$FID <- proj$`X.FID`
+    names(proj)[names(proj) == "X.FID"] <- "FID"
+  }
+  
+  if ("X.IID" %in% colnames(proj)) {
+    colnames(proj)[colnames(proj) == "X.IID"] <- "IID"
   }
 
   pc_start <- which(colnames(proj) == "PC1_AVG")
   colnames(proj)[pc_start:ncol(proj)] <-
     sub("_AVG$", "", colnames(proj)[pc_start:ncol(proj)])
   
-
-  rf_path <- system.file("extdata", 'final_model.RDS',
+  if (is.null(rf_path)) {
+    rf_path <- system.file("extdata", 'final_model.RDS',
                                     package="plinkQC")
+  }
+  else {
+    checkRF_path(rf_path)
+  }
   superpop <- readRDS(rf_path)
   prediction_prob <- predict(superpop, proj, type = "prob")
   prediction_prob <- data.frame(prediction_prob)
@@ -304,7 +328,7 @@ evaluate_ancestry_prediction <- function(qcdir, name, verbose=FALSE,
  
   colnames(prediction_prob) <- sub("^predictions.", "", colnames(prediction_prob))
   prediction_prob_long <- pivot_longer(prediction_prob, 
-                                       cols = 'Africa':'Middle_East',
+                                       cols = rf_labels,
                                        names_to = "Ancestry",
                                        values_to = "predictions")
   p_ancestry <- 
@@ -321,6 +345,36 @@ evaluate_ancestry_prediction <- function(qcdir, name, verbose=FALSE,
            axis.text = element_text(size = axis_text_size),
            axis.title = element_text(size = axis_title_size)) +
     scale_fill_brewer(palette = "Set2") 
+  
+  if (write_multiqc) {
+    multiqc_ancestry <- dplyr::rename(prediction_prob, Sample = .data$IID)
+    multiqc_ancestry <- select(multiqc_ancestry, -"FID")
+    
+    outfile <- makepath(qcdir, "ancestry_mqc.txt")
+    
+    ancestry_names <- colnames(multiqc_ancestry)[colnames(multiqc_ancestry) != "Sample"]
+    set2_colors <- c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3",
+                     "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3")
+    
+    writeLines(c(
+      "# plot_type: 'bargraph'",
+      "# id: 'ancestry'",
+      "# section_name: 'Ancestry Prediction'",
+      "# description: 'Predicted ancestry proportions per sample'",
+      "# pconfig:",
+      "#    xlab: 'Samples'",
+      "#    ylab: 'Ancestral Prediction'",
+      "#    stacking: 'normal'",
+      "#    cpswitch: False",
+      "#    hide_zero_cats: False",
+      "# colors:",
+      paste0("#    '", ancestry_names, "': '", 
+             set2_colors[seq_along(ancestry_names)], "'")
+    ), con = outfile)
+    
+    write.table(multiqc_ancestry, outfile,
+                sep = "\t", quote = FALSE, row.names = FALSE, append = TRUE)
+  }
   
    return(list(prediction_prob=prediction_prob, 
                prediction_majority = prediction_majority, 
@@ -379,14 +433,20 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
                                              extract_markers=NULL,
                                              plink2format=FALSE,
                                              var_format=FALSE,
+                                             rf_path = NULL,
+                                             rf_labels = c("Africa", "America", 
+                                              "Central_South_Asia",
+                                              "East_Asia", "Europe",
+                                              "Middle_East"),
                                              excludeAncestry=NULL,
                                              do.run_ancestry_prediction=TRUE,
-                                             do.evaluate_ancestry_prediction=TRUE) {
+                                             do.evaluate_ancestry_prediction=TRUE,
+                                             write_multiqc = FALSE) {
     sscore_path <- indir
     ancestry_name <- name
     
     if (do.run_ancestry_prediction) {
-      if ((plink2format == FALSE) | (var_format == FALSE)) { 
+      if (var_format == FALSE) { 
         ancestry_name <- run_ancestry_format(indir=indir, name=name, qcdir=qcdir, 
                                              verbose=verbose,
                                              path2plink2=path2plink2,
@@ -408,6 +468,7 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
                                        remove_individuals=remove_individuals,
                                        extract_markers=extract_markers,
                                        exclude_markers=exclude_markers,
+                                       plink2format = plink2format,
                                        showPlinkOutput=showPlinkOutput)
       }
       sscore_path <- qcdir
@@ -418,6 +479,8 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
       ancestry_exclusion <- evaluate_ancestry_prediction(qcdir=sscore_path,
                                                          name=ancestry_name,
                                                          excludeAncestry = excludeAncestry,
+                                                         rf_path = rf_path,
+                                                         rf_labels = rf_labels,
                                                          legend_text_size =
                                                            legend_text_size,
                                                          legend_title_size =
@@ -429,7 +492,8 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
                                                          title_size =
                                                            title_size,
                                                          interactive=interactive,
-                                                         legend_position = "bottom")
+                                                         legend_position = "bottom",
+                                                         write_multiqc = write_multiqc)
       
       
       return(ancestry_exclusion)
@@ -453,6 +517,8 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
 #' @param format [character] This gives the template to rewrite the variant identifier.
 #' A '@' represents the chromosome code, and a '#' represents the base-pair position.
 #' @inheritParams checkPlink2
+#' @param plink2format [logical] If TRUE, data is in plink2 format (i.e. name.pvar, 
+#' name.psam, and name.pgen)
 #' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
 #' printed to standard out.
 #' @param verbose [logical] If TRUE, progress info is printed to standard out.
@@ -471,13 +537,22 @@ ancestry_prediction <- function(indir, qcdir, name, verbose=FALSE,
 rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
                                     path2plink2=NULL,
                                     format = "@:#[hg38]",
-                                    showPlinkOutput=TRUE) {
+                                    showPlinkOutput=TRUE,
+                                    plink2format = FALSE) {
   
   prefix <- makepath(indir, name)
   out <- makepath(qcdir, paste0(name, ".renamed")) 
   
-  checkFormatPlink2(prefix)
-  checkPlink2(path2plink2)
+  if (plink2format) {
+    checkFormatPlink2(prefix)
+    filestarting = "--pfile"
+    fileending = "--make-pgen"
+  }
+  else {
+    checkFormat(prefix)
+    filestarting = "--bfile"
+    fileending = "--make-bed"
+  }
   
   if (showPlinkOutput) {
     showPlinkOutput = ""
@@ -487,14 +562,13 @@ rename_variant_identifiers <- function(indir, name, qcdir=indir, verbose=FALSE,
   }
    
   system2(path2plink2, 
-          args=c("--pfile", prefix,
+          args=c(filestarting, prefix,
                  "--snps-only",
                  "--max-alleles 2",
                  "--chr 1-22",
                  "--set-all-var-ids", paste0('"', format, '"'),
                  "--rm-dup exclude-all",
-                 "--make-pgen",
-                 "--out", out),
+                 fileending, "--out", out),
           stdout = showPlinkOutput, stderr = showPlinkOutput)
 }
 
@@ -530,3 +604,122 @@ checkLoadingMat <- function(path2load_mat) {
   }
 }
 
+#' Converting VCF data files into PLINK v1.9 and PLINK v2.0 data files
+#' 
+#' This converts files in the VCF format (i.e. name.vcf) into 
+#' PLINK v1.9 format (i.e. name.bed, name.bim, and name.fam) and/or 
+#' PLINK v2.0 format (i.e. name.pvar, name.psam, and name.pgen)
+#' 
+#' @param indir [character] /path/to/directory containing the basic vcf file, name.vcf or
+#' name.vcf.gz
+#' @param qcdir [character] /path/to/directory where the plink1.9 or plink2 data formations
+#' as returned by plink2 --vcf --make-bed or plink2 --vcf --make-pgen will be 
+#' saved to. User needs writing permission to qcdir. Per default is qcdir=indir.  
+#' @param name [character] Prefix of VCF files, i.e. name.vcf or name.vcf.gz
+#' @inheritParams checkPlink2
+#' @param makebed [logical] If TRUE, will output PLINK v1.9 files (i.e. name.bed, 
+#' name.bim, and name.fam)
+#' @param makepgen [logical] If TRUE, will output PLINK v2.0 files (i.e. name.pvar, 
+#' name.psam, and name.pgen)
+#' @param gzipped [logical] Put as TRUE if the vcf file is gzipped (i.e. name.vcf.gz)
+#' @param showPlinkOutput [logical] If TRUE, plink log and error messages are
+#' printed to standard out.
+#' @param verbose [logical] If TRUE, progress info is printed to standard out.
+#' @return Creates PLINK v1.9 or PLINK v2.0 datafiles
+#' @export
+#' @examples
+#' indir <- system.file("extdata", package="plinkQC")
+#' qcdir <- tempdir()
+#' name <- "data"
+#' path2plink <- '/path/to/plink'
+#' \dontrun{
+#' # the following code is not run on package build, as the path2plink on the
+#' # user system is not known.
+#' convert_to_plink2(indir=indir, qcdir=qcdir, name=name, path2plink2 = path2plink2)
+#' }
+convert_from_vcf <- function(indir, name, qcdir=indir, verbose=FALSE,
+                           path2plink2=NULL,
+                           gzipped=FALSE, makebed = TRUE,
+                           makepgen = FALSE, showPlinkOutput = TRUE
+                           ) {
+  if (makebed && makepgen) {
+    message("Both makebed and makepgen are TRUE. Making both a file in bed/bim/fam 
+    format and a file in pgen/psam/pvar format")
+  }
+  
+  if (makebed==FALSE && makepgen==FALSE) {
+    stop("Both makebed and makepgen are FALSE. Please set one of them as TRUE
+         to select the outputted to either be in bed/bim/fam format or pgen/psam/pvar
+         format")
+  }
+  
+  vcfname = makepath(indir, paste0(name, ".vcf"))
+  if (gzipped) {
+    vcfname = paste0(vcfname, ".gz")
+  }
+  
+  out <- makepath(qcdir, name) 
+
+  path2plink2 <- checkPlink2(path2plink2)
+  
+  if (showPlinkOutput) {
+    showPlinkOutput = ""}
+  else {
+    showPlinkOutput = FALSE}
+  
+  if (verbose) message("Converting to vcf data types")
+  
+  if (makebed) {
+    system2(path2plink2, 
+            args=c("--vcf", vcfname,
+                   "--make-bed",
+                   "--out", out),
+            stdout = showPlinkOutput, stderr = showPlinkOutput)
+  }
+
+  if (makepgen) {
+    system2(path2plink2, 
+            args=c("--vcf", vcfname,
+                   "--make-pgen",
+                   "--out", out),
+            stdout = showPlinkOutput, stderr = showPlinkOutput)
+  }
+}
+
+#' Checking the path of userinputted random forest
+#' 
+#' Makes sure the user inputted random forest is able to be loaded
+#' 
+#' @param rf_path [character] /path/to/directory where the rds file for a user inputted
+#' classification model is located Note that the name of the file including the .rds or
+#' .RDS extenstion must be included
+#' @param anc_list [list] List of the names used for labels for the random forest
+#' @export
+#' @return NULL 
+#' @examples
+#' rf_path <- '/path/to/model/model.rds'
+#' \dontrun{
+#' # the following code is not run on package build, as the path2load_mat on the
+#' # user system is not known.
+#' checkRF_path(rf_path = rf_path)
+#' }
+checkRF_path <- function(rf_path, anc_list) {
+  if (!file.exists(rf_path)) {
+    stop("The classification model is not found in the path given for rf_path. Please
+         check that the filepath is correct. Note that the filepath requires for the 
+         .rds or .RDS extension to be included")
+  }
+  
+  tryCatch(
+    {
+      rf <- readRDS(rf_path)
+    },
+    error = function(e) {
+      stop("Error: Random forest model is unable to be loaded in R")
+    })
+  
+  if (!setequal(rf$classes, anc_list)) {
+    stop("The labels for the random forest do not match up with the labels inputted 
+         into the anc_list variable")
+  }
+}
