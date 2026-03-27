@@ -1,9 +1,12 @@
-# plinkQC 1.0.2
-## minor changes
-* Changed it so ancestry prediction function works with PLINK 1.9v files. There is
-now an additional parameter the user can use if the data is in PLINK 2.0 format
+# plinkQC 1.1.0
+## major changes
+* Changed it so ancestry prediction function works with PLINK 1.9v files. The default is 
+that there are PLINK 1.9v files available. Users can use the plink2format parameter if
+the data is in PLINK 2.0 format.
 * Added convert_to_vcf() function to convert vcf files to PLINK format 
-* Added parameter to ancestry function so user can use their own trained classifier
+* Added parameter to ancestry function so user can use their own trained classifier 
+* added a parameter write_multiqc for functions relating to sample QC to create
+reports compatible with multiQC
 
 # plinkQC 1.0.1
 ## minor changes
