@@ -33,4 +33,4 @@ A log of version changes can be found [here](https://meyer-lab-cshl.github.io/pl
 
 ## <i class="fa fa-pencil" aria-hidden="true"></i> Citation
 
-Syed M, Walter C and Meyer HV (2025) plinkQC: An Integrated Tool for Ancestry Inference, Sample Selection, and Quality Control in Population Genetics. [[bioRxiv]](https://www.biorxiv.org/content/10.1101/2025.11.25.690541v1)
+Maha Syed, Caroline Walter, Hannah V Meyer, plinkQC: an integrated tool for ancestry inference, sample selection, and quality control in population genetics, _Bioinformatics_, Volume 42, Issue 9, September 2026, btag612, [https://doi.org/10.1093/bioinformatics/btag612](https://academic.oup.com/bioinformatics/article/42/9/btag612/8761982)
